@@ -1885,6 +1885,85 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return cheeks_iteam;
     }
 
+    public final ArrayList<OrderTransactions> getAllRequestVoucher(String Vfh_No ) {
+        final ArrayList<OrderTransactions> orderTransactions = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + ORDER_TRANSACTIONS + " where VOUCHER_NO = '" + Vfh_No + "'" +" and ORDER_KIND = '0'";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                OrderTransactions item = new OrderTransactions();
+
+                item.setOrderType(Integer.parseInt(cursor.getString(0)));
+                item.setOrderKind(Integer.parseInt(cursor.getString(1)));
+                item.setVoucherDate(cursor.getString(2));
+                item.setPosNo(Integer.parseInt(cursor.getString(3)));
+                item.setStoreNo(Integer.parseInt(cursor.getString(4)));
+                item.setVoucherNo(cursor.getString(5));
+                item.setVoucherSerial(Integer.parseInt(cursor.getString(6)));
+                item.setItemBarcode(cursor.getString(7));
+                item.setItemName(cursor.getString(8));
+                item.setSecondaryName(cursor.getString(9));
+                item.setKitchenAlias(cursor.getString(10));
+                item.setItemCategory(cursor.getString(11));
+                item.setItemFamily(cursor.getString(12));
+                item.setQty(Integer.parseInt(cursor.getString(13)));
+                item.setPrice(Double.parseDouble(cursor.getString(14)));
+                item.setTotal(Double.parseDouble(cursor.getString(15)));
+                item.setDiscount(Double.parseDouble(cursor.getString(16)));
+                item.setlDiscount(Double.parseDouble(cursor.getString(17)));
+                item.setTotalDiscount(Double.parseDouble(cursor.getString(18)));
+                item.setTaxValue(Double.parseDouble(cursor.getString(19)));
+                item.setTaxPerc(Double.parseDouble(cursor.getString(20)));
+                item.setTaxKind(Integer.parseInt(cursor.getString(21)));
+                item.setService(Integer.parseInt(cursor.getString(22)));
+                item.setServiceTax(Double.parseDouble(cursor.getString(23)));
+                item.setTableNo(Integer.parseInt(cursor.getString(24)));
+                item.setSectionNo(Integer.parseInt(cursor.getString(25)));
+                item.setShiftNo(Integer.parseInt(cursor.getString(26)));
+                item.setShiftName(cursor.getString(27));
+
+                orderTransactions.add(item);
+
+            } while (cursor.moveToNext());
+        }
+
+        return orderTransactions;
+    }
+
+    public final ArrayList<PayMethod> getAllRequestPayMethod(String Vfh_No) {
+        final ArrayList<PayMethod> orderTransactions = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + PAY_METHOD + " where VOUCHER_NUMBER = '" + Vfh_No + "'"+" and ORDER_KIND = '0'";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                PayMethod item = new PayMethod();
+
+                item.setOrderType(cursor.getInt(0));
+                item.setOrderKind(cursor.getInt(1));
+                item.setVoucherDate(cursor.getString(2));
+                item.setPointOfSaleNumber(cursor.getInt(3));
+                item.setStoreNumber(cursor.getInt(4));
+                item.setVoucherNumber(cursor.getString(5));
+                item.setVoucherSerial(cursor.getInt(6));
+                item.setPayType(cursor.getString(7));
+                item.setPayValue(cursor.getDouble(8));
+                item.setPayNumber(cursor.getString(9));
+                item.setPayName(cursor.getString(10));
+                item.setShiftName(cursor.getString(11));
+                item.setShiftNumber(cursor.getInt(12));
+
+                orderTransactions.add(item);
+
+            } while (cursor.moveToNext());
+        }
+
+        return orderTransactions;
+    }
+
     public List<OrderTransactions> getAllOrderTransactions() {
         List<OrderTransactions> items = new ArrayList<>();
 

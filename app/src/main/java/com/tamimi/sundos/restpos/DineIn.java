@@ -105,7 +105,7 @@ public class DineIn extends AppCompatActivity {
 
         mHandler = new DatabaseHandler(DineIn.this);
         greenTables = mHandler.getAllOrderTransactionsTemp();
-        gestureDetector = new GestureDetector(this, new SingleTapConfirm());
+//        gestureDetector = new GestureDetector(this, new SingleTapConfirm());
 
         initialize();
         focusedTextView = null;
@@ -1615,14 +1615,6 @@ public class DineIn extends AppCompatActivity {
         greenTables = mHandler.getAllOrderTransactionsTemp();
         if (focused != null)
             focused.setBackgroundDrawable(getResources().getDrawable(R.drawable.green_light));
-    }
-
-    private class SingleTapConfirm extends GestureDetector.SimpleOnGestureListener {
-
-        @Override
-        public boolean onSingleTapUp(MotionEvent event) {
-            return true;
-        }
     }
 
     void initialize() {

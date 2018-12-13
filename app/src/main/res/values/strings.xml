@@ -280,7 +280,7 @@
 
     <string name="customer_code"> Customer Code </string>
     <string name="member_ship_card"> Member Ship Card NO </string>
-    <string name="coender"> Coender </string>
+    <string name="Gender"> Gender </string>
     <string name="Male"> Male </string>
     <string name="Female"> Female </string>
     <string name="city"> City </string>
