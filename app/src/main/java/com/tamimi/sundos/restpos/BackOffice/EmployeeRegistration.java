@@ -29,7 +29,8 @@ import androidx.core.content.ContextCompat;
 public class EmployeeRegistration extends AppCompatActivity {
 
     TableLayout tableEmployee;
-    EditText empNo, empName, mobileNo, userPassword, hireDate, termination, payRate;
+    EditText  empName, mobileNo, userPassword, hireDate, termination, payRate;
+    TextView empNo;
     Button newButton, saveButton, exitButton;
     Spinner securityLevel, payBasic, holidayPay, jobGroup, employeeType;
     CheckBox active;
@@ -75,6 +76,8 @@ public class EmployeeRegistration extends AppCompatActivity {
         mDHandler = new DatabaseHandler(EmployeeRegistration.this);
 
         jopGroupListForSpinner = mDHandler.getAllJobGroup();
+        final int[] serial = {mDHandler.getAllEmployeeRegistration().size()};
+        empNo.setText(""+ serial[0]);
 
         for (int i = 0; i < jopGroupListForSpinner.size(); i++) {
             jopGroupSpinner.add(jopGroupListForSpinner.get(i).getJobGroup());
@@ -138,7 +141,8 @@ public class EmployeeRegistration extends AppCompatActivity {
                         String pass = userPassword.getText().toString();
                         jobList.add(jobGroup.getSelectedItem().toString());
                         empNameList.add(empName.getText().toString());
-                        empNOList.add(Integer.parseInt(empNo.getText().toString()));
+//                        empNOList.add(Integer.parseInt(empNo.getText().toString()));
+                        empNOList.add(serial[0]);
                         mobileList.add(Integer.parseInt(mobileNo.getText().toString()));
                         securityList.add(securityLevel.getSelectedItem().toString());
                         userPassList.add(Integer.parseInt(pass));
@@ -165,8 +169,7 @@ public class EmployeeRegistration extends AppCompatActivity {
                         }
 
                         Toast.makeText(EmployeeRegistration.this, "OK ", Toast.LENGTH_SHORT).show();
-
-                        insertRaw3(empName.getText().toString(), Integer.parseInt(empNo.getText().toString()), Integer.parseInt(mobileNo.getText().toString()),
+                        insertRaw3(empName.getText().toString(), serial[0], Integer.parseInt(mobileNo.getText().toString()),
                                 securityLevel.getSelectedItem().toString(), Integer.parseInt(pass), hireDate.getText().toString(), termination.getText().toString()
                                 , payBasic.getSelectedItem().toString(), payRate.getText().toString(), holidayPay.getSelectedItem().toString(), employeeType.getSelectedItem().toString(), tableEmployee);
 
@@ -178,13 +181,15 @@ public class EmployeeRegistration extends AppCompatActivity {
                         termination.setText("");
                         payRate.setText("");
 
+
                     } else {
                         Toast.makeText(EmployeeRegistration.this, "Please Insert data ", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Toast.makeText(EmployeeRegistration.this, "Please Add Job Group Before Adding new Employee ", Toast.LENGTH_SHORT).show();
                 }
-
+                serial[0]++;
+                empNo.setText(""+ serial[0]);
             }
         });
 
@@ -269,7 +274,7 @@ public class EmployeeRegistration extends AppCompatActivity {
             exitButton = (Button) findViewById(R.id.deleteButton5);
             newButton = (Button) findViewById(R.id.newButton5);
 
-            empNo = (EditText) findViewById(R.id.empNo);
+            empNo = (TextView) findViewById(R.id.empNo);
             empName = (EditText) findViewById(R.id.empName);
             mobileNo = (EditText) findViewById(R.id.mobileNo);
             userPassword = (EditText) findViewById(R.id.user_password8);

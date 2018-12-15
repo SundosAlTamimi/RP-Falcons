@@ -2163,7 +2163,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         if (moneys.isEmpty())
-            max = 0;
+            max = -1;
         else
             max = Collections.max(moneys);
         return max;

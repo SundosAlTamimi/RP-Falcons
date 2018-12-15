@@ -1329,8 +1329,8 @@ public class PayMethods extends AppCompatActivity {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM");
         String today = df1.format(currentTimeAndDate);
         int serial = mDHandler.getMaxSerial("VOUCHER_SERIAL", "PAY_METHOD");
-        String vhfSerial = df.format(currentTimeAndDate) + "_" + (serial + 1);
-        String newString = vhfSerial.replace("-", "");
+        String vhfSerial = df.format(currentTimeAndDate);// + "-" + (serial);
+        String newString = vhfSerial.replace("-", "")+ "-" + (serial+1);
 
         double cashValues = 0, cardValues = 0, chequeValues = 0, giftValues = 0, couponValues = 0, pointValues = 0;
 
@@ -1342,7 +1342,7 @@ public class PayMethods extends AppCompatActivity {
         payMethod.setPointOfSaleNumber(Settings.POS_number);
         payMethod.setStoreNumber(Settings.store_number);
         payMethod.setVoucherNumber(newString);
-        payMethod.setVoucherSerial(serial + 1);
+        payMethod.setVoucherSerial(serial+1);
         payMethod.setShiftName(Settings.shift_name);
         payMethod.setShiftNumber(Settings.shift_number);
 
