@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import com.tamimi.sundos.restpos.Models.BlindClose;
 import com.tamimi.sundos.restpos.Models.BlindCloseDetails;
@@ -2581,6 +2582,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         BlindShift shift = new BlindShift();
 
         String selectQuery = "SELECT * FROM " + BLIND_SHIFT_IN + " where DATE = '" + date + "' and STATUS = '" + status + "'";
+        Log.e("*****" , selectQuery);
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 

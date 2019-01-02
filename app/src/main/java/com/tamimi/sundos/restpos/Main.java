@@ -68,13 +68,15 @@ public class Main extends AppCompatActivity {
         focusedTextView = null;
         initialize();
 
-        userName.setText(Settings.user_name);
-        shift.setText(Settings.shift_name);
+
 
         Date currentTimeAndDate = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
         today = df.format(currentTimeAndDate);
+
         date.setText(today);
+        userName.setText(Settings.user_name);
+        shift.setText("Shift: " + mDHandler.getOpenedShifts(today, 1).getShiftName());
 
     }
 
