@@ -294,9 +294,9 @@ public class Main extends AppCompatActivity {
                     TableRow tableRow = (TableRow) categories.getChildAt(i);
                     TextView text1 = (TextView) tableRow.getChildAt(1);
                     TextView text2 = (TextView) tableRow.getChildAt(2);
-                    text1.setText("1");
-                    text2.setText(money.get(i).getCatValue() + "");
-                    mainTotal.setText("0.000");
+                    text1.setText("0");
+                    text2.setText("0");
+                    mainTotal.setText("0.00");
                 }
             }
         });
@@ -343,7 +343,7 @@ public class Main extends AppCompatActivity {
             textView1.setHeight(26);
             textView1.setPadding(10, 0, 0, 0);
             textView1.setTextColor(getResources().getColor(R.color.text_color));
-            textView1.setText("1");
+            textView1.setText("0");
             textView1.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -412,7 +412,7 @@ public class Main extends AppCompatActivity {
 
 
             TextView textView2 = new TextView(Main.this);
-            textView2.setText("" + money.get(i).getCatValue());
+            textView2.setText("0");
 
             TableRow.LayoutParams lp2 = new TableRow.LayoutParams(130, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
             lp2.setMargins(15, 0, 15, 0);
@@ -429,10 +429,10 @@ public class Main extends AppCompatActivity {
             categories.addView(row);
         }
         double totals = 0;
-        for (int i = 0; i < money.size(); i++) {
-            totals += money.get(i).getCatValue();
-            mainTotal.setText("" + totals);
-        }
+//        for (int i = 0; i < money.size(); i++) {
+//            totals += money.get(i).getCatValue();
+        mainTotal.setText("0.00");
+//        }
 
 
         dialog.show();
@@ -453,7 +453,7 @@ public class Main extends AppCompatActivity {
         final ArrayList<Money> money = mDHandler.getAllMoneyCategory();
 
         categories = (TableLayout) dialog.findViewById(R.id.money_categories);
-        final TextView cashTotal = (TextView) dialog.findViewById(R.id.cashTotal);
+        final TextView cashTotals = (TextView) dialog.findViewById(R.id.cashTotal);
         final TextView creditCard = (TextView) dialog.findViewById(R.id.creditCard);
         final TextView cheque = (TextView) dialog.findViewById(R.id.cheque);
         final TextView giftCard = (TextView) dialog.findViewById(R.id.giftCard);
@@ -558,10 +558,10 @@ public class Main extends AppCompatActivity {
                     TableRow tableRow = (TableRow) categories.getChildAt(i);
                     TextView text1 = (TextView) tableRow.getChildAt(1);
                     TextView text2 = (TextView) tableRow.getChildAt(2);
-                    text1.setText("1");
-                    text2.setText(money.get(i).getCatValue() + "");
-                    cashTotal.setText("0.000");
+                    text1.setText("0");
+                    text2.setText("0");
                 }
+//                cashTotals.setText("0.000");
                 creditCard.setText("0.00");
                 cheque.setText("0.00");
                 giftCard.setText("0.00");
@@ -592,7 +592,7 @@ public class Main extends AppCompatActivity {
                     if (orderHeaders.get(i).getVoucherDate().equals(today) && orderHeaders.get(i).getShiftName().equals(Settings.shift_name))
                         sysSales += orderHeaders.get(i).getAmountDue();
 
-                double userCash = Double.parseDouble(cashTotal.getText().toString());
+                double userCash = Double.parseDouble(cashTotals.getText().toString());
                 double sysCash = 0;
                 for (int i = 0; i < payMethods.size(); i++)
                     if (payMethods.get(i).getVoucherDate().equals(today) && payMethods.get(i).getShiftName().equals(Settings.shift_name)
@@ -679,7 +679,7 @@ public class Main extends AppCompatActivity {
             textView1.setHeight(26);
             textView1.setPadding(10, 0, 0, 0);
             textView1.setTextColor(getResources().getColor(R.color.text_color));
-            textView1.setText("1");
+            textView1.setText("0");
             textView1.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -704,18 +704,19 @@ public class Main extends AppCompatActivity {
                             TextView text = (TextView) tableRow.getChildAt(0);
                             TextView text2 = (TextView) tableRow.getChildAt(2);
 
-                            double total = Integer.parseInt(text.getTag().toString()) * Integer.parseInt(focusedTextView.getText().toString());
+                            int total = Integer.parseInt(text.getTag().toString()) * Integer.parseInt(focusedTextView.getText().toString());
                             text2.setText("" + total);
                         }
 
-                        cashTotal.setText("0.000");
+                        cashTotals.setText("0.000");
                         for (int i = 0; i < money.size(); i++) {
                             TableRow tRow = (TableRow) categories.getChildAt(i);
                             TextView t = (TextView) tRow.getChildAt(2);
-                            cashTotal.setText("" + (Double.parseDouble(cashTotal.getText().toString()) + Double.parseDouble(t.getText().toString())));
+                            cashTotals.setText("" + (Double.parseDouble(cashTotals.getText().toString()) + Double.parseDouble(t.getText().toString())));
                         }
-                        mainTotal.setText("" + (Double.parseDouble(cashTotal.getText().toString()) +
+                        mainTotal.setText("" + (Double.parseDouble(cashTotals.getText().toString()) +
                                 Double.parseDouble(otherPaymentTotal.getText().toString())));
+
                     }
                 }
 
@@ -729,9 +730,8 @@ public class Main extends AppCompatActivity {
                 }
             });
 
-
             TextView textView2 = new TextView(Main.this);
-            textView2.setText("" + money.get(i).getCatValue());
+            textView2.setText("0");
 
             TableRow.LayoutParams lp2 = new TableRow.LayoutParams(130, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
             lp2.setMargins(15, 0, 15, 0);
@@ -748,10 +748,10 @@ public class Main extends AppCompatActivity {
             categories.addView(row);
         }
         double totals = 0;
-        for (int i = 0; i < money.size(); i++) {
-            totals += money.get(i).getCatValue();
-            cashTotal.setText("" + totals);
-        }
+//        for (int i = 0; i < money.size(); i++) {
+//            totals += money.get(i).getCatValue();
+        cashTotals.setText("0.00");
+//        }
 
         //------------------------------------
 
@@ -781,7 +781,7 @@ public class Main extends AppCompatActivity {
                                         Double.parseDouble(point.getText().toString());
 
                         otherPaymentTotal.setText("" + sum);
-                        mainTotal.setText("" + (Double.parseDouble(cashTotal.getText().toString()) +
+                        mainTotal.setText("" + (Double.parseDouble(cashTotals.getText().toString()) +
                                 Double.parseDouble(otherPaymentTotal.getText().toString())));
                     }
                 }
