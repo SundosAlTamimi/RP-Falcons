@@ -1,8 +1,10 @@
 package com.tamimi.sundos.restpos.BackOffice;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -77,7 +79,7 @@ public class BackOfficeActivity extends AppCompatActivity {
             salesReportByCustomer, profitLossReport, detailSalesReport;
 
     private DatePickerDialog.OnDateSetListener mdate;
-    int count, count2;
+    int count, count2 , nextSerial;
     TextView test = null, fromDate, toDate;
     Dialog dialog;
     String today;
@@ -377,7 +379,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         Window window = dialog.getWindow();
         window.setLayout(860, 430);
 
-        final int nextSerial = mDHandler.getAllMoneyCategory().size();
+        nextSerial = mDHandler.getAllMoneyCategory().size();
         final ArrayList<Money> money = new ArrayList<>();
 
         final EditText serial = (EditText) dialog.findViewById(R.id.serial);
@@ -421,6 +423,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     moneyPicImageView.setImageDrawable(getResources().getDrawable(R.drawable.focused_table));
                     imageBitmap = null;
                     show.setChecked(true);
+                    nextSerial++;
                     Toast.makeText(BackOfficeActivity.this, "Added to list", Toast.LENGTH_SHORT).show();
                 } else
                     Toast.makeText(BackOfficeActivity.this, "Please insure your inputs", Toast.LENGTH_SHORT).show();
@@ -430,15 +433,36 @@ public class BackOfficeActivity extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mDHandler.addMoneyCategory(money);
-                dialog.dismiss();
+                if (!catName.getText().toString().equals("") && !catValue.getText().toString().equals("")) {
+                    mDHandler.addMoneyCategory(money);
+                    dialog.dismiss();
+                } else
+                    Toast.makeText(BackOfficeActivity.this, "", Toast.LENGTH_SHORT).show();
             }
         });
 
         exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialog.dismiss();
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(BackOfficeActivity.this);
+                builder1.setMessage("Your inputs will be lost, are you sure you want to dismiss ?");
+                builder1.setCancelable(false);
+
+                builder1.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog1, int id) {
+                                dialog1.cancel();
+                                dialog.dismiss();
+                            }
+                        });
+
+                builder1.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog1, int id) {
+                                dialog1.cancel();
+                            }
+                        });
+
+                AlertDialog alert11 = builder1.create();
+                alert11.show();
             }
         });
 
@@ -1745,10 +1769,7 @@ public class BackOfficeActivity extends AppCompatActivity {
     }
 
     boolean checkMoneyInputs(String s, String cName, String cValue, Bitmap pic) {
-        if (s.equals("") && cName.equals("") && cValue.equals("") && pic == null)
-            return false;
-        else
-            return true;
+        return !s.equals("") && !cName.equals("") && !cValue.equals("") ;
     }
 
     void currentLinear(LinearLayout linearLayout) {
