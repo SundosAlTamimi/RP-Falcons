@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tamimi.sundos.restpos.Models.Tables;
 
@@ -545,7 +546,8 @@ public class DineInLayout extends AppCompatActivity {
         zoomIn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                zoomIn();
+                if (focused.getChildCount() != 0)
+                    zoomIn();
             }
         });
 
@@ -555,7 +557,8 @@ public class DineInLayout extends AppCompatActivity {
         zoomOut.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                zoomOut();
+                if (focused.getChildCount() != 0)
+                    zoomOut();
             }
         });
 
@@ -575,11 +578,13 @@ public class DineInLayout extends AppCompatActivity {
         delete.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                TextView textView = (TextView) focused.getChildAt(1);
-                land.removeView(focused);
-                for (int i = 0; i < currentList.size(); i++) {
-                    if (Integer.parseInt(textView.getText().toString()) == currentList.get(i).getTableNumber())
-                        currentList.remove(i);
+                if (focused.getChildCount() != 0) {
+                    TextView textView = (TextView) focused.getChildAt(1);
+                    land.removeView(focused);
+                    for (int i = 0; i < currentList.size(); i++) {
+                        if (Integer.parseInt(textView.getText().toString()) == currentList.get(i).getTableNumber())
+                            currentList.remove(i);
+                    }
                 }
             }
         });
@@ -611,6 +616,8 @@ public class DineInLayout extends AppCompatActivity {
 
         if (list5.size() != 0)
             mHandler.addTables(list5, 5);
+
+        Toast.makeText(DineInLayout.this , "Saved" , Toast.LENGTH_LONG).show();
     }
 
     public void zoomIn() {
