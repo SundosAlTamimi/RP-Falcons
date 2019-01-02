@@ -1066,21 +1066,27 @@ public class BackOfficeActivity extends AppCompatActivity {
 
         fromDate.setText(today);
         toDate.setText(today);
-        ArrayList<String> shiftNumberArray = new ArrayList<>();
+        ArrayList<String> shiftNameArray = new ArrayList<>();
         ArrayList<String> userArray = new ArrayList<>();
         ArrayList<String> posNoArray = new ArrayList<>();
 
-        shiftNumberArray.add("All");
-        shiftNumberArray.add("ahmad");
-        shiftNumberArray.add("B");
-        userArray.add("All");
-        userArray.add("salll");
+        for(int i=0;i<mDHandler.getAllShifts().size();i++) {
+            shiftNameArray.add(mDHandler.getAllShifts().get(i).getShiftName());
+        }
+        shiftNameArray.add(0,"All");
+
+        for(int i=0;i<mDHandler.getAllEmployeeRegistration().size();i++) {
+            if(mDHandler.getAllEmployeeRegistration().get(i).getEmployeeType()==0)
+            {userArray.add(mDHandler.getAllEmployeeRegistration().get(i).getEmployeeName());}
+        }
+        userArray.add(0,"All");
+
         posNoArray.add("All");
         posNoArray.add("4");
         posNoArray.add("7");
 
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, shiftNumberArray);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, shiftNameArray);
         shiftName.setAdapter(adapter);
 
         ArrayAdapter<String> adapterUser = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, userArray);
@@ -1099,6 +1105,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         mdate = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                month+=1;
                 test.setText(dayOfMonth + "-" + month + "-" + year);
                 Log.e("date ",""+dayOfMonth + "-" + month + "-" + year);
             }
