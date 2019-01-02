@@ -313,6 +313,9 @@ public class OrderLayout extends AppCompatActivity {
             mDbHandler.addUsedItems(new UsedItems(focused.getText().toString(), textView.getText().toString(),
                     backColor, textColor, i));
         }
+
+        Toast.makeText(OrderLayout.this , "Menu Saved" , Toast.LENGTH_LONG).show();
+        finish();
     }
 
     void fillGridView(int flag) {
