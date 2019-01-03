@@ -192,15 +192,15 @@ public class PayMethods extends AppCompatActivity {
         window.setLayout(780, 460);
 
         final TextView balance = (TextView) dialog.findViewById(R.id.balance);
-        final TextView received = (TextView) dialog.findViewById(R.id.received);
+        final TextView received = (TextView) dialog.findViewById(R.id.receivedCash);
         final TextView cashMoney = (TextView) dialog.findViewById(R.id.cashMoney);
         final TableLayout tableLayout = (TableLayout) dialog.findViewById(R.id.money_categories);
 
-        received.setOnTouchListener(new View.OnTouchListener() {
+        received.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
+            public void onClick(View view) {
                 received.setText("");
-                return true;
+                cashMoney.setText("0.00");
             }
         });
 
