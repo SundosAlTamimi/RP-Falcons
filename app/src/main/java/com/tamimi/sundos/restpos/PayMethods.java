@@ -67,12 +67,19 @@ public class PayMethods extends AppCompatActivity {
     ArrayAdapter<String> adapter2;
 
     String mainBalance;
-    public static double cashValue = 0.00;
-    public static double creditCardValue = 0.00;
-    public static double chequeValue = 0.00;
-    public static double giftCardValue = 0.00;
-    public static double creditValue = 0.00;
-    public static double pointValue = 0.00;
+    double cashValue = 0.00;
+    double creditCardValue = 0.00;
+    double chequeValue = 0.00;
+    double giftCardValue = 0.00;
+    double creditValue = 0.00;
+    double pointValue = 0.00;
+
+    public static double cashValue1 = 0.00;
+    public static double creditCardValue1 = 0.00;
+    public static double chequeValue1 = 0.00;
+    public static double giftCardValue1 = 0.00;
+    public static double creditValue1 = 0.00;
+    public static double pointValue1 = 0.00;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -1339,7 +1346,7 @@ public class PayMethods extends AppCompatActivity {
         PayMethod payMethod = new PayMethod();
 
         payMethod.setOrderType(orderType.equals("Take Away") ? 0 : 1);
-        payMethod.setOrderKind(2);
+        payMethod.setOrderKind(0);
         payMethod.setVoucherDate(today);
         payMethod.setPointOfSaleNumber(Settings.POS_number);
         payMethod.setStoreNumber(Settings.store_number);
@@ -1347,6 +1354,8 @@ public class PayMethods extends AppCompatActivity {
         payMethod.setVoucherSerial(serial+1);
         payMethod.setShiftName(Settings.shift_name);
         payMethod.setShiftNumber(Settings.shift_number);
+        payMethod.setUserNo(Settings.password);
+        payMethod.setUserName(Settings.user_name);
 
         if (cashValue != 0.00) {
             payMethod.setPayType("Cash");
@@ -1354,6 +1363,7 @@ public class PayMethods extends AppCompatActivity {
             payMethod.setPayNumber("0");
             payMethod.setPayName("null");
             mDHandler.addAllPayMethodItem(payMethod);
+            cashValue1=cashValue;
             cashValue = 0.00;
         }
         if (creditCardValue != 0.00) {
@@ -1370,6 +1380,7 @@ public class PayMethods extends AppCompatActivity {
             countCridit = 0;
             cardName.clear();
             resiveCredit.clear();
+            creditCardValue1=cardValues;
             creditCardValue = 0.00;
         }
         if (chequeValue != 0.00) {
@@ -1382,6 +1393,7 @@ public class PayMethods extends AppCompatActivity {
                 chequeValues += Double.parseDouble(resiveCheque.get(i));
                 Log.e("chequeValues", String.valueOf(chequeValues));
             }
+            chequeValue1 = chequeValues;
             chequeValue = 0.00;
             chequeNambers.clear();
             bankName.clear();
@@ -1398,6 +1410,7 @@ public class PayMethods extends AppCompatActivity {
                 giftValues += Double.parseDouble(resiveGift.get(i));
                 Log.e("giftValues", String.valueOf(giftValues));
             }
+            giftCardValue1 = giftValues;
             giftCardValue = 0.00;
             giftCardNumber.clear();
             resiveGift.clear();
@@ -1414,6 +1427,7 @@ public class PayMethods extends AppCompatActivity {
                 couponValues += Double.parseDouble(couponNumber.get(i));
                 Log.e("couponValues", String.valueOf(couponValues));
             }
+            creditValue1=couponValues;
             creditValue = 0.00;
             couponNumber.clear();
             countCoupon = 0;
@@ -1428,6 +1442,7 @@ public class PayMethods extends AppCompatActivity {
                 pointValues += Double.parseDouble(resivePoint.get(i));
                 Log.e("pointValues", String.valueOf(pointValues));
             }
+            pointValue1=pointValues;
             pointValue = 0.00;
             countPoint = 0;
             pointCardNumber.clear();
@@ -1436,6 +1451,14 @@ public class PayMethods extends AppCompatActivity {
 
         if (orderHeaderTemp == null) {
             //getting the data from order activity and save it in database.
+
+            obj.getOrderHeaderObj().setCashValue(cashValue1);
+            obj.getOrderHeaderObj().setPointValue(pointValue1);
+            obj.getOrderHeaderObj().setCardsValue(creditCardValue1);
+            obj.getOrderHeaderObj().setChequeValue(chequeValue1);
+            obj.getOrderHeaderObj().setGiftValue(giftCardValue1);
+            obj.getOrderHeaderObj().setCouponValue(creditValue1);
+
             mDHandler.addOrderHeader(obj.getOrderHeaderObj());
             for (int i = 0; i < obj.getOrderTransactionObj().size(); i++)
                 
@@ -1457,7 +1480,7 @@ public class PayMethods extends AppCompatActivity {
             startActivity(intent);
         }
 
-        Toast.makeText(this, "Saved Successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Saved Successfully", Toast.LENGTH_SHORT).show();
         finish();
     }
 

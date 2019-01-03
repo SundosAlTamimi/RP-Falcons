@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.media.Image;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -1056,6 +1057,8 @@ public class BackOfficeActivity extends AppCompatActivity {
                 visaText, masterText, chequeText, netPayMethodText, pointText, giftText, creditText;
         final Spinner shiftName, posNo, users;
         Button done, exit;
+        
+        ImageView printingReport;
 
         done = (Button) dialog.findViewById(R.id.doneReport);
         exit = (Button) dialog.findViewById(R.id.exitReport);
@@ -1083,6 +1086,8 @@ public class BackOfficeActivity extends AppCompatActivity {
         pointText = (TextView) dialog.findViewById(R.id.points);
         giftText = (TextView) dialog.findViewById(R.id.gifts);
         creditText = (TextView) dialog.findViewById(R.id.credits);
+
+        printingReport= (ImageView) dialog.findViewById(R.id.printing);
 
         Date currentTimeAndDate = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
@@ -1151,7 +1156,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                 for (int i = 0; i < headerData.size(); i++) {
                     if (filters(i)) {//1
                         if (headerData.get(i).getShiftName().equals(shiftNameString[0]) || shiftNameString[0].equals("All")) {
-                            if ( headerData.get(i).getWaiter().equals(userString[0]) ||userString[0].equals("All")) {
+                            if ( headerData.get(i).getUserName().equals(userString[0]) ||userString[0].equals("All")) {
                                 if (headerData.get(i).getPointOfSaleNumber()==posNoString[0]|| posNoString[0]==-1) {
                                     if (headerData.get(i).getOrderKind() == 0) {
                                         sales += headerData.get(i).getAmountDue();
@@ -1205,6 +1210,13 @@ public class BackOfficeActivity extends AppCompatActivity {
                 returnsServiceText.setText("" + totalServiceReturn);
                 netServiceText.setText("" + netService);
 
+            }
+        });
+
+        printingReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(BackOfficeActivity.this, "printing", Toast.LENGTH_SHORT).show();
             }
         });
 

@@ -15,13 +15,16 @@ public class PayMethod {
     private String payName;
     private String shiftName;
     private int shiftNumber;
+    private String userName;
+    private int userNo;
 
 
     public PayMethod() {
 
     }
 
-    public PayMethod(int orderType, int orderKind, String voucherDate, int pointOfSaleNumber, int storeNumber, String voucherNumber, int voucherSerial, String payType, double payValue, String payNumber, String payName,int shiftNumber,String shiftName) {
+    public PayMethod(int orderType, int orderKind, String voucherDate, int pointOfSaleNumber, int storeNumber, String voucherNumber, int voucherSerial, String payType, double payValue,
+                     String payNumber, String payName,int shiftNumber,String shiftName ,String userName, int userNo) {
         this.orderType = orderType;
         this.orderKind = orderKind;
         this.voucherDate = voucherDate;
@@ -35,6 +38,8 @@ public class PayMethod {
         this.payName = payName;
         this.shiftNumber=shiftNumber;
         this.shiftName=shiftName;
+        this.userName=userName;
+        this.userNo=userNo;
     }
 
     public void setOrderType(int orderType) {
@@ -141,5 +146,19 @@ public class PayMethod {
         return shiftNumber;
     }
 
+    public String getUserName() {
+        return userName;
+    }
 
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public int getUserNo() {
+        return userNo;
+    }
+
+    public void setUserNo(int userNo) {
+        this.userNo = userNo;
+    }
 }

@@ -356,4 +356,5 @@
     <string name="net_Service">Net Service :</string>
     <string name="visa">Visa</string>
     <string name="master">Master</string>
+    <string name="Preview"> Preview </string>
 </resources>
