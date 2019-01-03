@@ -40,6 +40,7 @@ import com.tamimi.sundos.restpos.BackOffice.BackOfficeActivity;
 import com.tamimi.sundos.restpos.BackOffice.EmployeeRegistration;
 import com.tamimi.sundos.restpos.BackOffice.MenuRegistration;
 import com.tamimi.sundos.restpos.Models.EmployeeRegistrationModle;
+import com.tamimi.sundos.restpos.Models.Money;
 import com.tamimi.sundos.restpos.Models.OrderHeader;
 import com.tamimi.sundos.restpos.Models.OrderTransactions;
 import com.tamimi.sundos.restpos.Models.PayMethod;
@@ -96,6 +97,7 @@ public class DineIn extends AppCompatActivity {
     TableLayout refundTables,table;
     ArrayList<OrderTransactions> orderTransactions;
     ArrayList<OrderTransactions> rowRefund;
+    TableLayout categories;
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -640,6 +642,9 @@ public class DineIn extends AppCompatActivity {
         card = (TextView) dialog.findViewById(R.id.credit);
         gift = (TextView) dialog.findViewById(R.id.gift);
 
+        categories = (TableLayout) dialog.findViewById(R.id.money_categorie);
+        final ArrayList<Money> money = mHandler.getAllMoneyCategory();
+
         netTotalText = (TextView) dialog.findViewById(R.id.nettotal);
         netTotalText.setText("" + netTotals);
 
@@ -827,7 +832,7 @@ public class DineIn extends AppCompatActivity {
                             Settings.service_value, rowRefund.get(0).getTaxValue(), rowRefund.get(0).getServiceTax(), netTotals,
                             netTotals, 1, rowRefund.get(0).getTableNo(),
                             rowRefund.get(0).getSectionNo(), cashValues, creditValues, chequeVales, cardValues,
-                            giftCardValues, pointValues, Settings.shift_name, Settings.shift_number, "No Waiter", 0);
+                            giftCardValues, pointValues, Settings.shift_name, Settings.shift_number, "No Waiter", 0,Settings.user_name,Settings.password);
 
                     mHandler.addOrderHeader(orderHeader);
 
@@ -839,7 +844,7 @@ public class DineIn extends AppCompatActivity {
                                 rowRefund.get(i).getItemFamily(), rowRefund.get(i).getQty(), rowRefund.get(i).getPrice(),
                                 totalAdd,  DiscountArray.get(i),lineDiscount.get(i), lineDiscount.get(i) + DiscountArray.get(i), rowRefund.get(i).getTaxValue(),
                                 rowRefund.get(i).getTaxPerc(), 0, rowRefund.get(i).getService(), rowRefund.get(i).getServiceTax(),
-                                rowRefund.get(i).getTableNo(), rowRefund.get(i).getSectionNo(), Settings.shift_number, Settings.shift_name);
+                                rowRefund.get(i).getTableNo(), rowRefund.get(i).getSectionNo(), Settings.shift_number, Settings.shift_name,Settings.password,Settings.user_name);
 
 
                         mHandler.addOrderTransaction(orderTransactions);
@@ -862,12 +867,12 @@ public class DineIn extends AppCompatActivity {
                             Log.e("paynum1 : ",payNumber+"     --> "+payName);
                         }
 
-                        PayMethod payMethod = new PayMethod(list.get(x).getOrderType(),
+                        PayMethod payMethod = new PayMethod(list.get(0).getOrderType(),
                                 998,
                                 today,
                                 Settings.POS_number,
-                                Settings.store_number, list.get(x).getVoucherNo(), list.get(x).getVoucherSerial(), listForPay.get(x),
-                                listValuePay.get(x),payNumber, payName, Settings.shift_number, Settings.shift_name);
+                                Settings.store_number, list.get(0).getVoucherNo(), list.get(0).getVoucherSerial(), listForPay.get(x),
+                                listValuePay.get(x),payNumber, payName, Settings.shift_number, Settings.shift_name,Settings.user_name,Settings.password);
 
                         mHandler.addAllPayMethodItem(payMethod);
                     }
@@ -928,6 +933,99 @@ public class DineIn extends AppCompatActivity {
         point.addTextChangedListener(textWatcher);
         gift.addTextChangedListener(textWatcher);
         card.addTextChangedListener(textWatcher);
+
+
+        ///"""""""""""""""""""""""""""""""""""""""
+
+        for (int i = 0; i < money.size(); i++) {
+            final int position = i;
+            TableRow row = new TableRow(DineIn.this);
+            TableLayout.LayoutParams lp = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT);
+            lp.setMargins(0, 10, 0, 5);
+            row.setLayoutParams(lp);
+
+            TextView textView = new TextView(DineIn.this);
+            textView.setText(money.get(i).getCatName() + "   ");
+            textView.setTag(money.get(i).getCatValue());
+            textView.setGravity(Gravity.CENTER);
+            textView.setTextColor(getResources().getColor(R.color.text_color));
+
+            final TextView textView1 = new TextView(DineIn.this);
+            textView1.setBackgroundColor(getResources().getColor(R.color.layer1));
+            textView1.setHeight(26);
+            textView1.setPadding(10, 0, 0, 0);
+            textView1.setTextColor(getResources().getColor(R.color.text_color));
+            textView1.setText("0");
+            textView1.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (focusedTextView != null && focusedTextView.getText().toString().equals("")) {
+                        focusedTextView.setText("0");
+                    }
+
+                    focusedTextView = textView1;
+                    focusedTextView.setTag("" + position);
+                    focusedTextView.setText("");
+                }
+            });
+
+            textView1.addTextChangedListener(new TextWatcher() {
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (focusedTextView != null) {
+                        if (!focusedTextView.getText().toString().equals("")) {
+
+                            TableRow tableRow = (TableRow) categories.getChildAt(Integer.parseInt(focusedTextView.getTag().toString()));
+                            TextView text = (TextView) tableRow.getChildAt(0);
+                            TextView text2 = (TextView) tableRow.getChildAt(2);
+
+                            int total = Integer.parseInt(text.getTag().toString()) * Integer.parseInt(focusedTextView.getText().toString());
+                            text2.setText("" + total);
+                        }
+
+                        cashValue.setText("0.000");
+                        for (int i = 0; i < money.size(); i++) {
+                            TableRow tRow = (TableRow) categories.getChildAt(i);
+                            TextView t = (TextView) tRow.getChildAt(2);
+                            cashValue.setText("" + (Double.parseDouble(cashValue.getText().toString()) + Double.parseDouble(t.getText().toString())));
+                        }
+
+                    }
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count,
+                                              int after) {
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                }
+            });
+
+
+            TextView textView2 = new TextView(DineIn.this);
+            textView2.setText("0");
+
+            TableRow.LayoutParams lp2 = new TableRow.LayoutParams(130, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+            lp2.setMargins(15, 0, 15, 0);
+            textView.setLayoutParams(lp2);
+            textView1.setLayoutParams(lp2);
+            textView2.setLayoutParams(lp2);
+            textView2.setGravity(Gravity.CENTER);
+            textView2.setTextColor(getResources().getColor(R.color.text_color));
+
+            row.addView(textView);
+            row.addView(textView1);
+            row.addView(textView2);
+
+            categories.addView(row);
+        }
+
+        ///"""""""""""""""""""""""""""""""""""""""
+
+
 
         dialog.show();
     }

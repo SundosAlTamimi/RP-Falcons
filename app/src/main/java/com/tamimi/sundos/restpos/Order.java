@@ -1160,7 +1160,7 @@ public class Order extends AppCompatActivity {
                     wantedItems.get(k).getFamilyName(), Integer.parseInt(textViewQty.getText().toString()), wantedItems.get(k).getPrice(),
                     totalLine, discount, lineDiscount_, discount + lineDiscount_, taxValue,
                     wantedItems.get(k).getTax(), 0, Double.parseDouble(service.getText().toString()), serviceTax,
-                    tableNumber, sectionNumber, Settings.shift_number, Settings.shift_name));
+                    tableNumber, sectionNumber, Settings.shift_number, Settings.shift_name,Settings.password,Settings.user_name));
         }
     }
 
@@ -1170,13 +1170,17 @@ public class Order extends AppCompatActivity {
         double ldisc = Double.parseDouble(lineDisCount.getText().toString());
         double serviceTax = Double.parseDouble(service.getText().toString()) * Settings.service_tax;
 
+        Log.e("orderH cash vAlue ","aa"+ PayMethods.cashValue1);
+
 //        mDbHandler.addOrderHeader(
         OrderHeaderObj = new OrderHeader(orderTypeFlag, 0, today, Settings.POS_number, Settings.store_number,
                 voucherNo, voucherSerial, Double.parseDouble(total.getText().toString()), ldisc, disc, disc + ldisc,
                 Settings.service_value, Double.parseDouble((tax.getText().toString())), serviceTax, Double.parseDouble((subTotal.getText().toString())),
                 Double.parseDouble(amountDue.getText().toString()), Double.parseDouble(deliveryCharge.getText().toString()), tableNumber,
-                sectionNumber, PayMethods.cashValue, PayMethods.creditCardValue, PayMethods.chequeValue, PayMethods.creditValue,
-                PayMethods.giftCardValue, PayMethods.pointValue, Settings.shift_name, Settings.shift_number, "No Waiter", 0);
+                sectionNumber, PayMethods.cashValue1, PayMethods.creditCardValue1, PayMethods.chequeValue1, PayMethods.creditValue1,
+                PayMethods.giftCardValue1, PayMethods.pointValue1, Settings.shift_name, Settings.shift_number, "No Waiter", 0,Settings.user_name,Settings.password);
+
+
     }
 
     void saveInOrderTransactionTemp() {
@@ -1210,7 +1214,7 @@ public class Order extends AppCompatActivity {
                     wantedItems.get(k).getFamilyName(), Integer.parseInt(textViewQty.getText().toString()), wantedItems.get(k).getPrice(),
                     totalLine, discount, lineDiscount_, discount + lineDiscount_, taxValue,
                     wantedItems.get(k).getTax(), 0, Double.parseDouble(service.getText().toString()), serviceTax,
-                    tableNumber, sectionNumber, Settings.shift_number, Settings.shift_name));
+                    tableNumber, sectionNumber, Settings.shift_number, Settings.shift_name,Settings.password,Settings.user_name));
         }
     }
 
@@ -1228,7 +1232,7 @@ public class Order extends AppCompatActivity {
                 Settings.service_value, Double.parseDouble((tax.getText().toString())), serviceTax, Double.parseDouble((subTotal.getText().toString())),
                 Double.parseDouble(amountDue.getText().toString()), Double.parseDouble(deliveryCharge.getText().toString()), tableNumber,
                 sectionNumber, 0.00, 0.00, 0.00, 0.00,
-                0.00, 0.00, Settings.shift_name, Settings.shift_number, waiter, seatNo));
+                0.00, 0.00, Settings.shift_name, Settings.shift_number, waiter, seatNo,Settings.user_name,Settings.password));
     }
 
     public ArrayList<OrderTransactions> getOrderTransactionObj() {

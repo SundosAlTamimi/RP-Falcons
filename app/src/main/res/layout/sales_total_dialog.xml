@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="1000dp"
     android:layout_height="wrap_content"
@@ -14,15 +15,28 @@
         android:orientation="vertical"
         android:padding="5dp">
 
-        <TextView
-            android:id="@+id/textView52"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:gravity="center"
-            android:text="@string/sales_totals"
-            android:textColor="@color/text_color"
-            android:textSize="25sp" />
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginLeft="20dp">
+
+            <TextView
+                android:id="@+id/textView52"
+                android:layout_width="896dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:gravity="center"
+                android:text="@string/sales_totals"
+                android:textColor="@color/text_color"
+                android:textSize="25sp" />
+            <ImageView
+                android:id="@+id/printing"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                app:srcCompat="@drawable/printer" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/textView56"
@@ -74,12 +88,13 @@
 
                 <TextView
                     android:id="@+id/tDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_width="199dp"
+                    android:layout_height="30dp"
                     android:background="@color/layer2"
                     android:gravity="center"
                     android:textColor="@color/text_color"
                     android:textSize="18sp" />
+
 
             </TableRow>
 
@@ -588,7 +603,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="20dp"
                 android:background="@color/dark_blue"
-                android:text="@string/okay" />
+                android:text="@string/Preview" />
 
             <Button
                 android:id="@+id/exitReport"

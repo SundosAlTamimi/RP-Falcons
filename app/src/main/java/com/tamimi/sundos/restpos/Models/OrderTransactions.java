@@ -30,6 +30,8 @@ public class OrderTransactions {
     private int sectionNo;
     private int shiftNo;
     private String shiftName;
+    private int userNo;
+    private String userName;
 
     public OrderTransactions(){
 
@@ -39,7 +41,7 @@ public class OrderTransactions {
                              int voucherSerial, String itemBarcode, String itemName, String secondaryName, String kitchenAlias,
                              String itemCategory, String itemFamily, int qty, double price, double total, double discount,
                              double lDiscount, double totalDiscount, double taxValue, double taxPerc, int taxKind, double service,
-                             double serviceTax, int tableNo, int sectionNo , int shiftNo , String shiftName) {
+                             double serviceTax, int tableNo, int sectionNo , int shiftNo , String shiftName ,int userNo, String userNmae) {
         this.orderType = orderType;
         this.orderKind = orderKind;
         this.voucherDate = voucherDate;
@@ -68,6 +70,25 @@ public class OrderTransactions {
         this.sectionNo = sectionNo;
         this.shiftNo = shiftNo;
         this.shiftName = shiftName;
+        this.userNo = userNo;
+        this.userName = userNmae;
+
+    }
+
+    public int getUserNo() {
+        return userNo;
+    }
+
+    public void setUserNo(int userNo) {
+        this.userNo = userNo;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public int getOrderType() {
