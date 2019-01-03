@@ -410,6 +410,7 @@ public class PayMethods extends AppCompatActivity {
 
         final ArrayList<CreditCard> creditCards = mDHandler.getAllCreditCards();
         creditCardsName = new ArrayList();
+        creditCardsName.add("");
 
         if (creditCards.size() > 0)
             for (int i = creditCards.size() - 1; i >= 0; i--) {
@@ -507,7 +508,7 @@ public class PayMethods extends AppCompatActivity {
                 String t1 = received.getText().toString();
                 String t2 = cardNo.getText().toString();
 
-                if (t1.equals("") && t2.equals(""))
+                if (t1.equals("") && t2.equals("") && spinner.getSelectedItem().toString() != "")
                     Toast.makeText(PayMethods.this, "Please enter received value  and card number", Toast.LENGTH_LONG).show();
                 else if (Double.parseDouble(t1) <= Double.parseDouble(t0)) {
 
@@ -720,6 +721,7 @@ public class PayMethods extends AppCompatActivity {
         final ArrayList<Cheque> chequeList = mDHandler.getAllCheques();
         final int serial = chequeList.size();
 
+        chequeListName.add("");
         if (chequeList.size() > 0)
             for (int i = chequeList.size() - 1; i >= 0; i--) {
                 chequeListName.add(chequeList.get(i).getBankName());
@@ -737,7 +739,7 @@ public class PayMethods extends AppCompatActivity {
                 String t1 = received.getText().toString();
                 String t2 = chequeNumber.getText().toString();
 
-                if (t1.equals("") && t2.equals(""))
+                if (t1.equals("") && t2.equals("") && spinner2.getSelectedItem().toString() != "")
                     Toast.makeText(PayMethods.this, "Please enter received value  and card number", Toast.LENGTH_LONG).show();
                 else if (Double.parseDouble(t1) <= Double.parseDouble(t0)) {
 
@@ -1459,6 +1461,7 @@ public class PayMethods extends AppCompatActivity {
 
             mDHandler.addOrderHeader(obj.getOrderHeaderObj());
             for (int i = 0; i < obj.getOrderTransactionObj().size(); i++)
+                
                 mDHandler.addOrderTransaction(obj.getOrderTransactionObj().get(i));
 
             Intent intent = new Intent(PayMethods.this, Order.class);
