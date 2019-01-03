@@ -408,7 +408,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     Money m = new Money();
                     m.setSerial(Integer.parseInt(serial.getText().toString()));
                     m.setCatName(catName.getText().toString());
-                    m.setCatValue(Integer.parseInt(catValue.getText().toString()));
+                    m.setCatValue(Double.parseDouble(catValue.getText().toString()));
                     m.setPicture(imageBitmap);
                     if (show.isChecked())
                         m.setShow(1);
@@ -432,11 +432,12 @@ public class BackOfficeActivity extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!catName.getText().toString().equals("") && !catValue.getText().toString().equals("")) {
+//                if (!catName.getText().toString().equals("") && !catValue.getText().toString().equals("")) {
+                if (money.size()!=0) {
                     mDHandler.addMoneyCategory(money);
                     dialog.dismiss();
                 } else
-                    Toast.makeText(BackOfficeActivity.this, "", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BackOfficeActivity.this, "Please insure your inputs", Toast.LENGTH_SHORT).show();
             }
         });
 

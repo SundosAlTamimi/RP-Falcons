@@ -104,7 +104,7 @@
                     android:layout_margin="10dp"
                     android:paddingHorizontal="10dp"
                     android:imeOptions="actionDone"
-                    android:inputType="number"
+                    android:inputType="numberDecimal"
                     android:background="@color/layer1"
                     android:textColor="@color/text_color"
                     android:textSize="24sp" />

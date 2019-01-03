@@ -1007,7 +1007,7 @@ public class DineIn extends AppCompatActivity {
                             TextView text = (TextView) tableRow.getChildAt(0);
                             TextView text2 = (TextView) tableRow.getChildAt(2);
 
-                            int total = Integer.parseInt(text.getTag().toString()) * Integer.parseInt(focusedTextView.getText().toString());
+                            double total = Double.parseDouble(text.getTag().toString()) * Double.parseDouble(focusedTextView.getText().toString());
                             text2.setText("" + total);
                         }
 

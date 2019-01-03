@@ -1777,7 +1777,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
                 item.setSerial(Integer.parseInt(cursor.getString(0)));
                 item.setCatName(cursor.getString(1));
-                item.setCatValue(Integer.parseInt(cursor.getString(2)));
+                item.setCatValue(Double.parseDouble(cursor.getString(2)));
                 item.setShow(Integer.parseInt(cursor.getString(3)));
                 if (cursor.getBlob(4).length == 0)
                     item.setPicture(null);

@@ -6,7 +6,7 @@ public class Money {
 
     private int serial;
     private String catName;
-    private int catValue;
+    private double catValue;
     private int show;
     private Bitmap picture;
 
@@ -38,11 +38,11 @@ public class Money {
         this.catName = catName;
     }
 
-    public int getCatValue() {
+    public double getCatValue() {
         return catValue;
     }
 
-    public void setCatValue(int catValue) {
+    public void setCatValue(double catValue) {
         this.catValue = catValue;
     }
 
