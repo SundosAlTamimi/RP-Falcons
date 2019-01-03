@@ -39,6 +39,7 @@ import android.widget.Toast;
 import com.tamimi.sundos.restpos.BackOffice.BackOfficeActivity;
 import com.tamimi.sundos.restpos.BackOffice.EmployeeRegistration;
 import com.tamimi.sundos.restpos.BackOffice.MenuRegistration;
+import com.tamimi.sundos.restpos.Models.Cashier;
 import com.tamimi.sundos.restpos.Models.EmployeeRegistrationModle;
 import com.tamimi.sundos.restpos.Models.Money;
 import com.tamimi.sundos.restpos.Models.OrderHeader;
@@ -645,6 +646,12 @@ public class DineIn extends AppCompatActivity {
         categories = (TableLayout) dialog.findViewById(R.id.money_categorie);
         final ArrayList<Money> money = mHandler.getAllMoneyCategory();
 
+        String categoryName;
+        double categoryValue=0.0;
+        int categoryQty=0;
+
+
+
         netTotalText = (TextView) dialog.findViewById(R.id.nettotal);
         netTotalText.setText("" + netTotals);
 
@@ -850,7 +857,27 @@ public class DineIn extends AppCompatActivity {
                         mHandler.addOrderTransaction(orderTransactions);
 
                     }
-//
+
+                    for (int i = 0; i < money.size(); i++) {
+                        TableRow tRow = (TableRow) categories.getChildAt(i);
+                        TextView t = (TextView) tRow.getChildAt(2);
+                        TextView t0 = (TextView) tRow.getChildAt(0);
+                        TextView t1 = (TextView) tRow.getChildAt(1);
+                        if(!t1.getText().toString().equals("0")&&!t1.getText().toString().equals("")){
+                            Cashier cashier =new Cashier();
+                            ArrayList<Cashier> cashiersList=new ArrayList<Cashier>();
+                            cashier.setCashierName(Settings.user_name);
+                            cashier.setCategoryName(t0.getText().toString());
+                            cashier.setCategoryQty(Integer.parseInt(t1.getText().toString()));
+                            cashier.setCategoryValue(Double.parseDouble("-"+t.getText().toString()));
+                            cashier.setCheckInDate(today);
+
+                            cashiersList.add(cashier);
+
+                            mHandler.addCashierInOut(cashiersList);
+                        }
+                    }
+
                     ArrayList<PayMethod>listOrder=new ArrayList();
                     listOrder=mHandler.getAllRequestPayMethod( VHF_NO);
                     String payNumber="0",payName="0";

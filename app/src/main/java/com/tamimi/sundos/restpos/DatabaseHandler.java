@@ -2176,10 +2176,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 payMethod.setPayValue(cursor.getDouble(8));
                 payMethod.setPayNumber(cursor.getString(9));
                 payMethod.setPayName(cursor.getString(10));
-                payMethod.setShiftName(cursor.getString(11));
-                payMethod.setShiftNumber(cursor.getInt(12));
-                payMethod.setUserName(cursor.getString(13));
-                payMethod.setUserNo(cursor.getInt(14));
+                payMethod.setUserName(cursor.getString(11));
+                payMethod.setUserNo(cursor.getInt(12));
+                payMethod.setShiftName(cursor.getString(13));
+                payMethod.setShiftNumber(cursor.getInt(14));
+
 
 
                 payMethodsList.add(payMethod);
@@ -2244,12 +2245,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 order_header.setCouponValue(cursor.getDouble(22));
                 order_header.setGiftValue(cursor.getDouble(23));
                 order_header.setPointValue(cursor.getDouble(24));
-                order_header.setShiftName(cursor.getString(25));
-                order_header.setShiftNumber(cursor.getInt(26));
-                order_header.setWaiter(cursor.getString(27));
-                order_header.setSeatsNumber(cursor.getInt(28));
-                order_header.setUserName(cursor.getString(29));
-                order_header.setUserNo(cursor.getInt(30));
+                order_header.setUserName(cursor.getString(25));
+                order_header.setUserNo(cursor.getInt(26));
+                order_header.setShiftName(cursor.getString(27));
+                order_header.setShiftNumber(cursor.getInt(28));
+                order_header.setWaiter(cursor.getString(29));
+                order_header.setSeatsNumber(cursor.getInt(30));
+
 
                 orderHeaders.add(order_header);
 

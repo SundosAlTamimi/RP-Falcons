@@ -10,7 +10,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
-import android.media.Image;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -48,7 +47,6 @@ import com.tamimi.sundos.restpos.Models.Money;
 import com.tamimi.sundos.restpos.Models.OrderHeader;
 import com.tamimi.sundos.restpos.Models.PayMethod;
 import com.tamimi.sundos.restpos.Models.Shift;
-import com.tamimi.sundos.restpos.Order;
 import com.tamimi.sundos.restpos.R;
 import com.tamimi.sundos.restpos.Settings;
 
@@ -89,7 +87,7 @@ public class BackOfficeActivity extends AppCompatActivity {
     ImageView moneyPicImageView = null;
 
     ArrayList<OrderHeader> headerData;
-
+    ArrayList<PayMethod> payData;
     TableRow focusedRaw = null;
     int rawPosition = 0;
 
@@ -1127,7 +1125,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         headerData = new ArrayList<OrderHeader>();
 
         headerData = mDHandler.getAllOrderHeader();
-
+        payData=mDHandler.getAllExistingPay();
         fromDate.setOnClickListener(dateClick);
         toDate.setOnClickListener(dateClick);
 
@@ -1168,10 +1166,6 @@ public class BackOfficeActivity extends AppCompatActivity {
                                         totalServiceReturn += headerData.get(i).getTotalService();
                                     }
 
-//                        if(headerData.get(i).) {     ///in this side we must
-                                    visaValue += headerData.get(i).getCardsValue();
-                                    masterValue += headerData.get(i).getCardsValue();
-//                        }
                                     cashValue += headerData.get(i).getCashValue();
                                     pointValue += headerData.get(i).getPointValue();
                                     giftValue += headerData.get(i).getGiftValue();
@@ -1183,6 +1177,29 @@ public class BackOfficeActivity extends AppCompatActivity {
                         }
                     }//else 1
                 }
+
+                for (int i = 0; i < payData.size(); i++) {
+                    if (filtersPay(i)) {//1
+                        if (payData.get(i).getShiftName().equals(shiftNameString[0]) || shiftNameString[0].equals("All")) {
+                            if ( payData.get(i).getUserName().equals(userString[0]) ||userString[0].equals("All")) {
+                                if (payData.get(i).getPointOfSaleNumber()==posNoString[0]|| posNoString[0]==-1) {
+                                    if (payData.get(i).getOrderKind() == 0) {
+                                        if(payData.get(i).getPayName().equals("visa"))
+                                        visaValue += payData.get(i).getPayValue();
+                                        else if (payData.get(i).getPayName().equals("master"))
+                                        masterValue += payData.get(i).getPayValue();
+
+                                    }else if (payData.get(i).getOrderKind() == 998) {
+                                        if(payData.get(i).getPayName().equals("visa"))
+                                            visaValue -= payData.get(i).getPayValue();
+                                        else if (payData.get(i).getPayName().equals("master"))
+                                            masterValue -= payData.get(i).getPayValue();
+                                    }
+
+
+                                }}}}}
+
+
                 netSales = sales - returns;
                 netDiscount = allDiscountSales - allDiscountReturn;
                 netService = totalServiceSales - totalServiceReturn;
@@ -1277,6 +1294,31 @@ public class BackOfficeActivity extends AppCompatActivity {
 
         return false;
     }
+
+    ////////
+
+    public boolean filtersPay(int n) {
+
+
+        String fromDate1 = fromDate.getText().toString().trim();
+        String toDate1 = toDate.getText().toString();
+
+        String date = payData.get(n).getVoucherDate();
+
+        try {
+
+            if ((formatDate(date).after(formatDate(fromDate1)) || formatDate(date).equals(formatDate(fromDate1))) &&
+                    (formatDate(date).before(formatDate(toDate1)) || formatDate(date).equals(formatDate(toDate1))))
+                return true;
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    ///////
 
     public Date formatDate(String date) throws ParseException {
 
