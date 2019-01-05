@@ -1191,7 +1191,7 @@ public class DineIn extends AppCompatActivity {
             }
         });
         final ArrayList<Tables> currentListTemp = mHandler.getRequestedTables(toSection);
-        List<String> orderedTables = new ArrayList<>(mHandler.getAllOrderedTables(toSection));
+        List<String> orderedTables = mHandler.getAllOrderedTables(toSection);
         for (int i = 0; i < currentListTemp.size(); i++) {
             boolean exist = false;
             for (int k = 0; k < orderedTables.size(); k++) {
