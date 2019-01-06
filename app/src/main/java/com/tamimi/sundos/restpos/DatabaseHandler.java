@@ -20,6 +20,7 @@ import com.tamimi.sundos.restpos.Models.CreditCard;
 import com.tamimi.sundos.restpos.Models.CustomerPayment;
 import com.tamimi.sundos.restpos.Models.CustomerRegistrationModel;
 import com.tamimi.sundos.restpos.Models.EmployeeRegistrationModle;
+import com.tamimi.sundos.restpos.Models.FamilyCategory;
 import com.tamimi.sundos.restpos.Models.ForceQuestions;
 import com.tamimi.sundos.restpos.Models.ItemWithFq;
 import com.tamimi.sundos.restpos.Models.ItemWithModifier;
@@ -131,6 +132,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String CATEGORY_NAME3 = "CATEGORY_NAME";
     private static final String CATEGORY_VALUE3 = "CATEGORY_VALUE";
     private static final String CATEGORY_QTY3 = "CATEGORY_QTY";
+    private static final String ORDER_KIND3 = "ORDER_KIND";
+
 
     //___________________________________________________________________________________
     private static final String PAY_IN_OUT = "PAY_IN_OUT";
@@ -445,6 +448,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
     //____________________________________________________________________________________
+    private static final String FAMILY_CATEGORY_TABLE = "FAMILY_CATEGORY_TABLE";
+
+    private static final String SERIAL2 = "SERIAL";
+    private static final String TYPE2 = "TYPE";
+    private static final String NAME_CATEGORY_FAMILY2 = "NAME_CATEGORY_FAMILY";
+
+    //____________________________________________________________________________________
 
 
     public DatabaseHandler(Context context) {
@@ -540,7 +550,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + DATE3 + " TEXT,"
                 + CATEGORY_NAME3 + " TEXT,"
                 + CATEGORY_VALUE3 + " INTEGER,"
-                + CATEGORY_QTY3 + " INTEGER" + ")";
+                + CATEGORY_QTY3 + " INTEGER,"
+                + ORDER_KIND3 + " INTEGER" + ")";
         db.execSQL(CREATE_TABLE_CASHIER_IN_OUT);
 
         //___________________________________________________________________________________
@@ -936,7 +947,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + SHIFT_NO8 + " INTEGER " + ")";
         db.execSQL(CREATE_TABLE_CUSTOMER_REGISTRATION_TABLE);
 
-    }
+
+
+    //___________________________________________________________________________________
+
+    String CREATE_TABLE_FAMILY_CATEGORY_TABLE = "CREATE TABLE " + FAMILY_CATEGORY_TABLE + "("
+            +SERIAL2 + " INTEGER ,"
+            + TYPE2 + " INTEGER ,"
+            + NAME_CATEGORY_FAMILY2 + " TEXT " + ")";
+        db.execSQL(CREATE_TABLE_FAMILY_CATEGORY_TABLE);
+
+}
 
 
     // Upgrading database
@@ -972,6 +993,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + BLIND_SHIFT_IN); //26
         db.execSQL("DROP TABLE IF EXISTS " + BLIND_CLOSE); //27
         db.execSQL("DROP TABLE IF EXISTS " + BLIND_CLOSE_DETAILS); //28
+        db.execSQL("DROP TABLE IF EXISTS " + FAMILY_CATEGORY_TABLE); //29
         // Create tables again
         onCreate(db);
     }
@@ -1108,6 +1130,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             values.put(CATEGORY_NAME3, cashier.get(i).getCategoryName());
             values.put(CATEGORY_VALUE3, cashier.get(i).getCategoryValue());
             values.put(CATEGORY_QTY3, cashier.get(i).getCategoryQty());
+            values.put(ORDER_KIND3, cashier.get(i).getOrderKind());
 
             db.insert(CASHIER_IN_OUT, null, values);
         }
@@ -1618,6 +1641,19 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(SHIFT_NAME8, customerRegistrationModel.getShiftName());
 
         db.insert(CUSTOMER_REGISTRATION_TABLE, null, values);
+
+        db.close();
+    }
+
+    public void addFamilyCategory(FamilyCategory familyCategory) {
+        db = this.getReadableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(SERIAL2, familyCategory.getSerial());
+        values.put(TYPE2, familyCategory.getType());
+        values.put(NAME_CATEGORY_FAMILY2, familyCategory.getName());
+
+        db.insert(FAMILY_CATEGORY_TABLE, null, values);
 
         db.close();
     }
@@ -2796,6 +2832,28 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         return employeeRegistrationModels;
+    }
+
+    public ArrayList<FamilyCategory> getAllFamilyCategory() {
+        ArrayList<FamilyCategory> familyCategoryArrayList = new ArrayList<>();
+
+        String selectQuery = "SELECT * FROM " + FAMILY_CATEGORY_TABLE;
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                FamilyCategory familyCategory = new FamilyCategory();
+
+                familyCategory.setSerial(Integer.parseInt(cursor.getString(0)));
+                familyCategory.setType(Integer.parseInt(cursor.getString(1)));
+                familyCategory.setName(cursor.getString(2));
+
+                familyCategoryArrayList.add(familyCategory);
+
+            } while (cursor.moveToNext());
+        }
+        return familyCategoryArrayList;
     }
 
     //Updating single record

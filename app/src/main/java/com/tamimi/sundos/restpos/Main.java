@@ -316,7 +316,7 @@ public class Main extends AppCompatActivity {
                     cash.setCategoryName(text.getText().toString());
                     cash.setCategoryValue(Double.parseDouble(text.getTag().toString()));
                     cash.setCategoryQty(Integer.parseInt(text1.getText().toString()));
-
+                    cash.setOrderKind(0);
                     cashier.add(cash);
                 }
                 mDHandler.addCashierInOut(cashier);

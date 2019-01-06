@@ -21,6 +21,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.tamimi.sundos.restpos.Models.Cashier;
 import com.tamimi.sundos.restpos.Models.Cheque;
 import com.tamimi.sundos.restpos.Models.CreditCard;
 import com.tamimi.sundos.restpos.Models.Money;
@@ -152,7 +153,8 @@ public class PayMethods extends AppCompatActivity {
                     break;
 
                 case R.id.credit_card:
-                    showCreditCardDialog();
+                showCreditCardDialog();
+
                     break;
 
                 case R.id.cheque:
@@ -190,33 +192,42 @@ public class PayMethods extends AppCompatActivity {
 
         Window window = dialog.getWindow();
         window.setLayout(780, 460);
-
         final TextView balance = (TextView) dialog.findViewById(R.id.balance);
         final TextView received = (TextView) dialog.findViewById(R.id.receivedCash);
         final TextView cashMoney = (TextView) dialog.findViewById(R.id.cashMoney);
         final TableLayout tableLayout = (TableLayout) dialog.findViewById(R.id.money_categories);
+
+
+
+        balance.setText(mainBalance);
+        final ArrayList<Money> moneyList;
+        moneyList = mDHandler.getAllMoneyCategory();
 
         received.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 received.setText("");
                 cashMoney.setText("0.00");
+
+                for(int i=0;i<moneyList.size();i++){
+                    TableRow tRaw =(TableRow) tableLayout.getChildAt(i);
+                    TextView text=(TextView)tRaw.getChildAt(2);
+                    text.setText("0");
+                }
+
             }
         });
 
-        balance.setText(mainBalance);
-        final ArrayList<Money> moneyList;
-        moneyList = mDHandler.getAllMoneyCategory();
-
         for (int i = 0; i < moneyList.size(); i++) {
             position1 = i;
-            final TableRow row = new TableRow(PayMethods.this);
 
+            final TableRow row = new TableRow(PayMethods.this);
             TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
             row.setLayoutParams(lp);
 
             TextView textView = new TextView(PayMethods.this);
             textView.setText(moneyList.get(i).getCatName());
+            textView.setTag(moneyList.get(i).getCatValue());
             textView.setTextColor(ContextCompat.getColor(PayMethods.this, R.color.text_color));
             textView.setGravity(Gravity.CENTER);
             textView.setBackgroundColor(getResources().getColor(R.color.layer3));
@@ -230,13 +241,29 @@ public class PayMethods extends AppCompatActivity {
             textView.setLayoutParams(lp2);
             imageView.setLayoutParams(lp2);
 
+            //--------------------------
+            TextView textView1 = new TextView(PayMethods.this);
+            textView1.setText("0");
+            textView1.setTextColor(ContextCompat.getColor(PayMethods.this, R.color.layer3));
+            textView1.setGravity(Gravity.CENTER);
+            textView1.setBackgroundColor(getResources().getColor(R.color.layer3));
+            TableRow.LayoutParams lp1 = new TableRow.LayoutParams(1, 1);
+            lp1.setMargins(0, 5, 0, 0);
+            textView1.setLayoutParams(lp1);
+            //----------------------------
+
             final double catValue = moneyList.get(i).getCatValue();
             row.addView(imageView);
             row.addView(textView);
+            row.addView(textView1);
             row.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     cashMoney.setText("" + (Double.parseDouble(cashMoney.getText().toString()) + catValue));
+                    TextView t1 = (TextView) row.getChildAt(2);
+                    textView1.setText("" + (Integer.parseInt(t1.getText().toString())+1));
+
+                    Log.e("111","11"+t1.getText().toString()+"*********");
                 }
             });
 
@@ -334,12 +361,39 @@ public class PayMethods extends AppCompatActivity {
                 String t1 = received.getText().toString();
                 String t2 = cashMoney.getText().toString();
 
+                Date currentTimeAndDate = Calendar.getInstance().getTime();
+                SimpleDateFormat df1 = new SimpleDateFormat("dd-MM-yyyy");
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM");
+                String today = df1.format(currentTimeAndDate);
+
                 if (t1.equals(""))
                     Toast.makeText(PayMethods.this, "Please enter received value", Toast.LENGTH_SHORT).show();
                 else if (Double.parseDouble(t1) == Double.parseDouble(t2) &&
                         Double.parseDouble(t1) <= Double.parseDouble(t0)) {
 
                     cashValue += Double.parseDouble(t1);
+
+                    for (int i = 0; i < moneyList.size(); i++) {
+                        TableRow tRow = (TableRow) tableLayout.getChildAt(i);
+                        TextView x1 = (TextView) tRow.getChildAt(2);
+                        TextView x2 = (TextView) tRow.getChildAt(1);
+                        if(!x1.getText().toString().equals("0")&&!x1.getText().toString().equals("")){
+                            Cashier cashier =new Cashier();
+                            ArrayList<Cashier> cashiersList=new ArrayList<Cashier>();
+                            cashier.setCashierName(Settings.user_name);
+                            cashier.setCategoryName(x2.getText().toString());
+                            cashier.setCategoryQty(Integer.parseInt(x1.getText().toString()));
+                            cashier.setCategoryValue(Double.parseDouble(x2.getTag().toString())*Integer.parseInt(x1.getText().toString()));
+                            cashier.setCheckInDate(today);
+                            cashier.setOrderKind(1);
+
+
+                            cashiersList.add(cashier);
+
+                            mDHandler.addCashierInOut(cashiersList);
+                        }
+                    }
+
                     dialog.dismiss();
                     Toast.makeText(PayMethods.this, "Saved", Toast.LENGTH_SHORT).show();
                     if (cashValue != 0) {

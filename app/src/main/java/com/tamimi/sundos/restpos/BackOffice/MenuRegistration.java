@@ -35,6 +35,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tamimi.sundos.restpos.DatabaseHandler;
+import com.tamimi.sundos.restpos.Models.FamilyCategory;
 import com.tamimi.sundos.restpos.Models.Items;
 import com.tamimi.sundos.restpos.Models.Recipes;
 import com.tamimi.sundos.restpos.R;
@@ -268,9 +269,19 @@ public class MenuRegistration extends AppCompatActivity {
             public void onClick(View view) {
                 if (!catName.getText().toString().equals("") && familyNameSpinner.getCount() != 0) {
 
+                    FamilyCategory familyCategory = new FamilyCategory();
+
                     categories.add(0, catName.getText().toString());
                     categoriesAdapter.notifyDataSetChanged();
                     familyName = familyNameSpinner.getSelectedItem().toString();
+                    int serial = mDbHandler.getAllFamilyCategory().size();
+                    familyCategory.setSerial(serial);
+                    familyCategory.setType(2);
+                    // 1--> family type // 2--> category type
+                    familyCategory.setName(catName.getText().toString());
+
+                    mDbHandler.addFamilyCategory(familyCategory);
+
                     dialog.dismiss();
 
                 } else {
@@ -329,8 +340,19 @@ public class MenuRegistration extends AppCompatActivity {
             public void onClick(View view) {
                 if (!familyEditText.getText().toString().equals("")) {
 
+                    FamilyCategory familyCategory = new FamilyCategory();
+
                     families.add(0, familyEditText.getText().toString());
                     familiesAdapter.notifyDataSetChanged();
+
+                    int serial = mDbHandler.getAllFamilyCategory().size();
+                    familyCategory.setSerial(serial);
+                    familyCategory.setType(1);
+                    // 1--> family type // 2--> category type
+                    familyCategory.setName(familyEditText.getText().toString());
+
+                    mDbHandler.addFamilyCategory(familyCategory);
+
                     dialog2.dismiss();
 
                 } else {

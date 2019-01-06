@@ -7,17 +7,20 @@ public class Cashier {
     private String categoryName ;
     private double categoryValue ;
     private int categoryQty ; // 2
+    private int orderKind ;
 
     public Cashier (){
 
     }
 
-    public Cashier(String cashierName, String checkInDate, String categoryName, double categoryValue, int categoryQty) {
+    public Cashier(String cashierName, String checkInDate, String categoryName,
+                   double categoryValue, int categoryQty, int orderKind) {
         this.cashierName = cashierName;
         this.checkInDate = checkInDate;
         this.categoryName = categoryName;
         this.categoryValue = categoryValue;
         this.categoryQty = categoryQty;
+        this.orderKind = orderKind;
     }
 
     public String getCashierName() {
@@ -58,5 +61,13 @@ public class Cashier {
 
     public void setCategoryQty(int categoryQty) {
         this.categoryQty = categoryQty;
+    }
+
+    public int getOrderKind() {
+        return orderKind;
+    }
+
+    public void setOrderKind(int orderKind) {
+        this.orderKind = orderKind;
     }
 }

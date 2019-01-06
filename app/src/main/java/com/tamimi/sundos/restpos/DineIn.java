@@ -871,6 +871,7 @@ public class DineIn extends AppCompatActivity {
                             cashier.setCategoryQty(Integer.parseInt(t1.getText().toString()));
                             cashier.setCategoryValue(Double.parseDouble("-"+t.getText().toString()));
                             cashier.setCheckInDate(today);
+                            cashier.setOrderKind(1);
 
                             cashiersList.add(cashier);
 
