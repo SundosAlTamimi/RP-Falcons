@@ -46,7 +46,7 @@ public class DineInLayout extends AppCompatActivity {
     boolean clicked = false;
 
     LinearLayout focused;
-    int tableNumber = 1;
+    int tableNumber = 0;
     int current = 0;
 
     DatabaseHandler mHandler;
@@ -487,7 +487,7 @@ public class DineInLayout extends AppCompatActivity {
             float left = linearLayout.getX();
             float top = linearLayout.getY();
             int resource = (int) imageView1.getTag();
-            int tableNumber = Integer.parseInt(textView1.getText().toString());
+            int tableNumber = i;
 
             Tables table = new Tables(height, width, resource, left, top, tableNumber);
             currentList.add(table);

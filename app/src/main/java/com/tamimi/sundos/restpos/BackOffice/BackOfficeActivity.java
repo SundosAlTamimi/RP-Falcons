@@ -34,6 +34,8 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.tamimi.sundos.restpos.DatabaseHandler;
+import com.tamimi.sundos.restpos.DineInLayout;
+import com.tamimi.sundos.restpos.Main;
 import com.tamimi.sundos.restpos.Models.CategoryWithModifier;
 import com.tamimi.sundos.restpos.Models.CustomerPayment;
 import com.tamimi.sundos.restpos.Models.ForceQuestions;
@@ -1661,13 +1663,13 @@ public class BackOfficeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (!editText.getText().toString().equals("")) {
                     if (Integer.parseInt(editText.getText().toString()) == 4444) {
-                        Settings settings = new Settings();
-                        settings.table_edit_authorized = true;
-                        Toast.makeText(BackOfficeActivity.this, "Your'r authorized to edit tables ", Toast.LENGTH_SHORT).show();
+                        Settings.table_edit_authorized = true;
+//                        Toast.makeText(BackOfficeActivity.this, "Your'r authorized to edit tables ", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
+                        Intent intent = new Intent(BackOfficeActivity.this, DineInLayout.class);
+                        startActivity(intent);
                     } else {
-                        Settings settings = new Settings();
-                        settings.table_edit_authorized = false;
+                        Settings.table_edit_authorized = false;
                         Toast.makeText(BackOfficeActivity.this, "Your authorization number is incorrect", Toast.LENGTH_SHORT).show();
                     }
                 }
