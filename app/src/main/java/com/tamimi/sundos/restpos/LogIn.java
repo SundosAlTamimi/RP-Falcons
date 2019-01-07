@@ -7,6 +7,7 @@ import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -16,7 +17,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.tamimi.sundos.restpos.BackOffice.EmployeeRegistration;
 import com.tamimi.sundos.restpos.Models.BlindShift;
+import com.tamimi.sundos.restpos.Models.EmployeeRegistrationModle;
 import com.tamimi.sundos.restpos.Models.Shift;
 
 import java.text.ParseException;
@@ -41,6 +44,7 @@ public class LogIn extends AppCompatActivity {
     String date, time, shiftName;
     int shiftNo;
     boolean isActive;
+    int userPassword;
 
     Dialog dialog;
     DatabaseHandler mDHandler;
@@ -131,12 +135,30 @@ public class LogIn extends AppCompatActivity {
 
                     switch (openedShift(userText)) {
                         case "":
-                            Settings.user_name = userText;
-                            isActive = false;
-                            dialog.dismiss();
+                            if(userText.equals("master")){
+                                isActive = false;
+                                Settings.user_name = userText;
+                                dialog.dismiss();
+                            }else {
+                                isActive = false;
+                                ArrayList<EmployeeRegistrationModle> employees = mDHandler.getAllEmployeeRegistration();
+                                boolean isExist = false;
+                                for (int i = 0; i < employees.size(); i++) {
+                                    if (userText.equals(employees.get(i).getEmployeeName())) {
+                                        Settings.user_name = userText;
+                                        userPassword = employees.get(i).getUserPassword();
+                                        isExist = true;
+                                        break;
+                                    }
+                                }
+                                if (isExist) {
+                                    dialog.dismiss();
+                                } else
+                                    Toast.makeText(LogIn.this, "user not found", Toast.LENGTH_SHORT).show();
+                            }
                             break;
-                        case "another user is active":
-                            Toast.makeText(LogIn.this, "another user is active", Toast.LENGTH_SHORT).show();
+                        case "another user is logged":
+                            Toast.makeText(LogIn.this, "another user is logged", Toast.LENGTH_SHORT).show();
                             break;
                         default:
                             Settings.user_name = userText;
@@ -155,7 +177,12 @@ public class LogIn extends AppCompatActivity {
     }
 
     public boolean isCorrect(int password) {
-        return password == 5555;
+        if (Settings.user_name.equals("master"))
+            return password == 5555;
+        else {
+            Log.e("***" , "" + password + "-" + userPassword);
+            return password == userPassword;
+        }
     }
 
     public void logIn() {
@@ -174,10 +201,11 @@ public class LogIn extends AppCompatActivity {
     String openedShift(String userName) {
         BlindShift openShift = mDHandler.getOpenedShifts(date, 1);
         if (openShift.getUserName() != null) {
-            if (openShift.getUserName().equals(userName))
+            if (openShift.getUserName().equals(userName)) {
+                userPassword = openShift.getUserNo();
                 return userName;
-            else
-                return "another user is active";
+            } else
+                return "another user is logged";
         } else
             return "";
     }
@@ -194,7 +222,7 @@ public class LogIn extends AppCompatActivity {
 
         ArrayList<Shift> shifts = mDHandler.getAllShifts();
 
-        if(shifts.size() == 0 ){
+        if (shifts.size() == 0) {
             shiftNo = 0;
             shiftName = "A";
         }

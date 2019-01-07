@@ -130,6 +130,7 @@ public class OrderLayout extends AppCompatActivity {
 
                 case R.id.save:
                     storeItems();
+                    finish();
                     break;
 
             }
@@ -315,7 +316,6 @@ public class OrderLayout extends AppCompatActivity {
         }
 
         Toast.makeText(OrderLayout.this , "Menu Saved" , Toast.LENGTH_LONG).show();
-        finish();
     }
 
     void fillGridView(int flag) {

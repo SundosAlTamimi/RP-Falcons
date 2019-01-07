@@ -71,7 +71,7 @@ public class DineIn extends AppCompatActivity {
     TextView focusedTextView;
     LinearLayout focused = null;
     GestureDetector gestureDetector;
-    boolean CheckTrue =true;
+    boolean CheckTrue = true;
     int tableNumber;
     int current = 0;
     String waiter;
@@ -95,10 +95,11 @@ public class DineIn extends AppCompatActivity {
     String data;
     List<OrderTransactions> greenTables;
     DatabaseHandler mHandler;
-    TableLayout refundTables,table;
+    TableLayout refundTables, table;
     ArrayList<OrderTransactions> orderTransactions;
     ArrayList<OrderTransactions> rowRefund;
     TableLayout categories;
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -365,7 +366,7 @@ public class DineIn extends AppCompatActivity {
         final boolean[] flag = {true};
         final ArrayList<String> inVoucher = new ArrayList<>();
         orderTransactions = new ArrayList<>();
-        rowRefund=new ArrayList<>();
+        rowRefund = new ArrayList<>();
 
         final boolean[] check = {false};
 
@@ -392,7 +393,7 @@ public class DineIn extends AppCompatActivity {
             public void onClick(View v) {
 
 
-                 VHF_NO[0] = vhfNo.getText().toString();
+                VHF_NO[0] = vhfNo.getText().toString();
 
                 for (int i = 0; i < inVoucher.size(); i++) {
                     if (!inVoucher.get(i).equals(VHF_NO[0])) {
@@ -418,9 +419,9 @@ public class DineIn extends AppCompatActivity {
 
                         for (int i = 0; i < orderTransactions.size(); i++) {
 //                            if(!(orderTransactions.get(i).getOrderKind()==998)) {
-                                insertRow(orderTransactions.get(i).getVoucherSerial(), orderTransactions.get(i).getItemName(), orderTransactions.get(i).getQty(), orderTransactions, refundTables);
+                            insertRow(orderTransactions.get(i).getVoucherSerial(), orderTransactions.get(i).getItemName(), orderTransactions.get(i).getQty(), orderTransactions, refundTables);
 //                            }
-                    }
+                        }
                         flag[0] = false;
                     } else {
                         Toast.makeText(DineIn.this, "This InVoice Number not found ", Toast.LENGTH_SHORT).show();
@@ -439,17 +440,15 @@ public class DineIn extends AppCompatActivity {
 
                 double textData;
 
-                for (int i=0;i<orderTransactions.size();i++)
-                {
-                    text=dialog.findViewById(Integer.parseInt(i+""+5));
-                    String textCheak=text.getText().toString();
-                    if(textCheak.equals("-1"))
-                    {
-                        CheckTrue =false;
+                for (int i = 0; i < orderTransactions.size(); i++) {
+                    text = dialog.findViewById(Integer.parseInt(i + "" + 5));
+                    String textCheak = text.getText().toString();
+                    if (textCheak.equals("-1")) {
+                        CheckTrue = false;
                         break;
                     }
                 }
-                if (netTotals != 0.0&& CheckTrue) {
+                if (netTotals != 0.0 && CheckTrue) {
                     for (int i = 0; i < orderTransactions.size(); i++) {
                         text = dialog.findViewById(Integer.parseInt(i + "3"));
                         if (!text.getText().toString().equals("")) {
@@ -466,7 +465,7 @@ public class DineIn extends AppCompatActivity {
                         DiscountArray.add(textData * (orderTransactions.get(i).getDiscount() / q));
                     }
                     textId = 0;
-                    CheckTrue =true;
+                    CheckTrue = true;
                     dialog.dismiss();
                     payMethodRefund(orderTransactions, VHF_NO[0]);
 
@@ -522,22 +521,22 @@ public class DineIn extends AppCompatActivity {
 
                         if (!data.equals("")) {
                             if (Integer.parseInt(data) <= (list.get(id).getQty()) && Integer.parseInt(data) > 0) {
-                                rows=row;
+                                rows = row;
                                 rows.setBackgroundColor(getResources().getColor(R.color.layer3));
                                 rTotal[0] = ((Integer.parseInt(data)) * list.get(id).getPrice());
                                 text = (TextView) dialog.findViewById(idGeneral);
                                 text.setText(String.valueOf(rTotal[0]));
-                                text=(TextView) dialog.findViewById(Integer.parseInt(row.getId()+""+5));
+                                text = (TextView) dialog.findViewById(Integer.parseInt(row.getId() + "" + 5));
                                 text.setText("0");
-                                CheckTrue =true;
+                                CheckTrue = true;
                             } else {
                                 text = (TextView) dialog.findViewById(idGeneral);
 
                                 notCorrectValueDialog();
-                                rows=row;
+                                rows = row;
                                 rows.setBackgroundColor(getResources().getColor(R.color.exit_hover));
                                 text.setText("0.0");
-                                text=(TextView) dialog.findViewById(Integer.parseInt(row.getId()+""+5));
+                                text = (TextView) dialog.findViewById(Integer.parseInt(row.getId() + "" + 5));
                                 text.setText("-1");
 
                             }
@@ -584,13 +583,13 @@ public class DineIn extends AppCompatActivity {
                     }
                 });
 
-            } else if(i==5) {
+            } else if (i == 5) {
                 textView.setId(Integer.parseInt(textId + "" + i));
                 textView.setText("0");
                 TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT);
                 textView.setLayoutParams(lp2);
                 row.addView(textView);
-            }else{
+            } else {
                 switch (i) {
                     case 0:
                         textView.setText("" + serial);
@@ -627,7 +626,7 @@ public class DineIn extends AppCompatActivity {
 
     }
 
-    public void payMethodRefund(final ArrayList<OrderTransactions> list, final String  VHF_NO) {
+    public void payMethodRefund(final ArrayList<OrderTransactions> list, final String VHF_NO) {
         dialog = new Dialog(DineIn.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
@@ -647,9 +646,8 @@ public class DineIn extends AppCompatActivity {
         final ArrayList<Money> money = mHandler.getAllMoneyCategory();
 
         String categoryName;
-        double categoryValue=0.0;
-        int categoryQty=0;
-
+        double categoryValue = 0.0;
+        int categoryQty = 0;
 
 
         netTotalText = (TextView) dialog.findViewById(R.id.nettotal);
@@ -675,7 +673,7 @@ public class DineIn extends AppCompatActivity {
         gift.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                 gift.setText("");
+                gift.setText("");
                 focusedTextView = gift;
 
             }
@@ -684,7 +682,7 @@ public class DineIn extends AppCompatActivity {
         cashValue.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                 cashValue.setText("");
+                cashValue.setText("");
                 focusedTextView = cashValue;
 
             }
@@ -692,7 +690,7 @@ public class DineIn extends AppCompatActivity {
         chequeValue.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                 chequeValue.setText("");
+                chequeValue.setText("");
                 focusedTextView = chequeValue;
 
             }
@@ -801,32 +799,32 @@ public class DineIn extends AppCompatActivity {
                 ArrayList<String> listForPay = new ArrayList<>();
                 ArrayList<Double> listValuePay = new ArrayList<>();
 
-                if (!cashValue.getText().toString().equals("0")&&!cashValue.getText().toString().equals("")) {
+                if (!cashValue.getText().toString().equals("0") && !cashValue.getText().toString().equals("")) {
                     listForPay.add("cash");
                     listValuePay.add(Double.parseDouble(cashValue.getText().toString()));
                     cashValues = Double.parseDouble(cashValue.getText().toString());
                 }
-                if (!CreditValue.getText().toString().equals("0")&&!CreditValue.getText().toString().equals("")) {
+                if (!CreditValue.getText().toString().equals("0") && !CreditValue.getText().toString().equals("")) {
                     listForPay.add("Credit Card");
                     listValuePay.add(Double.parseDouble(CreditValue.getText().toString()));
                     creditValues = Double.parseDouble(CreditValue.getText().toString());
                 }
-                if (!chequeValue.getText().toString().equals("0")&&!chequeValue.getText().toString().equals("")) {
+                if (!chequeValue.getText().toString().equals("0") && !chequeValue.getText().toString().equals("")) {
                     listForPay.add("Cheque");
                     listValuePay.add(Double.parseDouble(chequeValue.getText().toString()));
                     chequeVales = Double.parseDouble(chequeValue.getText().toString());
                 }
-                if (!point.getText().toString().equals("0")&&!point.getText().toString().equals("")) {
+                if (!point.getText().toString().equals("0") && !point.getText().toString().equals("")) {
                     listForPay.add("Point");
                     listValuePay.add(Double.parseDouble(point.getText().toString()));
                     pointValues = Double.parseDouble(point.getText().toString());
                 }
-                if (!gift.getText().toString().equals("0")&&!gift.getText().toString().equals("")) {
+                if (!gift.getText().toString().equals("0") && !gift.getText().toString().equals("")) {
                     listForPay.add("Gift Card");
                     listValuePay.add(Double.parseDouble(gift.getText().toString()));
                     giftCardValues = Double.parseDouble(gift.getText().toString());
                 }
-                if (!card.getText().toString().equals("0")&&!card.getText().toString().equals("")) {
+                if (!card.getText().toString().equals("0") && !card.getText().toString().equals("")) {
                     listForPay.add("Coupon");
                     listValuePay.add(Double.parseDouble(card.getText().toString()));
                     cardValues = Double.parseDouble(card.getText().toString());
@@ -839,7 +837,7 @@ public class DineIn extends AppCompatActivity {
                             Settings.service_value, rowRefund.get(0).getTaxValue(), rowRefund.get(0).getServiceTax(), netTotals,
                             netTotals, 1, rowRefund.get(0).getTableNo(),
                             rowRefund.get(0).getSectionNo(), cashValues, creditValues, chequeVales, cardValues,
-                            giftCardValues, pointValues, Settings.shift_name, Settings.shift_number, "No Waiter", 0,Settings.user_name,Settings.password);
+                            giftCardValues, pointValues, Settings.shift_name, Settings.shift_number, "No Waiter", 0, Settings.user_name, Settings.password);
 
                     mHandler.addOrderHeader(orderHeader);
 
@@ -849,9 +847,9 @@ public class DineIn extends AppCompatActivity {
                                 rowRefund.get(i).getVoucherNo(), rowRefund.get(i).getVoucherSerial(), "" + rowRefund.get(i).getItemBarcode(), rowRefund.get(i).getItemName(),
                                 rowRefund.get(i).getSecondaryName(), rowRefund.get(i).getKitchenAlias(), rowRefund.get(i).getItemCategory(),
                                 rowRefund.get(i).getItemFamily(), rowRefund.get(i).getQty(), rowRefund.get(i).getPrice(),
-                                totalAdd,  DiscountArray.get(i),lineDiscount.get(i), lineDiscount.get(i) + DiscountArray.get(i), rowRefund.get(i).getTaxValue(),
+                                totalAdd, DiscountArray.get(i), lineDiscount.get(i), lineDiscount.get(i) + DiscountArray.get(i), rowRefund.get(i).getTaxValue(),
                                 rowRefund.get(i).getTaxPerc(), 0, rowRefund.get(i).getService(), rowRefund.get(i).getServiceTax(),
-                                rowRefund.get(i).getTableNo(), rowRefund.get(i).getSectionNo(), Settings.shift_number, Settings.shift_name,Settings.password,Settings.user_name);
+                                rowRefund.get(i).getTableNo(), rowRefund.get(i).getSectionNo(), Settings.shift_number, Settings.shift_name, Settings.password, Settings.user_name);
 
 
                         mHandler.addOrderTransaction(orderTransactions);
@@ -863,13 +861,13 @@ public class DineIn extends AppCompatActivity {
                         TextView t = (TextView) tRow.getChildAt(2);
                         TextView t0 = (TextView) tRow.getChildAt(0);
                         TextView t1 = (TextView) tRow.getChildAt(1);
-                        if(!t1.getText().toString().equals("0")&&!t1.getText().toString().equals("")){
-                            Cashier cashier =new Cashier();
-                            ArrayList<Cashier> cashiersList=new ArrayList<Cashier>();
+                        if (!t1.getText().toString().equals("0") && !t1.getText().toString().equals("")) {
+                            Cashier cashier = new Cashier();
+                            ArrayList<Cashier> cashiersList = new ArrayList<Cashier>();
                             cashier.setCashierName(Settings.user_name);
                             cashier.setCategoryName(t0.getText().toString());
                             cashier.setCategoryQty(Integer.parseInt(t1.getText().toString()));
-                            cashier.setCategoryValue(Double.parseDouble("-"+t.getText().toString()));
+                            cashier.setCategoryValue(Double.parseDouble("-" + t.getText().toString()));
                             cashier.setCheckInDate(today);
                             cashier.setOrderKind(1);
 
@@ -879,20 +877,20 @@ public class DineIn extends AppCompatActivity {
                         }
                     }
 
-                    ArrayList<PayMethod>listOrder=new ArrayList();
-                    listOrder=mHandler.getAllRequestPayMethod( VHF_NO);
-                    String payNumber="0",payName="0";
+                    ArrayList<PayMethod> listOrder = new ArrayList();
+                    listOrder = mHandler.getAllRequestPayMethod(VHF_NO);
+                    String payNumber = "0", payName = "0";
                     for (int x = 0; x < listForPay.size(); x++) {
 
-                        for(int i=0;i<listOrder.size();i++){
-                            if(listForPay.get(x).equals(listOrder.get(i).getPayType())){
-                                payNumber=listOrder.get(i).getPayNumber();
+                        for (int i = 0; i < listOrder.size(); i++) {
+                            if (listForPay.get(x).equals(listOrder.get(i).getPayType())) {
+                                payNumber = listOrder.get(i).getPayNumber();
 
-                                payName=listOrder.get(i).getPayName();
-                                        Log.e("paynum : ",payNumber+"     --> "+payName);
+                                payName = listOrder.get(i).getPayName();
+                                Log.e("paynum : ", payNumber + "     --> " + payName);
                                 break;
                             }
-                            Log.e("paynum1 : ",payNumber+"     --> "+payName);
+                            Log.e("paynum1 : ", payNumber + "     --> " + payName);
                         }
 
                         PayMethod payMethod = new PayMethod(list.get(0).getOrderType(),
@@ -900,7 +898,7 @@ public class DineIn extends AppCompatActivity {
                                 today,
                                 Settings.POS_number,
                                 Settings.store_number, list.get(0).getVoucherNo(), list.get(0).getVoucherSerial(), listForPay.get(x),
-                                listValuePay.get(x),payNumber, payName, Settings.shift_number, Settings.shift_name,Settings.user_name,Settings.password);
+                                listValuePay.get(x), payNumber, payName, Settings.shift_number, Settings.shift_name, Settings.user_name, Settings.password);
 
                         mHandler.addAllPayMethodItem(payMethod);
                     }
@@ -930,28 +928,54 @@ public class DineIn extends AppCompatActivity {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
 
             }
+
             @Override
             public void afterTextChanged(Editable s) {
                 balance = netTotals;
-                String pointV, cashV, CreditV, chequeV,giftV,cardV;
+                String pointV, cashV, CreditV, chequeV, giftV, cardV;
 
-                        if (!point.getText().toString().equals("")) { pointV = point.getText().toString(); } else { pointV = "0"; }
-                        if (!cashValue.getText().toString().equals("")) { cashV = cashValue.getText().toString(); } else { cashV = "0"; }
-                        if (!CreditValue.getText().toString().equals("")) { CreditV = CreditValue.getText().toString(); } else { CreditV = "0"; }
-                        if (!chequeValue.getText().toString().equals("")) { chequeV = chequeValue.getText().toString(); } else { chequeV = "0"; }
-                        if (!gift.getText().toString().equals("")) { giftV = gift.getText().toString(); } else { giftV = "0"; }
-                        if (!card.getText().toString().equals("")) {cardV = card.getText().toString(); } else {cardV = "0";}
+                if (!point.getText().toString().equals("")) {
+                    pointV = point.getText().toString();
+                } else {
+                    pointV = "0";
+                }
+                if (!cashValue.getText().toString().equals("")) {
+                    cashV = cashValue.getText().toString();
+                } else {
+                    cashV = "0";
+                }
+                if (!CreditValue.getText().toString().equals("")) {
+                    CreditV = CreditValue.getText().toString();
+                } else {
+                    CreditV = "0";
+                }
+                if (!chequeValue.getText().toString().equals("")) {
+                    chequeV = chequeValue.getText().toString();
+                } else {
+                    chequeV = "0";
+                }
+                if (!gift.getText().toString().equals("")) {
+                    giftV = gift.getText().toString();
+                } else {
+                    giftV = "0";
+                }
+                if (!card.getText().toString().equals("")) {
+                    cardV = card.getText().toString();
+                } else {
+                    cardV = "0";
+                }
 
-                        balance = netTotals - (Double.parseDouble(cashV) + Double.parseDouble(chequeV) +
-                                               Double.parseDouble(CreditV)+Double.parseDouble(pointV) +
-                                               Double.parseDouble(giftV) +Double.parseDouble(cardV));
+                balance = netTotals - (Double.parseDouble(cashV) + Double.parseDouble(chequeV) +
+                        Double.parseDouble(CreditV) + Double.parseDouble(pointV) +
+                        Double.parseDouble(giftV) + Double.parseDouble(cardV));
 
-                        netTotalText.setText("" + balance);
+                netTotalText.setText("" + balance);
 
             }
         };
@@ -1052,7 +1076,6 @@ public class DineIn extends AppCompatActivity {
         }
 
         ///"""""""""""""""""""""""""""""""""""""""
-
 
 
         dialog.show();
@@ -1741,6 +1764,13 @@ public class DineIn extends AppCompatActivity {
         greenTables = mHandler.getAllOrderTransactionsTemp();
         if (focused != null)
             focused.setBackgroundDrawable(getResources().getDrawable(R.drawable.green_light));
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(DineIn.this, Main.class);
+        startActivity(intent);
     }
 
     void initialize() {
