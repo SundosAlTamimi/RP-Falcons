@@ -240,12 +240,11 @@ public class BackOfficeActivity extends AppCompatActivity {
                     break;
 
                 case R.id.sales_total:
-
-                    salesTotalDialog();
-
+                    salesTotalReportDialog();
                     break;
 
                 case R.id.cashier_in_out:
+                    cashierInOutReportDialog();
                     break;
 
                 case R.id.canceled_order_history:
@@ -1043,7 +1042,7 @@ public class BackOfficeActivity extends AppCompatActivity {
     }
 
 
-    void salesTotalDialog() {
+    void salesTotalReportDialog() {
         dialog = new Dialog(BackOfficeActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
@@ -1246,6 +1245,18 @@ public class BackOfficeActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
+
+        dialog.show();
+
+    }
+
+    void cashierInOutReportDialog() {
+        dialog = new Dialog(BackOfficeActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.cashier_in_out_dialog);
+        dialog.setCanceledOnTouchOutside(true);
+
 
         dialog.show();
 

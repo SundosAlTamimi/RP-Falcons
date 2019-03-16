@@ -13,7 +13,9 @@
     <color name="exit">#c24641</color>
     <color name="exit_hover">#E77471</color>
     <color name="light_blue">#c2dfff</color>
-    <color name="dark_blue">#89cbee</color>#98AFC7
+    <color name="dark_blue">#89cbee</color>
+    <color name="blue_ice">#368BC1</color>
+    <color name="jeans_blue">#A0CFEC</color>
     <color name="gray">#98afc7</color>
     <color name="floor">#e8adaa</color>
 </resources>
