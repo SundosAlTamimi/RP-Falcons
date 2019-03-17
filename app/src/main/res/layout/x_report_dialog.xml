@@ -37,13 +37,13 @@
                     android:id="@+id/textView52"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="3"
                     android:layout_gravity="center"
                     android:layout_marginEnd="50dp"
                     android:layout_marginRight="50dp"
                     android:layout_marginBottom="5dp"
+                    android:layout_weight="3"
                     android:gravity="center"
-                    android:text="Cashier In Out Report"
+                    android:text="X - Report"
                     android:textColor="@color/text_color"
                     android:textSize="25sp" />
 
@@ -126,7 +126,7 @@
                         android:textSize="18sp" />
 
                     <TextView
-                        android:id="@+id/frDate"
+                        android:id="@+id/fromDateX"
                         android:layout_width="199dp"
                         android:layout_height="30dp"
                         android:layout_marginRight="20dp"
@@ -143,7 +143,7 @@
                         android:textSize="18sp" />
 
                     <TextView
-                        android:id="@+id/toDate"
+                        android:id="@+id/toDateX"
                         android:layout_width="199dp"
                         android:layout_height="30dp"
                         android:background="@color/layer2"
@@ -173,7 +173,7 @@
 
                 <Spinner
                     android:id="@+id/shiftName"
-                    android:layout_width="170dp"
+                    android:layout_width="199dp"
                     android:layout_height="30dp" />
 
                 <TextView
@@ -187,26 +187,28 @@
 
                 <Spinner
                     android:id="@+id/posNo"
-                    android:layout_width="170dp"
+                    android:layout_width="199dp"
                     android:layout_height="30dp" />
             </TableRow>
 
         </LinearLayout>
 
-
-        <ScrollView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="350dp"
-            android:padding="5dp">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+            <ScrollView
+                android:layout_width="1259dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:padding="5dp">>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:orientation="vertical">
 
 
@@ -216,7 +218,7 @@
                         android:layout_marginBottom="2dp">
 
                         <TextView
-                            android:id="@+id/textView62"
+                            android:id="@+id/re"
                             android:layout_width="100dp"
                             android:layout_height="wrap_content"
                             android:layout_marginHorizontal="1dp"
@@ -224,7 +226,7 @@
                             android:background="@color/blue_ice"
                             android:gravity="center"
                             android:padding="2dp"
-                            android:text="#"
+                            android:text="@string/item_name"
                             android:textColor="@color/layer1"
                             android:textSize="18sp" />
 
@@ -236,7 +238,7 @@
                             android:background="@color/blue_ice"
                             android:gravity="center"
                             android:padding="2dp"
-                            android:text="Cashier Name"
+                            android:text="@string/total"
                             android:textColor="@color/layer1"
                             android:textSize="18sp" />
 
@@ -248,7 +250,7 @@
                             android:background="@color/blue_ice"
                             android:gravity="center"
                             android:padding="2dp"
-                            android:text="Date"
+                            android:text="@string/tax"
                             android:textColor="@color/layer1"
                             android:textSize="18sp" />
 
@@ -260,7 +262,7 @@
                             android:background="@color/blue_ice"
                             android:gravity="center"
                             android:padding="2dp"
-                            android:text="Time "
+                            android:text="Net"
                             android:textColor="@color/layer1"
                             android:textSize="18sp" />
 
@@ -268,18 +270,21 @@
 
 
                     <TableLayout
-                        android:id="@+id/cashierTable"
+                        android:id="@+id/taxTable"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
                     </TableLayout>
 
                 </LinearLayout>
+            </ScrollView>
 
-                <TableLayout
+            <TableLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="5dp"
                     android:layout_marginTop="4dp"
+                    android:layout_weight="1"
                     android:background="@drawable/focused_table">
 
                     <TableRow
@@ -288,27 +293,27 @@
                         android:layout_margin="1dp">
 
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="17dp"
+                            android:layout_width="20dp"
+                            android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_marginLeft="10dp"
                             android:layout_weight="2"
                             android:gravity="left"
-                            android:text="@string/total"
+                            android:text="Total Befor Tax"
                             android:textColor="@color/text_color"
-                            android:textSize="13sp"
+                            android:textSize="16sp"
                             android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/total"
                             android:layout_width="wrap_content"
-                            android:layout_height="17dp"
+                            android:layout_height="wrap_content"
                             android:layout_margin="1dp"
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="@string/zero_decimal"
                             android:textColor="@color/colorPrimary"
-                            android:textSize="13sp"
+                            android:textSize="16sp"
                             android:textStyle="bold" />
 
                     </TableRow>
@@ -320,26 +325,26 @@
 
                         <TextView
                             android:layout_width="wrap_content"
-                            android:layout_height="17dp"
+                            android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_marginLeft="10dp"
                             android:layout_weight="2"
                             android:gravity="left"
-                            android:text="@string/delivery_change"
+                            android:text="@string/tax"
                             android:textColor="@color/text_color"
-                            android:textSize="13sp"
+                            android:textSize="16sp"
                             android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/delivery"
                             android:layout_width="wrap_content"
-                            android:layout_height="17dp"
+                            android:layout_height="wrap_content"
                             android:layout_margin="1dp"
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="@string/zero_decimal"
                             android:textColor="@color/colorPrimary"
-                            android:textSize="13sp"
+                            android:textSize="16sp"
                             android:textStyle="bold" />
 
                     </TableRow>
@@ -351,26 +356,26 @@
 
                         <TextView
                             android:layout_width="wrap_content"
-                            android:layout_height="17dp"
+                            android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_marginLeft="10dp"
                             android:layout_weight="2"
                             android:gravity="left"
-                            android:text="@string/line_discount"
+                            android:text="Total After Tax"
                             android:textColor="@color/text_color"
-                            android:textSize="13sp"
+                            android:textSize="16sp"
                             android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/line_discount"
                             android:layout_width="wrap_content"
-                            android:layout_height="17dp"
+                            android:layout_height="wrap_content"
                             android:layout_margin="1dp"
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="@string/zero_decimal"
                             android:textColor="@color/colorPrimary"
-                            android:textSize="13sp"
+                            android:textSize="16sp"
                             android:textStyle="bold" />
 
                     </TableRow>
@@ -382,26 +387,26 @@
 
                         <TextView
                             android:layout_width="wrap_content"
-                            android:layout_height="17dp"
+                            android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_marginLeft="10dp"
                             android:layout_weight="2"
                             android:gravity="left"
-                            android:text="@string/discount"
+                            android:text="@string/service"
                             android:textColor="@color/text_color"
-                            android:textSize="13sp"
+                            android:textSize="16sp"
                             android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/discount"
                             android:layout_width="wrap_content"
-                            android:layout_height="17dp"
+                            android:layout_height="wrap_content"
                             android:layout_margin="1dp"
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="@string/zero_decimal"
                             android:textColor="@color/colorPrimary"
-                            android:textSize="13sp"
+                            android:textSize="16sp"
                             android:textStyle="bold" />
 
                     </TableRow>
@@ -420,26 +425,26 @@
 
                         <TextView
                             android:layout_width="wrap_content"
-                            android:layout_height="17dp"
+                            android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_marginLeft="10dp"
                             android:layout_weight="2"
                             android:gravity="left"
-                            android:text="@string/sub_total"
+                            android:text="Service Tax "
                             android:textColor="@color/text_color"
-                            android:textSize="13sp"
+                            android:textSize="16sp"
                             android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/sub_total"
                             android:layout_width="wrap_content"
-                            android:layout_height="17dp"
+                            android:layout_height="wrap_content"
                             android:layout_margin="1dp"
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="@string/zero_decimal"
                             android:textColor="@color/colorPrimary"
-                            android:textSize="13sp"
+                            android:textSize="16sp"
                             android:textStyle="bold" />
 
                     </TableRow>
@@ -451,93 +456,223 @@
 
                         <TextView
                             android:layout_width="wrap_content"
-                            android:layout_height="17dp"
+                            android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_marginLeft="10dp"
                             android:layout_weight="2"
                             android:gravity="left"
-                            android:text="@string/service"
+                            android:text="Total Tax "
                             android:textColor="@color/text_color"
-                            android:textSize="13sp"
+                            android:textSize="16sp"
                             android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/service"
                             android:layout_width="wrap_content"
-                            android:layout_height="17dp"
+                            android:layout_height="wrap_content"
                             android:layout_margin="1dp"
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="@string/zero_decimal"
                             android:textColor="@color/colorPrimary"
-                            android:textSize="13sp"
+                            android:textSize="16sp"
                             android:textStyle="bold" />
 
                     </TableRow>
 
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="10dp"
-                        android:layout_margin="1dp">
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="1dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="17dp"
-                            android:layout_marginStart="10dp"
-                            android:layout_marginLeft="10dp"
-                            android:layout_weight="2"
-                            android:gravity="left"
-                            android:text="@string/tax"
-                            android:textColor="@color/text_color"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="2"
+                        android:gravity="left"
+                        android:text="Net"
+                        android:textColor="@color/text_color"
+                        android:textSize="18dp"
+                        android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/tax"
-                            android:layout_width="wrap_content"
-                            android:layout_height="17dp"
-                            android:layout_margin="1dp"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="@string/zero_decimal"
-                            android:textColor="@color/colorPrimary"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/tax"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="1dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/zero_decimal"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
 
-                    </TableRow>
-
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="10dp"
-                        android:layout_margin="1dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="17dp"
-                            android:layout_marginStart="10dp"
-                            android:layout_marginLeft="10dp"
-                            android:layout_weight="2"
-                            android:gravity="left"
-                            android:text="@string/amount_due"
-                            android:textColor="@color/text_color"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/amount_due"
-                            android:layout_width="wrap_content"
-                            android:layout_height="17dp"
-                            android:layout_margin="1dp"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="@string/zero_decimal"
-                            android:textColor="@color/exit"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
-
-                    </TableRow>
+                </TableRow>
 
                 </TableLayout>
+
+</LinearLayout>
+
+        <TextView
+            android:id="@+id/textView65"
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@color/gray" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="101dp"
+            android:padding="5dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="1169dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="2dp">
+
+                        <TextView
+                            android:id="@+id/textView62"
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="1dp"
+                            android:layout_weight="1"
+                            android:background="@color/blue_ice"
+                            android:gravity="center"
+                            android:padding="2dp"
+                            android:text="@string/tax_percent"
+                            android:textColor="@color/layer1"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="1dp"
+                            android:layout_weight="1"
+                            android:background="@color/blue_ice"
+                            android:gravity="center"
+                            android:padding="2dp"
+                            android:text="@string/total"
+                            android:textColor="@color/layer1"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="1dp"
+                            android:layout_weight="1"
+                            android:background="@color/blue_ice"
+                            android:gravity="center"
+                            android:padding="2dp"
+                            android:text="@string/tax"
+                            android:textColor="@color/layer1"
+                            android:textSize="18sp" />
+
+                    </TableRow>
+
+
+                    <TableLayout
+                        android:id="@+id/cashierTable"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp">
+
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="2dp">
+
+                            <TextView
+                                android:id="@+id/textView74"
+                                android:layout_width="100dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginHorizontal="2dp"
+                                android:layout_weight="1"
+                                android:background="@color/jeans_blue"
+                                android:gravity="center"
+                                android:text="Sale In/EX Tax 16%"
+                                android:textColor="@color/text_color"
+                                android:textSize="18sp" />
+
+                            <TextView
+                                android:id="@+id/textView71"
+                                android:layout_width="100dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginHorizontal="2dp"
+                                android:layout_weight="1"
+                                android:background="@color/jeans_blue"
+                                android:gravity="center"
+                                android:textColor="@color/text_color"
+                                android:textSize="18sp" />
+
+                            <TextView
+                                android:id="@+id/textView69"
+                                android:layout_width="100dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginHorizontal="2dp"
+                                android:layout_weight="1"
+                                android:background="@color/jeans_blue"
+                                android:gravity="center"
+                                android:textColor="@color/text_color"
+                                android:textSize="18sp" />
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:id="@+id/textView79"
+                                android:layout_width="100dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginHorizontal="2dp"
+                                android:layout_weight="1"
+                                android:background="@color/jeans_blue"
+                                android:gravity="center"
+                                android:text="Sale In/EX Tax 14%"
+                                android:textColor="@color/text_color"
+                                android:textSize="18sp" />
+
+                            <TextView
+                                android:id="@+id/textView76"
+                                android:layout_width="100dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginHorizontal="2dp"
+                                android:layout_weight="1"
+                                android:background="@color/jeans_blue"
+                                android:gravity="center"
+                                android:textColor="@color/text_color"
+                                android:textSize="18sp" />
+
+                            <TextView
+                                android:id="@+id/textView77"
+                                android:layout_width="100dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginHorizontal="2dp"
+                                android:layout_weight="1"
+                                android:background="@color/jeans_blue"
+                                android:gravity="center"
+                                android:textColor="@color/text_color"
+                                android:textSize="18sp" />
+                        </TableRow>
+                    </TableLayout>
+
+                </LinearLayout>
+
             </LinearLayout>
         </ScrollView>
 

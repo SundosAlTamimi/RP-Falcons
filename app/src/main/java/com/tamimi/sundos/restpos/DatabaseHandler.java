@@ -2856,6 +2856,35 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return familyCategoryArrayList;
     }
 
+    //SELECT ITEM_CODE, SUM(ITEM_QTY) , SUM(ROW_INDEX)FROM ITEMS_INFO GROUP BY ITEM_CODE  ;
+//SELECT ITEM_NAME, SUM(PRICE) FROM ORDER_TRANSACTIONS GROUP BY ITEM_NAME  ;
+
+    public ArrayList<OrderTransactions> getXReport() {
+        ArrayList<OrderTransactions> orderTransactionsArrayList = new ArrayList<>();
+
+        String selectQuery ="SELECT ITEM_NAME, SUM(PRICE) FROM ORDER_TRANSACTIONS GROUP BY ITEM_NAME" ;
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                OrderTransactions orderTransactions = new OrderTransactions();
+
+                orderTransactions.setItemName(cursor.getString(0));
+                orderTransactions.setPrice(Double.parseDouble(cursor.getString(1)));
+
+                orderTransactionsArrayList.add(orderTransactions);
+
+            } while (cursor.moveToNext());
+        }
+
+        Log.e("orderTrans ::: ",""+orderTransactionsArrayList.toString());
+
+        return orderTransactionsArrayList;
+    }
+
+
+
     //Updating single record
 
     public void updateUsedCategories(UsedCategories usedCategories) {

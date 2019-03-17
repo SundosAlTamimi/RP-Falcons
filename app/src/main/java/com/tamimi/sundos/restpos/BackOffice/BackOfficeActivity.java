@@ -47,6 +47,7 @@ import com.tamimi.sundos.restpos.Models.MemberShipGroup;
 import com.tamimi.sundos.restpos.Models.Modifier;
 import com.tamimi.sundos.restpos.Models.Money;
 import com.tamimi.sundos.restpos.Models.OrderHeader;
+import com.tamimi.sundos.restpos.Models.OrderTransactions;
 import com.tamimi.sundos.restpos.Models.Pay;
 import com.tamimi.sundos.restpos.Models.PayMethod;
 import com.tamimi.sundos.restpos.Models.Shift;
@@ -82,7 +83,7 @@ public class BackOfficeActivity extends AppCompatActivity {
 
     private DatePickerDialog.OnDateSetListener mdate;
     int count, count2, nextSerial;
-    TextView test = null, fromDate, toDate, fromDateCashier, toDateCashier;
+    TextView test = null, fromDate, toDate, fromDateCashier, toDateCashier,fromDateX, toDateX;
     Dialog dialog;
     String today;
     DatabaseHandler mDHandler;
@@ -91,6 +92,7 @@ public class BackOfficeActivity extends AppCompatActivity {
 
     ArrayList<OrderHeader> headerData;
     ArrayList<PayMethod> payData;
+    List <OrderTransactions> orderTransactionData;
     ArrayList<Pay> payInData;
     TableRow focusedRaw = null;
     int rawPosition = 0;
@@ -253,6 +255,9 @@ public class BackOfficeActivity extends AppCompatActivity {
                     break;
 
                 case R.id.daily_cash_out:
+
+                    X_ReportDialog();
+
                     break;
 
                 case R.id.sales_by_employee:
@@ -369,6 +374,156 @@ public class BackOfficeActivity extends AppCompatActivity {
             }
         });
         dialog.show();
+    }
+
+    void X_ReportDialog(){
+        dialog = new Dialog(BackOfficeActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.x_report_dialog);
+        dialog.setCanceledOnTouchOutside(true);
+
+
+
+
+        toDateX=(TextView)dialog.findViewById(R.id.toDateX);
+        fromDateX=(TextView)dialog.findViewById(R.id.fromDateX);
+
+        Button preview,exit,export,print;
+        Spinner ShiftName ,PosNo;
+
+        ShiftName=(Spinner)dialog.findViewById(R.id.shiftName);
+        PosNo=(Spinner)dialog.findViewById(R.id.posNo);
+
+        preview=(Button)dialog.findViewById(R.id.doneReport);
+        exit=(Button)dialog.findViewById(R.id.exitReport);
+        export=(Button)dialog.findViewById(R.id.exportReport);
+        print=(Button)dialog.findViewById(R.id.printReport);
+
+        TableLayout tableXreport=(TableLayout)dialog.findViewById(R.id.taxTable);
+
+        orderTransactionData=new ArrayList<>();
+        ArrayList<String> shiftNameArray = new ArrayList<>();
+        ArrayList<String> userArray = new ArrayList<>();
+        ArrayList<String> posNoArray = new ArrayList<>();
+
+        for (int i = 0; i < mDHandler.getAllShifts().size(); i++) {
+            shiftNameArray.add(mDHandler.getAllShifts().get(i).getShiftName());
+        }
+        shiftNameArray.add(0, "All");
+
+        for (int i = 0; i < mDHandler.getAllEmployeeRegistration().size(); i++) {
+            if (mDHandler.getAllEmployeeRegistration().get(i).getEmployeeType() == 0) {
+                userArray.add(String.valueOf(mDHandler.getAllEmployeeRegistration().get(i).getEmployeeNO()));
+            }
+        }
+        userArray.add(0, "All");
+
+        posNoArray.add("All");
+        posNoArray.add("4");
+        posNoArray.add("7");
+
+
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, shiftNameArray);
+        ShiftName.setAdapter(adapter);
+
+        ArrayAdapter<String> adapterPosNo = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, posNoArray);
+        PosNo.setAdapter(adapterPosNo);
+
+        fromDateX.setOnClickListener(dateClick);
+        toDateX.setOnClickListener(dateClick);
+
+        Date currentTimeAndDate = Calendar.getInstance().getTime();
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+        today = df.format(currentTimeAndDate);
+
+        fromDateX.setText(today);
+        toDateX.setText(today);
+
+        mdate = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                month += 1;
+                test.setText(dayOfMonth + "-" + month + "-" + year);
+                Log.e("date ", "" + dayOfMonth + "-" + month + "-" + year);
+            }
+        };
+
+        orderTransactionData=mDHandler.getAllOrderTransactions();
+
+        preview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               tableXreport.removeAllViews();
+
+                String ShiftNa = ShiftName.getSelectedItem().toString();
+                int posNoString = -1;
+
+                if (PosNo.getSelectedItem().toString().equals("All")) {
+                    posNoString = -1;
+                } else {
+                    posNoString = Integer.parseInt(PosNo.getSelectedItem().toString());
+                }
+
+                for (int i = 0; i < orderTransactionData.size(); i++) {
+                    if (filters(i, 3)) {//1
+                        if (orderTransactionData.get(i).getShiftName().equals(ShiftNa) || ShiftNa.equals("All")) {
+                                if (orderTransactionData.get(i).getPosNo() == posNoString || posNoString == -1) {
+
+                                    insertCashierInOutReport(tableXreport, String.valueOf(i), ""
+                                                , "", "", ""
+                                                , "", "2-2-2000",4);
+
+                                   Log.e("mDHandler.getXReport()",""+mDHandler.getXReport().get(0).getPrice()+mDHandler.getXReport().get(0).getItemName());
+                                }
+
+                        }
+                    }//else 1
+                }
+
+                for (int i=0;i<orderTransactionData.size();i++){
+
+
+                }
+
+
+            }
+        });
+
+        export.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+
+            }
+        });
+
+
+        print.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+
+            }
+        });
+
+
+        exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dialog.dismiss();
+
+            }
+        });
+
+
+
+        dialog.show();
+
     }
 
     void showMoneyCategoryDialog() {
@@ -1383,7 +1538,7 @@ public class BackOfficeActivity extends AppCompatActivity {
 
                                         insertCashierInOutReport(cashierTable, String.valueOf(i), payInData.get(i).getTransDate()
                                                 , String.valueOf(payInData.get(i).getPosNo()), payInData.get(i).getUserName(), String.valueOf(payInData.get(i).getTransType())
-                                                , String.valueOf(payInData.get(i).getValue()), "2-2-2000");
+                                                , String.valueOf(payInData.get(i).getValue()), "2-2-2000",7);
                                     }
 
                                 }
@@ -1445,6 +1600,13 @@ public class BackOfficeActivity extends AppCompatActivity {
                 case R.id.toDate:
                     test = toDateCashier;
                     break;
+                case R.id.fromDateX:
+                    test = fromDateX;
+                    break;
+
+                case R.id.toDateX:
+                    test = toDateX;
+                    break;
 
 
             }
@@ -1477,6 +1639,11 @@ public class BackOfficeActivity extends AppCompatActivity {
                 fromDate1 = fromDateCashier.getText().toString().trim();
                 toDate1 = toDateCashier.getText().toString();
                 date = payInData.get(n).getTransDate();
+                break;
+            case 3:
+                fromDate1 = fromDateX.getText().toString().trim();
+                toDate1 =  toDateX.getText().toString();
+                date = orderTransactionData.get(n).getVoucherDate();
                 break;
         }
         try {
@@ -1876,14 +2043,14 @@ public class BackOfficeActivity extends AppCompatActivity {
 
 
     void insertCashierInOutReport(TableLayout tableLayout, String num, String Date, String pos, String cashierName,
-                                  String transType, String Amount, String Times) {
+                                  String transType, String Amount, String Times,int switchCount) {
         final TableRow row = new TableRow(BackOfficeActivity.this);
 
         TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
 //        lp.setMargins(2, 2, 2, 2);
         row.setLayoutParams(lp);
 
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < switchCount; i++) {
             TextView textView = new TextView(BackOfficeActivity.this);
 
             switch (i) {
