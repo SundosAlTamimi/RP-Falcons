@@ -162,6 +162,7 @@
     <string name="menu_registration_">Menu Registration</string>
     <string name="modifier_">Modifier</string>
     <string name="force_question">Force Question</string>
+    <string name="void_reasons">Void reasons</string>
     <string name="menu_layout">Menu Layout</string>
     <string name="job_group">Job Group</string>
     <string name="employee_registration">Employee Registration</string>
@@ -250,6 +251,8 @@
 
     <string name="add_force_question">Add Force Question</string>
     <string name="join_item_with_question">Join Item With Force question</string>
+
+    <string name="add_void_reason">Add Void Reason</string>
 
     <string name="customer_name"> Customer Name </string>
     <string name="customer_no"> Customer  NO  </string>

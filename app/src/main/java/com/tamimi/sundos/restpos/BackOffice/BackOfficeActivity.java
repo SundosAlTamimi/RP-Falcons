@@ -51,6 +51,8 @@ import com.tamimi.sundos.restpos.Models.OrderTransactions;
 import com.tamimi.sundos.restpos.Models.Pay;
 import com.tamimi.sundos.restpos.Models.PayMethod;
 import com.tamimi.sundos.restpos.Models.Shift;
+import com.tamimi.sundos.restpos.Models.VoidResons;
+import com.tamimi.sundos.restpos.Order;
 import com.tamimi.sundos.restpos.R;
 import com.tamimi.sundos.restpos.Settings;
 
@@ -75,7 +77,7 @@ public class BackOfficeActivity extends AppCompatActivity {
     LinearLayout announcement, giftCard, employeeClockInOut, menuSearch;
     LinearLayout membershipGroup, membership, customerRegistration;
     LinearLayout jobGroup, employeeRegistration, employeeSchedule, payroll, vacation, editTables;
-    LinearLayout menuCategory, menuRegistration, modifier, forceQuestion, menuLayout;
+    LinearLayout menuCategory, menuRegistration, modifier, forceQuestion, voiding_reasons, menuLayout;
     LinearLayout store, storeOperation, users, moneyCategory;
     LinearLayout salesTotal, cashierInOut, canceledOrderHistory, dailyCashOut, salesByEmployee, salesByServers,
             salesReportForDay, salesByHours, salesVolumeByItem, topSalesItemReport, topGroupSalesReport, topFamilySalesReport,
@@ -83,7 +85,7 @@ public class BackOfficeActivity extends AppCompatActivity {
 
     private DatePickerDialog.OnDateSetListener mdate;
     int count, count2, nextSerial;
-    TextView test = null, fromDate, toDate, fromDateCashier, toDateCashier,fromDateX, toDateX;
+    TextView test = null, fromDate, toDate, fromDateCashier, toDateCashier, fromDateX, toDateX;
     Dialog dialog;
     String today;
     DatabaseHandler mDHandler;
@@ -92,7 +94,7 @@ public class BackOfficeActivity extends AppCompatActivity {
 
     ArrayList<OrderHeader> headerData;
     ArrayList<PayMethod> payData;
-    List <OrderTransactions> orderTransactionData;
+    List<OrderTransactions> orderTransactionData;
     ArrayList<Pay> payInData;
     TableRow focusedRaw = null;
     int rawPosition = 0;
@@ -227,6 +229,10 @@ public class BackOfficeActivity extends AppCompatActivity {
 
                 case R.id.force_question:
                     showForceQuestionDialog();
+                    break;
+
+                case R.id.voiding_reasons:
+                    showVoidReasonsDialog();
                     break;
 
                 case R.id.store:
@@ -376,7 +382,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    void X_ReportDialog(){
+    void X_ReportDialog() {
         dialog = new Dialog(BackOfficeActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
@@ -384,25 +390,23 @@ public class BackOfficeActivity extends AppCompatActivity {
         dialog.setCanceledOnTouchOutside(true);
 
 
+        toDateX = (TextView) dialog.findViewById(R.id.toDateX);
+        fromDateX = (TextView) dialog.findViewById(R.id.fromDateX);
 
+        Button preview, exit, export, print;
+        Spinner ShiftName, PosNo;
 
-        toDateX=(TextView)dialog.findViewById(R.id.toDateX);
-        fromDateX=(TextView)dialog.findViewById(R.id.fromDateX);
+        ShiftName = (Spinner) dialog.findViewById(R.id.shiftName);
+        PosNo = (Spinner) dialog.findViewById(R.id.posNo);
 
-        Button preview,exit,export,print;
-        Spinner ShiftName ,PosNo;
+        preview = (Button) dialog.findViewById(R.id.doneReport);
+        exit = (Button) dialog.findViewById(R.id.exitReport);
+        export = (Button) dialog.findViewById(R.id.exportReport);
+        print = (Button) dialog.findViewById(R.id.printReport);
 
-        ShiftName=(Spinner)dialog.findViewById(R.id.shiftName);
-        PosNo=(Spinner)dialog.findViewById(R.id.posNo);
+        TableLayout tableXreport = (TableLayout) dialog.findViewById(R.id.taxTable);
 
-        preview=(Button)dialog.findViewById(R.id.doneReport);
-        exit=(Button)dialog.findViewById(R.id.exitReport);
-        export=(Button)dialog.findViewById(R.id.exportReport);
-        print=(Button)dialog.findViewById(R.id.printReport);
-
-        TableLayout tableXreport=(TableLayout)dialog.findViewById(R.id.taxTable);
-
-        orderTransactionData=new ArrayList<>();
+        orderTransactionData = new ArrayList<>();
         ArrayList<String> shiftNameArray = new ArrayList<>();
         ArrayList<String> userArray = new ArrayList<>();
         ArrayList<String> posNoArray = new ArrayList<>();
@@ -422,7 +426,6 @@ public class BackOfficeActivity extends AppCompatActivity {
         posNoArray.add("All");
         posNoArray.add("4");
         posNoArray.add("7");
-
 
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, shiftNameArray);
@@ -450,12 +453,12 @@ public class BackOfficeActivity extends AppCompatActivity {
             }
         };
 
-        orderTransactionData=mDHandler.getAllOrderTransactions();
+        orderTransactionData = mDHandler.getAllOrderTransactions();
 
         preview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               tableXreport.removeAllViews();
+                tableXreport.removeAllViews();
 
                 String ShiftNa = ShiftName.getSelectedItem().toString();
                 int posNoString = -1;
@@ -469,20 +472,20 @@ public class BackOfficeActivity extends AppCompatActivity {
                 for (int i = 0; i < orderTransactionData.size(); i++) {
                     if (filters(i, 3)) {//1
                         if (orderTransactionData.get(i).getShiftName().equals(ShiftNa) || ShiftNa.equals("All")) {
-                                if (orderTransactionData.get(i).getPosNo() == posNoString || posNoString == -1) {
+                            if (orderTransactionData.get(i).getPosNo() == posNoString || posNoString == -1) {
 
-                                    insertCashierInOutReport(tableXreport, String.valueOf(i), ""
-                                                , "", "", ""
-                                                , "", "2-2-2000",4);
+                                insertCashierInOutReport(tableXreport, String.valueOf(i), ""
+                                        , "", "", ""
+                                        , "", "2-2-2000", 4);
 
-                                   Log.e("mDHandler.getXReport()",""+mDHandler.getXReport().get(0).getPrice()+mDHandler.getXReport().get(0).getItemName());
-                                }
+                                Log.e("mDHandler.getXReport()", "" + mDHandler.getXReport().get(0).getPrice() + mDHandler.getXReport().get(0).getItemName());
+                            }
 
                         }
                     }//else 1
                 }
 
-                for (int i=0;i<orderTransactionData.size();i++){
+                for (int i = 0; i < orderTransactionData.size(); i++) {
 
 
                 }
@@ -496,7 +499,6 @@ public class BackOfficeActivity extends AppCompatActivity {
             public void onClick(View v) {
 
 
-
             }
         });
 
@@ -504,7 +506,6 @@ public class BackOfficeActivity extends AppCompatActivity {
         print.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
 
 
             }
@@ -519,7 +520,6 @@ public class BackOfficeActivity extends AppCompatActivity {
 
             }
         });
-
 
 
         dialog.show();
@@ -746,6 +746,118 @@ public class BackOfficeActivity extends AppCompatActivity {
                 showJoinItemWithForceQuestionDialog();
             }
         });
+        dialog.show();
+    }
+
+    void showVoidReasonsDialog() {
+        final Dialog dialog = new Dialog(BackOfficeActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.void_reason_dialog);
+
+        LinearLayout addR = (LinearLayout) dialog.findViewById(R.id.add_reason);
+        EditText reason = (EditText) dialog.findViewById(R.id.reason);
+        CheckBox isActive = (CheckBox) dialog.findViewById(R.id.isActive);
+        TableLayout reasons = (TableLayout) dialog.findViewById(R.id.tableOfReasons);
+        Button save = (Button) dialog.findViewById(R.id.done);
+        Button exit = (Button) dialog.findViewById(R.id.exit);
+
+        ArrayList<VoidResons> resons = mDHandler.getAllVoidReasons();
+
+        reasons.removeAllViews();
+        for (int k = 0; k < resons.size(); k++) {
+
+            final TableRow row = new TableRow(BackOfficeActivity.this);
+            TableLayout.LayoutParams lp = new TableLayout.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+            lp.setMargins(2, 2, 2, 4);
+            row.setLayoutParams(lp);
+
+            TextView textView = new TextView(BackOfficeActivity.this);
+            textView.setText(resons.get(k).getVoidReason());
+            textView.setTextSize(20);
+            textView.setTextColor(ContextCompat.getColor(BackOfficeActivity.this, R.color.text_color));
+            TableRow.LayoutParams lp1 = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+            textView.setLayoutParams(lp1);
+
+            CheckBox checkBox = new CheckBox(BackOfficeActivity.this);
+            checkBox.setChecked(resons.get(k).getActiveated() == 1);
+            checkBox.setTextColor(ContextCompat.getColor(BackOfficeActivity.this, R.color.text_color));
+            TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 0.15f);
+            checkBox.setLayoutParams(lp2);
+
+            Button button = new Button(BackOfficeActivity.this);
+            button.setBackgroundDrawable(getResources().getDrawable(R.drawable.delete_raw));
+            TableRow.LayoutParams lp3 = new TableRow.LayoutParams(0, 20, 0.05f);
+            button.setLayoutParams(lp3);
+            button.setOnClickListener(view1 -> {
+                reasons.removeView(row);
+            });
+
+            row.addView(textView);
+            row.addView(checkBox);
+            row.addView(button);
+
+            reasons.addView(row);
+        }
+
+        addR.setOnClickListener(view -> {
+
+            if(!reason.getText().toString().equals("")) {
+
+                final TableRow row1 = new TableRow(BackOfficeActivity.this);
+
+                TableLayout.LayoutParams lp12 = new TableLayout.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+                lp12.setMargins(2, 2, 2, 4);
+                row1.setLayoutParams(lp12);
+
+                TextView textView = new TextView(BackOfficeActivity.this);
+                textView.setText(reason.getText().toString());
+                textView.setTextSize(20);
+                textView.setTextColor(ContextCompat.getColor(BackOfficeActivity.this, R.color.text_color));
+                TableRow.LayoutParams lp1 = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+                textView.setLayoutParams(lp1);
+
+                CheckBox checkBox = new CheckBox(BackOfficeActivity.this);
+                checkBox.setChecked(isActive.isChecked());
+                checkBox.setTextColor(ContextCompat.getColor(BackOfficeActivity.this, R.color.text_color));
+                TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 0.15f);
+                checkBox.setLayoutParams(lp2);
+
+                Button button = new Button(BackOfficeActivity.this);
+                button.setBackgroundDrawable(getResources().getDrawable(R.drawable.delete_raw));
+                TableRow.LayoutParams lp3 = new TableRow.LayoutParams(0, 20, 0.05f);
+                button.setLayoutParams(lp3);
+                button.setOnClickListener(view1 -> {
+                    reasons.removeView(row1);
+                });
+
+                row1.addView(textView);
+                row1.addView(checkBox);
+                row1.addView(button);
+
+                reasons.addView(row1);
+            } else
+                Toast.makeText(BackOfficeActivity.this, "No text to be added ! ", Toast.LENGTH_LONG).show();
+        });
+
+        save.setOnClickListener(view -> {
+
+            mDHandler.deleteAllVoidReasons();
+
+            for (int k = 0; k < reasons.getChildCount(); k++) {
+                TableRow tableRow = (TableRow) reasons.getChildAt(k);
+                TextView textView = (TextView) tableRow.getChildAt(0);
+                CheckBox checkBox = (CheckBox) tableRow.getChildAt(1);
+                int active = checkBox.isChecked() ? 1 : 0;
+
+                mDHandler.addVoidReason(new VoidResons(Settings.shift_number ,Settings.shift_name ,Settings.password ,
+                        Settings.user_name ,textView.getText().toString() ,today , active));
+            }
+            dialog.dismiss();
+        });
+
+        exit.setOnClickListener(view -> dialog.dismiss());
+
         dialog.show();
     }
 
@@ -1538,7 +1650,7 @@ public class BackOfficeActivity extends AppCompatActivity {
 
                                         insertCashierInOutReport(cashierTable, String.valueOf(i), payInData.get(i).getTransDate()
                                                 , String.valueOf(payInData.get(i).getPosNo()), payInData.get(i).getUserName(), String.valueOf(payInData.get(i).getTransType())
-                                                , String.valueOf(payInData.get(i).getValue()), "2-2-2000",7);
+                                                , String.valueOf(payInData.get(i).getValue()), "2-2-2000", 7);
                                     }
 
                                 }
@@ -1626,8 +1738,8 @@ public class BackOfficeActivity extends AppCompatActivity {
     public boolean filters(int n, int switchVh) {
 
 
-        String fromDate1="";
-        String toDate1="";
+        String fromDate1 = "";
+        String toDate1 = "";
         String date = "";
         switch (switchVh) {
             case 0:
@@ -1642,7 +1754,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                 break;
             case 3:
                 fromDate1 = fromDateX.getText().toString().trim();
-                toDate1 =  toDateX.getText().toString();
+                toDate1 = toDateX.getText().toString();
                 date = orderTransactionData.get(n).getVoucherDate();
                 break;
         }
@@ -2043,7 +2155,7 @@ public class BackOfficeActivity extends AppCompatActivity {
 
 
     void insertCashierInOutReport(TableLayout tableLayout, String num, String Date, String pos, String cashierName,
-                                  String transType, String Amount, String Times,int switchCount) {
+                                  String transType, String Amount, String Times, int switchCount) {
         final TableRow row = new TableRow(BackOfficeActivity.this);
 
         TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
@@ -2290,6 +2402,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         menuRegistration = (LinearLayout) findViewById(R.id.menu_registration);
         modifier = (LinearLayout) findViewById(R.id.modifier);
         forceQuestion = (LinearLayout) findViewById(R.id.force_question);
+        voiding_reasons = (LinearLayout) findViewById(R.id.voiding_reasons);
         menuLayout = (LinearLayout) findViewById(R.id.menu_layout);
         store = (LinearLayout) findViewById(R.id.store);
         storeOperation = (LinearLayout) findViewById(R.id.store_operation);
@@ -2336,6 +2449,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         menuRegistration.setOnClickListener(onClickListener2);
         modifier.setOnClickListener(onClickListener2);
         forceQuestion.setOnClickListener(onClickListener2);
+        voiding_reasons.setOnClickListener(onClickListener2);
         menuLayout.setOnClickListener(onClickListener2);
         store.setOnClickListener(onClickListener2);
         storeOperation.setOnClickListener(onClickListener2);
