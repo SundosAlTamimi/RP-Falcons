@@ -47,6 +47,7 @@ import com.tamimi.sundos.restpos.Models.MemberShipGroup;
 import com.tamimi.sundos.restpos.Models.Modifier;
 import com.tamimi.sundos.restpos.Models.Money;
 import com.tamimi.sundos.restpos.Models.OrderHeader;
+import com.tamimi.sundos.restpos.Models.Pay;
 import com.tamimi.sundos.restpos.Models.PayMethod;
 import com.tamimi.sundos.restpos.Models.Shift;
 import com.tamimi.sundos.restpos.R;
@@ -80,8 +81,8 @@ public class BackOfficeActivity extends AppCompatActivity {
             salesReportByCustomer, profitLossReport, detailSalesReport;
 
     private DatePickerDialog.OnDateSetListener mdate;
-    int count, count2 , nextSerial;
-    TextView test = null, fromDate, toDate;
+    int count, count2, nextSerial;
+    TextView test = null, fromDate, toDate, fromDateCashier, toDateCashier;
     Dialog dialog;
     String today;
     DatabaseHandler mDHandler;
@@ -90,10 +91,11 @@ public class BackOfficeActivity extends AppCompatActivity {
 
     ArrayList<OrderHeader> headerData;
     ArrayList<PayMethod> payData;
+    ArrayList<Pay> payInData;
     TableRow focusedRaw = null;
     int rawPosition = 0;
 
-    Calendar myCalendar ;
+    Calendar myCalendar;
 
     ArrayList<ItemWithFq> itemWithFqsList;
     ArrayList<ItemWithModifier> itemWithModifiersList;
@@ -434,7 +436,7 @@ public class BackOfficeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 //                if (!catName.getText().toString().equals("") && !catValue.getText().toString().equals("")) {
-                if (money.size()!=0) {
+                if (money.size() != 0) {
                     mDHandler.addMoneyCategory(money);
                     dialog.dismiss();
                 } else
@@ -450,17 +452,17 @@ public class BackOfficeActivity extends AppCompatActivity {
                 builder1.setCancelable(false);
 
                 builder1.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog1, int id) {
-                                dialog1.cancel();
-                                dialog.dismiss();
-                            }
-                        });
+                    public void onClick(DialogInterface dialog1, int id) {
+                        dialog1.cancel();
+                        dialog.dismiss();
+                    }
+                });
 
                 builder1.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog1, int id) {
-                                dialog1.cancel();
-                            }
-                        });
+                    public void onClick(DialogInterface dialog1, int id) {
+                        dialog1.cancel();
+                    }
+                });
 
                 AlertDialog alert11 = builder1.create();
                 alert11.show();
@@ -1057,7 +1059,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                 visaText, masterText, chequeText, netPayMethodText, pointText, giftText, creditText;
         final Spinner shiftName, posNo, users;
         Button done, exit;
-        
+
         ImageView printingReport;
 
         done = (Button) dialog.findViewById(R.id.doneReport);
@@ -1087,7 +1089,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         giftText = (TextView) dialog.findViewById(R.id.gifts);
         creditText = (TextView) dialog.findViewById(R.id.credits);
 
-        printingReport= (ImageView) dialog.findViewById(R.id.printing);
+        printingReport = (ImageView) dialog.findViewById(R.id.printing);
 
         Date currentTimeAndDate = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
@@ -1099,16 +1101,17 @@ public class BackOfficeActivity extends AppCompatActivity {
         ArrayList<String> userArray = new ArrayList<>();
         ArrayList<String> posNoArray = new ArrayList<>();
 
-        for(int i=0;i<mDHandler.getAllShifts().size();i++) {
+        for (int i = 0; i < mDHandler.getAllShifts().size(); i++) {
             shiftNameArray.add(mDHandler.getAllShifts().get(i).getShiftName());
         }
-        shiftNameArray.add(0,"All");
+        shiftNameArray.add(0, "All");
 
-        for(int i=0;i<mDHandler.getAllEmployeeRegistration().size();i++) {
-            if(mDHandler.getAllEmployeeRegistration().get(i).getEmployeeType()==0)
-            {userArray.add(mDHandler.getAllEmployeeRegistration().get(i).getEmployeeName());}
+        for (int i = 0; i < mDHandler.getAllEmployeeRegistration().size(); i++) {
+            if (mDHandler.getAllEmployeeRegistration().get(i).getEmployeeType() == 0) {
+                userArray.add(mDHandler.getAllEmployeeRegistration().get(i).getEmployeeName());
+            }
         }
-        userArray.add(0,"All");
+        userArray.add(0, "All");
 
         posNoArray.add("All");
         posNoArray.add("4");
@@ -1127,16 +1130,16 @@ public class BackOfficeActivity extends AppCompatActivity {
         headerData = new ArrayList<OrderHeader>();
 
         headerData = mDHandler.getAllOrderHeader();
-        payData=mDHandler.getAllExistingPay();
+        payData = mDHandler.getAllExistingPay();
         fromDate.setOnClickListener(dateClick);
         toDate.setOnClickListener(dateClick);
 
         mdate = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                month+=1;
+                month += 1;
                 test.setText(dayOfMonth + "-" + month + "-" + year);
-                Log.e("date ",""+dayOfMonth + "-" + month + "-" + year);
+                Log.e("date ", "" + dayOfMonth + "-" + month + "-" + year);
             }
         };
 
@@ -1149,15 +1152,17 @@ public class BackOfficeActivity extends AppCompatActivity {
                 userString[0] = users.getSelectedItem().toString();
                 shiftNameString[0] = shiftName.getSelectedItem().toString();
 
-               if(posNo.getSelectedItem().toString().equals("All")){
-                   posNoString[0]=-1;
-               }else{ posNoString[0]=Integer.parseInt(posNo.getSelectedItem().toString());}
+                if (posNo.getSelectedItem().toString().equals("All")) {
+                    posNoString[0] = -1;
+                } else {
+                    posNoString[0] = Integer.parseInt(posNo.getSelectedItem().toString());
+                }
 
                 for (int i = 0; i < headerData.size(); i++) {
-                    if (filters(i)) {//1
+                    if (filters(i, 0)) {//1
                         if (headerData.get(i).getShiftName().equals(shiftNameString[0]) || shiftNameString[0].equals("All")) {
-                            if ( headerData.get(i).getUserName().equals(userString[0]) ||userString[0].equals("All")) {
-                                if (headerData.get(i).getPointOfSaleNumber()==posNoString[0]|| posNoString[0]==-1) {
+                            if (headerData.get(i).getUserName().equals(userString[0]) || userString[0].equals("All")) {
+                                if (headerData.get(i).getPointOfSaleNumber() == posNoString[0] || posNoString[0] == -1) {
                                     if (headerData.get(i).getOrderKind() == 0) {
                                         sales += headerData.get(i).getAmountDue();
                                         allDiscountSales += headerData.get(i).getAllDiscount();
@@ -1183,23 +1188,27 @@ public class BackOfficeActivity extends AppCompatActivity {
                 for (int i = 0; i < payData.size(); i++) {
                     if (filtersPay(i)) {//1
                         if (payData.get(i).getShiftName().equals(shiftNameString[0]) || shiftNameString[0].equals("All")) {
-                            if ( payData.get(i).getUserName().equals(userString[0]) ||userString[0].equals("All")) {
-                                if (payData.get(i).getPointOfSaleNumber()==posNoString[0]|| posNoString[0]==-1) {
+                            if (payData.get(i).getUserName().equals(userString[0]) || userString[0].equals("All")) {
+                                if (payData.get(i).getPointOfSaleNumber() == posNoString[0] || posNoString[0] == -1) {
                                     if (payData.get(i).getOrderKind() == 0) {
-                                        if(payData.get(i).getPayName().equals("visa"))
-                                        visaValue += payData.get(i).getPayValue();
+                                        if (payData.get(i).getPayName().equals("visa"))
+                                            visaValue += payData.get(i).getPayValue();
                                         else if (payData.get(i).getPayName().equals("master"))
-                                        masterValue += payData.get(i).getPayValue();
+                                            masterValue += payData.get(i).getPayValue();
 
-                                    }else if (payData.get(i).getOrderKind() == 998) {
-                                        if(payData.get(i).getPayName().equals("visa"))
+                                    } else if (payData.get(i).getOrderKind() == 998) {
+                                        if (payData.get(i).getPayName().equals("visa"))
                                             visaValue -= payData.get(i).getPayValue();
                                         else if (payData.get(i).getPayName().equals("master"))
                                             masterValue -= payData.get(i).getPayValue();
                                     }
 
 
-                                }}}}}
+                                }
+                            }
+                        }
+                    }
+                }
 
 
                 netSales = sales - returns;
@@ -1257,6 +1266,161 @@ public class BackOfficeActivity extends AppCompatActivity {
         dialog.setContentView(R.layout.cashier_in_out_dialog);
         dialog.setCanceledOnTouchOutside(true);
 
+        RadioButton All, In, Out;
+
+        Button exit, preview, export, print;
+        TableLayout cashierTable = (TableLayout) dialog.findViewById(R.id.cashierTable);
+
+
+        Spinner shiftName, cashierNo, PosNo;
+
+        exit = (Button) dialog.findViewById(R.id.exitReport);
+        preview = (Button) dialog.findViewById(R.id.doneReport);
+        export = (Button) dialog.findViewById(R.id.exportReport);
+        print = (Button) dialog.findViewById(R.id.printReport);
+
+        fromDateCashier = (TextView) dialog.findViewById(R.id.frDate);
+        toDateCashier = (TextView) dialog.findViewById(R.id.toDate);
+
+        shiftName = (Spinner) dialog.findViewById(R.id.shiftName);
+        cashierNo = (Spinner) dialog.findViewById(R.id.casherNo);
+        PosNo = (Spinner) dialog.findViewById(R.id.posNo);
+
+        All = (RadioButton) dialog.findViewById(R.id.All);
+        In = (RadioButton) dialog.findViewById(R.id.cashierIN);
+        Out = (RadioButton) dialog.findViewById(R.id.cashierOut);
+
+
+        Date currentTimeAndDate = Calendar.getInstance().getTime();
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+        today = df.format(currentTimeAndDate);
+
+        fromDateCashier.setText(today);
+        toDateCashier.setText(today);
+        ArrayList<String> shiftNameArray = new ArrayList<>();
+        ArrayList<String> userArray = new ArrayList<>();
+        ArrayList<String> posNoArray = new ArrayList<>();
+
+        for (int i = 0; i < mDHandler.getAllShifts().size(); i++) {
+            shiftNameArray.add(mDHandler.getAllShifts().get(i).getShiftName());
+        }
+        shiftNameArray.add(0, "All");
+
+        for (int i = 0; i < mDHandler.getAllEmployeeRegistration().size(); i++) {
+            if (mDHandler.getAllEmployeeRegistration().get(i).getEmployeeType() == 0) {
+                userArray.add(String.valueOf(mDHandler.getAllEmployeeRegistration().get(i).getEmployeeNO()));
+            }
+        }
+        userArray.add(0, "All");
+
+        posNoArray.add("All");
+        posNoArray.add("4");
+        posNoArray.add("7");
+
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, shiftNameArray);
+        shiftName.setAdapter(adapter);
+
+        ArrayAdapter<String> adapterUser = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, userArray);
+        cashierNo.setAdapter(adapterUser);
+
+        ArrayAdapter<String> adapterPosNo = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, posNoArray);
+        PosNo.setAdapter(adapterPosNo);
+
+
+        fromDateCashier.setOnClickListener(dateClick);
+        toDateCashier.setOnClickListener(dateClick);
+
+        mdate = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                month += 1;
+                test.setText(dayOfMonth + "-" + month + "-" + year);
+                Log.e("date ", "" + dayOfMonth + "-" + month + "-" + year);
+            }
+        };
+
+        payInData = new ArrayList<Pay>();
+        payInData = mDHandler.getAllPayInOut();
+        preview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                cashierTable.removeAllViews();
+
+                int cashierType = 0;
+                if (All.isChecked()) {
+                    cashierType = -1;
+                } else if (In.isChecked()) {
+                    cashierType = 0;
+                } else if (Out.isChecked()) {
+                    cashierType = 1;
+                }
+                int CashierNo = -1;
+
+                if (cashierNo.getSelectedItem().toString().equals("All")) {
+                    CashierNo = -1;
+                } else {
+                    CashierNo = Integer.parseInt(cashierNo.getSelectedItem().toString());
+                }
+
+
+                String ShiftName = shiftName.getSelectedItem().toString();
+                int posNoString = -1;
+
+                if (PosNo.getSelectedItem().toString().equals("All")) {
+                    posNoString = -1;
+                } else {
+                    posNoString = Integer.parseInt(PosNo.getSelectedItem().toString());
+                }
+
+                for (int i = 0; i < payInData.size(); i++) {
+                    if (filters(i, 1)) {//1
+                        if (payInData.get(i).getShiftName().equals(ShiftName) || ShiftName.equals("All")) {
+                            if (payInData.get(i).getUserNo() == CashierNo || CashierNo == -1) {
+                                if (payInData.get(i).getPosNo() == posNoString || posNoString == -1) {
+                                    if (cashierType == payInData.get(i).getTransType() || cashierType == -1) {
+
+                                        insertCashierInOutReport(cashierTable, String.valueOf(i), payInData.get(i).getTransDate()
+                                                , String.valueOf(payInData.get(i).getPosNo()), payInData.get(i).getUserName(), String.valueOf(payInData.get(i).getTransType())
+                                                , String.valueOf(payInData.get(i).getValue()), "2-2-2000");
+                                    }
+
+                                }
+                            }
+                        }
+                    }//else 1
+                }
+
+
+            }
+        });
+
+
+        print.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+
+        export.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+
+        exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+
+            }
+        });
+
 
         dialog.show();
 
@@ -1274,6 +1438,15 @@ public class BackOfficeActivity extends AppCompatActivity {
                 case R.id.tDate:
                     test = toDate;
                     break;
+                case R.id.frDate:
+                    test = fromDateCashier;
+                    break;
+
+                case R.id.toDate:
+                    test = toDateCashier;
+                    break;
+
+
             }
 
             Calendar cal = Calendar.getInstance();
@@ -1288,14 +1461,24 @@ public class BackOfficeActivity extends AppCompatActivity {
         }
     };
 
-    public boolean filters(int n) {
+    public boolean filters(int n, int switchVh) {
 
 
-        String fromDate1 = fromDate.getText().toString().trim();
-        String toDate1 = toDate.getText().toString();
-
-        String date = headerData.get(n).getVoucherDate();
-
+        String fromDate1="";
+        String toDate1="";
+        String date = "";
+        switch (switchVh) {
+            case 0:
+                fromDate1 = fromDate.getText().toString().trim();
+                toDate1 = toDate.getText().toString();
+                date = headerData.get(n).getVoucherDate();
+                break;
+            case 1:
+                fromDate1 = fromDateCashier.getText().toString().trim();
+                toDate1 = toDateCashier.getText().toString();
+                date = payInData.get(n).getTransDate();
+                break;
+        }
         try {
 
             if ((formatDate(date).after(formatDate(fromDate1)) || formatDate(date).equals(formatDate(fromDate1))) &&
@@ -1452,8 +1635,8 @@ public class BackOfficeActivity extends AppCompatActivity {
                         new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                String AM_PM ;
-                                if(hourOfDay < 12) {
+                                String AM_PM;
+                                if (hourOfDay < 12) {
                                     AM_PM = "AM";
 
                                 } else {
@@ -1478,8 +1661,8 @@ public class BackOfficeActivity extends AppCompatActivity {
                         new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                String AM_PM ;
-                                if(hourOfDay < 12) {
+                                String AM_PM;
+                                if (hourOfDay < 12) {
                                     AM_PM = "AM";
 
                                 } else {
@@ -1545,7 +1728,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(tableLayout.getChildCount() != 0) {
+                if (tableLayout.getChildCount() != 0) {
                     for (int i = 0; i < tableLayout.getChildCount(); i++) {
                         TableRow tableRow = (TableRow) tableLayout.getChildAt(i);
                         TextView shNo = (TextView) tableRow.getChildAt(0);
@@ -1690,6 +1873,62 @@ public class BackOfficeActivity extends AppCompatActivity {
         dialog.show();
 
     }
+
+
+    void insertCashierInOutReport(TableLayout tableLayout, String num, String Date, String pos, String cashierName,
+                                  String transType, String Amount, String Times) {
+        final TableRow row = new TableRow(BackOfficeActivity.this);
+
+        TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
+//        lp.setMargins(2, 2, 2, 2);
+        row.setLayoutParams(lp);
+
+        for (int i = 0; i < 7; i++) {
+            TextView textView = new TextView(BackOfficeActivity.this);
+
+            switch (i) {
+                case 0:
+                    textView.setText(num);
+                    break;
+                case 1:
+                    textView.setText(cashierName);
+                    break;
+                case 2:
+                    textView.setText(Date);
+                    break;
+                case 3:
+                    textView.setText(Times);
+                    break;
+                case 4:
+                    textView.setText(pos);
+                    break;
+                case 5:
+                    textView.setText(transType);
+                    break;
+                case 6:
+                    textView.setText(Amount);
+                    break;
+
+
+            }
+
+            textView.setTextColor(ContextCompat.getColor(BackOfficeActivity.this, R.color.text_color));
+            textView.setBackgroundColor(ContextCompat.getColor(BackOfficeActivity.this, R.color.jeans_blue));
+            textView.setGravity(Gravity.CENTER);
+            textView.setTextSize(16);
+
+            TableRow.LayoutParams lp2 = new TableRow.LayoutParams(100, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+            lp2.setMargins(2, 2, 2, 2);
+            textView.setLayoutParams(lp2);
+
+            row.addView(textView);
+
+        }
+
+        tableLayout.addView(row);
+
+    }
+
 
     void insertRaw(Items items, final TableLayout itemsTableLayout, String text) {
         final TableRow row = new TableRow(BackOfficeActivity.this);
@@ -1837,7 +2076,7 @@ public class BackOfficeActivity extends AppCompatActivity {
     }
 
     boolean checkMoneyInputs(String s, String cName, String cValue, Bitmap pic) {
-        return !s.equals("") && !cName.equals("") && !cValue.equals("") ;
+        return !s.equals("") && !cName.equals("") && !cValue.equals("");
     }
 
     void currentLinear(LinearLayout linearLayout) {

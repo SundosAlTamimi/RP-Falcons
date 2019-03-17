@@ -357,4 +357,5 @@
     <string name="visa">Visa</string>
     <string name="master">Master</string>
     <string name="Preview"> Preview </string>
+    <string name="export">Export</string>
 </resources>
