@@ -54,6 +54,7 @@ import com.tamimi.sundos.restpos.Models.Shift;
 import com.tamimi.sundos.restpos.R;
 import com.tamimi.sundos.restpos.Settings;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -83,7 +84,7 @@ public class BackOfficeActivity extends AppCompatActivity {
 
     private DatePickerDialog.OnDateSetListener mdate;
     int count, count2, nextSerial;
-    TextView test = null, fromDate, toDate, fromDateCashier, toDateCashier,fromDateX, toDateX;
+    TextView test = null, fromDate, toDate, fromDateCashier, toDateCashier, fromDateX, toDateX;
     Dialog dialog;
     String today;
     DatabaseHandler mDHandler;
@@ -92,7 +93,7 @@ public class BackOfficeActivity extends AppCompatActivity {
 
     ArrayList<OrderHeader> headerData;
     ArrayList<PayMethod> payData;
-    List <OrderTransactions> orderTransactionData;
+    List<OrderTransactions> orderTransactionData;
     ArrayList<Pay> payInData;
     TableRow focusedRaw = null;
     int rawPosition = 0;
@@ -376,7 +377,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    void X_ReportDialog(){
+    void X_ReportDialog() {
         dialog = new Dialog(BackOfficeActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
@@ -384,25 +385,37 @@ public class BackOfficeActivity extends AppCompatActivity {
         dialog.setCanceledOnTouchOutside(true);
 
 
+        TextView totalBeforTax, tax, totalAfterTax, services, servicesTax, totalTax, net;
+
+        totalBeforTax = (TextView) dialog.findViewById(R.id.total);
+        tax = (TextView) dialog.findViewById(R.id.tax);
+        totalAfterTax = (TextView) dialog.findViewById(R.id.totalAfterTax);
+        services = (TextView) dialog.findViewById(R.id.services);
+        servicesTax = (TextView) dialog.findViewById(R.id.servicesTax);
+        totalTax = (TextView) dialog.findViewById(R.id.totalTax);
+        net = (TextView) dialog.findViewById(R.id.net);
 
 
-        toDateX=(TextView)dialog.findViewById(R.id.toDateX);
-        fromDateX=(TextView)dialog.findViewById(R.id.fromDateX);
 
-        Button preview,exit,export,print;
-        Spinner ShiftName ,PosNo;
+        toDateX = (TextView) dialog.findViewById(R.id.toDateX);
+        fromDateX = (TextView) dialog.findViewById(R.id.fromDateX);
 
-        ShiftName=(Spinner)dialog.findViewById(R.id.shiftName);
-        PosNo=(Spinner)dialog.findViewById(R.id.posNo);
+        Button preview, exit, export, print;
+        Spinner ShiftName, PosNo;
 
-        preview=(Button)dialog.findViewById(R.id.doneReport);
-        exit=(Button)dialog.findViewById(R.id.exitReport);
-        export=(Button)dialog.findViewById(R.id.exportReport);
-        print=(Button)dialog.findViewById(R.id.printReport);
+        ShiftName = (Spinner) dialog.findViewById(R.id.shiftName);
+        PosNo = (Spinner) dialog.findViewById(R.id.posNo);
 
-        TableLayout tableXreport=(TableLayout)dialog.findViewById(R.id.taxTable);
+        preview = (Button) dialog.findViewById(R.id.doneReport);
+        exit = (Button) dialog.findViewById(R.id.exitReport);
+        export = (Button) dialog.findViewById(R.id.exportReport);
+        print = (Button) dialog.findViewById(R.id.printReport);
 
-        orderTransactionData=new ArrayList<>();
+        TableLayout tableXreportTax = (TableLayout) dialog.findViewById(R.id.TAXPer);
+
+        TableLayout tableXreport = (TableLayout) dialog.findViewById(R.id.taxTable);
+ArrayList<OrderTransactions> orderTransactionsTax=new ArrayList<>();
+        orderTransactionData = new ArrayList<>();
         ArrayList<String> shiftNameArray = new ArrayList<>();
         ArrayList<String> userArray = new ArrayList<>();
         ArrayList<String> posNoArray = new ArrayList<>();
@@ -422,7 +435,6 @@ public class BackOfficeActivity extends AppCompatActivity {
         posNoArray.add("All");
         posNoArray.add("4");
         posNoArray.add("7");
-
 
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, shiftNameArray);
@@ -445,45 +457,88 @@ public class BackOfficeActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 month += 1;
-                test.setText(dayOfMonth + "-" + month + "-" + year);
-                Log.e("date ", "" + dayOfMonth + "-" + month + "-" + year);
+                String monthStr="",dayString="";
+                if(month<=9){
+                    monthStr="0"+String.valueOf(month);
+                }else{
+                    monthStr=String.valueOf(month);
+                }
+                if(dayOfMonth<=9){
+                    dayString="0"+String.valueOf(dayOfMonth);
+                }else{
+                    dayString=String.valueOf(dayOfMonth);
+                }
+
+
+                test.setText(dayString + "-" + monthStr + "-" + year);
+                Log.e("date124 ", "" + dayOfMonth + "-" + month + "-" + year);
             }
         };
 
-        orderTransactionData=mDHandler.getAllOrderTransactions();
 
         preview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               tableXreport.removeAllViews();
+                tableXreport.removeAllViews();
+                tableXreportTax.removeAllViews();
 
-                String ShiftNa = ShiftName.getSelectedItem().toString();
-                int posNoString = -1;
+                String ShiftNa = "SHIFT_NAME";
+                String fromDate = fromDateX.getText().toString();
+                String toDate = toDateX.getText().toString();
+                double totalText = 0.0, tatText = 0.0, netText = 0.0;
+
+                String posNoString = "POS_NO";
+
+                if (ShiftName.getSelectedItem().toString().equals("All")) {
+                    ShiftNa = "SHIFT_NAME";
+
+                } else {
+                    ShiftNa = "'" + ShiftName.getSelectedItem().toString() + "'";
+                }
 
                 if (PosNo.getSelectedItem().toString().equals("All")) {
-                    posNoString = -1;
+                    posNoString = "POS_NO";
+
                 } else {
-                    posNoString = Integer.parseInt(PosNo.getSelectedItem().toString());
+                    posNoString = "'" + PosNo.getSelectedItem().toString() + "'";
                 }
+
+                orderTransactionData = mDHandler.getXReport(ShiftNa, posNoString, fromDate, toDate);
 
                 for (int i = 0; i < orderTransactionData.size(); i++) {
-                    if (filters(i, 3)) {//1
-                        if (orderTransactionData.get(i).getShiftName().equals(ShiftNa) || ShiftNa.equals("All")) {
-                                if (orderTransactionData.get(i).getPosNo() == posNoString || posNoString == -1) {
 
-                                    insertCashierInOutReport(tableXreport, String.valueOf(i), ""
-                                                , "", "", ""
-                                                , "", "2-2-2000",4);
-
-                                   Log.e("mDHandler.getXReport()",""+mDHandler.getXReport().get(0).getPrice()+mDHandler.getXReport().get(0).getItemName());
-                                }
-
-                        }
-                    }//else 1
+                    insertCashierInOutReport(tableXreport, orderTransactionData.get(i).getItemName(), String.valueOf(orderTransactionData.get(i).getTaxValue()),
+                            "", String.valueOf(orderTransactionData.get(i).getTotal())
+                            , "", "", String.valueOf(orderTransactionData.get(i).getTotal() + orderTransactionData.get(i).getTaxValue()), 4);
                 }
 
-                for (int i=0;i<orderTransactionData.size();i++){
+                for (int a = 0; a < tableXreport.getChildCount(); a++) {
 
+                    TableRow rows = (TableRow) tableXreport.getChildAt(a);
+                    TextView textTotal = (TextView) rows.getChildAt(1);
+                    TextView textTax = (TextView) rows.getChildAt(2);
+                    TextView textNet = (TextView) rows.getChildAt(3);
+
+                    totalText += Double.parseDouble(textTotal.getText().toString());
+                    tatText += Double.parseDouble(textTax.getText().toString());
+                    netText += Double.parseDouble(textNet.getText().toString());
+
+                }
+
+                totalBeforTax.setText("" +totalText);
+                tax.setText("" + tatText);
+                totalAfterTax.setText("" + netText);
+//                services.setText("" + totalText);
+//                servicesTax.setText("" + totalText);
+                totalTax.setText("" + totalText);
+                net.setText("" + netText);
+
+                orderTransactionData=mDHandler.getXReportPercent(ShiftNa, posNoString, fromDate, toDate);
+                for(int i=0;i<orderTransactionData.size();i++) {
+
+                    insertCashierInOutReport(tableXreportTax,String.valueOf(orderTransactionData.get(i).getTaxPerc()),
+                                              String.valueOf(orderTransactionData.get(i).getTaxValue()),"",
+                                              String.valueOf(orderTransactionData.get(i).getTotal()),"","","",3);
 
                 }
 
@@ -496,7 +551,6 @@ public class BackOfficeActivity extends AppCompatActivity {
             public void onClick(View v) {
 
 
-
             }
         });
 
@@ -504,7 +558,6 @@ public class BackOfficeActivity extends AppCompatActivity {
         print.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
 
 
             }
@@ -519,7 +572,6 @@ public class BackOfficeActivity extends AppCompatActivity {
 
             }
         });
-
 
 
         dialog.show();
@@ -1538,7 +1590,7 @@ public class BackOfficeActivity extends AppCompatActivity {
 
                                         insertCashierInOutReport(cashierTable, String.valueOf(i), payInData.get(i).getTransDate()
                                                 , String.valueOf(payInData.get(i).getPosNo()), payInData.get(i).getUserName(), String.valueOf(payInData.get(i).getTransType())
-                                                , String.valueOf(payInData.get(i).getValue()), "2-2-2000",7);
+                                                , String.valueOf(payInData.get(i).getValue()), "2-2-2000", 7);
                                     }
 
                                 }
@@ -1626,8 +1678,8 @@ public class BackOfficeActivity extends AppCompatActivity {
     public boolean filters(int n, int switchVh) {
 
 
-        String fromDate1="";
-        String toDate1="";
+        String fromDate1 = "";
+        String toDate1 = "";
         String date = "";
         switch (switchVh) {
             case 0:
@@ -1642,7 +1694,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                 break;
             case 3:
                 fromDate1 = fromDateX.getText().toString().trim();
-                toDate1 =  toDateX.getText().toString();
+                toDate1 = toDateX.getText().toString();
                 date = orderTransactionData.get(n).getVoucherDate();
                 break;
         }
@@ -1689,6 +1741,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         String myFormat = "dd-MM-yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
         Date d = sdf.parse(date);
+//        Log.e("date222",""+d);
         return d;
     }
 
@@ -2043,7 +2096,7 @@ public class BackOfficeActivity extends AppCompatActivity {
 
 
     void insertCashierInOutReport(TableLayout tableLayout, String num, String Date, String pos, String cashierName,
-                                  String transType, String Amount, String Times,int switchCount) {
+                                  String transType, String Amount, String Times, int switchCount) {
         final TableRow row = new TableRow(BackOfficeActivity.this);
 
         TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);

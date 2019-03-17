@@ -12,6 +12,7 @@ import android.util.Log;
 import com.tamimi.sundos.restpos.Models.BlindClose;
 import com.tamimi.sundos.restpos.Models.BlindCloseDetails;
 import com.tamimi.sundos.restpos.Models.BlindShift;
+import com.tamimi.sundos.restpos.Models.CancleOrder;
 import com.tamimi.sundos.restpos.Models.Cashier;
 import com.tamimi.sundos.restpos.Models.CategoryWithModifier;
 import com.tamimi.sundos.restpos.Models.Cheque;
@@ -455,8 +456,26 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String NAME_CATEGORY_FAMILY2 = "NAME_CATEGORY_FAMILY";
 
     //____________________________________________________________________________________
+    private static final String CANCEL_ORDER = "CANCEL_ORDER";
+
+    private static final String ORDER_NO13 = "ORDER_NO";
+    private static final String TRANCE_DATE13 = "TRANCE_DATE";
+    private static final String USER_NO13 = "USER_NO";
+    private static final String USER_NAME13 = "USER_NAME";
+    private static final String SHIFT_NO13 = "SHIFT_NO";
+    private static final String SHIFT_NAME13 = "SHIFT_NAME";
+    private static final String WAITER_NO13 = "WAITER_NO";
+    private static final String WAITER_NAME13 = "WAITER_NAME";
+    private static final String ITEM_CODE13 = "ITEM_CODE";
+    private static final String ITEM_NAME13 = "ITEM_NAME";
+    private static final String QTY13 = "QTY";
+    private static final String PRICE13 = "PRICE";
+    private static final String TOTAL13 = "TOTAL";
+    private static final String REASON13 = "REASON";
+    private static final String IS_ALL_CANCEL13 = "IS_ALL_CANCEL";
 
 
+    //____________________________________________________________________________________
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -957,7 +976,28 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             + NAME_CATEGORY_FAMILY2 + " TEXT " + ")";
         db.execSQL(CREATE_TABLE_FAMILY_CATEGORY_TABLE);
 
-}
+        //_____________________________________________________________________
+
+        String CREATE_TABLE_CANCLE_ORDER_TABLE = "CREATE TABLE " + CANCEL_ORDER + "("
+                + ORDER_NO13 + " TEXT ,"
+                + TRANCE_DATE13 + " TEXT,"
+                + USER_NO13 + " INTEGER,"
+                + USER_NAME13 + " TEXT,"
+                + SHIFT_NAME13 + " TEXT,"
+                + SHIFT_NO13 + " INTEGER,"
+                + WAITER_NAME13 + " TEXT,"
+                + WAITER_NO13 + " INTEGER,"
+                + ITEM_CODE13 + " INTEGER,"
+                + ITEM_NAME13 + " TEXT,"
+                + QTY13 + " INTEGER ,"
+                + PRICE13 + " INTEGER ,"
+                + TOTAL13 + " INTEGER ,"
+                + REASON13 + " TEXT ,"
+                + IS_ALL_CANCEL13 + " INTEGER " + ")";
+        db.execSQL(CREATE_TABLE_CANCLE_ORDER_TABLE);
+
+
+    }
 
 
     // Upgrading database
@@ -994,6 +1034,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + BLIND_CLOSE); //27
         db.execSQL("DROP TABLE IF EXISTS " + BLIND_CLOSE_DETAILS); //28
         db.execSQL("DROP TABLE IF EXISTS " + FAMILY_CATEGORY_TABLE); //29
+        db.execSQL("DROP TABLE IF EXISTS " + CANCEL_ORDER); //30
         // Create tables again
         onCreate(db);
     }
@@ -1654,6 +1695,32 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(NAME_CATEGORY_FAMILY2, familyCategory.getName());
 
         db.insert(FAMILY_CATEGORY_TABLE, null, values);
+
+        db.close();
+    }
+
+
+    public void addCancleOrder(CancleOrder cancleOrder) {
+        db = this.getReadableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(ORDER_NO13, cancleOrder.getOrderNo());
+        values.put(TRANCE_DATE13, cancleOrder.getTransDate());
+        values.put(USER_NAME13, cancleOrder.getUserName());
+        values.put(USER_NO13, cancleOrder.getUserNo());
+        values.put(SHIFT_NAME13, cancleOrder.getShiftName());
+        values.put(SHIFT_NO13, cancleOrder.getShiftNo());
+        values.put(WAITER_NAME13, cancleOrder.getWaiterName());
+        values.put(WAITER_NO13, cancleOrder.getWaiterNo());
+        values.put(ITEM_CODE13, cancleOrder.getItemCode());
+        values.put(ITEM_NAME13, cancleOrder.getItemName());
+        values.put(QTY13, cancleOrder.getQty());
+        values.put(PRICE13, cancleOrder.getPrice());
+        values.put(TOTAL13, cancleOrder.getTotal());
+        values.put(REASON13, cancleOrder.getReason());
+        values.put(IS_ALL_CANCEL13, cancleOrder.getIsAllCancel());
+
+        db.insert(CANCEL_ORDER, null, values);
 
         db.close();
     }
@@ -2856,13 +2923,52 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return familyCategoryArrayList;
     }
 
-    //SELECT ITEM_CODE, SUM(ITEM_QTY) , SUM(ROW_INDEX)FROM ITEMS_INFO GROUP BY ITEM_CODE  ;
-//SELECT ITEM_NAME, SUM(PRICE) FROM ORDER_TRANSACTIONS GROUP BY ITEM_NAME  ;
+    public List<CancleOrder> getAllCanselOrder() {
+        List<CancleOrder> items = new ArrayList<CancleOrder>();
 
-    public ArrayList<OrderTransactions> getXReport() {
+        String selectQuery = "SELECT  * FROM " + CANCEL_ORDER;
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                CancleOrder cancleOrder = new CancleOrder();
+
+                cancleOrder.setOrderNo(cursor.getInt(0));
+                cancleOrder.setTransDate(cursor.getString(1));
+                cancleOrder.setUserName(cursor.getString(2));
+                cancleOrder.setUserNo(cursor.getInt(3));
+                cancleOrder.setShiftName(cursor.getString(4));
+                cancleOrder.setShiftNo(cursor.getInt(5));
+                cancleOrder.setWaiterName(cursor.getString(6));
+                cancleOrder.setWaiterNo(cursor.getInt(7));
+                cancleOrder.setItemCode(cursor.getString(8));
+                cancleOrder.setItemName(cursor.getString(9));
+                cancleOrder.setQty(Double.parseDouble(cursor.getString(10)));
+                cancleOrder.setPrice(Double.parseDouble(cursor.getString(11)));
+                cancleOrder.setTotal(Double.parseDouble(cursor.getString(12)));
+                cancleOrder.setReason(cursor.getString(13));
+                cancleOrder.setIsAllCancel(Integer.parseInt(cursor.getString(14)));
+
+
+                items.add(cancleOrder);
+            } while (cursor.moveToNext());
+        }
+        return items;
+    }
+
+
+    public ArrayList<OrderTransactions> getXReport(String shiftName,String PosNo ,String fDate ,String toDate ) {
         ArrayList<OrderTransactions> orderTransactionsArrayList = new ArrayList<>();
 
-        String selectQuery ="SELECT ITEM_NAME, SUM(PRICE) FROM ORDER_TRANSACTIONS GROUP BY ITEM_NAME" ;
+        String selectQuery ="SELECT ITEM_NAME, COALESCE(SUM(TOTAL),-1),COALESCE(SUM (TAX_VLUE),-1) FROM ORDER_TRANSACTIONS " +
+                "WHERE SHIFT_NAME = "+shiftName+" and POS_NO= "+PosNo+" AND VOUCHER_DATE BETWEEN '"+fDate+"' AND '"+toDate+"' GROUP BY ITEM_BARCODE1" ;
+
+//        String selectQuery ="SELECT ITEM_NAME, COALESCE(SUM(TOTAL),-1),COALESCE(SUM (TAX_VLUE),-1) FROM ORDER_TRANSACTIONS " +
+//               "WHERE SHIFT_NAME = "+shiftName+" and POS_NO= "+PosNo+" GROUP BY ITEM_NAME" ;
+
+        Log.e("se12",""+selectQuery);
+
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -2871,15 +2977,45 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 OrderTransactions orderTransactions = new OrderTransactions();
 
                 orderTransactions.setItemName(cursor.getString(0));
-                orderTransactions.setPrice(Double.parseDouble(cursor.getString(1)));
+                orderTransactions.setTotal(Double.parseDouble(cursor.getString(1)));
+                orderTransactions.setTaxValue(Double.parseDouble(cursor.getString(2)));
+
 
                 orderTransactionsArrayList.add(orderTransactions);
 
             } while (cursor.moveToNext());
         }
+        return orderTransactionsArrayList;
+    }
 
-        Log.e("orderTrans ::: ",""+orderTransactionsArrayList.toString());
 
+    public ArrayList<OrderTransactions> getXReportPercent(String shiftName,String PosNo ,String fDate ,String toDate ) {
+        ArrayList<OrderTransactions> orderTransactionsArrayList = new ArrayList<>();
+
+        String selectQuery ="SELECT TAX_PERC, COALESCE(SUM(TOTAL),-1),COALESCE(SUM (TAX_VLUE),-1) FROM ORDER_TRANSACTIONS " +
+                "WHERE SHIFT_NAME = "+shiftName+" and POS_NO= "+PosNo+" AND VOUCHER_DATE BETWEEN '"+fDate+"' AND '"+toDate+"' GROUP BY TAX_PERC" ;
+
+//        String selectQuery ="SELECT ITEM_NAME, COALESCE(SUM(TOTAL),-1),COALESCE(SUM (TAX_VLUE),-1) FROM ORDER_TRANSACTIONS " +
+//               "WHERE SHIFT_NAME = "+shiftName+" and POS_NO= "+PosNo+" GROUP BY ITEM_NAME" ;
+
+        Log.e("se123",""+selectQuery);
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                OrderTransactions orderTransactions = new OrderTransactions();
+
+                orderTransactions.setTaxPerc(Integer.parseInt(cursor.getString(0)));
+                orderTransactions.setTotal(Double.parseDouble(cursor.getString(1)));
+                orderTransactions.setTaxValue(Double.parseDouble(cursor.getString(2)));
+
+
+                orderTransactionsArrayList.add(orderTransactions);
+
+            } while (cursor.moveToNext());
+        }
         return orderTransactionsArrayList;
     }
 
