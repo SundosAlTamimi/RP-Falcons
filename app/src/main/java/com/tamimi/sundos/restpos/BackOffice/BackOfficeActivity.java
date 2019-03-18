@@ -35,7 +35,6 @@ import android.widget.Toast;
 
 import com.tamimi.sundos.restpos.DatabaseHandler;
 import com.tamimi.sundos.restpos.DineInLayout;
-import com.tamimi.sundos.restpos.Main;
 import com.tamimi.sundos.restpos.Models.CategoryWithModifier;
 import com.tamimi.sundos.restpos.Models.CustomerPayment;
 import com.tamimi.sundos.restpos.Models.ForceQuestions;
@@ -52,7 +51,6 @@ import com.tamimi.sundos.restpos.Models.Pay;
 import com.tamimi.sundos.restpos.Models.PayMethod;
 import com.tamimi.sundos.restpos.Models.Shift;
 import com.tamimi.sundos.restpos.Models.VoidResons;
-import com.tamimi.sundos.restpos.Order;
 import com.tamimi.sundos.restpos.R;
 import com.tamimi.sundos.restpos.Settings;
 
@@ -753,7 +751,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         final Dialog dialog = new Dialog(BackOfficeActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
-        dialog.setContentView(R.layout.void_reason_dialog);
+        dialog.setContentView(R.layout.add_void_reason_dialog);
 
         LinearLayout addR = (LinearLayout) dialog.findViewById(R.id.add_reason);
         EditText reason = (EditText) dialog.findViewById(R.id.reason);

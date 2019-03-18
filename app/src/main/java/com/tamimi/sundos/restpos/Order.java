@@ -26,6 +26,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.tamimi.sundos.restpos.BackOffice.BackOfficeActivity;
 import com.tamimi.sundos.restpos.BackOffice.MenuRegistration;
 import com.tamimi.sundos.restpos.Models.ForceQuestions;
 import com.tamimi.sundos.restpos.Models.ItemWithFq;
@@ -37,6 +38,7 @@ import com.tamimi.sundos.restpos.Models.OrderTransactions;
 import com.tamimi.sundos.restpos.Models.PayMethod;
 import com.tamimi.sundos.restpos.Models.UsedCategories;
 import com.tamimi.sundos.restpos.Models.UsedItems;
+import com.tamimi.sundos.restpos.Models.VoidResons;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -590,6 +592,7 @@ public class Order extends AppCompatActivity {
             builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
+                    showVoidReasonDialog();
                     tableLayout.removeView(row);
                     wantedItems.remove(Integer.parseInt(row.getTag().toString()));
                     lineDiscount.remove(Integer.parseInt(row.getTag().toString()));
@@ -609,6 +612,52 @@ public class Order extends AppCompatActivity {
             alertDialog.show();
         } else
             Toast.makeText(Order.this, " Please choose item to be deleted", Toast.LENGTH_SHORT).show();
+    }
+
+    void showVoidReasonDialog() {
+
+        dialog = new Dialog(Order.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.void_reason_dialog);
+        dialog.setCanceledOnTouchOutside(false);
+
+        TableLayout reasons = (TableLayout) dialog.findViewById(R.id.tableOfReasons);
+        Button save = (Button) dialog.findViewById(R.id.done);
+
+        ArrayList<VoidResons> resons = mDbHandler.getAllVoidReasons();
+
+        reasons.removeAllViews();
+        RadioGroup radioGroup = new RadioGroup(Order.this);
+        TableRow.LayoutParams lp1 = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+        lp1.setMargins(0, 2, 2, 6);
+        radioGroup.setLayoutParams(lp1);
+
+        final TableRow row = new TableRow(Order.this);
+        TableLayout.LayoutParams lp = new TableLayout.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+        lp.setMargins(0, 2, 2, 6);
+        row.setLayoutParams(lp);
+
+        for (int k = 0; k < resons.size(); k++) {
+
+            if (resons.get(k).getActiveated() == 1) {
+                RadioButton radioButton = new RadioButton(Order.this);
+                radioButton.setText(resons.get(k).getVoidReason());
+                radioButton.setTextSize(20);
+                radioButton.setTextColor(ContextCompat.getColor(Order.this, R.color.text_color));
+
+                radioGroup.addView(radioButton);
+            }
+        }
+        row.addView(radioGroup);
+        reasons.addView(row);
+
+        save.setOnClickListener(view -> {
+            // here ...
+        });
+
+        dialog.show();
+
     }
 
     void resetPosition() {
@@ -1141,7 +1190,7 @@ public class Order extends AppCompatActivity {
                 break;
             }
         }
-        disCount.setText((discNotAvailableForAll ? "0.0" : "" + discountValue ));
+        disCount.setText((discNotAvailableForAll ? "0.0" : "" + discountValue));
 
         double subTotalValue = sum - (lineDisCountValue + discountValue) + deliveryChargeValue;
         double serviceValue = sum * (Settings.service_value / 100);
@@ -1381,11 +1430,11 @@ public class Order extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if(orderTypeFlag == 0){
-            Intent intent = new Intent(Order.this , Main.class);
+        if (orderTypeFlag == 0) {
+            Intent intent = new Intent(Order.this, Main.class);
             startActivity(intent);
-        }else {
-            Intent intent = new Intent(Order.this , DineIn.class);
+        } else {
+            Intent intent = new Intent(Order.this, DineIn.class);
             startActivity(intent);
         }
     }

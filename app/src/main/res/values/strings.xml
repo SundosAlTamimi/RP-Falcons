@@ -253,6 +253,7 @@
     <string name="join_item_with_question">Join Item With Force question</string>
 
     <string name="add_void_reason">Add Void Reason</string>
+    <string name="void_reason">Void Reason</string>
 
     <string name="customer_name"> Customer Name </string>
     <string name="customer_no"> Customer  NO  </string>
