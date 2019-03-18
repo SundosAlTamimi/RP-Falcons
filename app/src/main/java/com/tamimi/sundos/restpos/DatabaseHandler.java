@@ -459,13 +459,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     //____________________________________________________________________________________
     private static final String VOID_REASONS = "VOID_REASONS";
 
-    private static final String SHIFT_NAME13 = "SHIFT_NAME";
-    private static final String SHIFT_NO13 = "SHIFT_NO";
-    private static final String USER_NAME13 = "USER_NAME";
-    private static final String USER_NUMBER13 = "USER_NUMBER";
-    private static final String VOID_REASON13 = "VOID_REASON";
-    private static final String DATE13 = "DATE";
-    private static final String ACTIVEATED13 = "ACTIVEATED";
+    private static final String SHIFT_NAME15 = "SHIFT_NAME";
+    private static final String SHIFT_NO15 = "SHIFT_NO";
+    private static final String USER_NAME15 = "USER_NAME";
+    private static final String USER_NUMBER15 = "USER_NUMBER";
+    private static final String VOID_REASON15 = "VOID_REASON";
+    private static final String DATE15 = "DATE";
+    private static final String ACTIVEATED15 = "ACTIVEATED";
 
     //____________________________________________________________________________________
     private static final String CANCEL_ORDER = "CANCEL_ORDER";
@@ -990,13 +990,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         //___________________________________________________________________________________
 
         String CREATE_TABLE_VOID_REASONS = "CREATE TABLE " + VOID_REASONS + "("
-                + SHIFT_NO13 + " INTEGER,"
-                + SHIFT_NAME13 + " TEXT,"
-                + USER_NUMBER13 + " INTEGER,"
-                + USER_NAME13 + " TEXT,"
-                + VOID_REASON13 + " TEXT,"
-                + DATE13 + " TEXT,"
-                + ACTIVEATED13 + " INTEGER" + ")";
+                + SHIFT_NO15 + " INTEGER,"
+                + SHIFT_NAME15 + " TEXT,"
+                + USER_NUMBER15 + " INTEGER,"
+                + USER_NAME15 + " TEXT,"
+                + VOID_REASON15 + " TEXT,"
+                + DATE15 + " TEXT,"
+                + ACTIVEATED15 + " INTEGER" + ")";
         db.execSQL(CREATE_TABLE_VOID_REASONS);
 
 
@@ -1064,13 +1064,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 //        onCreate(db);
 
         String CREATE_TABLE_VOID_REASONS = "CREATE TABLE " + VOID_REASONS + "("
-                + SHIFT_NO13 + " INTEGER,"
-                + SHIFT_NAME13 + " TEXT,"
-                + USER_NUMBER13 + " INTEGER,"
-                + USER_NAME13 + " TEXT,"
-                + VOID_REASON13 + " TEXT,"
-                + DATE13 + " TEXT,"
-                + ACTIVEATED13 + " INTEGER" + ")";
+                + SHIFT_NO15 + " INTEGER,"
+                + SHIFT_NAME15 + " TEXT,"
+                + USER_NUMBER15 + " INTEGER,"
+                + USER_NAME15 + " TEXT,"
+                + VOID_REASON15 + " TEXT,"
+                + DATE15 + " TEXT,"
+                + ACTIVEATED15 + " INTEGER" + ")";
         db.execSQL(CREATE_TABLE_VOID_REASONS);
 
     }
@@ -1765,13 +1765,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
-        values.put(SHIFT_NO13, obj.getShiftNo());
-        values.put(SHIFT_NAME13, obj.getShiftName());
-        values.put(USER_NUMBER13, obj.getUserNo());
-        values.put(USER_NAME13, obj.getUserName());
-        values.put(VOID_REASON13, obj.getVoidReason());
-        values.put(DATE13, obj.getDate());
-        values.put(ACTIVEATED13, obj.getActiveated());
+        values.put(SHIFT_NO15, obj.getShiftNo());
+        values.put(SHIFT_NAME15, obj.getShiftName());
+        values.put(USER_NUMBER15, obj.getUserNo());
+        values.put(USER_NAME15, obj.getUserName());
+        values.put(VOID_REASON15, obj.getVoidReason());
+        values.put(DATE15, obj.getDate());
+        values.put(ACTIVEATED15, obj.getActiveated());
 
         db.insert(VOID_REASONS, null, values);
 
