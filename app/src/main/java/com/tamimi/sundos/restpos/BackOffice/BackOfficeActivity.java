@@ -230,7 +230,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     break;
 
                 case R.id.voiding_reasons:
-                    showVoidReasonsDialog();
+                    showAddVoidReasonsDialog();
                     break;
 
                 case R.id.store:
@@ -256,12 +256,11 @@ public class BackOfficeActivity extends AppCompatActivity {
                     break;
 
                 case R.id.canceled_order_history:
+                    showCanceledOrdersHistory();
                     break;
 
                 case R.id.daily_cash_out:
-
                     X_ReportDialog();
-
                     break;
 
                 case R.id.sales_by_employee:
@@ -747,7 +746,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    void showVoidReasonsDialog() {
+    void showAddVoidReasonsDialog() {
         final Dialog dialog = new Dialog(BackOfficeActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
@@ -1686,6 +1685,153 @@ public class BackOfficeActivity extends AppCompatActivity {
             }
         });
 
+
+        dialog.show();
+
+    }
+
+    void showCanceledOrdersHistory() {
+        dialog = new Dialog(BackOfficeActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.canceled_orders_history_dialog);
+        dialog.setCanceledOnTouchOutside(true);
+
+        RadioButton All, In, Out;
+
+        Button exit, preview, export, print;
+        TableLayout cashierTable = (TableLayout) dialog.findViewById(R.id.cashierTable);
+
+        Spinner shiftName, cashierNo, PosNo;
+
+        exit = (Button) dialog.findViewById(R.id.exitReport);
+        preview = (Button) dialog.findViewById(R.id.doneReport);
+        export = (Button) dialog.findViewById(R.id.exportReport);
+        print = (Button) dialog.findViewById(R.id.printReport);
+
+        fromDateCashier = (TextView) dialog.findViewById(R.id.frDate);
+        toDateCashier = (TextView) dialog.findViewById(R.id.toDate);
+
+        shiftName = (Spinner) dialog.findViewById(R.id.shiftName);
+        cashierNo = (Spinner) dialog.findViewById(R.id.casherNo);
+        PosNo = (Spinner) dialog.findViewById(R.id.posNo);
+
+        All = (RadioButton) dialog.findViewById(R.id.All);
+        In = (RadioButton) dialog.findViewById(R.id.cashierIN);
+        Out = (RadioButton) dialog.findViewById(R.id.cashierOut);
+
+        fromDateCashier.setText(today);
+        toDateCashier.setText(today);
+        ArrayList<String> shiftNameArray = new ArrayList<>();
+        ArrayList<String> userArray = new ArrayList<>();
+        ArrayList<String> posNoArray = new ArrayList<>();
+
+        for (int i = 0; i < mDHandler.getAllShifts().size(); i++) {
+            shiftNameArray.add(mDHandler.getAllShifts().get(i).getShiftName());
+        }
+        shiftNameArray.add(0, "All");
+
+        for (int i = 0; i < mDHandler.getAllEmployeeRegistration().size(); i++) {
+            if (mDHandler.getAllEmployeeRegistration().get(i).getEmployeeType() == 0) {
+                userArray.add(String.valueOf(mDHandler.getAllEmployeeRegistration().get(i).getEmployeeNO()));
+            }
+        }
+        userArray.add(0, "All");
+
+        posNoArray.add("All");
+        posNoArray.add("4");
+        posNoArray.add("7");
+
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, shiftNameArray);
+        shiftName.setAdapter(adapter);
+
+        ArrayAdapter<String> adapterUser = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, userArray);
+        cashierNo.setAdapter(adapterUser);
+
+        ArrayAdapter<String> adapterPosNo = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, posNoArray);
+        PosNo.setAdapter(adapterPosNo);
+
+
+        fromDateCashier.setOnClickListener(dateClick);
+        toDateCashier.setOnClickListener(dateClick);
+
+        mdate = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                month += 1;
+                test.setText(dayOfMonth + "-" + month + "-" + year);
+                Log.e("date ", "" + dayOfMonth + "-" + month + "-" + year);
+            }
+        };
+
+        payInData = mDHandler.getAllPayInOut();
+        preview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                cashierTable.removeAllViews();
+
+                int cashierType = 0;
+                if (All.isChecked()) {
+                    cashierType = -1;
+                } else if (In.isChecked()) {
+                    cashierType = 0;
+                } else if (Out.isChecked()) {
+                    cashierType = 1;
+                }
+                int CashierNo = -1;
+
+                if (cashierNo.getSelectedItem().toString().equals("All")) {
+                    CashierNo = -1;
+                } else {
+                    CashierNo = Integer.parseInt(cashierNo.getSelectedItem().toString());
+                }
+
+                String ShiftName = shiftName.getSelectedItem().toString();
+                int posNoString = -1;
+
+                if (PosNo.getSelectedItem().toString().equals("All")) {
+                    posNoString = -1;
+                } else {
+                    posNoString = Integer.parseInt(PosNo.getSelectedItem().toString());
+                }
+
+                for (int i = 0; i < payInData.size(); i++) {
+                    if (filters(i, 1)) {//1
+                        if (payInData.get(i).getShiftName().equals(ShiftName) || ShiftName.equals("All")) {
+                            if (payInData.get(i).getUserNo() == CashierNo || CashierNo == -1) {
+                                if (payInData.get(i).getPosNo() == posNoString || posNoString == -1) {
+                                    if (cashierType == payInData.get(i).getTransType() || cashierType == -1) {
+
+                                        insertCashierInOutReport(cashierTable, String.valueOf(i), payInData.get(i).getTransDate()
+                                                , String.valueOf(payInData.get(i).getPosNo()), payInData.get(i).getUserName(), String.valueOf(payInData.get(i).getTransType())
+                                                , String.valueOf(payInData.get(i).getValue()), "2-2-2000", 7);
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        print.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        export.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        exit.setOnClickListener(v -> dialog.dismiss());
 
         dialog.show();
 

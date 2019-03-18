@@ -654,6 +654,10 @@ public class Order extends AppCompatActivity {
 
         save.setOnClickListener(view -> {
             // here ...
+            int selectedId = radioGroup.getCheckedRadioButtonId();
+            RadioButton radioButton = (RadioButton) findViewById(selectedId);
+
+            dialog.dismiss();
         });
 
         dialog.show();
