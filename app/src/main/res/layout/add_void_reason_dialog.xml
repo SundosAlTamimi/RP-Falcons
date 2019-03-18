@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="900dp"
+    android:layout_height="450dp"
+    android:background="@color/layer3"
+    android:orientation="vertical"
+    android:padding="40dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="350dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:lineSpacingExtra="15dp"
+                android:text="@string/add_void_reason"
+                android:textColor="@color/text_color"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/reason"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="@color/layer1"
+                android:gravity="top"
+                android:padding="10dp"
+                android:textColor="@color/text_color" />
+
+            <CheckBox
+                android:id="@+id/isActive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:checked="true"
+                android:paddingHorizontal="10dp"
+                android:text="@string/active"
+                android:textColor="@color/text_color"
+                android:textSize="20sp" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/add_reason"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="100dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:gravity="center"
+                android:text="@string/add"
+                android:textColor="@color/text_color"
+                android:textSize="19sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/right_arrow"
+                android:textAllCaps="false"
+                android:textColor="@color/layer1"
+                android:textSize="17sp" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.1"
+            android:background="@drawable/focused_table"
+            android:orientation="vertical">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TableLayout
+                    android:id="@+id/tableOfReasons"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="20dp">
+
+
+                </TableLayout>
+            </ScrollView>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/done"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_marginRight="20dp"
+            android:background="@color/colorPrimary"
+            android:text="@string/save"
+            android:textAllCaps="false"
+            android:textColor="@color/layer1"
+            android:textSize="15dp" />
+
+        <Button
+            android:id="@+id/exit"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_marginRight="20dp"
+            android:background="@color/exit"
+            android:text="@string/exit"
+            android:textAllCaps="false"
+            android:textColor="@color/layer1"
+            android:textSize="15dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

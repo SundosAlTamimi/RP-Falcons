@@ -39,6 +39,7 @@ import com.tamimi.sundos.restpos.Models.Shift;
 import com.tamimi.sundos.restpos.Models.Tables;
 import com.tamimi.sundos.restpos.Models.UsedCategories;
 import com.tamimi.sundos.restpos.Models.UsedItems;
+import com.tamimi.sundos.restpos.Models.VoidResons;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ import java.util.List;
 public class DatabaseHandler extends SQLiteOpenHelper {
     //hellohjt
     // Database Version
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     // Database Name
     private static final String DATABASE_NAME = "RestPos";
@@ -454,6 +455,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String SERIAL2 = "SERIAL";
     private static final String TYPE2 = "TYPE";
     private static final String NAME_CATEGORY_FAMILY2 = "NAME_CATEGORY_FAMILY";
+
+    //____________________________________________________________________________________
+    private static final String VOID_REASONS = "VOID_REASONS";
+
+    private static final String SHIFT_NAME13 = "SHIFT_NAME";
+    private static final String SHIFT_NO13 = "SHIFT_NO";
+    private static final String USER_NAME13 = "USER_NAME";
+    private static final String USER_NUMBER13 = "USER_NUMBER";
+    private static final String VOID_REASON13 = "VOID_REASON";
+    private static final String DATE13 = "DATE";
+    private static final String ACTIVEATED13 = "ACTIVEATED";
 
     //____________________________________________________________________________________
     private static final String CANCEL_ORDER = "CANCEL_ORDER";
@@ -967,14 +979,26 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_CUSTOMER_REGISTRATION_TABLE);
 
 
+        //___________________________________________________________________________________
 
-    //___________________________________________________________________________________
-
-    String CREATE_TABLE_FAMILY_CATEGORY_TABLE = "CREATE TABLE " + FAMILY_CATEGORY_TABLE + "("
-            +SERIAL2 + " INTEGER ,"
-            + TYPE2 + " INTEGER ,"
-            + NAME_CATEGORY_FAMILY2 + " TEXT " + ")";
+        String CREATE_TABLE_FAMILY_CATEGORY_TABLE = "CREATE TABLE " + FAMILY_CATEGORY_TABLE + "("
+                + SERIAL2 + " INTEGER ,"
+                + TYPE2 + " INTEGER ,"
+                + NAME_CATEGORY_FAMILY2 + " TEXT " + ")";
         db.execSQL(CREATE_TABLE_FAMILY_CATEGORY_TABLE);
+
+        //___________________________________________________________________________________
+
+        String CREATE_TABLE_VOID_REASONS = "CREATE TABLE " + VOID_REASONS + "("
+                + SHIFT_NO13 + " INTEGER,"
+                + SHIFT_NAME13 + " TEXT,"
+                + USER_NUMBER13 + " INTEGER,"
+                + USER_NAME13 + " TEXT,"
+                + VOID_REASON13 + " TEXT,"
+                + DATE13 + " TEXT,"
+                + ACTIVEATED13 + " INTEGER" + ")";
+        db.execSQL(CREATE_TABLE_VOID_REASONS);
+
 
         //_____________________________________________________________________
 
@@ -1006,38 +1030,49 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
         // Drop older table if existed
-        db.execSQL("DROP TABLE IF EXISTS " + ITEMS); //1
-        db.execSQL("DROP TABLE IF EXISTS " + RECIPES); //2
-        db.execSQL("DROP TABLE IF EXISTS " + USED_CATEGORIES); //3
-        db.execSQL("DROP TABLE IF EXISTS " + USED_ITEMS);  //4
-        db.execSQL("DROP TABLE IF EXISTS " + TABLES);  //5
-        db.execSQL("DROP TABLE IF EXISTS " + MONEY_CATEGORIES);  //6
-        db.execSQL("DROP TABLE IF EXISTS " + CASHIER_IN_OUT);  //7
-        db.execSQL("DROP TABLE IF EXISTS " + PAY_IN_OUT);  //8
-        db.execSQL("DROP TABLE IF EXISTS " + CREDIT_CARDS);  //9
-        db.execSQL("DROP TABLE IF EXISTS " + ORDER_TRANSACTIONS);  //10
-        db.execSQL("DROP TABLE IF EXISTS " + PAY_METHOD);  //11
-        db.execSQL("DROP TABLE IF EXISTS " + ORDER_HEADER); //12
-        db.execSQL("DROP TABLE IF EXISTS " + FORCE_QUESTIONS); //13
-        db.execSQL("DROP TABLE IF EXISTS " + MODIFIER); //14
-        db.execSQL("DROP TABLE IF EXISTS " + ITEM_WITH_MODIFIER); //15
-        db.execSQL("DROP TABLE IF EXISTS " + ITEM_WITH_FQ); //16
-        db.execSQL("DROP TABLE IF EXISTS " + CATEGORY_WITH_MODIFIER); //17
-        db.execSQL("DROP TABLE IF EXISTS " + CLOCK_IN_CLOCK_OUT);//18
-        db.execSQL("DROP TABLE IF EXISTS " + JOB_GROUP_TABLE);//19
-        db.execSQL("DROP TABLE IF EXISTS " + EMPLOYEE_REGISTRATION_TABLE);//20
-        db.execSQL("DROP TABLE IF EXISTS " + CUSTOMER_REGISTRATION_TABLE);//21
-        db.execSQL("DROP TABLE IF EXISTS " + ORDER_TRANSACTIONS_TEMP);  //22
-        db.execSQL("DROP TABLE IF EXISTS " + ORDER_HEADER_TEMP); //23
-        db.execSQL("DROP TABLE IF EXISTS " + MEMBER_SHIP_GROUP_MANAGEMENT_TABLE); //24
-        db.execSQL("DROP TABLE IF EXISTS " + SHIFT_REGISTRATION); //25
-        db.execSQL("DROP TABLE IF EXISTS " + BLIND_SHIFT_IN); //26
-        db.execSQL("DROP TABLE IF EXISTS " + BLIND_CLOSE); //27
-        db.execSQL("DROP TABLE IF EXISTS " + BLIND_CLOSE_DETAILS); //28
-        db.execSQL("DROP TABLE IF EXISTS " + FAMILY_CATEGORY_TABLE); //29
-        db.execSQL("DROP TABLE IF EXISTS " + CANCEL_ORDER); //30
-        // Create tables again
-        onCreate(db);
+//        db.execSQL("DROP TABLE IF EXISTS " + ITEMS); //1
+//        db.execSQL("DROP TABLE IF EXISTS " + RECIPES); //2
+//        db.execSQL("DROP TABLE IF EXISTS " + USED_CATEGORIES); //3
+//        db.execSQL("DROP TABLE IF EXISTS " + USED_ITEMS);  //4
+//        db.execSQL("DROP TABLE IF EXISTS " + TABLES);  //5
+//        db.execSQL("DROP TABLE IF EXISTS " + MONEY_CATEGORIES);  //6
+//        db.execSQL("DROP TABLE IF EXISTS " + CASHIER_IN_OUT);  //7
+//        db.execSQL("DROP TABLE IF EXISTS " + PAY_IN_OUT);  //8
+//        db.execSQL("DROP TABLE IF EXISTS " + CREDIT_CARDS);  //9
+//        db.execSQL("DROP TABLE IF EXISTS " + ORDER_TRANSACTIONS);  //10
+//        db.execSQL("DROP TABLE IF EXISTS " + PAY_METHOD);  //11
+//        db.execSQL("DROP TABLE IF EXISTS " + ORDER_HEADER); //12
+//        db.execSQL("DROP TABLE IF EXISTS " + FORCE_QUESTIONS); //13
+//        db.execSQL("DROP TABLE IF EXISTS " + MODIFIER); //14
+//        db.execSQL("DROP TABLE IF EXISTS " + ITEM_WITH_MODIFIER); //15
+//        db.execSQL("DROP TABLE IF EXISTS " + ITEM_WITH_FQ); //16
+//        db.execSQL("DROP TABLE IF EXISTS " + CATEGORY_WITH_MODIFIER); //17
+//        db.execSQL("DROP TABLE IF EXISTS " + CLOCK_IN_CLOCK_OUT);//18
+//        db.execSQL("DROP TABLE IF EXISTS " + JOB_GROUP_TABLE);//19
+//        db.execSQL("DROP TABLE IF EXISTS " + EMPLOYEE_REGISTRATION_TABLE);//20
+//        db.execSQL("DROP TABLE IF EXISTS " + CUSTOMER_REGISTRATION_TABLE);//21
+//        db.execSQL("DROP TABLE IF EXISTS " + ORDER_TRANSACTIONS_TEMP);  //22
+//        db.execSQL("DROP TABLE IF EXISTS " + ORDER_HEADER_TEMP); //23
+//        db.execSQL("DROP TABLE IF EXISTS " + MEMBER_SHIP_GROUP_MANAGEMENT_TABLE); //24
+//        db.execSQL("DROP TABLE IF EXISTS " + SHIFT_REGISTRATION); //25
+//        db.execSQL("DROP TABLE IF EXISTS " + BLIND_SHIFT_IN); //26
+//        db.execSQL("DROP TABLE IF EXISTS " + BLIND_CLOSE); //27
+//        db.execSQL("DROP TABLE IF EXISTS " + BLIND_CLOSE_DETAILS); //28
+//        db.execSQL("DROP TABLE IF EXISTS " + FAMILY_CATEGORY_TABLE); //29
+//
+//       //Create tables again
+//        onCreate(db);
+
+        String CREATE_TABLE_VOID_REASONS = "CREATE TABLE " + VOID_REASONS + "("
+                + SHIFT_NO13 + " INTEGER,"
+                + SHIFT_NAME13 + " TEXT,"
+                + USER_NUMBER13 + " INTEGER,"
+                + USER_NAME13 + " TEXT,"
+                + VOID_REASON13 + " TEXT,"
+                + DATE13 + " TEXT,"
+                + ACTIVEATED13 + " INTEGER" + ")";
+        db.execSQL(CREATE_TABLE_VOID_REASONS);
+
     }
 
     //Insert values to the table Items
@@ -1726,6 +1761,22 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void addVoidReason(VoidResons obj) {
+        db = this.getReadableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(SHIFT_NO13, obj.getShiftNo());
+        values.put(SHIFT_NAME13, obj.getShiftName());
+        values.put(USER_NUMBER13, obj.getUserNo());
+        values.put(USER_NAME13, obj.getUserName());
+        values.put(VOID_REASON13, obj.getVoidReason());
+        values.put(DATE13, obj.getDate());
+        values.put(ACTIVEATED13, obj.getActiveated());
+
+        db.insert(VOID_REASONS, null, values);
+
+        db.close();
+    }
 
     public ArrayList<ClockInClockOut> getAllExistingClockInClockOut() {
         ArrayList<ClockInClockOut> clockInClockOuts = new ArrayList<ClockInClockOut>();
@@ -3017,10 +3068,36 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
             } while (cursor.moveToNext());
         }
+
+        Log.e("orderTrans ::: ",""+orderTransactionsArrayList.toString());
+
         return orderTransactionsArrayList;
     }
 
+    public ArrayList<VoidResons> getAllVoidReasons() {
+        ArrayList<VoidResons> reasons = new ArrayList<>();
 
+        String selectQuery = "SELECT * FROM " + VOID_REASONS;
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                VoidResons reason = new VoidResons();
+                reason.setShiftNo(Integer.parseInt(cursor.getString(0)));
+                reason.setShiftName(cursor.getString(1));
+                reason.setUserNo(Integer.parseInt(cursor.getString(2)));
+                reason.setUserName(cursor.getString(3));
+                reason.setVoidReason(cursor.getString(4));
+                reason.setDate(cursor.getString(5));
+                reason.setActiveated(Integer.parseInt(cursor.getString(6)));
+
+                reasons.add(reason);
+
+            } while (cursor.moveToNext());
+        }
+        return reasons;
+    }
 
     //Updating single record
 
@@ -3151,6 +3228,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("delete from " + ORDER_TRANSACTIONS_TEMP);
         db.execSQL("delete from " + ORDER_HEADER);
         db.execSQL("delete from " + ORDER_TRANSACTIONS);
+        db.close();
+    }
+
+    public void deleteAllVoidReasons() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + VOID_REASONS);
         db.close();
     }
 
