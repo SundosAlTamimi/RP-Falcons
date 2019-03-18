@@ -17,13 +17,17 @@ public class CancleOrder {
     private double total;
     private String reason;
     private int isAllCancel;
+    private String time;
 
     public CancleOrder() {
 
     }
 
-    public CancleOrder(int orderNo, String transDate, String userName, int userNo, String shiftName, int shiftNo, String waiterName, int waiterNo, String itemCode, String itemName,
-                       double qty, double price, double total, String reason, int isAllCancel) {
+    public CancleOrder(int orderNo, String transDate, String userName, int userNo,
+                       String shiftName, int shiftNo, String waiterName, int waiterNo,
+                       String itemCode, String itemName, double qty, double price, double total,
+                       String reason, int isAllCancel, String time) {
+
         this.orderNo = orderNo;
         this.transDate = transDate;
         this.userName = userName;
@@ -39,8 +43,12 @@ public class CancleOrder {
         this.total = total;
         this.reason = reason;
         this.isAllCancel = isAllCancel;
+        this.time = time;
     }
 
+    public void setTime(String time) {
+        this.time = time;
+    }
 
     public void setOrderNo(int orderNo) {
         this.orderNo = orderNo;
@@ -160,5 +168,9 @@ public class CancleOrder {
 
     public int getIsAllCancel() {
         return isAllCancel;
+    }
+
+    public String getTime() {
+        return time;
     }
 }

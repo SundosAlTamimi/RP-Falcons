@@ -473,7 +473,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String TOTAL13 = "TOTAL";
     private static final String REASON13 = "REASON";
     private static final String IS_ALL_CANCEL13 = "IS_ALL_CANCEL";
-
+    private static final String TIME13 = "TIME";
 
     //____________________________________________________________________________________
     public DatabaseHandler(Context context) {
@@ -993,7 +993,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + PRICE13 + " INTEGER ,"
                 + TOTAL13 + " INTEGER ,"
                 + REASON13 + " TEXT ,"
-                + IS_ALL_CANCEL13 + " INTEGER " + ")";
+                + IS_ALL_CANCEL13 + " INTEGER ,"
+                + TIME13 + " TEXT " + ")";
         db.execSQL(CREATE_TABLE_CANCLE_ORDER_TABLE);
 
 
@@ -1719,7 +1720,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(TOTAL13, cancleOrder.getTotal());
         values.put(REASON13, cancleOrder.getReason());
         values.put(IS_ALL_CANCEL13, cancleOrder.getIsAllCancel());
-
+        values.put(TIME13, cancleOrder.getTime());
         db.insert(CANCEL_ORDER, null, values);
 
         db.close();
@@ -2949,7 +2950,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 cancleOrder.setTotal(Double.parseDouble(cursor.getString(12)));
                 cancleOrder.setReason(cursor.getString(13));
                 cancleOrder.setIsAllCancel(Integer.parseInt(cursor.getString(14)));
-
+                cancleOrder.setTime(cursor.getString(15));
 
                 items.add(cancleOrder);
             } while (cursor.moveToNext());
