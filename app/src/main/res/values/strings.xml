@@ -16,6 +16,7 @@
     <string name="clear">clear</string>
     <string name="enter_password">Enter Your Password :</string>
 
+    <string name="canceled">Canceled</string>
     <string name="menu">Menu</string>
     <string name="cashier_in">Cashier In</string>
     <string name="cashier_out">Cashier Out</string>
@@ -64,6 +65,8 @@
     <string name="table_number">Table:</string>
     <string name="check_number">Check:</string>
     <string name="date">Date:</string>
+    <string name="date_">Date</string>
+    <string name="time">Time</string>
     <string name="memo">Memo:</string>
     <string name="waiter">Waiter:</string>
     <string name="number_of_guests">Guests:</string>
@@ -78,6 +81,7 @@
     <string name="product_name">Pro-Name</string>
     <string name="unit_price">Price</string>
     <string name="total">Total</string>
+    <string name="total_price">Total Price</string>
     <string name="main_total">Main Total</string>
     <string name="zero_decimal">0.00</string>
     <string name="delivery_change">Delivery Change</string>
