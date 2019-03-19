@@ -25,6 +25,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TableLayout;
@@ -35,7 +36,7 @@ import android.widget.Toast;
 
 import com.tamimi.sundos.restpos.DatabaseHandler;
 import com.tamimi.sundos.restpos.DineInLayout;
-import com.tamimi.sundos.restpos.Main;
+import com.tamimi.sundos.restpos.Models.CancleOrder;
 import com.tamimi.sundos.restpos.Models.CategoryWithModifier;
 import com.tamimi.sundos.restpos.Models.CustomerPayment;
 import com.tamimi.sundos.restpos.Models.ForceQuestions;
@@ -55,7 +56,6 @@ import com.tamimi.sundos.restpos.Models.VoidResons;
 import com.tamimi.sundos.restpos.R;
 import com.tamimi.sundos.restpos.Settings;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -83,9 +83,7 @@ public class BackOfficeActivity extends AppCompatActivity {
             salesReportForDay, salesByHours, salesVolumeByItem, topSalesItemReport, topGroupSalesReport, topFamilySalesReport,
             salesReportByCustomer, profitLossReport, detailSalesReport;
 
-    private DatePickerDialog.OnDateSetListener mdate;
     int count, count2, nextSerial;
-    TextView test = null, fromDate, toDate, fromDateCashier, toDateCashier, fromDateX, toDateX;
     Dialog dialog;
     String today;
     DatabaseHandler mDHandler;
@@ -109,6 +107,8 @@ public class BackOfficeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.back_office_activity);
+
+        myCalendar = Calendar.getInstance();
 
         Date currentTimeAndDate = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
@@ -400,9 +400,8 @@ public class BackOfficeActivity extends AppCompatActivity {
         net = (TextView) dialog.findViewById(R.id.net);
 
 
-
-        toDateX = (TextView) dialog.findViewById(R.id.toDateX);
-        fromDateX = (TextView) dialog.findViewById(R.id.fromDateX);
+        TextView toDate = (TextView) dialog.findViewById(R.id.toDateX);
+        TextView fromDate = (TextView) dialog.findViewById(R.id.fromDateX);
 
         Button preview, exit, export, print;
         Spinner ShiftName, PosNo;
@@ -418,7 +417,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         TableLayout tableXreportTax = (TableLayout) dialog.findViewById(R.id.TAXPer);
 
         TableLayout tableXreport = (TableLayout) dialog.findViewById(R.id.taxTable);
-ArrayList<OrderTransactions> orderTransactionsTax=new ArrayList<>();
+        ArrayList<OrderTransactions> orderTransactionsTax = new ArrayList<>();
         orderTransactionData = new ArrayList<>();
         ArrayList<String> shiftNameArray = new ArrayList<>();
         ArrayList<String> userArray = new ArrayList<>();
@@ -447,39 +446,18 @@ ArrayList<OrderTransactions> orderTransactionsTax=new ArrayList<>();
         ArrayAdapter<String> adapterPosNo = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, posNoArray);
         PosNo.setAdapter(adapterPosNo);
 
-        fromDateX.setOnClickListener(dateClick);
-        toDateX.setOnClickListener(dateClick);
+        fromDate.setText(today);
+        toDate.setText(today);
 
-        Date currentTimeAndDate = Calendar.getInstance().getTime();
-        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-        today = df.format(currentTimeAndDate);
+        fromDate.setOnClickListener(v -> new DatePickerDialog(BackOfficeActivity.this, dateListener(fromDate), myCalendar
+                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH)).show());
 
-        fromDateX.setText(today);
-        toDateX.setText(today);
+        toDate.setOnClickListener(v -> new DatePickerDialog(BackOfficeActivity.this, dateListener(toDate), myCalendar
+                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH)).show());
 
-        mdate = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                month += 1;
-                String monthStr="",dayString="";
-                if(month<=9){
-                    monthStr="0"+String.valueOf(month);
-                }else{
-                    monthStr=String.valueOf(month);
-                }
-                if(dayOfMonth<=9){
-                    dayString="0"+String.valueOf(dayOfMonth);
-                }else{
-                    dayString=String.valueOf(dayOfMonth);
-                }
-
-
-                test.setText(dayString + "-" + monthStr + "-" + year);
-                Log.e("date124 ", "" + dayOfMonth + "-" + month + "-" + year);
-            }
-        };
-
-        orderTransactionData=mDHandler.getAllOrderTransactions();
+        orderTransactionData = mDHandler.getAllOrderTransactions();
 
         preview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -488,8 +466,8 @@ ArrayList<OrderTransactions> orderTransactionsTax=new ArrayList<>();
                 tableXreportTax.removeAllViews();
 
                 String ShiftNa = "SHIFT_NAME";
-                String fromDate = fromDateX.getText().toString();
-                String toDate = toDateX.getText().toString();
+                String fromDat = fromDate.getText().toString();
+                String toDat = toDate.getText().toString();
                 double totalText = 0.0, tatText = 0.0, netText = 0.0;
 
                 String posNoString = "POS_NO";
@@ -508,7 +486,7 @@ ArrayList<OrderTransactions> orderTransactionsTax=new ArrayList<>();
                     posNoString = "'" + PosNo.getSelectedItem().toString() + "'";
                 }
 
-                orderTransactionData = mDHandler.getXReport(ShiftNa, posNoString, fromDate, toDate);
+                orderTransactionData = mDHandler.getXReport(ShiftNa, posNoString, fromDat, toDat);
 
                 for (int i = 0; i < orderTransactionData.size(); i++) {
 
@@ -530,7 +508,7 @@ ArrayList<OrderTransactions> orderTransactionsTax=new ArrayList<>();
 
                 }
 
-                totalBeforTax.setText("" +totalText);
+                totalBeforTax.setText("" + totalText);
                 tax.setText("" + tatText);
                 totalAfterTax.setText("" + netText);
 //                services.setText("" + totalText);
@@ -538,12 +516,12 @@ ArrayList<OrderTransactions> orderTransactionsTax=new ArrayList<>();
                 totalTax.setText("" + totalText);
                 net.setText("" + netText);
 
-                orderTransactionData=mDHandler.getXReportPercent(ShiftNa, posNoString, fromDate, toDate);
-                for(int i=0;i<orderTransactionData.size();i++) {
+                orderTransactionData = mDHandler.getXReportPercent(ShiftNa, posNoString, fromDat, toDat);
+                for (int i = 0; i < orderTransactionData.size(); i++) {
 
-                    insertCashierInOutReport(tableXreportTax,String.valueOf(orderTransactionData.get(i).getTaxPerc()),
-                                              String.valueOf(orderTransactionData.get(i).getTaxValue()),"",
-                                              String.valueOf(orderTransactionData.get(i).getTotal()),"","","",3);
+                    insertCashierInOutReport(tableXreportTax, String.valueOf(orderTransactionData.get(i).getTaxPerc()),
+                            String.valueOf(orderTransactionData.get(i).getTaxValue()), "",
+                            String.valueOf(orderTransactionData.get(i).getTotal()), "", "", "", 3);
 
                 }
 
@@ -577,7 +555,6 @@ ArrayList<OrderTransactions> orderTransactionsTax=new ArrayList<>();
 
             }
         });
-
 
 
         dialog.show();
@@ -860,7 +837,7 @@ ArrayList<OrderTransactions> orderTransactionsTax=new ArrayList<>();
 
         addR.setOnClickListener(view -> {
 
-            if(!reason.getText().toString().equals("")) {
+            if (!reason.getText().toString().equals("")) {
 
                 final TableRow row1 = new TableRow(BackOfficeActivity.this);
 
@@ -908,8 +885,8 @@ ArrayList<OrderTransactions> orderTransactionsTax=new ArrayList<>();
                 CheckBox checkBox = (CheckBox) tableRow.getChildAt(1);
                 int active = checkBox.isChecked() ? 1 : 0;
 
-                mDHandler.addVoidReason(new VoidResons(Settings.shift_number ,Settings.shift_name ,Settings.password ,
-                        Settings.user_name ,textView.getText().toString() ,today , active));
+                mDHandler.addVoidReason(new VoidResons(Settings.shift_number, Settings.shift_name, Settings.password,
+                        Settings.user_name, textView.getText().toString(), today, active));
             }
             dialog.dismiss();
         });
@@ -1394,8 +1371,8 @@ ArrayList<OrderTransactions> orderTransactionsTax=new ArrayList<>();
         posNo = (Spinner) dialog.findViewById(R.id.posNo);
         users = (Spinner) dialog.findViewById(R.id.user);
 
-        fromDate = (TextView) dialog.findViewById(R.id.fDate);
-        toDate = (TextView) dialog.findViewById(R.id.tDate);
+        TextView fromDate = (TextView) dialog.findViewById(R.id.fDate);
+        TextView toDate = (TextView) dialog.findViewById(R.id.tDate);
         salesText = (TextView) dialog.findViewById(R.id.sales);
         returnsText = (TextView) dialog.findViewById(R.id.returns);
         netSalesText = (TextView) dialog.findViewById(R.id.netSales);
@@ -1456,17 +1433,14 @@ ArrayList<OrderTransactions> orderTransactionsTax=new ArrayList<>();
 
         headerData = mDHandler.getAllOrderHeader();
         payData = mDHandler.getAllExistingPay();
-        fromDate.setOnClickListener(dateClick);
-        toDate.setOnClickListener(dateClick);
 
-        mdate = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                month += 1;
-                test.setText(dayOfMonth + "-" + month + "-" + year);
-                Log.e("date ", "" + dayOfMonth + "-" + month + "-" + year);
-            }
-        };
+        fromDate.setOnClickListener(v -> new DatePickerDialog(BackOfficeActivity.this, dateListener(fromDate), myCalendar
+                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH)).show());
+
+        toDate.setOnClickListener(v -> new DatePickerDialog(BackOfficeActivity.this, dateListener(toDate), myCalendar
+                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH)).show());
 
         done.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1484,7 +1458,7 @@ ArrayList<OrderTransactions> orderTransactionsTax=new ArrayList<>();
                 }
 
                 for (int i = 0; i < headerData.size(); i++) {
-                    if (filters(i, 0)) {//1
+                    if (filters(fromDate.getText().toString(), toDate.getText().toString(), headerData.get(i).getVoucherDate())) {
                         if (headerData.get(i).getShiftName().equals(shiftNameString[0]) || shiftNameString[0].equals("All")) {
                             if (headerData.get(i).getUserName().equals(userString[0]) || userString[0].equals("All")) {
                                 if (headerData.get(i).getPointOfSaleNumber() == posNoString[0] || posNoString[0] == -1) {
@@ -1511,7 +1485,7 @@ ArrayList<OrderTransactions> orderTransactionsTax=new ArrayList<>();
                 }
 
                 for (int i = 0; i < payData.size(); i++) {
-                    if (filtersPay(i)) {//1
+                    if (filters(fromDate.getText().toString(), toDate.getText().toString(), payData.get(i).getVoucherDate())) {
                         if (payData.get(i).getShiftName().equals(shiftNameString[0]) || shiftNameString[0].equals("All")) {
                             if (payData.get(i).getUserName().equals(userString[0]) || userString[0].equals("All")) {
                                 if (payData.get(i).getPointOfSaleNumber() == posNoString[0] || posNoString[0] == -1) {
@@ -1604,8 +1578,8 @@ ArrayList<OrderTransactions> orderTransactionsTax=new ArrayList<>();
         export = (Button) dialog.findViewById(R.id.exportReport);
         print = (Button) dialog.findViewById(R.id.printReport);
 
-        fromDateCashier = (TextView) dialog.findViewById(R.id.frDate);
-        toDateCashier = (TextView) dialog.findViewById(R.id.toDate);
+        TextView fromDate = (TextView) dialog.findViewById(R.id.frDate);
+        TextView toDate = (TextView) dialog.findViewById(R.id.toDate);
 
         shiftName = (Spinner) dialog.findViewById(R.id.shiftName);
         cashierNo = (Spinner) dialog.findViewById(R.id.casherNo);
@@ -1615,13 +1589,8 @@ ArrayList<OrderTransactions> orderTransactionsTax=new ArrayList<>();
         In = (RadioButton) dialog.findViewById(R.id.cashierIN);
         Out = (RadioButton) dialog.findViewById(R.id.cashierOut);
 
-
-        Date currentTimeAndDate = Calendar.getInstance().getTime();
-        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-        today = df.format(currentTimeAndDate);
-
-        fromDateCashier.setText(today);
-        toDateCashier.setText(today);
+        fromDate.setText(today);
+        toDate.setText(today);
         ArrayList<String> shiftNameArray = new ArrayList<>();
         ArrayList<String> userArray = new ArrayList<>();
         ArrayList<String> posNoArray = new ArrayList<>();
@@ -1653,17 +1622,13 @@ ArrayList<OrderTransactions> orderTransactionsTax=new ArrayList<>();
         PosNo.setAdapter(adapterPosNo);
 
 
-        fromDateCashier.setOnClickListener(dateClick);
-        toDateCashier.setOnClickListener(dateClick);
+        fromDate.setOnClickListener(v -> new DatePickerDialog(BackOfficeActivity.this, dateListener(fromDate), myCalendar
+                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH)).show());
 
-        mdate = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                month += 1;
-                test.setText(dayOfMonth + "-" + month + "-" + year);
-                Log.e("date ", "" + dayOfMonth + "-" + month + "-" + year);
-            }
-        };
+        toDate.setOnClickListener(v -> new DatePickerDialog(BackOfficeActivity.this, dateListener(toDate), myCalendar
+                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH)).show());
 
         payInData = new ArrayList<Pay>();
         payInData = mDHandler.getAllPayInOut();
@@ -1700,7 +1665,7 @@ ArrayList<OrderTransactions> orderTransactionsTax=new ArrayList<>();
                 }
 
                 for (int i = 0; i < payInData.size(); i++) {
-                    if (filters(i, 1)) {//1
+                    if (filters(fromDate.getText().toString(), toDate.getText().toString(), payInData.get(i).getTransDate())) {
                         if (payInData.get(i).getShiftName().equals(ShiftName) || ShiftName.equals("All")) {
                             if (payInData.get(i).getUserNo() == CashierNo || CashierNo == -1) {
                                 if (payInData.get(i).getPosNo() == posNoString || posNoString == -1) {
@@ -1758,31 +1723,27 @@ ArrayList<OrderTransactions> orderTransactionsTax=new ArrayList<>();
         dialog.setContentView(R.layout.canceled_orders_history_dialog);
         dialog.setCanceledOnTouchOutside(true);
 
-        RadioButton All, In, Out;
+        TableLayout canceledTable = (TableLayout) dialog.findViewById(R.id.canceledTable);
 
-        Button exit, preview, export, print;
-        TableLayout cashierTable = (TableLayout) dialog.findViewById(R.id.cashierTable);
+        Button exit = (Button) dialog.findViewById(R.id.exitReport);
+        Button preview = (Button) dialog.findViewById(R.id.doneReport);
+        Button export = (Button) dialog.findViewById(R.id.exportReport);
+        Button print = (Button) dialog.findViewById(R.id.printReport);
 
-        Spinner shiftName, cashierNo, PosNo;
+        TextView fromDate = (TextView) dialog.findViewById(R.id.frDate);
+        TextView toDate = (TextView) dialog.findViewById(R.id.toDate);
 
-        exit = (Button) dialog.findViewById(R.id.exitReport);
-        preview = (Button) dialog.findViewById(R.id.doneReport);
-        export = (Button) dialog.findViewById(R.id.exportReport);
-        print = (Button) dialog.findViewById(R.id.printReport);
+        Spinner shiftName = (Spinner) dialog.findViewById(R.id.shiftName);
+        Spinner cashierNo = (Spinner) dialog.findViewById(R.id.casherNo);
+        Spinner PosNo = (Spinner) dialog.findViewById(R.id.posNo);
 
-        fromDateCashier = (TextView) dialog.findViewById(R.id.frDate);
-        toDateCashier = (TextView) dialog.findViewById(R.id.toDate);
+        RadioGroup voidType = dialog.findViewById(R.id.voidType);
+        RadioButton All = (RadioButton) dialog.findViewById(R.id.All);
+        RadioButton In = (RadioButton) dialog.findViewById(R.id.canceled);
+        RadioButton Out = (RadioButton) dialog.findViewById(R.id.void_);
 
-        shiftName = (Spinner) dialog.findViewById(R.id.shiftName);
-        cashierNo = (Spinner) dialog.findViewById(R.id.casherNo);
-        PosNo = (Spinner) dialog.findViewById(R.id.posNo);
-
-        All = (RadioButton) dialog.findViewById(R.id.All);
-        In = (RadioButton) dialog.findViewById(R.id.cashierIN);
-        Out = (RadioButton) dialog.findViewById(R.id.cashierOut);
-
-        fromDateCashier.setText(today);
-        toDateCashier.setText(today);
+        fromDate.setText(today);
+        toDate.setText(today);
         ArrayList<String> shiftNameArray = new ArrayList<>();
         ArrayList<String> userArray = new ArrayList<>();
         ArrayList<String> posNoArray = new ArrayList<>();
@@ -1803,7 +1764,6 @@ ArrayList<OrderTransactions> orderTransactionsTax=new ArrayList<>();
         posNoArray.add("4");
         posNoArray.add("7");
 
-
         ArrayAdapter<String> adapter = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, shiftNameArray);
         shiftName.setAdapter(adapter);
 
@@ -1814,62 +1774,115 @@ ArrayList<OrderTransactions> orderTransactionsTax=new ArrayList<>();
         PosNo.setAdapter(adapterPosNo);
 
 
-        fromDateCashier.setOnClickListener(dateClick);
-        toDateCashier.setOnClickListener(dateClick);
+        fromDate.setOnClickListener(v -> new DatePickerDialog(BackOfficeActivity.this, dateListener(fromDate), myCalendar
+                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH)).show());
 
-        mdate = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                month += 1;
-                test.setText(dayOfMonth + "-" + month + "-" + year);
-                Log.e("date ", "" + dayOfMonth + "-" + month + "-" + year);
+        toDate.setOnClickListener(v -> new DatePickerDialog(BackOfficeActivity.this, dateListener(toDate), myCalendar
+                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH)).show());
+
+
+        List<CancleOrder> canceledOrders = mDHandler.getAllCanselOrder();
+        preview.setOnClickListener(v -> {
+
+            canceledTable.removeAllViews();
+
+            int voidingType = -1;
+            switch (voidType.getCheckedRadioButtonId()) {
+                case R.id.All:
+                    voidingType = -1;
+                    break;
+
+                case R.id.canceled:
+                    voidingType = 0;
+                    break;
+
+                case R.id.void_:
+                    voidingType = 1;
+                    break;
             }
-        };
 
-        payInData = mDHandler.getAllPayInOut();
-        preview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            int CashierNo = -1;
+            if (cashierNo.getSelectedItem().toString().equals("All"))
+                CashierNo = -1;
+            else
+                CashierNo = Integer.parseInt(cashierNo.getSelectedItem().toString());
 
-                cashierTable.removeAllViews();
+            String ShiftName = shiftName.getSelectedItem().toString();
 
-                int cashierType = 0;
-                if (All.isChecked()) {
-                    cashierType = -1;
-                } else if (In.isChecked()) {
-                    cashierType = 0;
-                } else if (Out.isChecked()) {
-                    cashierType = 1;
-                }
-                int CashierNo = -1;
+            int posNoString= -1;
+            if (PosNo.getSelectedItem().toString().equals("All"))
+                posNoString = -1;
+            else
+                posNoString = Integer.parseInt(PosNo.getSelectedItem().toString());
 
-                if (cashierNo.getSelectedItem().toString().equals("All")) {
-                    CashierNo = -1;
-                } else {
-                    CashierNo = Integer.parseInt(cashierNo.getSelectedItem().toString());
-                }
+            int serial = 0;
+            for (int i = 0; i < canceledOrders.size(); i++) {
+                if (filters(fromDate.getText().toString(), toDate.getText().toString(), canceledOrders.get(i).getTransDate())) {
 
-                String ShiftName = shiftName.getSelectedItem().toString();
-                int posNoString = -1;
+                    if (canceledOrders.get(i).getShiftName().equals(ShiftName) || ShiftName.equals("All")) {
+                        if (canceledOrders.get(i).getUserNo() == CashierNo || CashierNo == -1) {
+                            if (canceledOrders.get(i).getPosNO() == posNoString || posNoString == -1) {
+                                if (voidingType == canceledOrders.get(i).getIsAllCancel() || voidingType == -1) {
 
-                if (PosNo.getSelectedItem().toString().equals("All")) {
-                    posNoString = -1;
-                } else {
-                    posNoString = Integer.parseInt(PosNo.getSelectedItem().toString());
-                }
+                                    TableRow row = new TableRow(BackOfficeActivity.this);
 
-                for (int i = 0; i < payInData.size(); i++) {
-                    if (filters(i, 1)) {//1
-                        if (payInData.get(i).getShiftName().equals(ShiftName) || ShiftName.equals("All")) {
-                            if (payInData.get(i).getUserNo() == CashierNo || CashierNo == -1) {
-                                if (payInData.get(i).getPosNo() == posNoString || posNoString == -1) {
-                                    if (cashierType == payInData.get(i).getTransType() || cashierType == -1) {
+                                    TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
+                                    row.setLayoutParams(lp);
 
-                                        insertCashierInOutReport(cashierTable, String.valueOf(i), payInData.get(i).getTransDate()
-                                                , String.valueOf(payInData.get(i).getPosNo()), payInData.get(i).getUserName(), String.valueOf(payInData.get(i).getTransType())
-                                                , String.valueOf(payInData.get(i).getValue()), "2-2-2000", 7);
+                                    for (int k = 0; k < 8; k++) {
+                                        TextView textView = new TextView(BackOfficeActivity.this);
+
+                                        switch (k) {
+                                            case 0:
+                                                textView.setText(""+serial);
+                                                break;
+                                            case 1:
+                                                textView.setText(canceledOrders.get(i).getTransDate());
+                                                break;
+                                            case 2:
+                                                textView.setText(canceledOrders.get(i).getTime());
+                                                break;
+                                            case 3:
+                                                textView.setText(canceledOrders.get(i).getItemCode());
+                                                break;
+                                            case 4:
+                                                textView.setText(canceledOrders.get(i).getItemName());
+                                                break;
+                                            case 5:
+                                                textView.setText(""+canceledOrders.get(i).getQty());
+                                                break;
+                                            case 6:
+                                                textView.setText(""+canceledOrders.get(i).getTotal());
+                                                break;
+                                            case 7:
+                                                textView.setText(canceledOrders.get(i).getReason());
+                                                break;
+                                        }
+
+                                        textView.setTextColor(ContextCompat.getColor(BackOfficeActivity.this, R.color.text_color));
+                                        textView.setBackgroundColor(ContextCompat.getColor(BackOfficeActivity.this, R.color.jeans_blue));
+                                        textView.setGravity(Gravity.CENTER);
+                                        textView.setTextSize(16);
+
+                                        if(k == 0){
+                                            TableRow.LayoutParams lp2 = new TableRow.LayoutParams(70, TableRow.LayoutParams.MATCH_PARENT, 0.5f);
+                                            lp2.setMargins(1, 1, 1, 1);
+                                            textView.setLayoutParams(lp2);
+                                        } else if(k == 7){
+                                            TableRow.LayoutParams lp2 = new TableRow.LayoutParams(150, TableRow.LayoutParams.WRAP_CONTENT, 4.0f);
+                                            lp2.setMargins(1, 1, 1, 1);
+                                            textView.setLayoutParams(lp2);
+                                        } else {
+                                            TableRow.LayoutParams lp2 = new TableRow.LayoutParams(100, TableRow.LayoutParams.MATCH_PARENT, 2.0f);
+                                            lp2.setMargins(1, 1, 1, 1);
+                                            textView.setLayoutParams(lp2);
+                                        }
+                                        row.addView(textView);
                                     }
-
+                                    canceledTable.addView(row);
+                                    serial++;
                                 }
                             }
                         }
@@ -1898,108 +1911,33 @@ ArrayList<OrderTransactions> orderTransactionsTax=new ArrayList<>();
 
     }
 
-    View.OnClickListener dateClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
+    public DatePickerDialog.OnDateSetListener dateListener(TextView textView){
+        final DatePickerDialog.OnDateSetListener date = (view, year, month, dayOfMonth) -> {
 
-            switch (v.getId()) {
-                case R.id.fDate:
-                    test = fromDate;
-                    break;
+            // TODO Auto-generated method stub
+            myCalendar.set(Calendar.YEAR, year);
+            myCalendar.set(Calendar.MONTH, month);
+            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-                case R.id.tDate:
-                    test = toDate;
-                    break;
-                case R.id.frDate:
-                    test = fromDateCashier;
-                    break;
+            String myFormat = "dd-MM-yyyy"; //In which you need put here
+            SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
-                case R.id.toDate:
-                    test = toDateCashier;
-                    break;
-                case R.id.fromDateX:
-                    test = fromDateX;
-                    break;
+            textView.setText(sdf.format(myCalendar.getTime()));
+        };
+        return date ;
+    }
 
-                case R.id.toDateX:
-                    test = toDateX;
-                    break;
-
-
-            }
-
-            Calendar cal = Calendar.getInstance();
-            int year = cal.get(Calendar.YEAR);
-            int month = cal.get(Calendar.MONTH);
-            int day = cal.get(Calendar.DAY_OF_WEEK);
-
-            DatePickerDialog dialogs = new DatePickerDialog(BackOfficeActivity.this, android.R.style.Theme_DeviceDefault_DialogWhenLarge, mdate, year, month, day);
-            dialogs.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));//Theme_Holo_Dialog_MinWidth
-            dialogs.show();
-
-        }
-    };
-
-    public boolean filters(int n, int switchVh) {
-
-
-        String fromDate1 = "";
-        String toDate1 = "";
-        String date = "";
-        switch (switchVh) {
-            case 0:
-                fromDate1 = fromDate.getText().toString().trim();
-                toDate1 = toDate.getText().toString();
-                date = headerData.get(n).getVoucherDate();
-                break;
-            case 1:
-                fromDate1 = fromDateCashier.getText().toString().trim();
-                toDate1 = toDateCashier.getText().toString();
-                date = payInData.get(n).getTransDate();
-                break;
-            case 3:
-                fromDate1 = fromDateX.getText().toString().trim();
-                toDate1 = toDateX.getText().toString();
-                date = orderTransactionData.get(n).getVoucherDate();
-                break;
-        }
+    public boolean filters(String fromDate, String toDate, String date) {
         try {
-
-            if ((formatDate(date).after(formatDate(fromDate1)) || formatDate(date).equals(formatDate(fromDate1))) &&
-                    (formatDate(date).before(formatDate(toDate1)) || formatDate(date).equals(formatDate(toDate1))))
+            if ((formatDate(date).after(formatDate(fromDate)) || formatDate(date).equals(formatDate(fromDate))) &&
+                    (formatDate(date).before(formatDate(toDate)) || formatDate(date).equals(formatDate(toDate))))
                 return true;
 
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
         return false;
     }
-
-    ////////
-
-    public boolean filtersPay(int n) {
-
-
-        String fromDate1 = fromDate.getText().toString().trim();
-        String toDate1 = toDate.getText().toString();
-
-        String date = payData.get(n).getVoucherDate();
-
-        try {
-
-            if ((formatDate(date).after(formatDate(fromDate1)) || formatDate(date).equals(formatDate(fromDate1))) &&
-                    (formatDate(date).before(formatDate(toDate1)) || formatDate(date).equals(formatDate(toDate1))))
-                return true;
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return false;
-    }
-
-    ///////
 
     public Date formatDate(String date) throws ParseException {
 

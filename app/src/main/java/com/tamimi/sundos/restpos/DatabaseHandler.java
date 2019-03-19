@@ -49,7 +49,7 @@ import java.util.List;
 public class DatabaseHandler extends SQLiteOpenHelper {
     //hellohjt
     // Database Version
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 4;
 
     // Database Name
     private static final String DATABASE_NAME = "RestPos";
@@ -486,6 +486,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String REASON13 = "REASON";
     private static final String IS_ALL_CANCEL13 = "IS_ALL_CANCEL";
     private static final String TIME13 = "TIME";
+    private static final String POS_NO13 = "POS_NO";
 
     //____________________________________________________________________________________
     public DatabaseHandler(Context context) {
@@ -1018,7 +1019,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + TOTAL13 + " INTEGER ,"
                 + REASON13 + " TEXT ,"
                 + IS_ALL_CANCEL13 + " INTEGER ,"
-                + TIME13 + " TEXT " + ")";
+                + TIME13 + " TEXT ,"
+                + POS_NO13 + " INTEGER " + ")";
         db.execSQL(CREATE_TABLE_CANCLE_ORDER_TABLE);
 
 
@@ -1063,15 +1065,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 //       //Create tables again
 //        onCreate(db);
 
-        String CREATE_TABLE_VOID_REASONS = "CREATE TABLE " + VOID_REASONS + "("
-                + SHIFT_NO15 + " INTEGER,"
-                + SHIFT_NAME15 + " TEXT,"
-                + USER_NUMBER15 + " INTEGER,"
-                + USER_NAME15 + " TEXT,"
-                + VOID_REASON15 + " TEXT,"
-                + DATE15 + " TEXT,"
-                + ACTIVEATED15 + " INTEGER" + ")";
-        db.execSQL(CREATE_TABLE_VOID_REASONS);
+        db.execSQL("ALTER TABLE CANCEL_ORDER ADD POS_NO TEXT NOT NULL DEFAULT '4'");
 
     }
 
@@ -1756,6 +1750,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(REASON13, cancleOrder.getReason());
         values.put(IS_ALL_CANCEL13, cancleOrder.getIsAllCancel());
         values.put(TIME13, cancleOrder.getTime());
+        values.put(POS_NO13, cancleOrder.getPosNO());
         db.insert(CANCEL_ORDER, null, values);
 
         db.close();
@@ -2451,12 +2446,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 order_header.setCouponValue(cursor.getDouble(22));
                 order_header.setGiftValue(cursor.getDouble(23));
                 order_header.setPointValue(cursor.getDouble(24));
-                order_header.setShiftNumber(cursor.getInt(25));
-                order_header.setShiftName(cursor.getString(26));
-                order_header.setWaiter(cursor.getString(27));
-                order_header.setSeatsNumber(cursor.getInt(28));
-                order_header.setUserName(cursor.getString(29));
-                order_header.setUserNo(cursor.getInt(30));
+                order_header.setUserName(cursor.getString(25));
+                order_header.setUserNo(cursor.getInt(26));
+                order_header.setShiftName(cursor.getString(27));
+                order_header.setShiftNumber(cursor.getInt(28));
+                order_header.setWaiter(cursor.getString(29));
+                order_header.setSeatsNumber(cursor.getInt(23));
 
                 orderHeaders.add(order_header);
 
@@ -2501,12 +2496,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 order_header.setCouponValue(cursor.getDouble(22));
                 order_header.setGiftValue(cursor.getDouble(23));
                 order_header.setPointValue(cursor.getDouble(24));
-                order_header.setShiftName(cursor.getString(25));
-                order_header.setShiftNumber(cursor.getInt(26));
-                order_header.setWaiter(cursor.getString(27));
-                order_header.setSeatsNumber(cursor.getInt(28));
-                order_header.setUserName(cursor.getString(29));
-                order_header.setUserNo(cursor.getInt(30));
+                order_header.setUserName(cursor.getString(25));
+                order_header.setUserNo(cursor.getInt(26));
+                order_header.setShiftName(cursor.getString(27));
+                order_header.setShiftNumber(cursor.getInt(28));
+                order_header.setWaiter(cursor.getString(29));
+                order_header.setSeatsNumber(cursor.getInt(23));
 
                 orderHeaders.add(order_header);
 
@@ -2986,7 +2981,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             do {
                 CancleOrder cancleOrder = new CancleOrder();
 
-                cancleOrder.setOrderNo(cursor.getInt(0));
+                cancleOrder.setOrderNo(cursor.getString(0));
                 cancleOrder.setTransDate(cursor.getString(1));
                 cancleOrder.setUserName(cursor.getString(2));
                 cancleOrder.setUserNo(cursor.getInt(3));
@@ -3002,6 +2997,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 cancleOrder.setReason(cursor.getString(13));
                 cancleOrder.setIsAllCancel(Integer.parseInt(cursor.getString(14)));
                 cancleOrder.setTime(cursor.getString(15));
+                cancleOrder.setPosNO(Integer.parseInt(cursor.getString(16)));
 
                 items.add(cancleOrder);
             } while (cursor.moveToNext());
@@ -3213,6 +3209,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void deleteFromOrderTransactionTemp(String sectionNo, String tableNo) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from ORDER_TRANSACTIONS_TEMP WHERE SECTION_NO = '" + sectionNo + "' and TABLE_NO = '" + tableNo + "'");
+        db.close();
+    }
+
+    public void deleteFromOrderTransactionTemp2(String sectionNo, String tableNo ,String itemCode) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from ORDER_TRANSACTIONS_TEMP WHERE SECTION_NO = '" + sectionNo + "' and TABLE_NO = '" + tableNo + "' and ITEM_BARCODE1 = '" + itemCode + "'" );
         db.close();
     }
 

@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.LinearLayout;
@@ -28,6 +29,7 @@ import android.widget.Toast;
 
 import com.tamimi.sundos.restpos.BackOffice.BackOfficeActivity;
 import com.tamimi.sundos.restpos.BackOffice.MenuRegistration;
+import com.tamimi.sundos.restpos.Models.CancleOrder;
 import com.tamimi.sundos.restpos.Models.ForceQuestions;
 import com.tamimi.sundos.restpos.Models.ItemWithFq;
 import com.tamimi.sundos.restpos.Models.ItemWithModifier;
@@ -74,10 +76,11 @@ public class Order extends AppCompatActivity {
     static OrderHeader OrderHeaderObj;
 
     int voucherSerial;
-    public static String OrderType, today, yearMonth, voucherNo;
+    public static String OrderType, today, time, yearMonth, voucherNo;
 
     View v = null;
-    String waiter;
+    String waiter = "No Waiter";
+    String waiterNo = "-1";
     int tableNumber, sectionNumber, seatNo;
     ArrayList<Items> wantedItems;
     List<UsedCategories> usedCategoriesList;
@@ -114,6 +117,8 @@ public class Order extends AppCompatActivity {
             tableNumber = extras.getInt("tableNo");
             sectionNumber = extras.getInt("sectionNo");
             waiter = extras.getString("waiter");
+            waiterNo = extras.getString("waiterNo");
+//            Log.e("test 2" , "" + waiterNo);
             seatNo = extras.getInt("seatNo");
 
         }
@@ -253,6 +258,9 @@ public class Order extends AppCompatActivity {
         Date currentTimeAndDate = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
         today = df.format(currentTimeAndDate);
+
+        SimpleDateFormat dfTime = new SimpleDateFormat("hh:mm");
+        time = dfTime.format(currentTimeAndDate);
 
         SimpleDateFormat df2 = new SimpleDateFormat("yyyyMM");
         yearMonth = df2.format(currentTimeAndDate);
@@ -586,35 +594,87 @@ public class Order extends AppCompatActivity {
     void deleteRaw(final TableRow row) {
         if (focused != null) {
             row.setBackgroundColor(getResources().getColor(R.color.layer4));
-            AlertDialog.Builder builder = new AlertDialog.Builder(Order.this);
-            builder.setTitle("Do you want to delete this recipe ?");
-            builder.setCancelable(false);
-            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+
+            AlertDialog.Builder builderSingle = new AlertDialog.Builder(Order.this);
+            builderSingle.setCancelable(false);
+            builderSingle.setTitle("What Kind Of Delete :");
+
+            final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(Order.this, android.R.layout.select_dialog_singlechoice);
+            arrayAdapter.add("Selected Item");
+            arrayAdapter.add("Current Order");
+
+            builderSingle.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
                 @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    showVoidReasonDialog();
-                    tableLayout.removeView(row);
-                    wantedItems.remove(Integer.parseInt(row.getTag().toString()));
-                    lineDiscount.remove(Integer.parseInt(row.getTag().toString()));
-                    tableLayoutPosition--;
-                    resetPosition();
-                    calculateTotal();
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
                 }
             });
 
-            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
                 @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    row.setBackgroundDrawable(null);
+                public void onClick(DialogInterface dialog, int which) {
+                    String strName = arrayAdapter.getItem(which);
+                    if (strName.equals("Selected Item")) {
+                        AlertDialog.Builder builderInner = new AlertDialog.Builder(Order.this);
+                        builderInner.setTitle("Do you want to delete this item ?");
+                        builderInner.setCancelable(false);
+                        builderInner.setPositiveButton("Yes", (dialog1, which1) -> {
+
+                            showVoidReasonDialog(row);
+                        });
+                        builderInner.setNegativeButton("No", (dialogInterface, i) -> {
+                            row.setBackgroundDrawable(null);
+                        });
+                        builderInner.show();
+
+                    } else {
+                        AlertDialog.Builder builderInner = new AlertDialog.Builder(Order.this);
+                        builderInner.setTitle("Do you want to delete the current order ?");
+                        builderInner.setCancelable(false);
+                        builderInner.setPositiveButton("Yes", (dialog1, which1) -> {
+
+                            showVoidReasonDialog2();
+                        });
+                        builderInner.setNegativeButton("No", (dialog1, i) -> {
+//                            row.setBackgroundDrawable(null);
+                            dialog1.dismiss();
+                        });
+                        builderInner.show();
+                    }
                 }
             });
-            AlertDialog alertDialog = builder.create();
-            alertDialog.show();
+            builderSingle.show();
+
+//            AlertDialog.Builder builder = new AlertDialog.Builder(Order.this);
+//            builder.setTitle("Do you want to delete this recipe ?");
+//            builder.setCancelable(false);
+//            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialogInterface, int i) {
+//
+//                    tableLayout.removeView(row);
+//                    wantedItems.remove(Integer.parseInt(row.getTag().toString()));
+//                    lineDiscount.remove(Integer.parseInt(row.getTag().toString()));
+//                    tableLayoutPosition--;
+//                    resetPosition();
+//                    calculateTotal();
+//                    showVoidReasonDialog(row);
+//                }
+//            });
+//
+//            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialogInterface, int i) {
+//                    row.setBackgroundDrawable(null);
+//                }
+//            });
+//            AlertDialog alertDialog = builder.create();
+//            alertDialog.show();
         } else
             Toast.makeText(Order.this, " Please choose item to be deleted", Toast.LENGTH_SHORT).show();
     }
 
-    void showVoidReasonDialog() {
+    void showVoidReasonDialog(TableRow raw) {
 
         dialog = new Dialog(Order.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -638,6 +698,92 @@ public class Order extends AppCompatActivity {
         lp.setMargins(0, 2, 2, 6);
         row.setLayoutParams(lp);
 
+        final String[] selectedReason = {""};
+        for (int k = 0; k < resons.size(); k++) {
+            if (resons.get(k).getActiveated() == 1) {
+                RadioButton radioButton = new RadioButton(Order.this);
+                radioButton.setText(resons.get(k).getVoidReason());
+                radioButton.setTextSize(20);
+                radioButton.setTextColor(ContextCompat.getColor(Order.this, R.color.text_color));
+                radioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                        selectedReason[0] = radioButton.getText().toString() ;
+                    }
+                });
+                radioGroup.addView(radioButton);
+            }
+        }
+        row.addView(radioGroup);
+        reasons.addView(row);
+
+        save.setOnClickListener(view -> {
+            if (!selectedReason[0].equals("")) {
+                int index = Integer.parseInt(raw.getTag().toString());
+
+//                Log.e("test " , "" + Integer.parseInt(waiterNo) );
+                TextView textViewQty = (TextView) raw.getChildAt(0);
+                TextView textViewTotal = (TextView) raw.getChildAt(3);
+                mDbHandler.addCancleOrder(new CancleOrder(voucherNo, today, Settings.user_name, Settings.password, Settings.shift_name,
+                        Settings.shift_number, waiter, Integer.parseInt(waiterNo), "" + wantedItems.get(index).getItemBarcode(),
+                        wantedItems.get(index).getMenuName(), Integer.parseInt(textViewQty.getText().toString()),
+                        wantedItems.get(index).getPrice(), Double.parseDouble(textViewTotal.getText().toString()),
+                        selectedReason[0], 0, time , Settings.POS_number));
+
+                if (orderTypeFlag == 0) {
+                    tableLayout.removeView(raw);
+                    wantedItems.remove(Integer.parseInt(raw.getTag().toString()));
+                    lineDiscount.remove(Integer.parseInt(raw.getTag().toString()));
+                    tableLayoutPosition--;
+                    resetPosition();
+                    calculateTotal();
+                } else {
+                    tableLayout.removeView(raw);
+                    wantedItems.remove(Integer.parseInt(raw.getTag().toString()));
+                    lineDiscount.remove(Integer.parseInt(raw.getTag().toString()));
+                    tableLayoutPosition--;
+                    resetPosition();
+                    calculateTotal();   //  تعديل عل ال header  و مسح من ال trans
+                    if(tableLayout.getChildCount() == 0) {
+                        Intent intent = new Intent(Order.this, DineIn.class);
+                        startActivity(intent);
+                    }
+                }
+
+                dialog.dismiss();
+            } else
+                Toast.makeText(Order.this, "Please select reason of cancel", Toast.LENGTH_LONG).show();
+        });
+
+        dialog.show();
+
+    }
+
+    void showVoidReasonDialog2() {
+
+        dialog = new Dialog(Order.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.void_reason_dialog);
+        dialog.setCanceledOnTouchOutside(false);
+
+        TableLayout reasons = (TableLayout) dialog.findViewById(R.id.tableOfReasons);
+        Button save = (Button) dialog.findViewById(R.id.done);
+
+        ArrayList<VoidResons> resons = mDbHandler.getAllVoidReasons();
+
+        reasons.removeAllViews();
+        RadioGroup radioGroup = new RadioGroup(Order.this);
+        TableRow.LayoutParams lp1 = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+        lp1.setMargins(0, 2, 2, 6);
+        radioGroup.setLayoutParams(lp1);
+
+        final TableRow row = new TableRow(Order.this);
+        TableLayout.LayoutParams lp = new TableLayout.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+        lp.setMargins(0, 2, 2, 6);
+        row.setLayoutParams(lp);
+
+        final String[] selectedReason = {""};
         for (int k = 0; k < resons.size(); k++) {
 
             if (resons.get(k).getActiveated() == 1) {
@@ -645,6 +791,12 @@ public class Order extends AppCompatActivity {
                 radioButton.setText(resons.get(k).getVoidReason());
                 radioButton.setTextSize(20);
                 radioButton.setTextColor(ContextCompat.getColor(Order.this, R.color.text_color));
+                radioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                        selectedReason[0] = radioButton.getText().toString() ;
+                    }
+                });
 
                 radioGroup.addView(radioButton);
             }
@@ -653,15 +805,44 @@ public class Order extends AppCompatActivity {
         reasons.addView(row);
 
         save.setOnClickListener(view -> {
-            // here ...
-            int selectedId = radioGroup.getCheckedRadioButtonId();
-            RadioButton radioButton = (RadioButton) findViewById(selectedId);
+            if (!selectedReason[0].equals("")) {
 
-            dialog.dismiss();
+                for (int k = 0; k < tableLayout.getChildCount(); k++) {
+                    TableRow raw = (TableRow) tableLayout.getChildAt(k);
+                    TextView textViewQty = (TextView) raw.getChildAt(0);
+                    TextView textViewTotal = (TextView) raw.getChildAt(3);
+
+                    mDbHandler.addCancleOrder(new CancleOrder(voucherNo, today, Settings.user_name, Settings.password, Settings.shift_name,
+                            Settings.shift_number, waiter, Integer.parseInt(waiterNo), "" + wantedItems.get(k).getItemBarcode(),
+                            wantedItems.get(k).getMenuName(), Integer.parseInt(textViewQty.getText().toString()),
+                            wantedItems.get(k).getPrice(), Double.parseDouble(textViewTotal.getText().toString()),
+                            selectedReason[0], 1, time ,Settings.POS_number));
+                }
+                if (orderTypeFlag == 0) {
+                    tableLayout.removeAllViews();
+                    wantedItems.clear();
+                    lineDiscount.clear();
+                    tableLayoutPosition = 0;
+                    resetPosition();
+                    calculateTotal();
+                } else {
+                    tableLayout.removeAllViews();
+                    wantedItems.clear();
+                    lineDiscount.clear();
+                    tableLayoutPosition = 0;
+                    resetPosition();
+                    calculateTotal();
+                    mDbHandler.deleteFromOrderHeaderTemp("" + sectionNumber, "" + tableNumber);
+                    mDbHandler.deleteFromOrderTransactionTemp("" + sectionNumber, "" + tableNumber);
+
+                    Intent intent = new Intent(Order.this, DineIn.class);
+                    startActivity(intent);
+                }
+                dialog.dismiss();
+            } else
+                Toast.makeText(Order.this, "Please select reason of cancel", Toast.LENGTH_LONG).show();
         });
-
         dialog.show();
-
     }
 
     void resetPosition() {

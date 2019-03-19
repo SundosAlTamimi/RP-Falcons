@@ -2,7 +2,7 @@ package com.tamimi.sundos.restpos.Models;
 
 public class CancleOrder {
 
-    private int orderNo;
+    private String orderNo;
     private String transDate;
     private String userName;
     private int userNo;
@@ -18,15 +18,15 @@ public class CancleOrder {
     private String reason;
     private int isAllCancel;
     private String time;
+    private int posNO;
 
     public CancleOrder() {
 
     }
 
-    public CancleOrder(int orderNo, String transDate, String userName, int userNo,
-                       String shiftName, int shiftNo, String waiterName, int waiterNo,
-                       String itemCode, String itemName, double qty, double price, double total,
-                       String reason, int isAllCancel, String time) {
+    public CancleOrder(String orderNo, String transDate, String userName, int userNo, String shiftName, int shiftNo, String waiterName,
+                       int waiterNo, String itemCode, String itemName, double qty, double price, double total, String reason,
+                       int isAllCancel, String time ,int posNO) {
 
         this.orderNo = orderNo;
         this.transDate = transDate;
@@ -44,13 +44,18 @@ public class CancleOrder {
         this.reason = reason;
         this.isAllCancel = isAllCancel;
         this.time = time;
+        this.posNO = posNO;
+    }
+
+    public void setPosNO(int posNO) {
+        this.posNO = posNO;
     }
 
     public void setTime(String time) {
         this.time = time;
     }
 
-    public void setOrderNo(int orderNo) {
+    public void setOrderNo(String orderNo) {
         this.orderNo = orderNo;
     }
 
@@ -110,7 +115,7 @@ public class CancleOrder {
         this.isAllCancel = isAllCancel;
     }
 
-    public int getOrderNo() {
+    public String getOrderNo() {
         return orderNo;
     }
 
@@ -172,5 +177,9 @@ public class CancleOrder {
 
     public String getTime() {
         return time;
+    }
+
+    public int getPosNO() {
+        return posNO;
     }
 }

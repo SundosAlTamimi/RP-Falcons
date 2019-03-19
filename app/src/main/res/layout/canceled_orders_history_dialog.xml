@@ -17,8 +17,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:layout_marginLeft="20dp">
+            android:layout_marginLeft="20dp"
+            android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/printing"
@@ -37,11 +37,11 @@
                     android:id="@+id/textView52"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="3"
                     android:layout_gravity="center"
+                    android:layout_marginBottom="5dp"
                     android:layout_marginEnd="50dp"
                     android:layout_marginRight="50dp"
-                    android:layout_marginBottom="5dp"
+                    android:layout_weight="3"
                     android:gravity="center"
                     android:text="Canceled Orders History"
                     android:textColor="@color/text_color"
@@ -85,7 +85,7 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_marginRight="5dp"
-                    android:background="@drawable/printer"/>
+                    android:background="@drawable/printer" />
             </LinearLayout>
 
 
@@ -152,10 +152,11 @@
                         android:textSize="18sp" />
 
                     <RadioGroup
+                        android:id="@+id/voidType"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="30dp"
                         android:layout_marginLeft="30dp"
+                        android:layout_marginStart="30dp"
                         android:orientation="horizontal">
 
                         <RadioButton
@@ -229,8 +230,7 @@
                 <Spinner
                     android:id="@+id/casherNo"
                     android:layout_width="170dp"
-                    android:layout_height="30dp"
-                    />
+                    android:layout_height="30dp" />
 
                 <TextView
                     android:id="@+id/text2"
@@ -250,130 +250,130 @@
         </LinearLayout>
 
 
-        <ScrollView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="350dp"
+            android:orientation="vertical"
             android:padding="5dp">
 
-            <LinearLayout
+
+            <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginBottom="2dp">
 
+                <TextView
+                    android:id="@+id/textView62"
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="1dp"
+                    android:layout_weight="0.5"
+                    android:background="@color/blue_ice"
+                    android:gravity="center"
+                    android:padding="2dp"
+                    android:text="#"
+                    android:textColor="@color/layer1"
+                    android:textSize="18sp" />
 
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="2dp">
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="1dp"
+                    android:layout_weight="2"
+                    android:background="@color/blue_ice"
+                    android:gravity="center"
+                    android:padding="2dp"
+                    android:text="@string/date_"
+                    android:textColor="@color/layer1"
+                    android:textSize="18sp" />
 
-                    <TextView
-                        android:id="@+id/textView62"
-                        android:layout_width="100dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="1dp"
-                        android:layout_weight="1"
-                        android:background="@color/blue_ice"
-                        android:gravity="center"
-                        android:padding="2dp"
-                        android:text="#"
-                        android:textColor="@color/layer1"
-                        android:textSize="18sp" />
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="1dp"
+                    android:layout_weight="2"
+                    android:background="@color/blue_ice"
+                    android:gravity="center"
+                    android:padding="2dp"
+                    android:text="@string/time"
+                    android:textColor="@color/layer1"
+                    android:textSize="18sp" />
 
-                    <TextView
-                        android:layout_width="100dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="1dp"
-                        android:layout_weight="1"
-                        android:background="@color/blue_ice"
-                        android:gravity="center"
-                        android:padding="2dp"
-                        android:text="@string/date_"
-                        android:textColor="@color/layer1"
-                        android:textSize="18sp" />
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="1dp"
+                    android:layout_weight="2"
+                    android:background="@color/blue_ice"
+                    android:gravity="center"
+                    android:padding="2dp"
+                    android:text="@string/item_code"
+                    android:textColor="@color/layer1"
+                    android:textSize="18sp" />
 
-                    <TextView
-                        android:layout_width="100dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="1dp"
-                        android:layout_weight="1"
-                        android:background="@color/blue_ice"
-                        android:gravity="center"
-                        android:padding="2dp"
-                        android:text="@string/time"
-                        android:textColor="@color/layer1"
-                        android:textSize="18sp" />
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="1dp"
+                    android:layout_weight="2"
+                    android:background="@color/blue_ice"
+                    android:gravity="center"
+                    android:padding="2dp"
+                    android:text="@string/item_name"
+                    android:textColor="@color/layer1"
+                    android:textSize="18sp" />
 
-                    <TextView
-                        android:layout_width="100dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="1dp"
-                        android:layout_weight="1"
-                        android:background="@color/blue_ice"
-                        android:gravity="center"
-                        android:padding="2dp"
-                        android:text="@string/item_code"
-                        android:textColor="@color/layer1"
-                        android:textSize="18sp" />
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="1dp"
+                    android:layout_weight="2"
+                    android:background="@color/blue_ice"
+                    android:gravity="center"
+                    android:padding="2dp"
+                    android:text="@string/qty"
+                    android:textColor="@color/layer1"
+                    android:textSize="18sp" />
 
-                    <TextView
-                        android:layout_width="100dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="1dp"
-                        android:layout_weight="1"
-                        android:background="@color/blue_ice"
-                        android:gravity="center"
-                        android:padding="2dp"
-                        android:text="@string/item_name"
-                        android:textColor="@color/layer1"
-                        android:textSize="18sp" />
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="1dp"
+                    android:layout_weight="2"
+                    android:background="@color/blue_ice"
+                    android:gravity="center"
+                    android:padding="2dp"
+                    android:text="@string/total_price"
+                    android:textColor="@color/layer1"
+                    android:textSize="18sp" />
 
-                    <TextView
-                        android:layout_width="100dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="1dp"
-                        android:layout_weight="1"
-                        android:background="@color/blue_ice"
-                        android:gravity="center"
-                        android:padding="2dp"
-                        android:text="@string/qty"
-                        android:textColor="@color/layer1"
-                        android:textSize="18sp" />
+                <TextView
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="1dp"
+                    android:layout_weight="4"
+                    android:background="@color/blue_ice"
+                    android:gravity="center"
+                    android:padding="2dp"
+                    android:text="@string/void_reason"
+                    android:textColor="@color/layer1"
+                    android:textSize="18sp" />
+            </TableRow>
 
-                    <TextView
-                        android:layout_width="100dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="1dp"
-                        android:layout_weight="1"
-                        android:background="@color/blue_ice"
-                        android:gravity="center"
-                        android:padding="2dp"
-                        android:text="@string/total_price"
-                        android:textColor="@color/layer1"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:layout_width="100dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="1dp"
-                        android:layout_weight="1"
-                        android:background="@color/blue_ice"
-                        android:gravity="center"
-                        android:padding="2dp"
-                        android:text="@string/void_reason"
-                        android:textColor="@color/layer1"
-                        android:textSize="18sp" />
-                </TableRow>
-
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
                 <TableLayout
-                    android:id="@+id/cashierTable"
+                    android:id="@+id/canceledTable"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                 </TableLayout>
+            </ScrollView>
 
-            </LinearLayout>
-        </ScrollView>
+        </LinearLayout>
+
 
     </LinearLayout>
 

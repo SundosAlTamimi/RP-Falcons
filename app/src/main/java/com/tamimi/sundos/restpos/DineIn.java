@@ -74,7 +74,7 @@ public class DineIn extends AppCompatActivity {
     boolean CheckTrue = true;
     int tableNumber;
     int current = 0;
-    String waiter;
+    String waiter , waiterNo;
 
     int fromSection, toSection;
     List<String> tablesNoLeft, tablesNoRight;
@@ -296,11 +296,14 @@ public class DineIn extends AppCompatActivity {
                         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 40);
 
                         final TextView textView = new TextView(DineIn.this);
-                        textView.setText(" " + employees.get(i).getEmployeeName());
+                        textView.setText("" + employees.get(i).getEmployeeName());
                         textView.setTextColor(getResources().getColor(R.color.text_color));
                         textView.setTextSize(22);
                         textView.setGravity(Gravity.BOTTOM);
                         textView.setLayoutParams(lp);
+
+                        final TextView textView2 = new TextView(DineIn.this);
+                        textView2.setText("" + employees.get(i).getEmployeeNO());
 
                         LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(50, 40);
                         lp2.setMargins(3, 5, 7, 5);
@@ -316,6 +319,7 @@ public class DineIn extends AppCompatActivity {
                             @Override
                             public void onClick(View view) {
                                 waiter = textView.getText().toString();
+                                waiterNo = textView2.getText().toString();
                                 setTableBackground(linearLayout, linearLayout1);
                             }
                         });
@@ -341,10 +345,32 @@ public class DineIn extends AppCompatActivity {
                 TextView textView = (TextView) focused.getChildAt(1);
                 tableNumber = Integer.parseInt(textView.getText().toString());
 
+                String waiterName = "";
+                ArrayList<OrderHeader> orderHeader = mHandler.getOrderHeaderTemp("" + current, "" + tableNumber);
+                for(int i=0 ; i<orderHeader.size() ; i++){
+                    if(orderHeader.get(i).getTableNO() == tableNumber) {
+                        waiterName = orderHeader.get(i).getWaiter();
+                        break;
+                    }
+                }
+
+                String waiterNumber = "";
+                ArrayList<EmployeeRegistrationModle> employees = mHandler.getAllEmployeeRegistration();
+                for(int i=0 ; i<employees.size() ; i++){
+                    if(employees.get(i).getEmployeeName().equals(waiterName)) {
+                        waiterNumber = "" + employees.get(i).getEmployeeNO();
+                        break;
+                    }
+                }
+                Log.e("test " , "" + waiterName );
+                Log.e("test " , "" + waiterNumber );
+
                 Intent intent = new Intent(DineIn.this, Order.class);
                 intent.putExtra("flag", "1");
                 intent.putExtra("tableNo", tableNumber);
                 intent.putExtra("sectionNo", current);
+                intent.putExtra("waiter", waiterName);
+                intent.putExtra("waiterNo", waiterNumber);
                 startActivity(intent);
             }
         }
@@ -1149,6 +1175,8 @@ public class DineIn extends AppCompatActivity {
                         intent.putExtra("tableNo", tableNumber);
                         intent.putExtra("sectionNo", current);
                         intent.putExtra("waiter", waiter);
+
+                        intent.putExtra("waiterNo", waiterNo);
                         intent.putExtra("seatNo", sum);
                         startActivity(intent);
 
