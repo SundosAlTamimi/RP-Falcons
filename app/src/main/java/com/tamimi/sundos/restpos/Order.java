@@ -118,7 +118,6 @@ public class Order extends AppCompatActivity {
             sectionNumber = extras.getInt("sectionNo");
             waiter = extras.getString("waiter");
             waiterNo = extras.getString("waiterNo");
-//            Log.e("test 2" , "" + waiterNo);
             seatNo = extras.getInt("seatNo");
 
         }
@@ -268,11 +267,25 @@ public class Order extends AppCompatActivity {
         List<OrderHeader> transactions = mDbHandler.getAllOrderHeader();
         List<OrderHeader> transactionsTemp = mDbHandler.getAllOrderHeaderTemp();
 
-        if (orderTypeFlag == 0) {
-            voucherSerial = (transactions.size() > 0 ? transactions.size() : 0);
+        int transactionsSize = 0, transactionsTempSize = 0;
+
+        if (transactions.size() != 0)
+            transactionsSize = Integer.parseInt(transactions.get(transactions.size() - 1).getVoucherNumber());
+
+        if (transactionsTemp.size() != 0)
+            transactionsTempSize = Integer.parseInt(transactionsTemp.get(transactionsTemp.size() - 1).getVoucherNumber());
+
+        if (transactionsSize > transactionsTempSize) {
+            voucherSerial = transactionsSize + 1;
         } else {
-            voucherSerial = (transactionsTemp.size() > 0 ? transactionsTemp.get(transactionsTemp.size() - 1).getVoucherSerial() + 1 : 0);
+            voucherSerial = transactionsTempSize + 1;
         }
+
+//        if (orderTypeFlag == 0) {
+//            voucherSerial = (transactions.size() > 0 ? transactions.size() : 0);
+//        } else {
+//            voucherSerial = (transactionsTemp.size() > 0 ? transactionsTemp.get(transactionsTemp.size() - 1).getVoucherSerial() + 1 : 0);
+//        }
         voucherNo = yearMonth + "-" + voucherSerial;
     }
 
@@ -708,7 +721,7 @@ public class Order extends AppCompatActivity {
                 radioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                        selectedReason[0] = radioButton.getText().toString() ;
+                        selectedReason[0] = radioButton.getText().toString();
                     }
                 });
                 radioGroup.addView(radioButton);
@@ -728,7 +741,7 @@ public class Order extends AppCompatActivity {
                         Settings.shift_number, waiter, Integer.parseInt(waiterNo), "" + wantedItems.get(index).getItemBarcode(),
                         wantedItems.get(index).getMenuName(), Integer.parseInt(textViewQty.getText().toString()),
                         wantedItems.get(index).getPrice(), Double.parseDouble(textViewTotal.getText().toString()),
-                        selectedReason[0], 0, time , Settings.POS_number));
+                        selectedReason[0], 0, time, Settings.POS_number));
 
                 if (orderTypeFlag == 0) {
                     tableLayout.removeView(raw);
@@ -744,7 +757,7 @@ public class Order extends AppCompatActivity {
                     tableLayoutPosition--;
                     resetPosition();
                     calculateTotal();   //  تعديل عل ال header  و مسح من ال trans
-                    if(tableLayout.getChildCount() == 0) {
+                    if (tableLayout.getChildCount() == 0) {
                         Intent intent = new Intent(Order.this, DineIn.class);
                         startActivity(intent);
                     }
@@ -794,7 +807,7 @@ public class Order extends AppCompatActivity {
                 radioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                        selectedReason[0] = radioButton.getText().toString() ;
+                        selectedReason[0] = radioButton.getText().toString();
                     }
                 });
 
@@ -816,7 +829,7 @@ public class Order extends AppCompatActivity {
                             Settings.shift_number, waiter, Integer.parseInt(waiterNo), "" + wantedItems.get(k).getItemBarcode(),
                             wantedItems.get(k).getMenuName(), Integer.parseInt(textViewQty.getText().toString()),
                             wantedItems.get(k).getPrice(), Double.parseDouble(textViewTotal.getText().toString()),
-                            selectedReason[0], 1, time ,Settings.POS_number));
+                            selectedReason[0], 1, time, Settings.POS_number));
                 }
                 if (orderTypeFlag == 0) {
                     tableLayout.removeAllViews();
@@ -1606,6 +1619,9 @@ public class Order extends AppCompatActivity {
         tax.setText("" + orderHeaders.get(0).getTotalTax());
         service.setText("" + orderHeaders.get(0).getTotalService());
         amountDue.setText("" + orderHeaders.get(0).getAmountDue());
+
+        voucherSerial = orderHeaders.get(0).getVoucherSerial();
+        voucherNo = orderHeaders.get(0).getVoucherNumber();
     }
 
     public double getBalance() {
