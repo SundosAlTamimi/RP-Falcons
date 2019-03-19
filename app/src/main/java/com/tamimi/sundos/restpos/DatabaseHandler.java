@@ -1065,7 +1065,26 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 //       //Create tables again
 //        onCreate(db);
 
-        db.execSQL("ALTER TABLE CANCEL_ORDER ADD POS_NO TEXT NOT NULL DEFAULT '4'");
+        String CREATE_TABLE_CANCLE_ORDER_TABLE = "CREATE TABLE " + CANCEL_ORDER + "("
+                + ORDER_NO13 + " TEXT ,"
+                + TRANCE_DATE13 + " TEXT,"
+                + USER_NO13 + " INTEGER,"
+                + USER_NAME13 + " TEXT,"
+                + SHIFT_NAME13 + " TEXT,"
+                + SHIFT_NO13 + " INTEGER,"
+                + WAITER_NAME13 + " TEXT,"
+                + WAITER_NO13 + " INTEGER,"
+                + ITEM_CODE13 + " INTEGER,"
+                + ITEM_NAME13 + " TEXT,"
+                + QTY13 + " INTEGER ,"
+                + PRICE13 + " INTEGER ,"
+                + TOTAL13 + " INTEGER ,"
+                + REASON13 + " TEXT ,"
+                + IS_ALL_CANCEL13 + " INTEGER ,"
+                + TIME13 + " TEXT ,"
+                + POS_NO13 + " INTEGER " + ")";
+        db.execSQL(CREATE_TABLE_CANCLE_ORDER_TABLE);
+
 
     }
 

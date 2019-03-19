@@ -366,4 +366,11 @@
     <string name="master">Master</string>
     <string name="Preview"> Preview </string>
     <string name="export">Export</string>
+    <string name="cashier_in_out_report">Cashier In Out Report</string>
+    <string name="all">ALL</string>
+    <string name="cashierno">CashierNo</string>
+    <string name="cashier_name">Cashier Name</string>
+    <string name="pos">POS</string>
+    <string name="trans_type">Trans Type</string>
+    <string name="amount">Amount</string>
 </resources>

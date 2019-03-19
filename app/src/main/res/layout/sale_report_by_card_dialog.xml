@@ -37,13 +37,13 @@
                     android:id="@+id/textView52"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="3"
                     android:layout_gravity="center"
                     android:layout_marginEnd="50dp"
                     android:layout_marginRight="50dp"
                     android:layout_marginBottom="5dp"
+                    android:layout_weight="3"
                     android:gravity="center"
-                    android:text="@string/cashier_in_out_report"
+                    android:text="Sales Report By Card Type "
                     android:textColor="@color/text_color"
                     android:textSize="25sp" />
 
@@ -126,7 +126,7 @@
                         android:textSize="18sp" />
 
                     <TextView
-                        android:id="@+id/frDate"
+                        android:id="@+id/frDateCard"
                         android:layout_width="150dp"
                         android:layout_height="30dp"
                         android:layout_marginRight="20dp"
@@ -143,51 +143,13 @@
                         android:textSize="18sp" />
 
                     <TextView
-                        android:id="@+id/toDate"
+                        android:id="@+id/toDateCard"
                         android:layout_width="150dp"
                         android:layout_height="30dp"
                         android:background="@color/layer2"
                         android:gravity="center"
                         android:textColor="@color/text_color"
                         android:textSize="18sp" />
-
-                    <RadioGroup
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <RadioButton
-                            android:id="@+id/All"
-                            android:layout_width="wrap_content"
-                            android:layout_height="30dp"
-                            android:layout_marginLeft="20dp"
-                            android:layout_marginRight="20dp"
-                            android:checked="true"
-                            android:text="@string/all"
-                            android:textColor="@color/text_color"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
-
-                        <RadioButton
-                            android:id="@+id/cashierIN"
-                            android:layout_width="wrap_content"
-                            android:layout_height="30dp"
-                            android:layout_marginRight="20dp"
-                            android:text="@string/cashier_in"
-                            android:textColor="@color/text_color"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
-
-                        <RadioButton
-                            android:id="@+id/cashierOut"
-                            android:layout_width="wrap_content"
-                            android:layout_height="30dp"
-                            android:layout_marginRight="20dp"
-                            android:text="@string/cashier_out"
-                            android:textColor="@color/text_color"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
-                    </RadioGroup>
 
 
                 </TableRow>
@@ -202,9 +164,11 @@
                 android:gravity="center">
 
                 <TextView
-                    android:id="@+id/textView67"
-                    android:layout_width="100dp"
+                    android:id="@+id/text"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="5dp"
                     android:text="@string/shift_name"
                     android:textColor="@color/text_color"
                     android:textSize="18sp" />
@@ -215,17 +179,15 @@
                     android:layout_height="30dp" />
 
                 <TextView
-                    android:id="@+id/text"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/textView67"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginRight="5dp"
-                    android:text="@string/cashierno"
+                    android:text="Card Type"
                     android:textColor="@color/text_color"
                     android:textSize="18sp" />
 
                 <Spinner
-                    android:id="@+id/casherNo"
+                    android:id="@+id/cardType"
                     android:layout_width="170dp"
                     android:layout_height="30dp"
                     />
@@ -250,7 +212,7 @@
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="350dp"
+            android:layout_height="271dp"
             android:padding="5dp">
 
             <LinearLayout
@@ -274,18 +236,6 @@
                         android:gravity="center"
                         android:padding="2dp"
                         android:text="#"
-                        android:textColor="@color/layer1"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:layout_width="100dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="1dp"
-                        android:layout_weight="1"
-                        android:background="@color/blue_ice"
-                        android:gravity="center"
-                        android:padding="2dp"
-                        android:text="@string/cashier_name"
                         android:textColor="@color/layer1"
                         android:textSize="18sp" />
 
@@ -333,7 +283,7 @@
                         android:background="@color/blue_ice"
                         android:gravity="center"
                         android:padding="2dp"
-                        android:text="@string/trans_type"
+                        android:text="Invoice No"
                         android:textColor="@color/layer1"
                         android:textSize="18sp" />
 
@@ -345,14 +295,26 @@
                         android:background="@color/blue_ice"
                         android:gravity="center"
                         android:padding="2dp"
-                        android:text="@string/amount"
+                        android:text="Net Total"
+                        android:textColor="@color/layer1"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="1dp"
+                        android:layout_weight="1"
+                        android:background="@color/blue_ice"
+                        android:gravity="center"
+                        android:padding="2dp"
+                        android:text="@string/customer_name"
                         android:textColor="@color/layer1"
                         android:textSize="18sp" />
                 </TableRow>
 
 
                 <TableLayout
-                    android:id="@+id/cashierTable"
+                    android:id="@+id/cardTypeTable"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -360,6 +322,31 @@
 
             </LinearLayout>
         </ScrollView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView68"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text="@string/total"
+                android:textColor="@color/exit"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/total"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text="0.00"
+                android:textColor="@color/exit"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
     </LinearLayout>
 
