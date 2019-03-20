@@ -2267,59 +2267,66 @@ public class BackOfficeActivity extends AppCompatActivity {
                 posNoString = Integer.parseInt(PosNo.getSelectedItem().toString());
 
             for (int i = 0; i < 24; i++) {
-                if (filters(fromDate.getText().toString(), toDate.getText().toString(), orderHeaders.get(i).getVoucherDate())) {
 
-                    if (orderHeaders.get(i).getShiftName().equals(ShiftName) || ShiftName.equals("All")) {
-                        if (orderHeaders.get(i).getUserNo() == CashierNo || CashierNo == -1) {
-                            if (orderHeaders.get(i).getPointOfSaleNumber() == posNoString || posNoString == -1) {
-//                                if (orderTyp == orderHeaders.get(i).getOrderType() || orderTyp == -1) {
+                List<OrderHeader> filteredList = getFilteredArrayByHour(orderHeaders, i, fromDate, toDate, ShiftName, CashierNo, posNoString);
 
-                                    TableRow row = new TableRow(BackOfficeActivity.this);
+                int totalGusts = 0;
+                int numOfTrans = 0;
+                double totalSales = 0;
 
-                                    TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
-                                    row.setLayoutParams(lp);
+                for (int s = 0; s < filteredList.size(); s++) {
+                    if (filteredList.get(s).getOrderType() == 0)
+                        totalGusts += 1;
+                    else
+                        totalGusts += filteredList.get(s).getSeatsNumber();
 
-                                    for (int k = 0; k < 6; k++) {
-                                        TextView textView = new TextView(BackOfficeActivity.this);
-
-                                        switch (k) {
-                                            case 0:
-                                                textView.setText(""+ i + ":00 - " + (i+1)+ ":00");
-                                                break;
-                                            case 1:
-                                                textView.setText("" + posNoString);
-                                                break;
-                                            case 2:
-                                                textView.setText("" + orderHeaders.get(i).getVoucherNumber());
-                                                break;
-                                            case 3:
-                                                textView.setText("" + orderHeaders.get(i).getTotal());
-                                                break;
-                                            case 4:
-                                                textView.setText("" + orderHeaders.get(i).getAllDiscount());
-                                                break;
-                                            case 5:
-                                                textView.setText("" + orderHeaders.get(i).getTotalTax());
-                                                break;
-                                        }
-
-                                        textView.setTextColor(ContextCompat.getColor(BackOfficeActivity.this, R.color.text_color));
-                                        textView.setBackgroundColor(ContextCompat.getColor(BackOfficeActivity.this, R.color.jeans_blue));
-                                        textView.setGravity(Gravity.CENTER);
-                                        textView.setTextSize(16);
-
-                                        TableRow.LayoutParams lp2 = new TableRow.LayoutParams(100, TableRow.LayoutParams.MATCH_PARENT, 2.0f);
-                                        lp2.setMargins(1, 1, 1, 1);
-                                        textView.setLayoutParams(lp2);
-
-                                        row.addView(textView);
-                                    }
-                                    table.addView(row);
-//                                }
-                            }
-                        }
-                    }
+                    numOfTrans += 1;
+                    totalSales += filteredList.get(s).getAmountDue();
                 }
+
+                TableRow row = new TableRow(BackOfficeActivity.this);
+                TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
+                row.setLayoutParams(lp);
+
+                for (int k = 0; k < 6; k++) {
+                    TextView textView = new TextView(BackOfficeActivity.this);
+
+                    switch (k) {
+                        case 0:
+                            textView.setText("" + i + ":00 - " + (i + 1) + ":00");
+                            break;
+                        case 1:
+                            textView.setText("" + totalGusts);
+                            break;
+                        case 2:
+                            textView.setText("" + numOfTrans);
+                            break;
+                        case 3:
+                            textView.setText("" + totalSales);
+                            break;
+                        case 4:
+                            textView.setText("" + (totalSales / numOfTrans));
+                            break;
+                        case 5:
+                            textView.setText("" + (totalSales / totalGusts));
+                            break;
+                    }
+
+                    textView.setTextColor(ContextCompat.getColor(BackOfficeActivity.this, R.color.text_color));
+                    textView.setBackgroundColor(ContextCompat.getColor(BackOfficeActivity.this, R.color.jeans_blue));
+                    textView.setGravity(Gravity.CENTER);
+                    textView.setTextSize(16);
+
+                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(100, TableRow.LayoutParams.MATCH_PARENT, 2.0f);
+                    lp2.setMargins(1, 1, 1, 1);
+                    textView.setLayoutParams(lp2);
+
+                    if(textView.getText().toString().equals("NaN"))
+                        textView.setText("-");
+
+                    row.addView(textView);
+                }
+                table.addView(row);
             }
         });
 
@@ -2341,6 +2348,27 @@ public class BackOfficeActivity extends AppCompatActivity {
 
         dialog.show();
 
+    }
+
+    public List<OrderHeader> getFilteredArrayByHour(List<OrderHeader> orderHeaders, int hour, TextView fromDate, TextView toDate, String ShiftName,
+                                                    int CashierNo, int posNoString) {
+        List<OrderHeader> filteredOrderHeaders = new ArrayList<>();
+        for (int i = 0; i < orderHeaders.size(); i++) {
+            int orderHour = Integer.parseInt(orderHeaders.get(i).getTime().substring(0, 2));
+
+            if (filters(fromDate.getText().toString(), toDate.getText().toString(), orderHeaders.get(i).getVoucherDate())) {
+                if (orderHeaders.get(i).getShiftName().equals(ShiftName) || ShiftName.equals("All")) {
+                    if (orderHeaders.get(i).getUserNo() == CashierNo || CashierNo == -1) {
+                        if (orderHeaders.get(i).getPointOfSaleNumber() == posNoString || posNoString == -1) {
+                            if (orderHour == hour) {
+                                filteredOrderHeaders.add(orderHeaders.get(i));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return filteredOrderHeaders;
     }
 
     void ShowSalesReportByCardTypes() {
@@ -2436,10 +2464,10 @@ public class BackOfficeActivity extends AppCompatActivity {
                             (OrderPayMData.get(i).getShiftName().equals(ShiftNames) || ShiftNames.equals("All")) &&
                             (posNoString == -1 || posNoString == OrderPayMData.get(i).getPointOfSaleNumber())) {
 
-                        insertCashierInOutReport(cardTypeTable,String.valueOf(i),OrderPayMData.get(i).getTime(),
-                                OrderPayMData.get(i).getVoucherNumber() ,OrderPayMData.get(i).getVoucherDate(),
-                                String.valueOf(OrderPayMData.get(i).getPayValue()),OrderPayMData.get(i).getUserName(),
-                                String.valueOf(OrderPayMData.get(i).getPointOfSaleNumber()),7);
+                        insertCashierInOutReport(cardTypeTable, String.valueOf(i), "11:32",
+                                OrderPayMData.get(i).getVoucherNumber(), OrderPayMData.get(i).getVoucherDate(),
+                                String.valueOf(OrderPayMData.get(i).getPayValue()), OrderPayMData.get(i).getUserName(),
+                                String.valueOf(OrderPayMData.get(i).getPointOfSaleNumber()), 7);
 
                     }
                 }
