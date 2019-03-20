@@ -821,7 +821,9 @@ public class DineIn extends AppCompatActivity {
             public void onClick(View view) {
                 Date currentTimeAndDate = Calendar.getInstance().getTime();
                 SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+                SimpleDateFormat Tf = new SimpleDateFormat("hh:mm:ss");
                 String today = df.format(currentTimeAndDate);
+                String times = Tf.format(currentTimeAndDate);
                 ArrayList<String> listForPay = new ArrayList<>();
                 ArrayList<Double> listValuePay = new ArrayList<>();
 
@@ -863,7 +865,7 @@ public class DineIn extends AppCompatActivity {
                             Settings.service_value, rowRefund.get(0).getTaxValue(), rowRefund.get(0).getServiceTax(), netTotals,
                             netTotals, 1, rowRefund.get(0).getTableNo(),
                             rowRefund.get(0).getSectionNo(), cashValues, creditValues, chequeVales, cardValues,
-                            giftCardValues, pointValues, Settings.shift_name, Settings.shift_number, "No Waiter", 0, Settings.user_name, Settings.password);
+                            giftCardValues, pointValues, Settings.shift_name, Settings.shift_number, "No Waiter", 0, Settings.user_name, Settings.password,times);
 
                     mHandler.addOrderHeader(orderHeader);
 
@@ -875,7 +877,7 @@ public class DineIn extends AppCompatActivity {
                                 rowRefund.get(i).getItemFamily(), rowRefund.get(i).getQty(), rowRefund.get(i).getPrice(),
                                 totalAdd, DiscountArray.get(i), lineDiscount.get(i), lineDiscount.get(i) + DiscountArray.get(i), rowRefund.get(i).getTaxValue(),
                                 rowRefund.get(i).getTaxPerc(), 0, rowRefund.get(i).getService(), rowRefund.get(i).getServiceTax(),
-                                rowRefund.get(i).getTableNo(), rowRefund.get(i).getSectionNo(), Settings.shift_number, Settings.shift_name, Settings.password, Settings.user_name);
+                                rowRefund.get(i).getTableNo(), rowRefund.get(i).getSectionNo(), Settings.shift_number, Settings.shift_name, Settings.password, Settings.user_name ,times);
 
 
                         mHandler.addOrderTransaction(orderTransactions);
@@ -924,7 +926,7 @@ public class DineIn extends AppCompatActivity {
                                 today,
                                 Settings.POS_number,
                                 Settings.store_number, list.get(0).getVoucherNo(), list.get(0).getVoucherSerial(), listForPay.get(x),
-                                listValuePay.get(x), payNumber, payName, Settings.shift_number, Settings.shift_name, Settings.user_name, Settings.password);
+                                listValuePay.get(x), payNumber, payName, Settings.shift_name, Settings.shift_number, Settings.user_name, Settings.password , times);
 
                         mHandler.addAllPayMethodItem(payMethod);
                     }

@@ -2004,7 +2004,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                             ( OrderPayMData.get(i).getShiftName().equals(ShiftNames)||ShiftNames.equals("All"))&&
                             ( posNoString==-1||posNoString==OrderPayMData.get(i).getPointOfSaleNumber())){
 
-                        insertCashierInOutReport(cardTypeTable,String.valueOf(i),"11:32",
+                        insertCashierInOutReport(cardTypeTable,String.valueOf(i),OrderPayMData.get(i).getTime(),
                                 OrderPayMData.get(i).getVoucherNumber() ,OrderPayMData.get(i).getVoucherDate(),
                                 String.valueOf(OrderPayMData.get(i).getPayValue()),OrderPayMData.get(i).getUserName(),
                                 String.valueOf(OrderPayMData.get(i).getPointOfSaleNumber()),7);

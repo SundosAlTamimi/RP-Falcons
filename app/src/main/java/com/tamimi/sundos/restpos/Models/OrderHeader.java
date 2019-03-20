@@ -33,18 +33,20 @@ public class OrderHeader {
     private int seatsNumber;
     private String userName;
     private int userNo;
-
+    private String time;
 
     public OrderHeader() {
 
     }
 
-    public OrderHeader(int orderType, int orderKind, String voucherDate, int pointOfSaleNumber, int storeNumber, String voucherNumber,
-                       int voucherSerial, double total, double totalLineDiscount, double totalDiscount, double allDiscount,
-                       double totalService, double totalTax, double totalServiceTax, double subTotal, double amountDue,
-                       double deliveryCharge, int tableNO, int sectionNO, double cashValue, double cardsValue, double chequeValue,
-                       double couponValue, double giftValue, double pointValue, String shiftName, int shiftNumber, String waiter,
-                       int seatsNumber ,String userName ,int userNo) {
+    public OrderHeader(int orderType, int orderKind, String voucherDate, int pointOfSaleNumber,
+                       int storeNumber, String voucherNumber, int voucherSerial, double total,
+                       double totalLineDiscount, double totalDiscount, double allDiscount, double totalService,
+                       double totalTax, double totalServiceTax, double subTotal, double amountDue, double deliveryCharge,
+                       int sectionNO, int tableNO, double cashValue, double cardsValue, double chequeValue, double couponValue ,
+                       double giftValue, double pointValue, String shiftName,int shiftNumber, String waiter,
+                       int seatsNumber, String userName, int userNo, String time) {
+
         this.orderType = orderType;
         this.orderKind = orderKind;
         this.voucherDate = voucherDate;
@@ -76,9 +78,8 @@ public class OrderHeader {
         this.seatsNumber = seatsNumber;
         this.userName = userName;
         this.userNo = userNo;
+        this.time = time;
     }
-
-
 
     public void setUserName(String userName) {
         this.userName = userName;
@@ -325,5 +326,13 @@ public class OrderHeader {
 
     public void setSeatsNumber(int seatsNumber) {
         this.seatsNumber = seatsNumber;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 }
