@@ -136,6 +136,11 @@ public class Order extends AppCompatActivity {
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+
+            Date currentTimeAndDate = Calendar.getInstance().getTime();
+            SimpleDateFormat dfTime = new SimpleDateFormat("hh:mm:ss");
+            time = dfTime.format(currentTimeAndDate);
+
             switch (view.getId()) {
                 case R.id.pay:
                     if (orderTypeFlag == 0) {
@@ -1433,7 +1438,7 @@ public class Order extends AppCompatActivity {
                     wantedItems.get(k).getFamilyName(), Integer.parseInt(textViewQty.getText().toString()), wantedItems.get(k).getPrice(),
                     totalLine, discount, lineDiscount_, discount + lineDiscount_, taxValue,
                     wantedItems.get(k).getTax(), 0, Double.parseDouble(service.getText().toString()), serviceTax,
-                    tableNumber, sectionNumber, Settings.shift_number, Settings.shift_name, Settings.password, Settings.user_name));
+                    tableNumber, sectionNumber, Settings.shift_number, Settings.shift_name, Settings.password, Settings.user_name ,time ));
         }
     }
 
@@ -1451,7 +1456,7 @@ public class Order extends AppCompatActivity {
                 Settings.service_value, Double.parseDouble((tax.getText().toString())), serviceTax, Double.parseDouble((subTotal.getText().toString())),
                 Double.parseDouble(amountDue.getText().toString()), Double.parseDouble(deliveryCharge.getText().toString()), tableNumber,
                 sectionNumber, PayMethods.cashValue1, PayMethods.creditCardValue1, PayMethods.chequeValue1, PayMethods.creditValue1,
-                PayMethods.giftCardValue1, PayMethods.pointValue1, Settings.shift_name, Settings.shift_number, "No Waiter", 0, Settings.user_name, Settings.password);
+                PayMethods.giftCardValue1, PayMethods.pointValue1, Settings.shift_name, Settings.shift_number, "No Waiter", 0, Settings.user_name, Settings.password,time);
 
 
     }
@@ -1487,7 +1492,7 @@ public class Order extends AppCompatActivity {
                     wantedItems.get(k).getFamilyName(), Integer.parseInt(textViewQty.getText().toString()), wantedItems.get(k).getPrice(),
                     totalLine, discount, lineDiscount_, discount + lineDiscount_, taxValue,
                     wantedItems.get(k).getTax(), 0, Double.parseDouble(service.getText().toString()), serviceTax,
-                    tableNumber, sectionNumber, Settings.shift_number, Settings.shift_name, Settings.password, Settings.user_name));
+                    tableNumber, sectionNumber, Settings.shift_number, Settings.shift_name, Settings.password, Settings.user_name , time));
         }
     }
 
@@ -1505,7 +1510,7 @@ public class Order extends AppCompatActivity {
                 Settings.service_value, Double.parseDouble((tax.getText().toString())), serviceTax, Double.parseDouble((subTotal.getText().toString())),
                 Double.parseDouble(amountDue.getText().toString()), Double.parseDouble(deliveryCharge.getText().toString()), tableNumber,
                 sectionNumber, 0.00, 0.00, 0.00, 0.00,
-                0.00, 0.00, Settings.shift_name, Settings.shift_number, waiter, seatNo, Settings.user_name, Settings.password));
+                0.00, 0.00, Settings.shift_name, Settings.shift_number, waiter, seatNo, Settings.user_name, Settings.password , time));
     }
 
     public ArrayList<OrderTransactions> getOrderTransactionObj() {

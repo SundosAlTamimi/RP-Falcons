@@ -1390,7 +1390,9 @@ public class PayMethods extends AppCompatActivity {
         Date currentTimeAndDate = Calendar.getInstance().getTime();
         SimpleDateFormat df1 = new SimpleDateFormat("dd-MM-yyyy");
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM");
+        SimpleDateFormat Tf = new SimpleDateFormat("hh:mm:ss");
         String today = df1.format(currentTimeAndDate);
+        String times = Tf.format(currentTimeAndDate);
         int serial = mDHandler.getMaxSerial("VOUCHER_SERIAL", "PAY_METHOD");
         String vhfSerial = df.format(currentTimeAndDate);// + "-" + (serial);
         String newString = vhfSerial.replace("-", "")+ "-" + (serial+1);
@@ -1410,6 +1412,7 @@ public class PayMethods extends AppCompatActivity {
         payMethod.setShiftNumber(Settings.shift_number);
         payMethod.setUserNo(Settings.password);
         payMethod.setUserName(Settings.user_name);
+        payMethod.setTime(times);
 
         if (cashValue != 0.00) {
             payMethod.setPayType("Cash");
