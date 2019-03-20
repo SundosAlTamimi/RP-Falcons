@@ -1065,7 +1065,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 //       //Create tables again
 //        onCreate(db);
 
-        db.execSQL("ALTER TABLE CANCEL_ORDER ADD POS_NO TEXT NOT NULL DEFAULT '4'");
+//        db.execSQL("ALTER TABLE CANCEL_ORDER ADD POS_NO TEXT NOT NULL DEFAULT '4'");
 
     }
 
@@ -2145,6 +2145,70 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return orderTransactions;
     }
 
+    public List<String> getAllOrderedCategories() {
+        List<String> categories = new ArrayList<>();
+
+        String selectQuery = "select distinct(ITEM_CATEGORY) from ORDER_TRANSACTIONS;";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                categories.add(cursor.getString(0));
+
+            } while (cursor.moveToNext());
+        }
+        return categories;
+    }
+
+    public List<OrderTransactions> getOrdersTransactionsByCategory(String category) {
+        List<OrderTransactions> items = new ArrayList<>();
+
+        String selectQuery = "SELECT  * FROM " + ORDER_TRANSACTIONS + " where ITEM_CATEGORY = '" + category + "'";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                OrderTransactions item = new OrderTransactions();
+
+                item.setOrderType(Integer.parseInt(cursor.getString(0)));
+                item.setOrderKind(Integer.parseInt(cursor.getString(1)));
+                item.setVoucherDate(cursor.getString(2));
+                item.setPosNo(Integer.parseInt(cursor.getString(3)));
+                item.setStoreNo(Integer.parseInt(cursor.getString(4)));
+                item.setVoucherNo(cursor.getString(5));
+                item.setVoucherSerial(Integer.parseInt(cursor.getString(6)));
+                item.setItemBarcode(cursor.getString(7));
+                item.setItemName(cursor.getString(8));
+                item.setSecondaryName(cursor.getString(9));
+                item.setKitchenAlias(cursor.getString(10));
+                item.setItemCategory(cursor.getString(11));
+                item.setItemFamily(cursor.getString(12));
+                item.setQty(Integer.parseInt(cursor.getString(13)));
+                item.setPrice(Double.parseDouble(cursor.getString(14)));
+                item.setTotal(Double.parseDouble(cursor.getString(15)));
+                item.setDiscount(Double.parseDouble(cursor.getString(16)));
+                item.setlDiscount(Double.parseDouble(cursor.getString(17)));
+                item.setTotalDiscount(Double.parseDouble(cursor.getString(18)));
+                item.setTaxValue(Double.parseDouble(cursor.getString(19)));
+                item.setTaxPerc(Double.parseDouble(cursor.getString(20)));
+                item.setTaxKind(Integer.parseInt(cursor.getString(21)));
+                item.setService(Integer.parseInt(cursor.getString(22)));
+                item.setServiceTax(Double.parseDouble(cursor.getString(23)));
+                item.setTableNo(Integer.parseInt(cursor.getString(24)));
+                item.setUserNo(Integer.parseInt(cursor.getString(25)));
+                item.setUserName(cursor.getString(26));
+                item.setSectionNo(Integer.parseInt(cursor.getString(27)));
+                item.setShiftNo(Integer.parseInt(cursor.getString(28)));
+                item.setShiftName(cursor.getString(29));
+
+                items.add(item);
+            } while (cursor.moveToNext());
+        }
+        return items;
+    }
+
     public List<OrderTransactions> getAllOrderTransactions() {
         List<OrderTransactions> items = new ArrayList<>();
 
@@ -2283,6 +2347,63 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 item.setShiftNo(Integer.parseInt(cursor.getString(28)));
                 item.setShiftName(cursor.getString(29));
 
+                items.add(item);
+            } while (cursor.moveToNext());
+        }
+        return items;
+    }
+
+    public List<OrderTransactions> getTopSalesItemsByQty() {
+        List<OrderTransactions> items = new ArrayList<>();
+
+        String selectQuery = "select ITEM_BARCODE1 , ITEM_NAME , VOUCHER_DATE , SHIFT_NAME , POS_NO  , USER_NAME , sum(QTY) , sum(TOTAL) \n" +
+                "from ORDER_TRANSACTIONS\n" +
+                "group by ITEM_BARCODE1 ORDER BY QTY DESC;";
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                OrderTransactions item = new OrderTransactions();
+
+                item.setItemBarcode(cursor.getString(0));
+                item.setItemName(cursor.getString(1));
+                item.setVoucherDate(cursor.getString(2));
+                item.setShiftName(cursor.getString(3));
+                item.setPosNo(Integer.parseInt(cursor.getString(4)));
+                item.setUserName(cursor.getString(5));
+                item.setQty(Integer.parseInt(cursor.getString(6)));
+                item.setTotal(Double.parseDouble(cursor.getString(7)));
+
+                items.add(item);
+            } while (cursor.moveToNext());
+        }
+        return items;
+    }
+
+    public List<OrderTransactions> getTopSalesItemsByTotal() {
+        List<OrderTransactions> items = new ArrayList<>();
+
+        String selectQuery = "select ITEM_BARCODE1 , ITEM_NAME , VOUCHER_DATE , SHIFT_NAME , POS_NO  , USER_NAME , sum(QTY) , sum(TOTAL) \n" +
+                "from ORDER_TRANSACTIONS\n" +
+                "group by ITEM_BARCODE1 ORDER BY TOTAL DESC;";
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                OrderTransactions item = new OrderTransactions();
+
+                item.setItemBarcode(cursor.getString(0));
+                item.setItemName(cursor.getString(1));
+                item.setVoucherDate(cursor.getString(2));
+                item.setShiftName(cursor.getString(3));
+                item.setPosNo(Integer.parseInt(cursor.getString(4)));
+                item.setUserName(cursor.getString(5));
+                item.setQty(Integer.parseInt(cursor.getString(6)));
+                item.setTotal(Double.parseDouble(cursor.getString(7)));
+
+                Log.e("log " , ""+Double.parseDouble(cursor.getString(7)));
                 items.add(item);
             } while (cursor.moveToNext());
         }

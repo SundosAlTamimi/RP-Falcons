@@ -43,7 +43,7 @@
                     android:layout_marginRight="50dp"
                     android:layout_weight="3"
                     android:gravity="center"
-                    android:text="@string/canceled_order_history"
+                    android:text="@string/sales_volume_by_item_type"
                     android:textColor="@color/text_color"
                     android:textSize="25sp" />
 
@@ -108,7 +108,6 @@
             <TableLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
                 android:background="@color/layer4"
                 android:padding="10dp">
 
@@ -151,46 +150,7 @@
                         android:textColor="@color/text_color"
                         android:textSize="18sp" />
 
-                    <RadioGroup
-                        android:id="@+id/voidType"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="30dp"
-                        android:layout_marginStart="30dp"
-                        android:orientation="horizontal">
 
-                        <RadioButton
-                            android:id="@+id/All"
-                            android:layout_width="wrap_content"
-                            android:layout_height="30dp"
-                            android:layout_marginLeft="20dp"
-                            android:layout_marginRight="20dp"
-                            android:checked="true"
-                            android:text="ALL"
-                            android:textColor="@color/text_color"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
-
-                        <RadioButton
-                            android:id="@+id/canceled"
-                            android:layout_width="wrap_content"
-                            android:layout_height="30dp"
-                            android:layout_marginRight="20dp"
-                            android:text="@string/canceled"
-                            android:textColor="@color/text_color"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
-
-                        <RadioButton
-                            android:id="@+id/void_"
-                            android:layout_width="wrap_content"
-                            android:layout_height="30dp"
-                            android:layout_marginRight="20dp"
-                            android:text="@string/void_"
-                            android:textColor="@color/text_color"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
-                    </RadioGroup>
 
 
                 </TableRow>
@@ -223,7 +183,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="12dp"
                     android:layout_marginRight="5dp"
-                    android:text="CashierNo "
+                    android:text="@string/cashier_no"
                     android:textColor="@color/text_color"
                     android:textSize="18sp" />
 
@@ -263,47 +223,10 @@
                 android:layout_marginBottom="2dp">
 
                 <TextView
-                    android:id="@+id/textView62"
-                    android:layout_width="70dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="1dp"
-                    android:layout_weight="0.5"
-                    android:background="@color/blue_ice"
-                    android:gravity="center"
-                    android:padding="2dp"
-                    android:text="#"
-                    android:textColor="@color/layer1"
-                    android:textSize="18sp" />
-
-                <TextView
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="1dp"
-                    android:layout_weight="2"
-                    android:background="@color/blue_ice"
-                    android:gravity="center"
-                    android:padding="2dp"
-                    android:text="@string/date_"
-                    android:textColor="@color/layer1"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="1dp"
-                    android:layout_weight="2"
-                    android:background="@color/blue_ice"
-                    android:gravity="center"
-                    android:padding="2dp"
-                    android:text="@string/time"
-                    android:textColor="@color/layer1"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="1dp"
-                    android:layout_weight="2"
+                    android:layout_weight="1"
                     android:background="@color/blue_ice"
                     android:gravity="center"
                     android:padding="2dp"
@@ -315,7 +238,7 @@
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="1dp"
-                    android:layout_weight="2"
+                    android:layout_weight="1"
                     android:background="@color/blue_ice"
                     android:gravity="center"
                     android:padding="2dp"
@@ -327,7 +250,7 @@
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="1dp"
-                    android:layout_weight="2"
+                    android:layout_weight="1"
                     android:background="@color/blue_ice"
                     android:gravity="center"
                     android:padding="2dp"
@@ -339,25 +262,26 @@
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="1dp"
-                    android:layout_weight="2"
+                    android:layout_weight="1"
                     android:background="@color/blue_ice"
                     android:gravity="center"
                     android:padding="2dp"
-                    android:text="@string/total_price"
+                    android:text="@string/price"
                     android:textColor="@color/layer1"
                     android:textSize="18sp" />
 
                 <TextView
-                    android:layout_width="150dp"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="1dp"
-                    android:layout_weight="4"
+                    android:layout_weight="1"
                     android:background="@color/blue_ice"
                     android:gravity="center"
                     android:padding="2dp"
-                    android:text="@string/void_reason"
+                    android:text="@string/total"
                     android:textColor="@color/layer1"
                     android:textSize="18sp" />
+
             </TableRow>
 
             <ScrollView
@@ -365,7 +289,7 @@
                 android:layout_height="match_parent">
 
                 <TableLayout
-                    android:id="@+id/canceledTable"
+                    android:id="@+id/table"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 

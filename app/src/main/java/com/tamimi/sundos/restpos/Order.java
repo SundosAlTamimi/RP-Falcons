@@ -270,10 +270,10 @@ public class Order extends AppCompatActivity {
         int transactionsSize = 0, transactionsTempSize = 0;
 
         if (transactions.size() != 0)
-            transactionsSize = Integer.parseInt(transactions.get(transactions.size() - 1).getVoucherNumber());
+            transactionsSize = transactions.get(transactions.size() - 1).getVoucherSerial();
 
         if (transactionsTemp.size() != 0)
-            transactionsTempSize = Integer.parseInt(transactionsTemp.get(transactionsTemp.size() - 1).getVoucherNumber());
+            transactionsTempSize = transactionsTemp.get(transactionsTemp.size() - 1).getVoucherSerial();
 
         if (transactionsSize > transactionsTempSize) {
             voucherSerial = transactionsSize + 1;

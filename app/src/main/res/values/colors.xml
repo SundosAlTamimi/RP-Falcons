@@ -12,6 +12,7 @@
     <color name="text_color">#25383c</color>
     <color name="exit">#c24641</color>
     <color name="exit_hover">#E77471</color>
+    <color name="light_blue_over">#E0FFFF</color>
     <color name="light_blue">#c2dfff</color>
     <color name="dark_blue">#89cbee</color>
     <color name="blue_ice">#368BC1</color>

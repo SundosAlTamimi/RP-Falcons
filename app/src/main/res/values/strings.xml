@@ -16,6 +16,7 @@
     <string name="clear">clear</string>
     <string name="enter_password">Enter Your Password :</string>
 
+    <string name="order_by">Order By</string>
     <string name="canceled">Canceled</string>
     <string name="menu">Menu</string>
     <string name="cashier_in">Cashier In</string>
@@ -177,6 +178,7 @@
     <string name="sales_total">Sales Total</string>
     <string name="cashier_in_out">Cashier In Out</string>
     <string name="canceled_order_history">Canceled Order History</string>
+    <string name="sales_volume_by_item_type">Sales Volume By Item Type</string>
     <string name="daily_cash_out">Daily Cash Out</string>
     <string name="sales_by_employee">Sales By Employee</string>
     <string name="sales_by_servers">Sales By Servers</string>
@@ -366,4 +368,7 @@
     <string name="master">Master</string>
     <string name="Preview"> Preview </string>
     <string name="export">Export</string>
+
+    <string name="cashier_no">Cashier No</string>
+
 </resources>
