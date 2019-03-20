@@ -88,7 +88,7 @@ public class BackOfficeActivity extends AppCompatActivity {
     ImageView moneyPicImageView = null;
 
     ArrayList<OrderHeader> headerData;
-    ArrayList<PayMethod> payData;
+    ArrayList<PayMethod> payData,OrderPayMData;
     List<OrderTransactions> orderTransactionData;
     ArrayList<Pay> payInData;
     TableRow focusedRaw = null;
@@ -263,6 +263,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     break;
 
                 case R.id.sales_by_employee:
+                    ShowSalesReportByCardTypes();
                     break;
 
                 case R.id.sales_by_servers:
@@ -1906,6 +1907,151 @@ public class BackOfficeActivity extends AppCompatActivity {
         exit.setOnClickListener(v -> dialog.dismiss());
 
         dialog.show();
+
+    }
+
+
+    void ShowSalesReportByCardTypes(){
+        dialog = new Dialog(BackOfficeActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.sale_report_by_card_dialog);
+        dialog.setCanceledOnTouchOutside(true);
+        Window window = dialog.getWindow();
+
+        Button exit, preview, export, print;
+        TableLayout cardTypeTable = (TableLayout) dialog.findViewById(R.id.cardTypeTable);
+
+
+        Spinner shiftName, cardType, PosNo;
+
+        exit = (Button) dialog.findViewById(R.id.exitReport);
+        preview = (Button) dialog.findViewById(R.id.doneReport);
+        export = (Button) dialog.findViewById(R.id.exportReport);
+        print = (Button) dialog.findViewById(R.id.printReport);
+
+        TextView fromDate2 = (TextView) dialog.findViewById(R.id.frDateCard);
+        TextView toDate2 = (TextView) dialog.findViewById(R.id.toDateCard);
+        TextView totalTextCard = (TextView) dialog.findViewById(R.id.total);
+
+
+        shiftName = (Spinner) dialog.findViewById(R.id.shiftName);
+        cardType = (Spinner) dialog.findViewById(R.id.cardType);
+        PosNo = (Spinner) dialog.findViewById(R.id.posNo);
+
+        fromDate2.setText(today);
+        toDate2.setText(today);
+        ArrayList<String> shiftNameArray = new ArrayList<>();
+        ArrayList<String> userArray = new ArrayList<>();
+        ArrayList<String> posNoArray = new ArrayList<>();
+
+        for (int i = 0; i < mDHandler.getAllShifts().size(); i++) {
+            shiftNameArray.add(mDHandler.getAllShifts().get(i).getShiftName());
+        }
+        shiftNameArray.add(0, "All");
+
+        for (int i = 0; i < mDHandler.getAllCreditCards().size(); i++) {
+            userArray.add(String.valueOf(mDHandler.getAllCreditCards().get(i).getCardName()));
+        }
+        userArray.add(0, "All");
+
+        posNoArray.add("All");
+        posNoArray.add("4");
+        posNoArray.add("7");
+
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, shiftNameArray);
+        shiftName.setAdapter(adapter);
+
+        ArrayAdapter<String> adapterUser = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, userArray);
+        cardType.setAdapter(adapterUser);
+
+        ArrayAdapter<String> adapterPosNo = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, posNoArray);
+        PosNo.setAdapter(adapterPosNo);
+
+
+        fromDate2.setOnClickListener(v -> new DatePickerDialog(BackOfficeActivity.this, dateListener(fromDate2), myCalendar
+                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH)).show());
+
+        toDate2.setOnClickListener(v -> new DatePickerDialog(BackOfficeActivity.this, dateListener(toDate2), myCalendar
+                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH)).show());
+
+
+        OrderPayMData=new ArrayList<>();
+
+        preview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                double totalText=0;
+                cardTypeTable.removeAllViews();
+
+                int posNoString = -1;
+
+                if (PosNo.getSelectedItem().toString().equals("All")) {
+                    posNoString = -1;
+                } else {
+                    posNoString = Integer.parseInt(PosNo.getSelectedItem().toString());
+                }
+                String cardTypes=cardType.getSelectedItem().toString();
+                 String ShiftNames=shiftName.getSelectedItem().toString();
+
+                OrderPayMData=mDHandler.getAllExistingPay();
+                for(int i=0;i<OrderPayMData.size();i++){
+                    if(filters(fromDate2.getText().toString(),toDate2.getText().toString(),OrderPayMData.get(i).getVoucherDate())&&
+                            (OrderPayMData.get(i).getPayName().equals(cardTypes)||cardTypes.equals("All"))&&
+                            ( OrderPayMData.get(i).getShiftName().equals(ShiftNames)||ShiftNames.equals("All"))&&
+                            ( posNoString==-1||posNoString==OrderPayMData.get(i).getPointOfSaleNumber())){
+
+                        insertCashierInOutReport(cardTypeTable,String.valueOf(i),"11:32",
+                                OrderPayMData.get(i).getVoucherNumber() ,OrderPayMData.get(i).getVoucherDate(),
+                                String.valueOf(OrderPayMData.get(i).getPayValue()),OrderPayMData.get(i).getUserName(),
+                                String.valueOf(OrderPayMData.get(i).getPointOfSaleNumber()),7);
+
+                    }
+                }
+
+                for (int a = 0; a < cardTypeTable.getChildCount(); a++) {
+
+                    TableRow rows = (TableRow) cardTypeTable.getChildAt(a);
+                    TextView textTotal = (TextView) rows.getChildAt(5);
+
+                    totalText += Double.parseDouble(textTotal.getText().toString());
+
+                }
+                totalTextCard.setText(": "+totalText);
+
+            }
+        });
+
+        print.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+
+        export.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+
+        exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+
+            }
+        });
+
+
+        dialog.show();
+
 
     }
 
