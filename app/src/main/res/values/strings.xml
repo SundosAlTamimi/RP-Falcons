@@ -68,12 +68,14 @@
     <string name="date">Date:</string>
     <string name="date_">Date</string>
     <string name="time">Time</string>
+    <string name="hour">Hour</string>
     <string name="memo">Memo:</string>
     <string name="waiter">Waiter:</string>
     <string name="number_of_guests">Guests:</string>
     <string name="modifier">Modifier</string>
     <string name="void_">Void</string>
     <string name="qty">Qty</string>
+    <string name="money">Money</string>
     <string name="choose_picture">Choose Picture :</string>
     <string name="split">Split</string>
     <string name="discount">Discount</string>
@@ -82,12 +84,14 @@
     <string name="product_name">Pro-Name</string>
     <string name="unit_price">Price</string>
     <string name="total">Total</string>
+    <string name="totals">Totals</string>
     <string name="total_price">Total Price</string>
     <string name="main_total">Main Total</string>
     <string name="zero_decimal">0.00</string>
     <string name="delivery_change">Delivery Change</string>
     <string name="sub_total">Sub Total</string>
     <string name="tax">Tax</string>
+    <string name="t_b_tax">T.B Tax</string>
     <string name="service">Service</string>
     <string name="amount_due">Amount Due</string>
     <string name="cash">Cash</string>
@@ -178,6 +182,8 @@
     <string name="sales_total">Sales Total</string>
     <string name="cashier_in_out">Cashier In Out</string>
     <string name="canceled_order_history">Canceled Order History</string>
+    <string name="simple_sales_total">Simple Sales Total</string>
+    <string name="sales_per_hours">Sales Per Hours</string>
     <string name="sales_volume_by_item_type">Sales Volume By Item Type</string>
     <string name="daily_cash_out">Daily Cash Out</string>
     <string name="sales_by_employee">Sales By Employee</string>
@@ -222,6 +228,7 @@
 
     <string name="tender">Tender</string>
     <string name="voucher_number">Voucher Number</string>
+    <string name="voucher_no">Voucher No</string>
     <string name="print_voucher_options">Print Voucher Options</string>
     <string name="cheque">Cheque</string>
     <string name="credit">Credit</string>
@@ -267,6 +274,7 @@
     <string name="trans_no"> Trans NO </string>
     <string name="trans_date"> Trans Date  </string>
     <string name="payment_type"> Payment Type  </string>
+    <string name="pay_method">Pay Method</string>
     <string name="customer_payment_type"> Customer Payment  </string>
 
     <string name="extra">Extra</string>
@@ -342,6 +350,7 @@
     <string name="original_date"> Original Date : </string>
     <string name="original_time"> Original Time : </string>
     <string name="customer"> Customer : </string>
+    <string name="customer_"> Customer</string>
     <string name="refund_QTY"> R.Qty </string>
     <string name="refund_total"> R.Total </string>
     <string name="table_numbers">Table NO : </string>
@@ -352,6 +361,7 @@
     <string name="sales_totals">Sales Total</string>
     <string name="returns">Return :</string>
     <string name="net_sales">Net Sales :</string>
+    <string name="net">Net</string>
     <string name="sales">Sales :</string>
     <string name="user">User</string>
     <string name="shift_name">Shift Name</string>
@@ -378,4 +388,9 @@
     <string name="pos">POS</string>
     <string name="trans_type">Trans Type</string>
     <string name="amount">Amount</string>
+    <string name="total_gusts">Total Gusts</string>
+    <string name="num_of_trans">No Of Trans</string>
+    <string name="total_sales">Total Sales</string>
+    <string name="avg_per_trans">Avg Per Trans</string>
+    <string name="avg_per_gusts">Avg Per Gusts</string>
 </resources>
