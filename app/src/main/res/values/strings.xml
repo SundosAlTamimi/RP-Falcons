@@ -63,6 +63,9 @@
     <string name="six_chairs">6 Chairs</string>
     <string name="eight_chairs">8 Chairs</string>
 
+    <string name="table_no">Table No</string>
+    <string name="to_table">To Table</string>
+    <string name="to_section">To Section</string>
     <string name="table_number">Table:</string>
     <string name="check_number">Check:</string>
     <string name="date">Date:</string>
@@ -106,6 +109,7 @@
     <string name="menu_category">Menu Category</string>
     <string name="menu_name">Menu Name</string>
     <string name="price">Price</string>
+    <string name="gross">Gross</string>
     <string name="tax_type">Tax Type</string>
     <string name="not_used">Not Used</string>
     <string name="no_tax">No Tax</string>
@@ -138,6 +142,7 @@
 
     <string name="category_name">Category Name</string>
     <string name="category">Category</string>
+    <string name="family">Family</string>
     <string name="categories">Categories</string>
     <string name="family_name">Family Name</string>
     <string name="show_in_menu">Show In Menu</string>
@@ -184,6 +189,8 @@
     <string name="canceled_order_history">Canceled Order History</string>
     <string name="simple_sales_total">Simple Sales Total</string>
     <string name="sales_per_hours">Sales Per Hours</string>
+    <string name="sold_qty_report">Sold Qty Report</string>
+    <string name="table_action_report">Table Action Report</string>
     <string name="sales_volume_by_item_type">Sales Volume By Item Type</string>
     <string name="daily_cash_out">Daily Cash Out</string>
     <string name="sales_by_employee">Sales By Employee</string>
@@ -259,6 +266,7 @@
 
     <string name="add_modifier">Add Modifier</string>
     <string name="active">Active</string>
+    <string name="action">Action</string>
     <string name="join_category_with_modifier">Join Category With Modifier</string>
     <string name="join_item_with_modifier">Join Item With Modifier</string>
 
@@ -385,6 +393,7 @@
     <string name="all">ALL</string>
     <string name="cashierno">CashierNo</string>
     <string name="cashier_name">Cashier Name</string>
+    <string name="cashier">Cashier</string>
     <string name="pos">POS</string>
     <string name="trans_type">Trans Type</string>
     <string name="amount">Amount</string>
