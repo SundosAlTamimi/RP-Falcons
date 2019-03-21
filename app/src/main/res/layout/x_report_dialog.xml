@@ -43,7 +43,7 @@
                     android:layout_marginBottom="5dp"
                     android:layout_weight="3"
                     android:gravity="center"
-                    android:text="X - Report"
+                    android:text="@string/x_report"
                     android:textColor="@color/text_color"
                     android:textSize="25sp" />
 
@@ -251,7 +251,7 @@
                         android:background="@color/blue_ice"
                         android:gravity="center"
                         android:padding="2dp"
-                        android:text="Net"
+                        android:text="@string/net"
                         android:textColor="@color/layer1"
                         android:textSize="18sp" />
 
@@ -296,7 +296,7 @@
                         android:layout_marginLeft="10dp"
                         android:layout_weight="2"
                         android:gravity="left"
-                        android:text="Total Befor Tax"
+                        android:text="@string/total_before_tax"
                         android:textColor="@color/text_color"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -358,7 +358,7 @@
                         android:layout_marginLeft="10dp"
                         android:layout_weight="2"
                         android:gravity="left"
-                        android:text="Total After Tax"
+                        android:text="@string/total_after_tax"
                         android:textColor="@color/text_color"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -427,7 +427,7 @@
                         android:layout_marginLeft="10dp"
                         android:layout_weight="2"
                         android:gravity="left"
-                        android:text="Service Tax "
+                        android:text="@string/service_tax"
                         android:textColor="@color/text_color"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -458,7 +458,7 @@
                         android:layout_marginLeft="10dp"
                         android:layout_weight="2"
                         android:gravity="left"
-                        android:text="Total Tax "
+                        android:text="@string/total_tax"
                         android:textColor="@color/text_color"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -492,7 +492,7 @@
                         android:layout_marginLeft="10dp"
                         android:layout_weight="2"
                         android:gravity="left"
-                        android:text="Net"
+                        android:text="@string/net"
                         android:textColor="@color/text_color"
                         android:textSize="18dp"
                         android:textStyle="bold" />

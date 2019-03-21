@@ -87,13 +87,12 @@ public class BackOfficeActivity extends AppCompatActivity {
     Bitmap imageBitmap = null;
     ImageView moneyPicImageView = null;
 
-    ArrayList<OrderHeader> headerData;
+    ArrayList<OrderHeader> headerData, headerDataMarket;
     ArrayList<PayMethod> payData, OrderPayMData;
     List<OrderTransactions> orderTransactionData;
     ArrayList<Pay> payInData;
     TableRow focusedRaw = null;
     int rawPosition = 0;
-
     Calendar myCalendar;
 
     ArrayList<ItemWithFq> itemWithFqsList;
@@ -114,6 +113,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         itemWithFqsList = new ArrayList<>();
         itemWithModifiersList = new ArrayList<>();
         categoryWithModifiersList = new ArrayList<>();
+        headerData = new ArrayList<OrderHeader>();
 
         initialize();
         currentLinear(lManagement);
@@ -267,6 +267,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     break;
 
                 case R.id.sales_by_servers:
+                    ShowMarketReport();
                     break;
 
                 case R.id.sales_report_for_day:
@@ -1430,7 +1431,6 @@ public class BackOfficeActivity extends AppCompatActivity {
         ArrayAdapter<String> adapterPosNo = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, posNoArray);
         posNo.setAdapter(adapterPosNo);
 
-        headerData = new ArrayList<OrderHeader>();
 
         headerData = mDHandler.getAllOrderHeader();
         payData = mDHandler.getAllExistingPay();
@@ -2321,7 +2321,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     lp2.setMargins(1, 1, 1, 1);
                     textView.setLayoutParams(lp2);
 
-                    if(textView.getText().toString().equals("NaN"))
+                    if (textView.getText().toString().equals("NaN"))
                         textView.setText("-");
 
                     row.addView(textView);
@@ -2515,6 +2515,92 @@ public class BackOfficeActivity extends AppCompatActivity {
 
 
     }
+
+
+    void ShowMarketReport() {
+        dialog = new Dialog(BackOfficeActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.market_report);
+        dialog.setCanceledOnTouchOutside(true);
+        Window window = dialog.getWindow();
+
+        Button exit, preview, export, print;
+        TableLayout marketTable = (TableLayout) dialog.findViewById(R.id.marketTable);
+
+
+        exit = (Button) dialog.findViewById(R.id.exitReport);
+        preview = (Button) dialog.findViewById(R.id.doneReport);
+        export = (Button) dialog.findViewById(R.id.exportReport);
+        print = (Button) dialog.findViewById(R.id.printReport);
+
+        TextView fromDate2 = (TextView) dialog.findViewById(R.id.frDateMarket);
+        TextView toDate2 = (TextView) dialog.findViewById(R.id.toDateMarket);
+
+
+        fromDate2.setText(today);
+        toDate2.setText(today);
+
+
+        fromDate2.setOnClickListener(v -> new DatePickerDialog(BackOfficeActivity.this, dateListener(fromDate2), myCalendar
+                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH)).show());
+
+        toDate2.setOnClickListener(v -> new DatePickerDialog(BackOfficeActivity.this, dateListener(toDate2), myCalendar
+                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH)).show());
+
+        headerDataMarket = new ArrayList<>();
+
+        preview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                double totalText = 0;
+                marketTable.removeAllViews();
+
+                int posNoString = -1;
+
+                headerDataMarket = mDHandler.getMarketReport(fromDate2.getText().toString(), toDate2.getText().toString());
+                for (int i = 0; i < headerDataMarket.size(); i++) {
+
+                    insertCashierInOutReport(marketTable, String.valueOf(headerDataMarket.get(i).getPointOfSaleNumber()),
+                            String.valueOf(headerDataMarket.get(i).getTotalTax()), headerDataMarket.get(i).getTime(),
+                            String.valueOf(headerDataMarket.get(i).getTotal()), String.valueOf(headerDataMarket.get(i).getAmountDue() / Integer.parseInt(headerDataMarket.get(i).getTime())), "",
+                            String.valueOf(headerDataMarket.get(i).getAmountDue()), 6);
+                }
+            }
+        });
+
+        print.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+
+        export.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+
+        exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+
+            }
+        });
+
+
+        dialog.show();
+
+
+    }
+
 
     void showSalesVolumeByItemType() {
         dialog = new Dialog(BackOfficeActivity.this);
