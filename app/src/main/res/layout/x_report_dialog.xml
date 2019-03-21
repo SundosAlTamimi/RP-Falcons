@@ -193,76 +193,76 @@
             android:layout_height="226dp"
             android:orientation="horizontal">
 
-            <ScrollView
-                android:layout_width="1259dp"
-                android:layout_height="match_parent"
-                android:layout_marginRight="5dp"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:padding="5dp">>
+                android:orientation="vertical"
+                android:padding="5dp">
 
-                <LinearLayout
+
+                <TableRow
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="2dp">
 
+                    <TextView
+                        android:id="@+id/re"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="1dp"
+                        android:layout_weight="1"
+                        android:background="@color/blue_ice"
+                        android:gravity="center"
+                        android:padding="2dp"
+                        android:text="@string/item_name"
+                        android:textColor="@color/layer1"
+                        android:textSize="18sp" />
 
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginBottom="2dp">
+                    <TextView
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="1dp"
+                        android:layout_weight="1"
+                        android:background="@color/blue_ice"
+                        android:gravity="center"
+                        android:padding="2dp"
+                        android:text="@string/total"
+                        android:textColor="@color/layer1"
+                        android:textSize="18sp" />
 
-                        <TextView
-                            android:id="@+id/re"
-                            android:layout_width="100dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="1dp"
-                            android:layout_weight="1"
-                            android:background="@color/blue_ice"
-                            android:gravity="center"
-                            android:padding="2dp"
-                            android:text="@string/item_name"
-                            android:textColor="@color/layer1"
-                            android:textSize="18sp" />
+                    <TextView
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="1dp"
+                        android:layout_weight="1"
+                        android:background="@color/blue_ice"
+                        android:gravity="center"
+                        android:padding="2dp"
+                        android:text="@string/tax"
+                        android:textColor="@color/layer1"
+                        android:textSize="18sp" />
 
-                        <TextView
-                            android:layout_width="100dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="1dp"
-                            android:layout_weight="1"
-                            android:background="@color/blue_ice"
-                            android:gravity="center"
-                            android:padding="2dp"
-                            android:text="@string/total"
-                            android:textColor="@color/layer1"
-                            android:textSize="18sp" />
+                    <TextView
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="1dp"
+                        android:layout_weight="1"
+                        android:background="@color/blue_ice"
+                        android:gravity="center"
+                        android:padding="2dp"
+                        android:text="Net"
+                        android:textColor="@color/layer1"
+                        android:textSize="18sp" />
 
-                        <TextView
-                            android:layout_width="100dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="1dp"
-                            android:layout_weight="1"
-                            android:background="@color/blue_ice"
-                            android:gravity="center"
-                            android:padding="2dp"
-                            android:text="@string/tax"
-                            android:textColor="@color/layer1"
-                            android:textSize="18sp" />
+                </TableRow>
 
-                        <TextView
-                            android:layout_width="100dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="1dp"
-                            android:layout_weight="1"
-                            android:background="@color/blue_ice"
-                            android:gravity="center"
-                            android:padding="2dp"
-                            android:text="Net"
-                            android:textColor="@color/layer1"
-                            android:textSize="18sp" />
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"><![CDATA[>
 
-                    </TableRow>
-
+                    ]]>
 
                     <TableLayout
                         android:id="@+id/taxTable"
@@ -271,12 +271,12 @@
                         android:paddingBottom="90dp">
 
                     </TableLayout>
+                </ScrollView>
 
-                </LinearLayout>
-            </ScrollView>
+            </LinearLayout>
 
             <TableLayout
-                android:layout_width="match_parent"
+                android:layout_width="527dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="4dp"
@@ -519,84 +519,77 @@
             android:id="@+id/textView65"
             android:layout_width="match_parent"
             android:layout_height="5dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:background="@color/gray" />
 
-        <ScrollView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="101dp"
+            android:layout_height="130dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
             android:padding="5dp">
 
-            <LinearLayout
+
+            <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_marginBottom="2dp">
 
-                <LinearLayout
-                    android:layout_width="1169dp"
-                    android:layout_height="match_parent"
+                <TextView
+                    android:id="@+id/textView62"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="1dp"
                     android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:background="@color/blue_ice"
+                    android:gravity="center"
+                    android:padding="2dp"
+                    android:text="@string/tax_percent"
+                    android:textColor="@color/layer1"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="1dp"
+                    android:layout_weight="1"
+                    android:background="@color/blue_ice"
+                    android:gravity="center"
+                    android:padding="2dp"
+                    android:text="@string/total"
+                    android:textColor="@color/layer1"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="1dp"
+                    android:layout_weight="1"
+                    android:background="@color/blue_ice"
+                    android:gravity="center"
+                    android:padding="2dp"
+                    android:text="@string/tax"
+                    android:textColor="@color/layer1"
+                    android:textSize="18sp" />
+
+            </TableRow>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TableLayout
+                    android:id="@+id/TAXPer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp">
+
+                </TableLayout>
+            </ScrollView>
 
 
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="2dp">
-
-                        <TextView
-                            android:id="@+id/textView62"
-                            android:layout_width="100dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="1dp"
-                            android:layout_weight="1"
-                            android:background="@color/blue_ice"
-                            android:gravity="center"
-                            android:padding="2dp"
-                            android:text="@string/tax_percent"
-                            android:textColor="@color/layer1"
-                            android:textSize="18sp" />
-
-                        <TextView
-                            android:layout_width="100dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="1dp"
-                            android:layout_weight="1"
-                            android:background="@color/blue_ice"
-                            android:gravity="center"
-                            android:padding="2dp"
-                            android:text="@string/total"
-                            android:textColor="@color/layer1"
-                            android:textSize="18sp" />
-
-                        <TextView
-                            android:layout_width="100dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="1dp"
-                            android:layout_weight="1"
-                            android:background="@color/blue_ice"
-                            android:gravity="center"
-                            android:padding="2dp"
-                            android:text="@string/tax"
-                            android:textColor="@color/layer1"
-                            android:textSize="18sp" />
-
-                    </TableRow>
-
-
-                    <TableLayout
-                        android:id="@+id/TAXPer"
-                        android:layout_width="match_parent"
-                        android:layout_height="70dp"
-                        android:layout_marginBottom="5dp">
-
-                    </TableLayout>
-
-                </LinearLayout>
-
-            </LinearLayout>
-        </ScrollView>
+        </LinearLayout>
 
     </LinearLayout>
 

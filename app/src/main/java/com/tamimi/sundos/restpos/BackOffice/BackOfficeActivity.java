@@ -2462,6 +2462,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     if (filters(fromDate2.getText().toString(), toDate2.getText().toString(), OrderPayMData.get(i).getVoucherDate()) &&
                             (OrderPayMData.get(i).getPayName().equals(cardTypes) || cardTypes.equals("All")) &&
                             (OrderPayMData.get(i).getShiftName().equals(ShiftNames) || ShiftNames.equals("All")) &&
+                            (OrderPayMData.get(i).getPayType().equals("Credit Card")) &&
                             (posNoString == -1 || posNoString == OrderPayMData.get(i).getPointOfSaleNumber())) {
 
                         insertCashierInOutReport(cardTypeTable, String.valueOf(i), "11:32",

@@ -434,7 +434,7 @@ public class DineIn extends AppCompatActivity {
                     orderTransactions = mHandler.getAllRequestVoucher(VHF_NO[0]);
                     if (!orderTransactions.isEmpty()) {
                         originalDate.setText(orderTransactions.get(0).getVoucherDate());
-                        originalTime.setText(orderTransactions.get(0).getVoucherDate());
+                        originalTime.setText(orderTransactions.get(0).getTime());
                         if (orderTransactions.get(0).getTableNo() != -1) {
                             tableNo.setText(String.valueOf(orderTransactions.get(0).getTableNo()));
                         } else {
