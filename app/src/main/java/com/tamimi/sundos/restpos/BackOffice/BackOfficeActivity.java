@@ -49,6 +49,7 @@ import com.tamimi.sundos.restpos.Models.OrderTransactions;
 import com.tamimi.sundos.restpos.Models.Pay;
 import com.tamimi.sundos.restpos.Models.PayMethod;
 import com.tamimi.sundos.restpos.Models.Shift;
+import com.tamimi.sundos.restpos.Models.TableActions;
 import com.tamimi.sundos.restpos.Models.VoidResons;
 import com.tamimi.sundos.restpos.R;
 import com.tamimi.sundos.restpos.Settings;
@@ -290,6 +291,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     break;
 
                 case R.id.top_family_sales_report:
+                    showTablesActionReport();
                     break;
 
                 case R.id.sales_report_by_cusromer:
@@ -1913,6 +1915,205 @@ public class BackOfficeActivity extends AppCompatActivity {
 
     }
 
+    void showTablesActionReport() {
+        dialog = new Dialog(BackOfficeActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.table_action_report);
+        dialog.setCanceledOnTouchOutside(true);
+
+        TableLayout canceledTable = (TableLayout) dialog.findViewById(R.id.table);
+
+        Button exit = (Button) dialog.findViewById(R.id.exitReport);
+        Button preview = (Button) dialog.findViewById(R.id.doneReport);
+        Button export = (Button) dialog.findViewById(R.id.exportReport);
+        Button print = (Button) dialog.findViewById(R.id.printReport);
+
+        TextView fromDate = (TextView) dialog.findViewById(R.id.frDate);
+        TextView toDate = (TextView) dialog.findViewById(R.id.toDate);
+
+        Spinner shiftName = (Spinner) dialog.findViewById(R.id.shiftName);
+        Spinner cashierNo = (Spinner) dialog.findViewById(R.id.casherNo);
+        Spinner PosNo = (Spinner) dialog.findViewById(R.id.posNo);
+
+        RadioGroup actionType = dialog.findViewById(R.id.actionType);
+        RadioButton All = (RadioButton) dialog.findViewById(R.id.All);
+        RadioButton move = (RadioButton) dialog.findViewById(R.id.move);
+        RadioButton merge = (RadioButton) dialog.findViewById(R.id.merge);
+        RadioButton split = (RadioButton) dialog.findViewById(R.id.split);
+
+        fromDate.setText(today);
+        toDate.setText(today);
+        ArrayList<String> shiftNameArray = new ArrayList<>();
+        ArrayList<String> userArray = new ArrayList<>();
+        ArrayList<String> posNoArray = new ArrayList<>();
+
+        for (int i = 0; i < mDHandler.getAllShifts().size(); i++) {
+            shiftNameArray.add(mDHandler.getAllShifts().get(i).getShiftName());
+        }
+        shiftNameArray.add(0, "All");
+
+        for (int i = 0; i < mDHandler.getAllEmployeeRegistration().size(); i++) {
+            if (mDHandler.getAllEmployeeRegistration().get(i).getEmployeeType() == 0) {
+                userArray.add(String.valueOf(mDHandler.getAllEmployeeRegistration().get(i).getEmployeeNO()));
+            }
+        }
+        userArray.add(0, "All");
+
+        posNoArray.add("All");
+        posNoArray.add("4");
+        posNoArray.add("7");
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, shiftNameArray);
+        shiftName.setAdapter(adapter);
+
+        ArrayAdapter<String> adapterUser = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, userArray);
+        cashierNo.setAdapter(adapterUser);
+
+        ArrayAdapter<String> adapterPosNo = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, posNoArray);
+        PosNo.setAdapter(adapterPosNo);
+
+
+        fromDate.setOnClickListener(v -> new DatePickerDialog(BackOfficeActivity.this, dateListener(fromDate), myCalendar
+                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH)).show());
+
+        toDate.setOnClickListener(v -> new DatePickerDialog(BackOfficeActivity.this, dateListener(toDate), myCalendar
+                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH)).show());
+
+
+        List<TableActions> actions = mDHandler.getAllTableActions();
+        preview.setOnClickListener(v -> {
+
+            canceledTable.removeAllViews();
+
+            int actionTyp = -1;
+            switch (actionType.getCheckedRadioButtonId()) {
+                case R.id.All:
+                    actionTyp = -1;
+                    break;
+                case R.id.move:
+                    actionTyp = 0;
+                    break;
+                case R.id.merge:
+                    actionTyp = 1;
+                    break;
+                case R.id.split:
+                    actionTyp = 2;
+                    break;
+            }
+
+            int CashierNo = -1;
+            if (cashierNo.getSelectedItem().toString().equals("All"))
+                CashierNo = -1;
+            else
+                CashierNo = Integer.parseInt(cashierNo.getSelectedItem().toString());
+
+            String ShiftName = shiftName.getSelectedItem().toString();
+
+            int posNoString = -1;
+            if (PosNo.getSelectedItem().toString().equals("All"))
+                posNoString = -1;
+            else
+                posNoString = Integer.parseInt(PosNo.getSelectedItem().toString());
+
+            for (int i = 0; i < actions.size(); i++) {
+                if (filters(fromDate.getText().toString(), toDate.getText().toString(), actions.get(i).getActionDate())) {
+
+                    if (actions.get(i).getShiftName().equals(ShiftName) || ShiftName.equals("All")) {
+                        if (actions.get(i).getUserNo() == CashierNo || CashierNo == -1) {
+                            if (actions.get(i).getPOSNumber() == posNoString || posNoString == -1) {
+                                if (actionTyp == actions.get(i).getActionType() || actionTyp == -1) {
+
+                                    String type = "";
+                                    switch (actions.get(i).getActionType()) {
+                                        case 0:
+                                            type = "Move";
+                                            break;
+                                        case 1:
+                                            type = "Merge";
+                                            break;
+                                        case 2:
+                                            type = "Split";
+                                            break;
+                                    }
+
+                                    TableRow row = new TableRow(BackOfficeActivity.this);
+
+                                    TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
+                                    row.setLayoutParams(lp);
+
+                                    for (int k = 0; k < 8; k++) {
+                                        TextView textView = new TextView(BackOfficeActivity.this);
+
+                                        switch (k) {
+                                            case 0:
+                                                textView.setText(actions.get(i).getActionDate());
+                                                break;
+                                            case 1:
+                                                textView.setText(actions.get(i).getActionTime());
+                                                break;
+                                            case 2:
+                                                textView.setText("" + actions.get(i).getTableNo());
+                                                break;
+                                            case 3:
+                                                textView.setText("" + actions.get(i).getSectionNo());
+                                                break;
+                                            case 4:
+                                                textView.setText(type);
+                                                break;
+                                            case 5:
+                                                textView.setText("" + actions.get(i).getToTable());
+                                                break;
+                                            case 6:
+                                                textView.setText("" + actions.get(i).getToSection());
+                                                break;
+                                            case 7:
+                                                textView.setText("" + actions.get(i).getUserName());
+                                                break;
+                                        }
+
+                                        textView.setTextColor(ContextCompat.getColor(BackOfficeActivity.this, R.color.text_color));
+                                        textView.setBackgroundColor(ContextCompat.getColor(BackOfficeActivity.this, R.color.jeans_blue));
+                                        textView.setGravity(Gravity.CENTER);
+                                        textView.setTextSize(16);
+
+                                        TableRow.LayoutParams lp2 = new TableRow.LayoutParams(100, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+                                        lp2.setMargins(1, 1, 1, 1);
+                                        textView.setLayoutParams(lp2);
+
+                                        row.addView(textView);
+                                    }
+                                    canceledTable.addView(row);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        print.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        export.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        exit.setOnClickListener(v -> dialog.dismiss());
+
+        dialog.show();
+
+    }
+
     void showSimpleSalesTotal() {
         dialog = new Dialog(BackOfficeActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -2745,7 +2946,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                                                     textView.setText("" + (transactions.get(i).getPrice()));
                                                     break;
                                                 case 6:
-                                                    textView.setText("" + (transactions.get(i).getQty()*(transactions.get(i).getPrice())));
+                                                    textView.setText("" + (transactions.get(i).getQty() * (transactions.get(i).getPrice())));
                                                     break;
                                                 case 7:
                                                     textView.setText("" + (transactions.get(i).getDiscount()));
@@ -2763,11 +2964,11 @@ public class BackOfficeActivity extends AppCompatActivity {
                                             textView.setGravity(Gravity.CENTER);
                                             textView.setTextSize(16);
 
-                                            if(k == 4 || k == 5 || k == 6 || k == 8){
+                                            if (k == 4 || k == 5 || k == 6 || k == 8) {
                                                 TableRow.LayoutParams lp2 = new TableRow.LayoutParams(70, TableRow.LayoutParams.MATCH_PARENT, 0.7f);
                                                 lp2.setMargins(1, 1, 1, 1);
                                                 textView.setLayoutParams(lp2);
-                                            }else {
+                                            } else {
                                                 TableRow.LayoutParams lp2 = new TableRow.LayoutParams(100, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
                                                 lp2.setMargins(1, 1, 1, 1);
                                                 textView.setLayoutParams(lp2);
