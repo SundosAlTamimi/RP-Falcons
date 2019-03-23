@@ -402,4 +402,14 @@
     <string name="total_sales">Total Sales</string>
     <string name="avg_per_trans">Avg Per Trans</string>
     <string name="avg_per_gusts">Avg Per Gusts</string>
+    <string name="total_before_tax">Total Before Tax</string>
+    <string name="total_after_tax">Total After Tax</string>
+    <string name="service_tax">Service Tax</string>
+    <string name="total_tax">Total Tax</string>
+    <string name="x_report">X - Report</string>
+    <string name="average">Average</string>
+    <string name="order_count">Order Count</string>
+    <string name="net_salesM">Net Sales</string>
+    <string name="sale_before_tax">Sale Before Tax</string>
+    <string name="market_report">Market Report</string>
 </resources>

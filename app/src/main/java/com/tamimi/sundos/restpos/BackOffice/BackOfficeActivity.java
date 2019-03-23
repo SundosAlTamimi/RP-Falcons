@@ -88,13 +88,12 @@ public class BackOfficeActivity extends AppCompatActivity {
     Bitmap imageBitmap = null;
     ImageView moneyPicImageView = null;
 
-    ArrayList<OrderHeader> headerData;
+    ArrayList<OrderHeader> headerData, headerDataMarket;
     ArrayList<PayMethod> payData, OrderPayMData;
     List<OrderTransactions> orderTransactionData;
     ArrayList<Pay> payInData;
     TableRow focusedRaw = null;
     int rawPosition = 0;
-
     Calendar myCalendar;
 
     ArrayList<ItemWithFq> itemWithFqsList;
@@ -115,6 +114,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         itemWithFqsList = new ArrayList<>();
         itemWithModifiersList = new ArrayList<>();
         categoryWithModifiersList = new ArrayList<>();
+        headerData = new ArrayList<OrderHeader>();
 
         initialize();
         currentLinear(lManagement);
@@ -268,6 +268,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     break;
 
                 case R.id.sales_by_servers:
+                    ShowMarketReport();
                     break;
 
                 case R.id.sales_report_for_day:
@@ -298,6 +299,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     break;
 
                 case R.id.profit_loss_report:
+                    waiterSalesReportDialog();
                     break;
 
                 case R.id.detail_sales_report:
@@ -1433,7 +1435,6 @@ public class BackOfficeActivity extends AppCompatActivity {
         ArrayAdapter<String> adapterPosNo = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, posNoArray);
         posNo.setAdapter(adapterPosNo);
 
-        headerData = new ArrayList<OrderHeader>();
 
         headerData = mDHandler.getAllOrderHeader();
         payData = mDHandler.getAllExistingPay();
@@ -2718,6 +2719,232 @@ public class BackOfficeActivity extends AppCompatActivity {
 
     }
 
+
+    void ShowMarketReport() {
+        dialog = new Dialog(BackOfficeActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.market_report);
+        dialog.setCanceledOnTouchOutside(true);
+        Window window = dialog.getWindow();
+
+        Button exit, preview, export, print;
+        TableLayout marketTable = (TableLayout) dialog.findViewById(R.id.marketTable);
+
+
+        exit = (Button) dialog.findViewById(R.id.exitReport);
+        preview = (Button) dialog.findViewById(R.id.doneReport);
+        export = (Button) dialog.findViewById(R.id.exportReport);
+        print = (Button) dialog.findViewById(R.id.printReport);
+
+        TextView fromDate2 = (TextView) dialog.findViewById(R.id.frDateMarket);
+        TextView toDate2 = (TextView) dialog.findViewById(R.id.toDateMarket);
+
+
+        fromDate2.setText(today);
+        toDate2.setText(today);
+
+
+        fromDate2.setOnClickListener(v -> new DatePickerDialog(BackOfficeActivity.this, dateListener(fromDate2), myCalendar
+                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH)).show());
+
+        toDate2.setOnClickListener(v -> new DatePickerDialog(BackOfficeActivity.this, dateListener(toDate2), myCalendar
+                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH)).show());
+
+        headerDataMarket = new ArrayList<>();
+
+        preview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                double totalText = 0;
+                marketTable.removeAllViews();
+
+                int posNoString = -1;
+
+                headerDataMarket = mDHandler.getMarketReport(fromDate2.getText().toString(), toDate2.getText().toString());
+                for (int i = 0; i < headerDataMarket.size(); i++) {
+                    if (filters(fromDate2.getText().toString(), toDate2.getText().toString(), headerDataMarket.get(i).getVoucherDate())) {
+                        insertCashierInOutReport(marketTable, String.valueOf(headerDataMarket.get(i).getPointOfSaleNumber()),
+                                String.valueOf(headerDataMarket.get(i).getTotalTax()), headerDataMarket.get(i).getTime(),
+                                String.valueOf(headerDataMarket.get(i).getTotal()), String.valueOf(headerDataMarket.get(i).getAmountDue() / Integer.parseInt(headerDataMarket.get(i).getTime())), "",
+                                String.valueOf(headerDataMarket.get(i).getAmountDue()), 6);
+                    }
+                }
+            }
+        });
+
+        print.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+
+        export.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+
+        exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+
+            }
+        });
+
+
+        dialog.show();
+
+
+    }
+
+    void waiterSalesReportDialog() {
+        dialog = new Dialog(BackOfficeActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.waiter_report);
+        dialog.setCanceledOnTouchOutside(true);
+
+
+        Button exit, preview, export, print;
+        TableLayout waiterTable = (TableLayout) dialog.findViewById(R.id.waiterTable);
+
+        Spinner shiftName, waiterName, PosNo;
+
+        exit = (Button) dialog.findViewById(R.id.exitReport);
+        preview = (Button) dialog.findViewById(R.id.doneReport);
+        export = (Button) dialog.findViewById(R.id.exportReport);
+        print = (Button) dialog.findViewById(R.id.printReport);
+
+        TextView fromDate = (TextView) dialog.findViewById(R.id.frDate);
+        TextView toDate = (TextView) dialog.findViewById(R.id.toDate);
+
+        shiftName = (Spinner) dialog.findViewById(R.id.shiftName);
+        waiterName = (Spinner) dialog.findViewById(R.id.casherNo);
+        PosNo = (Spinner) dialog.findViewById(R.id.posNo);
+
+
+        fromDate.setText(today);
+        toDate.setText(today);
+        ArrayList<String> shiftNameArray = new ArrayList<>();
+        ArrayList<String> userArray = new ArrayList<>();
+        ArrayList<String> posNoArray = new ArrayList<>();
+
+        for (int i = 0; i < mDHandler.getAllShifts().size(); i++) {
+            shiftNameArray.add(mDHandler.getAllShifts().get(i).getShiftName());
+        }
+        shiftNameArray.add(0, "All");
+
+        for (int i = 0; i < mDHandler.getAllEmployeeRegistration().size(); i++) {
+            if (mDHandler.getAllEmployeeRegistration().get(i).getEmployeeType() == 1) {
+                userArray.add(mDHandler.getAllEmployeeRegistration().get(i).getEmployeeName());
+            }
+        }
+        userArray.add(0, "All");
+
+        posNoArray.add("All");
+        posNoArray.add("4");
+        posNoArray.add("7");
+        posNoArray.add("1");
+        posNoArray.add("0");
+
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, shiftNameArray);
+        shiftName.setAdapter(adapter);
+
+        ArrayAdapter<String> adapterUser = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, userArray);
+        waiterName.setAdapter(adapterUser);
+
+        ArrayAdapter<String> adapterPosNo = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, posNoArray);
+        PosNo.setAdapter(adapterPosNo);
+
+
+        fromDate.setOnClickListener(v -> new DatePickerDialog(BackOfficeActivity.this, dateListener(fromDate), myCalendar
+                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH)).show());
+
+        toDate.setOnClickListener(v -> new DatePickerDialog(BackOfficeActivity.this, dateListener(toDate), myCalendar
+                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH)).show());
+
+
+        headerData = mDHandler.getAllOrderHeader();
+        preview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                waiterTable.removeAllViews();
+
+                String CashierNo = "All";
+
+                CashierNo = waiterName.getSelectedItem().toString();
+
+                String ShiftName = shiftName.getSelectedItem().toString();
+                int posNoString = -1;
+
+                if (PosNo.getSelectedItem().toString().equals("All")) {
+                    posNoString = -1;
+                } else {
+                    posNoString = Integer.parseInt(PosNo.getSelectedItem().toString());
+                }
+
+                for (int i = 0; i < headerData.size(); i++) {
+                    if (filters(fromDate.getText().toString(), toDate.getText().toString(), headerData.get(i).getVoucherDate())) {
+                        if (headerData.get(i).getShiftName().equals(ShiftName) || ShiftName.equals("All")) {
+                            if (headerData.get(i).getWaiter().equals(CashierNo) || CashierNo.equals("All")) {
+                                if (headerData.get(i).getPointOfSaleNumber() == posNoString || posNoString == -1) {
+
+                                    insertCashierInOutReport(waiterTable,headerData.get(i).getWaiter(),String.valueOf(headerData.get(i).getTotalDiscount()),
+                                            String.valueOf(headerData.get(i).getAmountDue()),
+                                            String.valueOf(headerData.get(i).getTotal()),String.valueOf(headerData.get(i).getTotalService()) ,
+                                            String.valueOf(headerData.get(i).getTotalServiceTax()),String.valueOf(headerData.get(i).getTotalTax()), 7);
+                                }
+                            }
+                        }
+                    }
+                }//else 1
+            }
+
+
+        });
+
+
+        print.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+
+        export.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+
+        exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+
+            }
+        });
+
+
+        dialog.show();
+
+    }
+
     void showSalesVolumeByItemType() {
         dialog = new Dialog(BackOfficeActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -3085,6 +3312,8 @@ public class BackOfficeActivity extends AppCompatActivity {
                     transactions = mDHandler.getTopSalesItemsByTotal();
                     break;
             }
+
+            Log.e("transactions", "-->" + transactions.size());
 
             int CashierNo = -1;
             if (cashierNo.getSelectedItem().toString().equals("All"))
