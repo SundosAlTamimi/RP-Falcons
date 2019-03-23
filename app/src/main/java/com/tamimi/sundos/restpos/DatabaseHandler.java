@@ -36,6 +36,7 @@ import com.tamimi.sundos.restpos.Models.Pay;
 import com.tamimi.sundos.restpos.Models.PayMethod;
 import com.tamimi.sundos.restpos.Models.Recipes;
 import com.tamimi.sundos.restpos.Models.Shift;
+import com.tamimi.sundos.restpos.Models.TableActions;
 import com.tamimi.sundos.restpos.Models.Tables;
 import com.tamimi.sundos.restpos.Models.UsedCategories;
 import com.tamimi.sundos.restpos.Models.UsedItems;
@@ -49,7 +50,7 @@ import java.util.List;
 public class DatabaseHandler extends SQLiteOpenHelper {
     //hellohjt
     // Database Version
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 7;
 
     // Database Name
     private static final String DATABASE_NAME = "RestPos";
@@ -490,6 +491,22 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String IS_ALL_CANCEL13 = "IS_ALL_CANCEL";
     private static final String TIME13 = "TIME";
     private static final String POS_NO13 = "POS_NO";
+
+    //____________________________________________________________________________________
+    private static final String TABLE_ACTIONS = "TABLE_ACTIONS";
+
+    private static final String POS_NO16 = "POS_NO";
+    private static final String USER_NO16 = "USER_NO";
+    private static final String USER_NAME16 = "USER_NAME";
+    private static final String SHIFT_NO16 = "SHIFT_NO";
+    private static final String SHIFT_NAME16 = "SHIFT_NAME";
+    private static final String ACTION_TYPE16 = "ACTION_TYPE";
+    private static final String ACTION_DATE16 = "ACTION_DATE";
+    private static final String ACTION_TIME16 = "ACTION_TIME";
+    private static final String TABLE_NO16 = "TABLE_NO";
+    private static final String SECTION_NO16 = "SECTION_NO";
+    private static final String TO_TABLE16 = "TO_TABLE";
+    private static final String TO_SECTION16 = "TO_SECTION";
 
     //____________________________________________________________________________________
     public DatabaseHandler(Context context) {
@@ -1031,6 +1048,22 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + POS_NO13 + " INTEGER " + ")";
         db.execSQL(CREATE_TABLE_CANCLE_ORDER_TABLE);
 
+        //_____________________________________________________________________
+
+        String CREATE_TABLE_TABLE_ACTIONS = "CREATE TABLE " + TABLE_ACTIONS + "("
+                + POS_NO16 + " INTEGER,"
+                + USER_NO16 + " INTEGER,"
+                + USER_NAME16 + " TEXT,"
+                + SHIFT_NAME16 + " TEXT,"
+                + SHIFT_NO16 + " INTEGER,"
+                + ACTION_TYPE16 + " INTEGER,"
+                + ACTION_DATE16 + " TEXT,"
+                + ACTION_TIME16 + " TEXT,"
+                + TABLE_NO16 + " INTEGER,"
+                + SECTION_NO16 + " INTEGER ,"
+                + TO_TABLE16 + " INTEGER ,"
+                + TO_SECTION16 + " INTEGER " + ")";
+        db.execSQL(CREATE_TABLE_TABLE_ACTIONS);
 
     }
 
@@ -1074,10 +1107,25 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 //        onCreate(db);
 
 //        db.execSQL("ALTER TABLE CANCEL_ORDER ADD POS_NO TEXT NOT NULL DEFAULT '4'");
-
-//        db.execSQL("ALTER TABLE ORDER_HEADER ADD TIME TEXT NOT NULL DEFAULT '01:30'");
-//        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS ADD TIME TEXT NOT NULL DEFAULT '01:30'");
+//        db.execSQL("ALTER TABLE ORDER_HEADER_TEMP ADD TIME TEXT NOT NULL DEFAULT '01:30'");
+//        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS_TEMP ADD TIME TEXT NOT NULL DEFAULT '01:30'");
 //        db.execSQL("ALTER TABLE PAY_METHOD ADD TIME TEXT NOT NULL DEFAULT '01:30'");
+
+
+        String CREATE_TABLE_TABLE_ACTIONS = "CREATE TABLE " + TABLE_ACTIONS + "("
+                + POS_NO16 + " INTEGER,"
+                + USER_NO16 + " INTEGER,"
+                + USER_NAME16 + " TEXT,"
+                + SHIFT_NAME16 + " TEXT,"
+                + SHIFT_NO16 + " INTEGER,"
+                + ACTION_TYPE16 + " INTEGER,"
+                + ACTION_DATE16 + " TEXT,"
+                + ACTION_TIME16 + " TEXT,"
+                + TABLE_NO16 + " INTEGER,"
+                + SECTION_NO16 + " INTEGER ,"
+                + TO_TABLE16 + " INTEGER ,"
+                + TO_SECTION16 + " INTEGER " + ")";
+        db.execSQL(CREATE_TABLE_TABLE_ACTIONS);
 
     }
 
@@ -1767,6 +1815,28 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(TIME13, cancleOrder.getTime());
         values.put(POS_NO13, cancleOrder.getPosNO());
         db.insert(CANCEL_ORDER, null, values);
+
+        db.close();
+    }
+
+    public void addTableAction(TableActions action) {
+        db = this.getReadableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(POS_NO16, action.getPOSNumber());
+        values.put(USER_NAME16, action.getUserName());
+        values.put(USER_NO16, action.getUserNo());
+        values.put(SHIFT_NAME16, action.getShiftName());
+        values.put(SHIFT_NO16, action.getShiftNo());
+        values.put(ACTION_TYPE16, action.getActionType());
+        values.put(ACTION_DATE16, action.getActionDate());
+        values.put(ACTION_TIME16, action.getActionTime());
+        values.put(TABLE_NO1, action.getTableNo());
+        values.put(SECTION_NO1, action.getSectionNo());
+        values.put(TO_TABLE16, action.getToTable());
+        values.put(TO_SECTION16, action.getToSection());
+
+        db.insert(TABLE_ACTIONS, null, values);
 
         db.close();
     }
@@ -3141,6 +3211,36 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 cancleOrder.setPosNO(Integer.parseInt(cursor.getString(16)));
 
                 items.add(cancleOrder);
+            } while (cursor.moveToNext());
+        }
+        return items;
+    }
+
+    public List<TableActions> getAllTableActions() {
+        List<TableActions> items = new ArrayList<>();
+
+        String selectQuery = "SELECT  * FROM " + TABLE_ACTIONS;
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                TableActions action = new TableActions();
+
+                action.setPOSNumber(cursor.getInt(0));
+                action.setUserName(cursor.getString(1));
+                action.setUserNo(cursor.getInt(2));
+                action.setShiftName(cursor.getString(3));
+                action.setShiftNo(cursor.getInt(4));
+                action.setActionType(cursor.getInt(5));
+                action.setActionDate(cursor.getString(6));
+                action.setActionTime(cursor.getString(7));
+                action.setTableNo(cursor.getInt(8));
+                action.setSectionNo(cursor.getInt(9));
+                action.setToTable(cursor.getInt(10));
+                action.setToSection(cursor.getInt(11));
+
+                items.add(action);
             } while (cursor.moveToNext());
         }
         return items;

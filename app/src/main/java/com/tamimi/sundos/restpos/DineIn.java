@@ -45,6 +45,7 @@ import com.tamimi.sundos.restpos.Models.Money;
 import com.tamimi.sundos.restpos.Models.OrderHeader;
 import com.tamimi.sundos.restpos.Models.OrderTransactions;
 import com.tamimi.sundos.restpos.Models.PayMethod;
+import com.tamimi.sundos.restpos.Models.TableActions;
 import com.tamimi.sundos.restpos.Models.Tables;
 
 import java.text.SimpleDateFormat;
@@ -83,6 +84,7 @@ public class DineIn extends AppCompatActivity {
 
     TextView text;
     TableRow rows;
+    public String  today, time ;
     double totalAdd = 0.0;
     double cashValues, creditValues, chequeVales, pointValues, giftCardValues, cardValues;
     double discountAdd = 0.0;
@@ -137,6 +139,13 @@ public class DineIn extends AppCompatActivity {
             case 5:
                 currentList = list5;
         }
+
+        Date currentTimeAndDate = Calendar.getInstance().getTime();
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+        today = df.format(currentTimeAndDate);
+
+        SimpleDateFormat dfTime = new SimpleDateFormat("hh:mm");
+        time = dfTime.format(currentTimeAndDate);
 
         fillMainFloor(); // when open the activity the main floor is active by default
     }
@@ -1383,6 +1392,11 @@ public class DineIn extends AppCompatActivity {
                     } else {
                         // update on tables temp
                         mHandler.moveTablesTemp(fromSection, focusedLeft, toSection, focusedRight);
+
+                        mHandler.addTableAction(new TableActions(Settings.POS_number ,Settings.user_name ,Settings.password,
+                                Settings.shift_name , Settings.shift_number ,0 ,today ,time ,focusedLeft ,fromSection ,
+                                focusedRight ,toSection));
+
                         dialog.dismiss();
 
                         final Dialog dialog2 = new Dialog(DineIn.this);
@@ -1579,6 +1593,11 @@ public class DineIn extends AppCompatActivity {
                     } else {
                         // update on tables temp
                         mHandler.mergeTablesTemp(fromSection, focusedLeft, toSection, focusedRight);
+
+                        mHandler.addTableAction(new TableActions(Settings.POS_number ,Settings.user_name ,Settings.password,
+                                Settings.shift_name , Settings.shift_number ,1 ,today ,time ,focusedLeft ,fromSection ,
+                                focusedRight ,toSection));
+
                         dialog.dismiss();
 
                         final Dialog dialog2 = new Dialog(DineIn.this);
