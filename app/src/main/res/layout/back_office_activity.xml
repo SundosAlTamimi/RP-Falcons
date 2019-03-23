@@ -1111,7 +1111,7 @@
 
 
                         <LinearLayout
-                            android:id="@+id/daily_cash_out"
+                            android:id="@+id/x_report"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_margin="15dp"
@@ -1129,13 +1129,13 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
                                 android:layout_margin="10dp"
-                                android:text="@string/daily_cash_out"
+                                android:text="@string/x_report"
                                 android:textColor="@color/text_color"
                                 android:textSize="16sp" />
                         </LinearLayout>
 
                         <LinearLayout
-                            android:id="@+id/sales_by_employee"
+                            android:id="@+id/z_report"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_margin="15dp"
@@ -1153,13 +1153,13 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
                                 android:layout_margin="10dp"
-                                android:text="@string/sales_by_employee"
+                                android:text="@string/z_report"
                                 android:textColor="@color/text_color"
                                 android:textSize="16sp" />
                         </LinearLayout>
 
                         <LinearLayout
-                            android:id="@+id/sales_by_servers"
+                            android:id="@+id/market_report_"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_margin="15dp"
@@ -1177,7 +1177,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
                                 android:layout_margin="10dp"
-                                android:text="@string/sales_by_servers"
+                                android:text="@string/market_report_"
                                 android:textColor="@color/text_color"
                                 android:textSize="16sp" />
                         </LinearLayout>
@@ -1352,7 +1352,6 @@
                         android:layout_marginHorizontal="20dp"
                         android:orientation="horizontal">
 
-
                         <LinearLayout
                             android:id="@+id/sales_report_by_cusromer"
                             android:layout_width="0dp"
@@ -1373,6 +1372,87 @@
                                 android:layout_gravity="center_vertical"
                                 android:layout_margin="10dp"
                                 android:text="@string/sales_report_by_customer"
+                                android:textColor="@color/text_color"
+                                android:textSize="16sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/sales_report_by_card_type"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_margin="15dp"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:background="@drawable/report_icon"
+                                android:scaleType="fitCenter" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_margin="10dp"
+                                android:text="@string/sales_report_by_customer"
+                                android:textColor="@color/text_color"
+                                android:textSize="16sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/waiter_sales_report"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_margin="15dp"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:background="@drawable/report_icon"
+                                android:scaleType="fitCenter" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_margin="10dp"
+                                android:text="@string/waiter_sales_report"
+                                android:textColor="@color/text_color"
+                                android:textSize="16sp" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="95dp"
+                        android:layout_marginHorizontal="20dp"
+                        android:orientation="horizontal">
+
+
+                        <LinearLayout
+                            android:id="@+id/table_action_report"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_margin="15dp"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:background="@drawable/report_icon"
+                                android:scaleType="fitCenter" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_margin="10dp"
+                                android:text="@string/table_action_report"
                                 android:textColor="@color/text_color"
                                 android:textSize="16sp" />
                         </LinearLayout>

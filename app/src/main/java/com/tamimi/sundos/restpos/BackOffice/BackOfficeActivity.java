@@ -77,9 +77,9 @@ public class BackOfficeActivity extends AppCompatActivity {
     LinearLayout jobGroup, employeeRegistration, employeeSchedule, payroll, vacation, editTables;
     LinearLayout menuCategory, menuRegistration, modifier, forceQuestion, voiding_reasons, menuLayout;
     LinearLayout store, storeOperation, users, moneyCategory;
-    LinearLayout salesTotal, cashierInOut, canceledOrderHistory, dailyCashOut, salesByEmployee, salesByServers,
+    LinearLayout salesTotal, cashierInOut, canceledOrderHistory, x_report, z_report, market_report_,
             salesReportForDay, salesByHours, salesVolumeByItem, topSalesItemReport, topGroupSalesReport, topFamilySalesReport,
-            salesReportByCustomer, profitLossReport, detailSalesReport;
+            salesReportByCustomer, salesReportByCardType, waiterSalesReport, tableActionReport, profitLossReport, detailSalesReport;
 
     int count, count2, nextSerial;
     Dialog dialog;
@@ -259,20 +259,20 @@ public class BackOfficeActivity extends AppCompatActivity {
                     showCanceledOrdersHistory();
                     break;
 
-                case R.id.daily_cash_out:
+                case R.id.x_report:
                     X_ReportDialog();
                     break;
 
-                case R.id.sales_by_employee:
-                    ShowSalesReportByCardTypes();
+                case R.id.z_report:
+
                     break;
 
-                case R.id.sales_by_servers:
+                case R.id.market_report_:
                     ShowMarketReport();
                     break;
 
                 case R.id.sales_report_for_day:
-                    showSimpleSalesTotal();
+
                     break;
 
                 case R.id.sales_by_houres:
@@ -288,22 +288,42 @@ public class BackOfficeActivity extends AppCompatActivity {
                     break;
 
                 case R.id.top_group_sales_report:
-                    showSoldQtyReport();
+
                     break;
 
                 case R.id.top_family_sales_report:
-                    showTablesActionReport();
+
                     break;
 
                 case R.id.sales_report_by_cusromer:
                     break;
 
-                case R.id.profit_loss_report:
+                case R.id.sales_report_by_card_type:
+                    ShowSalesReportByCardTypes();
+                    break;
+
+                case R.id.waiter_sales_report:
                     waiterSalesReportDialog();
                     break;
 
-                case R.id.detail_sales_report:
+                case R.id.table_action_report:
+                    showTablesActionReport();
                     break;
+
+                case R.id.profit_loss_report:
+
+                    break;
+
+                case R.id.detail_sales_report:
+
+                    break;
+
+
+
+                showSimpleSalesTotal();
+                showSoldQtyReport();
+
+                //reCancelation
 
             }
         }
@@ -4155,9 +4175,9 @@ public class BackOfficeActivity extends AppCompatActivity {
         salesTotal = (LinearLayout) findViewById(R.id.sales_total);
         cashierInOut = (LinearLayout) findViewById(R.id.cashier_in_out);
         canceledOrderHistory = (LinearLayout) findViewById(R.id.canceled_order_history);
-        dailyCashOut = (LinearLayout) findViewById(R.id.daily_cash_out);
-        salesByEmployee = (LinearLayout) findViewById(R.id.sales_by_employee);
-        salesByServers = (LinearLayout) findViewById(R.id.sales_by_servers);
+        x_report = (LinearLayout) findViewById(R.id.x_report);
+        z_report = (LinearLayout) findViewById(R.id.sales_by_employee);
+        market_report_ = (LinearLayout) findViewById(R.id.sales_by_servers);
         salesReportForDay = (LinearLayout) findViewById(R.id.sales_report_for_day);
         salesByHours = (LinearLayout) findViewById(R.id.sales_by_houres);
         salesVolumeByItem = (LinearLayout) findViewById(R.id.sales_volume_by_item);
@@ -4165,6 +4185,9 @@ public class BackOfficeActivity extends AppCompatActivity {
         topGroupSalesReport = (LinearLayout) findViewById(R.id.top_group_sales_report);
         topFamilySalesReport = (LinearLayout) findViewById(R.id.top_family_sales_report);
         salesReportByCustomer = (LinearLayout) findViewById(R.id.sales_report_by_cusromer);
+        salesReportByCardType = (LinearLayout) findViewById(R.id.sales_report_by_card_type);
+        waiterSalesReport = (LinearLayout) findViewById(R.id.waiter_sales_report);
+        tableActionReport = (LinearLayout) findViewById(R.id.table_action_report);
         profitLossReport = (LinearLayout) findViewById(R.id.profit_loss_report);
         detailSalesReport = (LinearLayout) findViewById(R.id.detail_sales_report);
 
@@ -4202,9 +4225,9 @@ public class BackOfficeActivity extends AppCompatActivity {
         salesTotal.setOnClickListener(onClickListener2);
         cashierInOut.setOnClickListener(onClickListener2);
         canceledOrderHistory.setOnClickListener(onClickListener2);
-        dailyCashOut.setOnClickListener(onClickListener2);
-        salesByEmployee.setOnClickListener(onClickListener2);
-        salesByServers.setOnClickListener(onClickListener2);
+        x_report.setOnClickListener(onClickListener2);
+        z_report.setOnClickListener(onClickListener2);
+        market_report_.setOnClickListener(onClickListener2);
         salesReportForDay.setOnClickListener(onClickListener2);
         salesByHours.setOnClickListener(onClickListener2);
         salesVolumeByItem.setOnClickListener(onClickListener2);
@@ -4212,6 +4235,9 @@ public class BackOfficeActivity extends AppCompatActivity {
         topGroupSalesReport.setOnClickListener(onClickListener2);
         topFamilySalesReport.setOnClickListener(onClickListener2);
         salesReportByCustomer.setOnClickListener(onClickListener2);
+        salesReportByCardType.setOnClickListener(onClickListener2);
+        waiterSalesReport.setOnClickListener(onClickListener2);
+        tableActionReport.setOnClickListener(onClickListener2);
         profitLossReport.setOnClickListener(onClickListener2);
         detailSalesReport.setOnClickListener(onClickListener2);
 
