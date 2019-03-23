@@ -191,10 +191,13 @@
     <string name="sales_per_hours">Sales Per Hours</string>
     <string name="sold_qty_report">Sold Qty Report</string>
     <string name="table_action_report">Table Action Report</string>
+    <string name="simple_sales_total_report">Simple sales Total Report</string>
+    <string name="user_order_count_report">User Order Count Report</string>
+    <string name="re_cancellation_report">Re-Cancellation Report</string>
+    <string name="re_cancellation_supervisor_report">Re-Cancellation Supervisor Report</string>
     <string name="sales_volume_by_item_type">Sales Volume By Item Type</string>
-    <string name="daily_cash_out">Daily Cash Out</string>
     <string name="sales_by_employee">Sales By Employee</string>
-    <string name="sales_by_servers">Sales By Servers</string>
+    <string name="market_report_">Market Report</string>
     <string name="sales_report_for_the_day">Sales Report For The Day</string>
     <string name="sales_by_hours">Sales By Hours</string>
     <string name="sales_volume_by_item">Sales Volume By Item</string>
@@ -202,6 +205,8 @@
     <string name="top_group_sales_report">Top Group Sales Report</string>
     <string name="top_family_sales_report">Top Family Sales Report</string>
     <string name="sales_report_by_customer">Sales Report By Customer</string>
+    <string name="sales_report_by_card_type">Sales Report By Card Type</string>
+    <string name="waiter_sales_report">Waiter Sales Report</string>
     <string name="profit_loss_report">Profit/Loss Report</string>
     <string name="detail_sales_report">Detail Sales Report</string>
     <string name="store">Store</string>
@@ -407,6 +412,7 @@
     <string name="service_tax">Service Tax</string>
     <string name="total_tax">Total Tax</string>
     <string name="x_report">X - Report</string>
+    <string name="z_report">Z - Report</string>
     <string name="average">Average</string>
     <string name="order_count">Order Count</string>
     <string name="net_salesM">Net Sales</string>
