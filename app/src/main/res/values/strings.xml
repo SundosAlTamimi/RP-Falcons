@@ -191,6 +191,10 @@
     <string name="sales_per_hours">Sales Per Hours</string>
     <string name="sold_qty_report">Sold Qty Report</string>
     <string name="table_action_report">Table Action Report</string>
+    <string name="simple_sales_total_report">Simple sales Total Report</string>
+    <string name="user_order_count_report">User Order Count Report</string>
+    <string name="re_cancellation_report">Re-Cancellation Report</string>
+    <string name="re_cancellation_supervisor_report">Re-Cancellation Supervisor Report</string>
     <string name="sales_volume_by_item_type">Sales Volume By Item Type</string>
     <string name="sales_by_employee">Sales By Employee</string>
     <string name="market_report_">Market Report</string>

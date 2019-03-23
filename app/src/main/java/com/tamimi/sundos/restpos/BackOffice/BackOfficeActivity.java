@@ -79,7 +79,8 @@ public class BackOfficeActivity extends AppCompatActivity {
     LinearLayout store, storeOperation, users, moneyCategory;
     LinearLayout salesTotal, cashierInOut, canceledOrderHistory, x_report, z_report, market_report_,
             salesReportForDay, salesByHours, salesVolumeByItem, topSalesItemReport, topGroupSalesReport, topFamilySalesReport,
-            salesReportByCustomer, salesReportByCardType, waiterSalesReport, tableActionReport, profitLossReport, detailSalesReport;
+            salesReportByCustomer, salesReportByCardType, waiterSalesReport, tableActionReport, profitLossReport, detailSalesReport,
+            simpleSalesTotalReport, SoldQtyReport, userOrderCountReport, reCancellationReport, reCancellationSupervisorReport;
 
     int count, count2, nextSerial;
     Dialog dialog;
@@ -318,12 +319,25 @@ public class BackOfficeActivity extends AppCompatActivity {
 
                     break;
 
+                case R.id.simple_sales_total_report:
+                    showSimpleSalesTotal();
+                    break;
 
+                case R.id.sold_qty_report:
+                    showSoldQtyReport();
+                    break;
 
-                showSimpleSalesTotal();
-                showSoldQtyReport();
+                case R.id.user_order_count_report:
 
-                //reCancelation
+                    break;
+
+                case R.id.re_cancellation_report:
+
+                    break;
+
+                case R.id.re_cancellation_supervisor_report:
+
+                    break;
 
             }
         }
@@ -4176,8 +4190,8 @@ public class BackOfficeActivity extends AppCompatActivity {
         cashierInOut = (LinearLayout) findViewById(R.id.cashier_in_out);
         canceledOrderHistory = (LinearLayout) findViewById(R.id.canceled_order_history);
         x_report = (LinearLayout) findViewById(R.id.x_report);
-        z_report = (LinearLayout) findViewById(R.id.sales_by_employee);
-        market_report_ = (LinearLayout) findViewById(R.id.sales_by_servers);
+        z_report = (LinearLayout) findViewById(R.id.z_report);
+        market_report_ = (LinearLayout) findViewById(R.id.market_report_);
         salesReportForDay = (LinearLayout) findViewById(R.id.sales_report_for_day);
         salesByHours = (LinearLayout) findViewById(R.id.sales_by_houres);
         salesVolumeByItem = (LinearLayout) findViewById(R.id.sales_volume_by_item);
@@ -4190,7 +4204,11 @@ public class BackOfficeActivity extends AppCompatActivity {
         tableActionReport = (LinearLayout) findViewById(R.id.table_action_report);
         profitLossReport = (LinearLayout) findViewById(R.id.profit_loss_report);
         detailSalesReport = (LinearLayout) findViewById(R.id.detail_sales_report);
-
+        simpleSalesTotalReport = (LinearLayout) findViewById(R.id.simple_sales_total_report);
+        SoldQtyReport = (LinearLayout) findViewById(R.id.sold_qty_report);
+        userOrderCountReport = (LinearLayout) findViewById(R.id.user_order_count_report);
+        reCancellationReport = (LinearLayout) findViewById(R.id.re_cancellation_report);
+        reCancellationSupervisorReport = (LinearLayout) findViewById(R.id.re_cancellation_supervisor_report);
 
         butManagement.setOnClickListener(onClickListener);
         butSales.setOnClickListener(onClickListener);
@@ -4240,6 +4258,11 @@ public class BackOfficeActivity extends AppCompatActivity {
         tableActionReport.setOnClickListener(onClickListener2);
         profitLossReport.setOnClickListener(onClickListener2);
         detailSalesReport.setOnClickListener(onClickListener2);
+        simpleSalesTotalReport.setOnClickListener(onClickListener2);
+        SoldQtyReport.setOnClickListener(onClickListener2);
+        userOrderCountReport.setOnClickListener(onClickListener2);
+        reCancellationReport.setOnClickListener(onClickListener2);
+        reCancellationSupervisorReport.setOnClickListener(onClickListener2);
 
     }
 }
