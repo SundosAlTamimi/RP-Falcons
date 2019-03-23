@@ -3342,6 +3342,39 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return orderTransactionsArrayList;
     }
 
+    public ArrayList<OrderHeader> getUserNameReport(String userName,String PosNo ,String fDate ,String toDate ) {
+        ArrayList<OrderHeader> orderHeaderArrayList = new ArrayList<>();
+
+        String selectQuery ="SELECT USER_NAME , COUNT(*) , COALESCE(SUM(AMOUNT_DUE),-1) FROM ORDER_HEADER " +
+                "WHERE USER_NAME = "+userName+" and POINT_OF_SALE_NUMBER= "+PosNo+" AND VOUCHER_DATE BETWEEN '"+fDate+"' AND '"+toDate+"' GROUP BY USER_NAME" ;
+
+//        String selectQuery ="SELECT ITEM_NAME, COALESCE(SUM(TOTAL),-1),COALESCE(SUM (TAX_VLUE),-1) FROM ORDER_TRANSACTIONS " +
+//               "WHERE SHIFT_NAME = "+shiftName+" and POS_NO= "+PosNo+" GROUP BY ITEM_NAME" ;
+
+        Log.e("se123",""+selectQuery);
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                OrderHeader orderHeader = new OrderHeader();
+
+                orderHeader.setUserName(cursor.getString(0));
+                orderHeader.setTime(cursor.getString(1));
+                orderHeader.setAmountDue(Double.parseDouble(cursor.getString(2)));
+
+                orderHeaderArrayList.add(orderHeader);
+
+            } while (cursor.moveToNext());
+        }
+
+        Log.e("orderTrans ::: ",""+orderHeaderArrayList.toString());
+
+        return orderHeaderArrayList;
+    }
+
+
     public ArrayList<VoidResons> getAllVoidReasons() {
         ArrayList<VoidResons> reasons = new ArrayList<>();
 

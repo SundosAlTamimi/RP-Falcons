@@ -303,6 +303,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     break;
 
                 case R.id.detail_sales_report:
+                    userOrderCountReportDialog();
                     break;
 
             }
@@ -534,6 +535,137 @@ public class BackOfficeActivity extends AppCompatActivity {
 
 
             }
+        });
+
+        export.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+            }
+        });
+
+
+        print.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+            }
+        });
+
+
+        exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dialog.dismiss();
+
+            }
+        });
+
+
+        dialog.show();
+
+    }
+
+    void userOrderCountReportDialog() {
+        dialog = new Dialog(BackOfficeActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.user_order_count);
+        dialog.setCanceledOnTouchOutside(true);
+
+
+
+        TextView toDate = (TextView) dialog.findViewById(R.id.toDateX);
+        TextView fromDate = (TextView) dialog.findViewById(R.id.fromDateX);
+
+        Button preview, exit, export, print;
+        Spinner userName, PosNo;
+
+        userName = (Spinner) dialog.findViewById(R.id.userN);
+        PosNo = (Spinner) dialog.findViewById(R.id.posNo);
+
+        preview = (Button) dialog.findViewById(R.id.doneReport);
+        exit = (Button) dialog.findViewById(R.id.exitReport);
+        export = (Button) dialog.findViewById(R.id.exportReport);
+        print = (Button) dialog.findViewById(R.id.printReport);
+
+        TableLayout userTable = (TableLayout) dialog.findViewById(R.id.userTable);
+
+
+        ArrayList<String> userArray = new ArrayList<>();
+        ArrayList<String> posNoArray = new ArrayList<>();
+
+
+
+        for (int i = 0; i < mDHandler.getAllEmployeeRegistration().size(); i++) {
+            if (mDHandler.getAllEmployeeRegistration().get(i).getEmployeeType() == 0) {
+                userArray.add(String.valueOf(mDHandler.getAllEmployeeRegistration().get(i).getEmployeeName()));
+            }
+        }
+        userArray.add(0, "All");
+
+        posNoArray.add("All");
+        posNoArray.add("4");
+        posNoArray.add("7");
+
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, userArray);
+        userName.setAdapter(adapter);
+
+        ArrayAdapter<String> adapterPosNo = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, posNoArray);
+        PosNo.setAdapter(adapterPosNo);
+
+        fromDate.setText(today);
+        toDate.setText(today);
+
+        fromDate.setOnClickListener(v -> new DatePickerDialog(BackOfficeActivity.this, dateListener(fromDate), myCalendar
+                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH)).show());
+
+        toDate.setOnClickListener(v -> new DatePickerDialog(BackOfficeActivity.this, dateListener(toDate), myCalendar
+                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH)).show());
+
+
+        preview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                userTable.removeAllViews();
+
+                String ShiftNa = "USER_NAME";
+                String fromDat = fromDate.getText().toString();
+                String toDat = toDate.getText().toString();
+                double totalText = 0.0, tatText = 0.0, netText = 0.0;
+
+                String posNoString = "POINT_OF_SALE_NUMBER";
+
+                if (userName.getSelectedItem().toString().equals("All")) {
+                    ShiftNa = "USER_NAME";
+
+                } else {
+                    ShiftNa = "'" + userName.getSelectedItem().toString() + "'";
+                }
+
+                if (PosNo.getSelectedItem().toString().equals("All")) {
+                    posNoString = "POINT_OF_SALE_NUMBER";
+
+                } else {
+                    posNoString = "'" + PosNo.getSelectedItem().toString() + "'";
+                }
+
+                headerData = mDHandler.getUserNameReport(ShiftNa, posNoString, fromDat, toDat);
+                for (int i = 0; i < headerData.size(); i++) {
+
+                    insertCashierInOutReport(userTable, String.valueOf(headerData.get(i).getUserName()),
+                            String.valueOf(headerData.get(i).getAmountDue()) , "",
+                            String.valueOf(headerData.get(i).getTime()) , "", "", "", 3);
+
+                }
+                            }
         });
 
         export.setOnClickListener(new View.OnClickListener() {
