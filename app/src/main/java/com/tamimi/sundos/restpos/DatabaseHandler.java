@@ -3181,8 +3181,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public ArrayList<OrderHeader> getMarketReport(String fDate,String toDate) {
         ArrayList<OrderHeader> orderHeaders = new ArrayList<>();
 
-        String selectQuery ="SELECT POINT_OF_SALE_NUMBER, COALESCE(SUM(TOTAL),-1),COALESCE(SUM (TOTAL_TAX),-1),COALESCE(SUM (AMOUNT_DUE),-1) ,COUNT(*)  FROM ORDER_HEADER " +
-                "WHERE "+"VOUCHER_DATE BETWEEN '"+fDate+"' AND '"+toDate+"' GROUP BY POINT_OF_SALE_NUMBER" ;
+        String selectQuery ="SELECT POINT_OF_SALE_NUMBER, COALESCE(SUM(TOTAL),-1),COALESCE(SUM (TOTAL_TAX),-1),COALESCE(SUM (AMOUNT_DUE),-1) ,COUNT(*) ,VOUCHER_DATE  FROM ORDER_HEADER " +
+                " GROUP BY POINT_OF_SALE_NUMBER" ;
 
 
         Log.e("se12",""+selectQuery);
@@ -3199,6 +3199,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 orderHeaderModel.setTotalTax(Double.parseDouble(cursor.getString(2)));
                 orderHeaderModel.setAmountDue(Double.parseDouble(cursor.getString(3)));
                 orderHeaderModel.setTime(cursor.getString(4));// this for count of order
+                orderHeaderModel.setVoucherDate(cursor.getString(5));
 
                 orderHeaders.add(orderHeaderModel);
 
