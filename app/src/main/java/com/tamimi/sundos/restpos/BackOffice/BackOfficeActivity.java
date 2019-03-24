@@ -51,6 +51,7 @@ import com.tamimi.sundos.restpos.Models.PayMethod;
 import com.tamimi.sundos.restpos.Models.Shift;
 import com.tamimi.sundos.restpos.Models.TableActions;
 import com.tamimi.sundos.restpos.Models.VoidResons;
+import com.tamimi.sundos.restpos.Models.ZReport;
 import com.tamimi.sundos.restpos.R;
 import com.tamimi.sundos.restpos.Settings;
 
@@ -265,7 +266,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     break;
 
                 case R.id.z_report:
-
+                    Z_ReportDialog();
                     break;
 
                 case R.id.market_report_:
@@ -600,6 +601,187 @@ public class BackOfficeActivity extends AppCompatActivity {
 
         dialog.show();
 
+    }
+    void Z_ReportDialog() {
+        dialog = new Dialog(BackOfficeActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.z_report_dialog);
+        dialog.setCanceledOnTouchOutside(true);
+
+
+        TextView totalBeforTax, tax, totalAfterTax, services, servicesTax, totalTax, net,serial,PosNo;
+
+        totalBeforTax = (TextView) dialog.findViewById(R.id.total);
+        tax = (TextView) dialog.findViewById(R.id.tax);
+        totalAfterTax = (TextView) dialog.findViewById(R.id.totalAfterTax);
+        services = (TextView) dialog.findViewById(R.id.services);
+        servicesTax = (TextView) dialog.findViewById(R.id.servicesTax);
+        totalTax = (TextView) dialog.findViewById(R.id.totalTax);
+        net = (TextView) dialog.findViewById(R.id.net);
+        serial= (TextView) dialog.findViewById(R.id.serial);
+        TextView fromDate = (TextView) dialog.findViewById(R.id.fromDateX);
+
+        Button preview, exit, export, print;
+
+        PosNo = (TextView) dialog.findViewById(R.id.posNo);
+
+        preview = (Button) dialog.findViewById(R.id.doneReport);
+        exit = (Button) dialog.findViewById(R.id.exitReport);
+        export = (Button) dialog.findViewById(R.id.exportReport);
+        print = (Button) dialog.findViewById(R.id.printReport);
+
+        TableLayout tableXreportTax = (TableLayout) dialog.findViewById(R.id.TAXPer);
+
+        TableLayout tableXreport = (TableLayout) dialog.findViewById(R.id.taxTable);
+        ArrayList<OrderTransactions> orderTransactionsTax = new ArrayList<>();
+        orderTransactionData = new ArrayList<>();
+
+//        ArrayList<String> posNoArray = new ArrayList<>();
+//
+//        posNoArray.add("All");
+//        posNoArray.add("4");
+//        posNoArray.add("7");
+//        posNoArray.add("1");
+//        posNoArray.add("0");
+//
+//
+//
+//
+//        ArrayAdapter<String> adapterPosNo = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, posNoArray);
+//        PosNo.setAdapter(adapterPosNo);
+
+        PosNo.setText(""+Settings.POS_number);
+        fromDate.setText(today);
+        int serials=mDHandler.getMaxZReportSerial(String.valueOf(Settings.POS_number))+1;
+        serial.setText(""+serials);
+
+        fromDate.setOnClickListener(v -> new DatePickerDialog(BackOfficeActivity.this, dateListener(fromDate), myCalendar
+                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH)).show());
+
+        orderTransactionData = mDHandler.getAllOrderTransactions();
+
+        preview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                tableXreport.removeAllViews();
+                tableXreportTax.removeAllViews();
+
+
+                String fromDat = fromDate.getText().toString();
+                double totalText = 0.0, tatText = 0.0, netText = 0.0;
+                String posNoString = "POS_NO";
+
+//                if (PosNo.getSelectedItem().toString().equals("All")) {
+//                    posNoString = "POS_NO";
+//
+//                } else {
+                    posNoString = "'" + PosNo.getText().toString() + "'";
+//                }
+
+                int serials=mDHandler.getMaxZReportSerial(posNoString)+1;
+
+                serial.setText(""+serials);
+                Log.e("testSerial",""+mDHandler.getMaxZReportSerial(posNoString));
+
+                orderTransactionData = mDHandler.getXReport("SHIFT_NAME", posNoString, fromDat, fromDat);
+
+                for (int i = 0; i < orderTransactionData.size(); i++) {
+
+                    insertCashierInOutReport(tableXreport, orderTransactionData.get(i).getItemName(), String.valueOf(orderTransactionData.get(i).getTaxValue()),
+                            "", String.valueOf(orderTransactionData.get(i).getTotal())
+                            , "", "", String.valueOf(orderTransactionData.get(i).getTotal() + orderTransactionData.get(i).getTaxValue()), 4);
+                }
+
+                for (int a = 0; a < tableXreport.getChildCount(); a++) {
+
+                    TableRow rows = (TableRow) tableXreport.getChildAt(a);
+                    TextView textTotal = (TextView) rows.getChildAt(1);
+                    TextView textTax = (TextView) rows.getChildAt(2);
+                    TextView textNet = (TextView) rows.getChildAt(3);
+
+                    totalText += Double.parseDouble(textTotal.getText().toString());
+                    tatText += Double.parseDouble(textTax.getText().toString());
+                    netText += Double.parseDouble(textNet.getText().toString());
+
+                }
+
+                totalBeforTax.setText("" + totalText);
+                tax.setText("" + tatText);
+                totalAfterTax.setText("" + netText);
+//                services.setText("" + totalText);
+//                servicesTax.setText("" + totalText);
+                totalTax.setText("" + totalText);
+                net.setText("" + netText);
+
+                orderTransactionData = mDHandler.getXReportPercent("SHIFT_NAME", posNoString, fromDat, fromDat);
+                for (int i = 0; i < orderTransactionData.size(); i++) {
+
+                    insertCashierInOutReport(tableXreportTax, String.valueOf(orderTransactionData.get(i).getTaxPerc()),
+                            String.valueOf(orderTransactionData.get(i).getTaxValue()), "",
+                            String.valueOf(orderTransactionData.get(i).getTotal()), "", "", "", 3);
+
+                }
+
+
+            }
+        });
+
+        export.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+            }
+        });
+
+
+        print.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(!isZReportPrinting(fromDate.getText().toString())){
+                    ZReport zReport=new ZReport(fromDate.getText().toString(),Settings.POS_number
+                            ,Settings.password,Settings.user_name, (Integer.parseInt(serial.getText().toString())) );
+
+                    mDHandler.addZReportTable(zReport);
+
+                    Toast.makeText(BackOfficeActivity.this, "Successful", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(BackOfficeActivity.this, "this report printed before this time", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
+        exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dialog.dismiss();
+
+            }
+        });
+
+
+        dialog.show();
+
+    }
+
+    boolean isZReportPrinting(String date){
+        ArrayList<ZReport> ZReport  = new ArrayList<>();
+        boolean isFound=false;
+        ZReport=mDHandler.getAllZReport();
+        for(int i=0;i<ZReport.size();i++) {
+            if (date.equals(ZReport.get(i).getDate())){
+                isFound=true;
+                break;
+            }
+        }
+        return isFound;
     }
 
     void userOrderCountReportDialog() {

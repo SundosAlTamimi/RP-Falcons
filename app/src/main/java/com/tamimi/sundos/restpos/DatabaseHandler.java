@@ -41,6 +41,7 @@ import com.tamimi.sundos.restpos.Models.Tables;
 import com.tamimi.sundos.restpos.Models.UsedCategories;
 import com.tamimi.sundos.restpos.Models.UsedItems;
 import com.tamimi.sundos.restpos.Models.VoidResons;
+import com.tamimi.sundos.restpos.Models.ZReport;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -50,7 +51,7 @@ import java.util.List;
 public class DatabaseHandler extends SQLiteOpenHelper {
     //hellohjt
     // Database Version
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 8;
 
     // Database Name
     private static final String DATABASE_NAME = "RestPos";
@@ -507,6 +508,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String SECTION_NO16 = "SECTION_NO";
     private static final String TO_TABLE16 = "TO_TABLE";
     private static final String TO_SECTION16 = "TO_SECTION";
+
+    //____________________________________________________________________________________
+    private static final String Z_REPORT_TABLE = "Z_REPORT_TABLE";
+
+    private static final String DATE17 = "DATE";
+    private static final String USER_NO17 = "USER_NO";
+    private static final String USER_NAME17 = "USER_NAME";
+    private static final String POS_NO17 = "POS_NO";
+    private static final String SERIAL17 = "SERIAL";
+
 
     //____________________________________________________________________________________
     public DatabaseHandler(Context context) {
@@ -1065,6 +1076,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + TO_SECTION16 + " INTEGER " + ")";
         db.execSQL(CREATE_TABLE_TABLE_ACTIONS);
 
+
+        //_____________________________________________________________________
+
+        String CREATE_TABLE_Z_REPORT_TABLE = "CREATE TABLE " + Z_REPORT_TABLE + "("
+                + DATE17 + " TEXT,"
+                + USER_NO17 + " INTEGER,"
+                + USER_NAME17 + " TEXT,"
+                + POS_NO17 + " INTEGER,"
+                + SERIAL17 + " INTEGER " + ")";
+        db.execSQL(CREATE_TABLE_Z_REPORT_TABLE);
+
     }
 
 
@@ -1112,20 +1134,30 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 //        db.execSQL("ALTER TABLE PAY_METHOD ADD TIME TEXT NOT NULL DEFAULT '01:30'");
 
 
-        String CREATE_TABLE_TABLE_ACTIONS = "CREATE TABLE " + TABLE_ACTIONS + "("
-                + POS_NO16 + " INTEGER,"
-                + USER_NO16 + " INTEGER,"
-                + USER_NAME16 + " TEXT,"
-                + SHIFT_NAME16 + " TEXT,"
-                + SHIFT_NO16 + " INTEGER,"
-                + ACTION_TYPE16 + " INTEGER,"
-                + ACTION_DATE16 + " TEXT,"
-                + ACTION_TIME16 + " TEXT,"
-                + TABLE_NO16 + " INTEGER,"
-                + SECTION_NO16 + " INTEGER ,"
-                + TO_TABLE16 + " INTEGER ,"
-                + TO_SECTION16 + " INTEGER " + ")";
-        db.execSQL(CREATE_TABLE_TABLE_ACTIONS);
+//        String CREATE_TABLE_TABLE_ACTIONS = "CREATE TABLE " + TABLE_ACTIONS + "("
+//                + POS_NO16 + " INTEGER,"
+//                + USER_NO16 + " INTEGER,"
+//                + USER_NAME16 + " TEXT,"
+//                + SHIFT_NAME16 + " TEXT,"
+//                + SHIFT_NO16 + " INTEGER,"
+//                + ACTION_TYPE16 + " INTEGER,"
+//                + ACTION_DATE16 + " TEXT,"
+//                + ACTION_TIME16 + " TEXT,"
+//                + TABLE_NO16 + " INTEGER,"
+//                + SECTION_NO16 + " INTEGER ,"
+//                + TO_TABLE16 + " INTEGER ,"
+//                + TO_SECTION16 + " INTEGER " + ")";
+//        db.execSQL(CREATE_TABLE_TABLE_ACTIONS);
+
+
+        String CREATE_TABLE_Z_REPORT_TABLE = "CREATE TABLE " + Z_REPORT_TABLE + "("
+                + DATE17 + " TEXT,"
+                + USER_NO17 + " INTEGER,"
+                + USER_NAME17 + " TEXT,"
+                + POS_NO17 + " INTEGER,"
+                + SERIAL17 + " INTEGER " + ")";
+        db.execSQL(CREATE_TABLE_Z_REPORT_TABLE);
+
 
     }
 
@@ -1837,6 +1869,21 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(TO_SECTION16, action.getToSection());
 
         db.insert(TABLE_ACTIONS, null, values);
+
+        db.close();
+    }
+
+    public void addZReportTable(ZReport zReport) {
+        db = this.getReadableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(DATE17, zReport.getDate());
+        values.put(USER_NAME17, zReport.getUserName());
+        values.put(USER_NO17, zReport.getUserNo());
+        values.put(POS_NO17, zReport.getPosNo());
+        values.put(SERIAL17, zReport.getSerial());
+
+        db.insert(Z_REPORT_TABLE, null, values);
 
         db.close();
     }
@@ -2568,6 +2615,25 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return max;
     }
 
+    public int getMaxZReportSerial(String posNo) {
+        ArrayList<Integer> moneys = new ArrayList<>();
+        int max;
+        String selectQuery = "SELECT " + SERIAL17 + " FROM " + Z_REPORT_TABLE +" where POS_NO = "+posNo;
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                moneys.add(cursor.getInt(0));
+
+            } while (cursor.moveToNext());
+        }
+        if (moneys.isEmpty())
+            max = 0;
+        else
+            max = Collections.max(moneys);
+        return max;
+    }
+
     public ArrayList<OrderHeader> getAllOrderHeader() {
         ArrayList<OrderHeader> orderHeaders = new ArrayList<>();
         String selectQuery = "SELECT * FROM " + ORDER_HEADER;
@@ -3245,6 +3311,31 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         return items;
     }
+
+
+    public ArrayList<ZReport> getAllZReport() {
+        ArrayList<ZReport> items = new ArrayList<>();
+
+        String selectQuery = "SELECT  * FROM " + Z_REPORT_TABLE;
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                ZReport zReport = new ZReport();
+
+                zReport.setDate(cursor.getString(0));
+                zReport.setUserNo(cursor.getInt(1));
+                zReport.setUserName(cursor.getString(2));
+                zReport.setPosNo(cursor.getInt(3));
+                zReport.setSerial(cursor.getInt(4));
+
+                items.add(zReport);
+            } while (cursor.moveToNext());
+        }
+        return items;
+    }
+
 
 
     public ArrayList<OrderTransactions> getXReport(String shiftName,String PosNo ,String fDate ,String toDate ) {
