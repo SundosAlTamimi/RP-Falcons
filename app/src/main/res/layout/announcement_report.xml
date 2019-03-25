@@ -43,7 +43,7 @@
                     android:layout_marginBottom="5dp"
                     android:layout_weight="3"
                     android:gravity="center"
-                    android:text="@string/user_order_count"
+                    android:text="@string/announcement_"
                     android:textColor="@color/text_color"
                     android:textSize="25sp" />
 
@@ -210,7 +210,20 @@
                 android:layout_marginBottom="2dp">
 
                 <TextView
-                    android:id="@+id/textView62"
+                    android:id="@+id/textView91"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="1dp"
+                    android:layout_weight="1"
+                    android:background="@color/blue_ice"
+                    android:gravity="center"
+                    android:padding="2dp"
+                    android:text="@string/shift_name"
+                    android:textColor="@color/layer1"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/textView79"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="1dp"
@@ -223,6 +236,7 @@
                     android:textSize="18sp" />
 
                 <TextView
+                    android:id="@+id/textView62"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="1dp"
@@ -230,7 +244,7 @@
                     android:background="@color/blue_ice"
                     android:gravity="center"
                     android:padding="2dp"
-                    android:text="@string/order_count"
+                    android:text="@string/point_of_sale"
                     android:textColor="@color/layer1"
                     android:textSize="18sp" />
 
@@ -242,7 +256,32 @@
                     android:background="@color/blue_ice"
                     android:gravity="center"
                     android:padding="2dp"
-                    android:text="@string/net_total_"
+                    android:text="@string/date_"
+                    android:textColor="@color/layer1"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="1dp"
+                    android:layout_weight="1"
+                    android:background="@color/blue_ice"
+                    android:gravity="center"
+                    android:padding="2dp"
+                    android:text="@string/message"
+                    android:textColor="@color/layer1"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/textView92"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="1dp"
+                    android:layout_weight="1"
+                    android:background="@color/blue_ice"
+                    android:gravity="center"
+                    android:padding="2dp"
+                    android:text="Is Show "
                     android:textColor="@color/layer1"
                     android:textSize="18sp" />
 

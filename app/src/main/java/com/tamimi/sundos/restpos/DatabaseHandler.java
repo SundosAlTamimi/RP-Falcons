@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
+import com.tamimi.sundos.restpos.Models.Announcemet;
 import com.tamimi.sundos.restpos.Models.BlindClose;
 import com.tamimi.sundos.restpos.Models.BlindCloseDetails;
 import com.tamimi.sundos.restpos.Models.BlindShift;
@@ -51,7 +52,7 @@ import java.util.List;
 public class DatabaseHandler extends SQLiteOpenHelper {
     //hellohjt
     // Database Version
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 9;
 
     // Database Name
     private static final String DATABASE_NAME = "RestPos";
@@ -520,6 +521,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
     //____________________________________________________________________________________
+    private static final String ANNOUNCEMENT_TABLE = "ANNOUNCEMENT_TABLE";
+
+    private static final String SHIFT_NAME18 = "SHIFT_NAME";
+    private static final String USER_NAME18 = "USER_NAME";
+    private static final String ANNOUNCEMENT_DATE18 = "ANNOUNCEMENT_DATE";
+    private static final String POS_NO18 = "POS_NO";
+    private static final String MESSAGE18 = "MESSAGE";
+    private static final String IS_SHOW18 = "IS_SHOW";
+
+
+    //___________________________________________________________________________________
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -1087,6 +1099,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + SERIAL17 + " INTEGER " + ")";
         db.execSQL(CREATE_TABLE_Z_REPORT_TABLE);
 
+        //_____________________________________________________________________
+
+        String CREATE_TABLE_ANNOUNCEMENT_TABLE = "CREATE TABLE " + ANNOUNCEMENT_TABLE + "("
+                + SHIFT_NAME18 + " TEXT,"
+                + ANNOUNCEMENT_DATE18 + " TEXT,"
+                + USER_NAME18 + " TEXT,"
+                + POS_NO18 + " INTEGER,"
+                + MESSAGE18 + " TEXT,"
+                + IS_SHOW18 + " INTEGER " + ")";
+        db.execSQL(CREATE_TABLE_ANNOUNCEMENT_TABLE);
+
+
     }
 
 
@@ -1150,13 +1174,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 //        db.execSQL(CREATE_TABLE_TABLE_ACTIONS);
 
 
-        String CREATE_TABLE_Z_REPORT_TABLE = "CREATE TABLE " + Z_REPORT_TABLE + "("
-                + DATE17 + " TEXT,"
-                + USER_NO17 + " INTEGER,"
-                + USER_NAME17 + " TEXT,"
-                + POS_NO17 + " INTEGER,"
-                + SERIAL17 + " INTEGER " + ")";
-        db.execSQL(CREATE_TABLE_Z_REPORT_TABLE);
+        String CREATE_TABLE_ANNOUNCEMENT_TABLE = "CREATE TABLE " + ANNOUNCEMENT_TABLE + "("
+                + SHIFT_NAME18 + " TEXT,"
+                + ANNOUNCEMENT_DATE18 + " TEXT,"
+                + USER_NAME18 + " TEXT,"
+                + POS_NO18 + " INTEGER,"
+                + MESSAGE18 + " TEXT,"
+                + IS_SHOW18 + " INTEGER " + ")";
+        db.execSQL(CREATE_TABLE_ANNOUNCEMENT_TABLE);
 
 
     }
@@ -1869,6 +1894,23 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(TO_SECTION16, action.getToSection());
 
         db.insert(TABLE_ACTIONS, null, values);
+
+        db.close();
+    }
+
+
+    public void addAnnouncement(Announcemet announcemet) {
+        db = this.getReadableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(SHIFT_NAME18, announcemet.getShiftName());
+        values.put(ANNOUNCEMENT_DATE18, announcemet.getAnnouncementDate());
+        values.put(USER_NAME18, announcemet.getUserName());
+        values.put(POS_NO18, announcemet.getPosNo());
+        values.put(MESSAGE18, announcemet.getMessage());
+        values.put(IS_SHOW18, announcemet.getIsShow());
+
+        db.insert(ANNOUNCEMENT_TABLE, null, values);
 
         db.close();
     }
@@ -3313,6 +3355,32 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
 
+    public ArrayList<Announcemet> getAllTableAnnouncement() {
+        ArrayList<Announcemet> announcementArrayList = new ArrayList<>();
+
+        String selectQuery = "SELECT  * FROM " + ANNOUNCEMENT_TABLE;
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Announcemet announcemet = new Announcemet();
+
+                announcemet.setShiftName(cursor.getString(0));
+                announcemet.setAnnouncementDate(cursor.getString(1));
+                announcemet.setUserName(cursor.getString(2));
+                announcemet.setPosNo(cursor.getInt(3));
+                announcemet.setMessage(cursor.getString(4));
+                announcemet.setIsShow(cursor.getInt(5));
+
+
+                announcementArrayList.add(announcemet);
+            } while (cursor.moveToNext());
+        }
+        return announcementArrayList;
+    }
+
+
     public ArrayList<ZReport> getAllZReport() {
         ArrayList<ZReport> items = new ArrayList<>();
 
@@ -3506,6 +3574,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         // updating row
         db.update(USED_CATEGORIES, values, CATEGORY_NAME + " = '" + usedCategories.getCategoryName() + "'", null);
     }
+
+    public void updateAnnounementIsShow(String message,String date) {
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        String filter=MESSAGE18 + " = '" + message  + "' and " +ANNOUNCEMENT_DATE18 +"= '"+date+"'";
+        values.put(IS_SHOW18, 1);
+
+        // updating row
+        db.update(ANNOUNCEMENT_TABLE, values, filter, null);
+    }
+
 
     public void moveTablesTemp(int oldSectionNo, int oldTableNo, int sectionNo, int tableNo) {
         db = this.getWritableDatabase();

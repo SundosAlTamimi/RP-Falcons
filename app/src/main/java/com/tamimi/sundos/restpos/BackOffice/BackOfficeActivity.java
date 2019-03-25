@@ -33,6 +33,7 @@ import android.widget.Toast;
 
 import com.tamimi.sundos.restpos.DatabaseHandler;
 import com.tamimi.sundos.restpos.DineInLayout;
+import com.tamimi.sundos.restpos.Models.Announcemet;
 import com.tamimi.sundos.restpos.Models.CancleOrder;
 import com.tamimi.sundos.restpos.Models.CategoryWithModifier;
 import com.tamimi.sundos.restpos.Models.CustomerPayment;
@@ -94,6 +95,7 @@ public class BackOfficeActivity extends AppCompatActivity {
     ArrayList<PayMethod> payData, OrderPayMData;
     List<OrderTransactions> orderTransactionData;
     ArrayList<Pay> payInData;
+    ArrayList<Announcemet> Announcement;
     TableRow focusedRaw = null;
     int rawPosition = 0;
     Calendar myCalendar;
@@ -162,6 +164,7 @@ public class BackOfficeActivity extends AppCompatActivity {
 
             switch (view.getId()) {
                 case R.id.announcement:
+                    addAnnouncementDialog();
                     break;
 
                 case R.id.gift_card:
@@ -274,6 +277,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     break;
 
                 case R.id.sales_report_for_day:
+                    announcementReportDialog();
 
                     break;
 
@@ -602,6 +606,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         dialog.show();
 
     }
+
     void Z_ReportDialog() {
         dialog = new Dialog(BackOfficeActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -610,7 +615,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         dialog.setCanceledOnTouchOutside(true);
 
 
-        TextView totalBeforTax, tax, totalAfterTax, services, servicesTax, totalTax, net,serial,PosNo;
+        TextView totalBeforTax, tax, totalAfterTax, services, servicesTax, totalTax, net, serial, PosNo;
 
         totalBeforTax = (TextView) dialog.findViewById(R.id.total);
         tax = (TextView) dialog.findViewById(R.id.tax);
@@ -619,7 +624,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         servicesTax = (TextView) dialog.findViewById(R.id.servicesTax);
         totalTax = (TextView) dialog.findViewById(R.id.totalTax);
         net = (TextView) dialog.findViewById(R.id.net);
-        serial= (TextView) dialog.findViewById(R.id.serial);
+        serial = (TextView) dialog.findViewById(R.id.serial);
         TextView fromDate = (TextView) dialog.findViewById(R.id.fromDateX);
 
         Button preview, exit, export, print;
@@ -651,10 +656,10 @@ public class BackOfficeActivity extends AppCompatActivity {
 //        ArrayAdapter<String> adapterPosNo = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, posNoArray);
 //        PosNo.setAdapter(adapterPosNo);
 
-        PosNo.setText(""+Settings.POS_number);
+        PosNo.setText("" + Settings.POS_number);
         fromDate.setText(today);
-        int serials=mDHandler.getMaxZReportSerial(String.valueOf(Settings.POS_number))+1;
-        serial.setText(""+serials);
+        int serials = mDHandler.getMaxZReportSerial(String.valueOf(Settings.POS_number)) + 1;
+        serial.setText("" + serials);
 
         fromDate.setOnClickListener(v -> new DatePickerDialog(BackOfficeActivity.this, dateListener(fromDate), myCalendar
                 .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
@@ -679,13 +684,13 @@ public class BackOfficeActivity extends AppCompatActivity {
 //                    posNoString = "POS_NO";
 //
 //                } else {
-                    posNoString = "'" + PosNo.getText().toString() + "'";
+                posNoString = "'" + PosNo.getText().toString() + "'";
 //                }
 
-                int serials=mDHandler.getMaxZReportSerial(posNoString)+1;
+                int serials = mDHandler.getMaxZReportSerial(posNoString) + 1;
 
-                serial.setText(""+serials);
-                Log.e("testSerial",""+mDHandler.getMaxZReportSerial(posNoString));
+                serial.setText("" + serials);
+                Log.e("testSerial", "" + mDHandler.getMaxZReportSerial(posNoString));
 
                 orderTransactionData = mDHandler.getXReport("SHIFT_NAME", posNoString, fromDat, fromDat);
 
@@ -743,14 +748,14 @@ public class BackOfficeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if(!isZReportPrinting(fromDate.getText().toString())){
-                    ZReport zReport=new ZReport(fromDate.getText().toString(),Settings.POS_number
-                            ,Settings.password,Settings.user_name, (Integer.parseInt(serial.getText().toString())) );
+                if (!isZReportPrinting(fromDate.getText().toString())) {
+                    ZReport zReport = new ZReport(fromDate.getText().toString(), Settings.POS_number
+                            , Settings.password, Settings.user_name, (Integer.parseInt(serial.getText().toString())));
 
                     mDHandler.addZReportTable(zReport);
 
                     Toast.makeText(BackOfficeActivity.this, "Successful", Toast.LENGTH_SHORT).show();
-                }else{
+                } else {
                     Toast.makeText(BackOfficeActivity.this, "this report printed before this time", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -771,13 +776,13 @@ public class BackOfficeActivity extends AppCompatActivity {
 
     }
 
-    boolean isZReportPrinting(String date){
-        ArrayList<ZReport> ZReport  = new ArrayList<>();
-        boolean isFound=false;
-        ZReport=mDHandler.getAllZReport();
-        for(int i=0;i<ZReport.size();i++) {
-            if (date.equals(ZReport.get(i).getDate())){
-                isFound=true;
+    boolean isZReportPrinting(String date) {
+        ArrayList<ZReport> ZReport = new ArrayList<>();
+        boolean isFound = false;
+        ZReport = mDHandler.getAllZReport();
+        for (int i = 0; i < ZReport.size(); i++) {
+            if (date.equals(ZReport.get(i).getDate())) {
+                isFound = true;
                 break;
             }
         }
@@ -790,7 +795,6 @@ public class BackOfficeActivity extends AppCompatActivity {
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.user_order_count);
         dialog.setCanceledOnTouchOutside(true);
-
 
 
         TextView toDate = (TextView) dialog.findViewById(R.id.toDateX);
@@ -812,7 +816,6 @@ public class BackOfficeActivity extends AppCompatActivity {
 
         ArrayList<String> userArray = new ArrayList<>();
         ArrayList<String> posNoArray = new ArrayList<>();
-
 
 
         for (int i = 0; i < mDHandler.getAllEmployeeRegistration().size(); i++) {
@@ -876,11 +879,139 @@ public class BackOfficeActivity extends AppCompatActivity {
                 for (int i = 0; i < headerData.size(); i++) {
 
                     insertCashierInOutReport(userTable, String.valueOf(headerData.get(i).getUserName()),
-                            String.valueOf(headerData.get(i).getAmountDue()) , "",
-                            String.valueOf(headerData.get(i).getTime()) , "", "", "", 3);
+                            String.valueOf(headerData.get(i).getAmountDue()), "",
+                            String.valueOf(headerData.get(i).getTime()), "", "", "", 3);
 
                 }
-                            }
+            }
+        });
+
+        export.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+            }
+        });
+
+
+        print.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+            }
+        });
+
+
+        exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dialog.dismiss();
+
+            }
+        });
+
+
+        dialog.show();
+
+    }
+
+    void announcementReportDialog() {
+        dialog = new Dialog(BackOfficeActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.announcement_report);
+        dialog.setCanceledOnTouchOutside(true);
+
+
+        TextView toDate = (TextView) dialog.findViewById(R.id.toDateX);
+        TextView fromDate = (TextView) dialog.findViewById(R.id.fromDateX);
+
+        Button preview, exit, export, print;
+        Spinner userName, PosNo;
+
+        userName = (Spinner) dialog.findViewById(R.id.userN);
+        PosNo = (Spinner) dialog.findViewById(R.id.posNo);
+
+        preview = (Button) dialog.findViewById(R.id.doneReport);
+        exit = (Button) dialog.findViewById(R.id.exitReport);
+        export = (Button) dialog.findViewById(R.id.exportReport);
+        print = (Button) dialog.findViewById(R.id.printReport);
+
+        TableLayout userTable = (TableLayout) dialog.findViewById(R.id.userTable);
+        Announcement = new ArrayList<>();
+
+        ArrayList<String> userArray = new ArrayList<>();
+        ArrayList<String> posNoArray = new ArrayList<>();
+
+
+        for (int i = 0; i < mDHandler.getAllEmployeeRegistration().size(); i++) {
+            if (mDHandler.getAllEmployeeRegistration().get(i).getEmployeeType() == 0) {
+                userArray.add(String.valueOf(mDHandler.getAllEmployeeRegistration().get(i).getEmployeeName()));
+            }
+        }
+        userArray.add(0, "All");
+
+        posNoArray.add("All");
+        posNoArray.add("4");
+        posNoArray.add("7");
+
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, userArray);
+        userName.setAdapter(adapter);
+
+        ArrayAdapter<String> adapterPosNo = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, posNoArray);
+        PosNo.setAdapter(adapterPosNo);
+
+        fromDate.setText(today);
+        toDate.setText(today);
+
+        fromDate.setOnClickListener(v -> new DatePickerDialog(BackOfficeActivity.this, dateListener(fromDate), myCalendar
+                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH)).show());
+
+        toDate.setOnClickListener(v -> new DatePickerDialog(BackOfficeActivity.this, dateListener(toDate), myCalendar
+                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH)).show());
+
+
+        preview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                userTable.removeAllViews();
+                String posNoAll="All";
+
+                String fromDat = fromDate.getText().toString();
+                String toDat = toDate.getText().toString();
+
+
+                int posNoString = -1;
+                if (PosNo.getSelectedItem().toString().equals("All")) {
+                    posNoString = -1;
+
+                } else {
+                    posNoString = Integer.parseInt(PosNo.getSelectedItem().toString());
+
+                }
+
+                Announcement = mDHandler.getAllTableAnnouncement();
+                for (int i = 0; i < Announcement.size(); i++) {
+                    if (filters(fromDat, toDat, Announcement.get(i).getAnnouncementDate()) &&
+                            (Announcement.get(i).getUserName().equals(userName.getSelectedItem().toString()) || userName.getSelectedItem().toString().equals("All")) &&
+                            (Announcement.get(i).getPosNo() == posNoString || posNoString == -1)) {
+                        if(Announcement.get(i).getPosNo()== -1){
+                            posNoAll="All";
+                        }else {
+                            posNoAll=String.valueOf(Announcement.get(i).getPosNo());
+                        }
+                        insertCashierInOutReport(userTable, Announcement.get(i).getShiftName(),posNoAll,
+                                Announcement.get(i).getMessage(), Announcement.get(i).getUserName(), String.valueOf(Announcement.get(i).getIsShow()), "", Announcement.get(i).getAnnouncementDate(),6);
+                    }
+                }
+            }
         });
 
         export.setOnClickListener(new View.OnClickListener() {
@@ -3248,10 +3379,10 @@ public class BackOfficeActivity extends AppCompatActivity {
                             if (headerData.get(i).getWaiter().equals(CashierNo) || CashierNo.equals("All")) {
                                 if (headerData.get(i).getPointOfSaleNumber() == posNoString || posNoString == -1) {
 
-                                    insertCashierInOutReport(waiterTable,headerData.get(i).getWaiter(),String.valueOf(headerData.get(i).getTotalDiscount()),
+                                    insertCashierInOutReport(waiterTable, headerData.get(i).getWaiter(), String.valueOf(headerData.get(i).getTotalDiscount()),
                                             String.valueOf(headerData.get(i).getAmountDue()),
-                                            String.valueOf(headerData.get(i).getTotal()),String.valueOf(headerData.get(i).getTotalService()) ,
-                                            String.valueOf(headerData.get(i).getTotalServiceTax()),String.valueOf(headerData.get(i).getTotalTax()), 7);
+                                            String.valueOf(headerData.get(i).getTotal()), String.valueOf(headerData.get(i).getTotalService()),
+                                            String.valueOf(headerData.get(i).getTotalServiceTax()), String.valueOf(headerData.get(i).getTotalTax()), 7);
                                 }
                             }
                         }
@@ -4012,6 +4143,110 @@ public class BackOfficeActivity extends AppCompatActivity {
         });
 
         dialog.show();
+    }
+
+
+    void addAnnouncementDialog() {
+        dialog = new Dialog(BackOfficeActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.add_annoouncemet_dialog);
+        dialog.setCanceledOnTouchOutside(true);
+
+        TextView date = (TextView) dialog.findViewById(R.id.Date);
+        EditText message = (EditText) dialog.findViewById(R.id.message);
+        Spinner posNo, shiftName, userName;
+        Button update, save, exit;
+
+        posNo = (Spinner) dialog.findViewById(R.id.posNo);
+        shiftName = (Spinner) dialog.findViewById(R.id.shiftName);
+        userName = (Spinner) dialog.findViewById(R.id.userName);
+
+        update = (Button) dialog.findViewById(R.id.update);
+        save = (Button) dialog.findViewById(R.id.save);
+        exit = (Button) dialog.findViewById(R.id.exit);
+
+        date.setText(today);
+        date.setOnClickListener(v -> new DatePickerDialog(BackOfficeActivity.this, dateListener(date), myCalendar
+                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH)).show());
+
+        ArrayList<String> shiftNameArray = new ArrayList<>();
+        ArrayList<String> userArray = new ArrayList<>();
+        ArrayList<String> posNoArray = new ArrayList<>();
+
+        for (int i = 0; i < mDHandler.getAllShifts().size(); i++) {
+            shiftNameArray.add(mDHandler.getAllShifts().get(i).getShiftName());
+        }
+        shiftNameArray.add(0, "All");
+
+        for (int i = 0; i < mDHandler.getAllEmployeeRegistration().size(); i++) {
+            if (mDHandler.getAllEmployeeRegistration().get(i).getEmployeeType() == 0) {
+                userArray.add(String.valueOf(mDHandler.getAllEmployeeRegistration().get(i).getEmployeeName()));
+            }
+        }
+        userArray.add(0, "All");
+
+        posNoArray.add("All");
+        posNoArray.add("4");
+        posNoArray.add("7");
+
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, shiftNameArray);
+        shiftName.setAdapter(adapter);
+
+        ArrayAdapter<String> adapterPosNo = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, posNoArray);
+        posNo.setAdapter(adapterPosNo);
+
+        ArrayAdapter<String> adapterUserName = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, userArray);
+        userName.setAdapter(adapterUserName);
+
+
+        update.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String ShiftNameString = shiftName.getSelectedItem().toString();
+                String userNameString = userName.getSelectedItem().toString();
+                String messageString = message.getText().toString();
+                String DateString = date.getText().toString();
+                int posNoString = -1;
+                if (posNo.getSelectedItem().toString().equals("All")) {
+                    posNoString = -1;
+                } else {
+                    posNoString = Integer.parseInt(posNo.getSelectedItem().toString());
+                }
+
+                if (!messageString.equals("")) {
+
+                    Announcemet announcemet = new Announcemet(ShiftNameString,
+                            DateString, userNameString, posNoString, messageString, 0);
+
+                    mDHandler.addAnnouncement(announcemet);
+
+                    Toast.makeText(BackOfficeActivity.this, "Successful", Toast.LENGTH_SHORT).show();
+                    message.setText("");
+                } else {
+                    Toast.makeText(BackOfficeActivity.this, "Please add Message ", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+        exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+
     }
 
     void showMemberShipGroupDialog() {
