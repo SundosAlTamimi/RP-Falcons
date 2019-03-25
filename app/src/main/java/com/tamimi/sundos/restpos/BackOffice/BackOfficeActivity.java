@@ -4156,13 +4156,13 @@ public class BackOfficeActivity extends AppCompatActivity {
         TextView date = (TextView) dialog.findViewById(R.id.Date);
         EditText message = (EditText) dialog.findViewById(R.id.message);
         Spinner posNo, shiftName, userName;
-        Button update, save, exit;
+        Button  save, exit;
 
         posNo = (Spinner) dialog.findViewById(R.id.posNo);
         shiftName = (Spinner) dialog.findViewById(R.id.shiftName);
         userName = (Spinner) dialog.findViewById(R.id.userName);
 
-        update = (Button) dialog.findViewById(R.id.update);
+
         save = (Button) dialog.findViewById(R.id.save);
         exit = (Button) dialog.findViewById(R.id.exit);
 
@@ -4201,13 +4201,6 @@ public class BackOfficeActivity extends AppCompatActivity {
         ArrayAdapter<String> adapterUserName = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, userArray);
         userName.setAdapter(adapterUserName);
 
-
-        update.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
