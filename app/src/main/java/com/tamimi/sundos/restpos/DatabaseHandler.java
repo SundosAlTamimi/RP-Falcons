@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
+import com.tamimi.sundos.restpos.Models.Announcemet;
 import com.tamimi.sundos.restpos.Models.BlindClose;
 import com.tamimi.sundos.restpos.Models.BlindCloseDetails;
 import com.tamimi.sundos.restpos.Models.BlindShift;
@@ -41,6 +42,7 @@ import com.tamimi.sundos.restpos.Models.Tables;
 import com.tamimi.sundos.restpos.Models.UsedCategories;
 import com.tamimi.sundos.restpos.Models.UsedItems;
 import com.tamimi.sundos.restpos.Models.VoidResons;
+import com.tamimi.sundos.restpos.Models.ZReport;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -50,7 +52,7 @@ import java.util.List;
 public class DatabaseHandler extends SQLiteOpenHelper {
     //hellohjt
     // Database Version
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 9;
 
     // Database Name
     private static final String DATABASE_NAME = "RestPos";
@@ -511,6 +513,27 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String TO_SECTION16 = "TO_SECTION";
 
     //____________________________________________________________________________________
+    private static final String Z_REPORT_TABLE = "Z_REPORT_TABLE";
+
+    private static final String DATE17 = "DATE";
+    private static final String USER_NO17 = "USER_NO";
+    private static final String USER_NAME17 = "USER_NAME";
+    private static final String POS_NO17 = "POS_NO";
+    private static final String SERIAL17 = "SERIAL";
+
+
+    //____________________________________________________________________________________
+    private static final String ANNOUNCEMENT_TABLE = "ANNOUNCEMENT_TABLE";
+
+    private static final String SHIFT_NAME18 = "SHIFT_NAME";
+    private static final String USER_NAME18 = "USER_NAME";
+    private static final String ANNOUNCEMENT_DATE18 = "ANNOUNCEMENT_DATE";
+    private static final String POS_NO18 = "POS_NO";
+    private static final String MESSAGE18 = "MESSAGE";
+    private static final String IS_SHOW18 = "IS_SHOW";
+
+
+    //___________________________________________________________________________________
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -1069,6 +1092,29 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + TO_SECTION16 + " INTEGER " + ")";
         db.execSQL(CREATE_TABLE_TABLE_ACTIONS);
 
+
+        //_____________________________________________________________________
+
+        String CREATE_TABLE_Z_REPORT_TABLE = "CREATE TABLE " + Z_REPORT_TABLE + "("
+                + DATE17 + " TEXT,"
+                + USER_NO17 + " INTEGER,"
+                + USER_NAME17 + " TEXT,"
+                + POS_NO17 + " INTEGER,"
+                + SERIAL17 + " INTEGER " + ")";
+        db.execSQL(CREATE_TABLE_Z_REPORT_TABLE);
+
+        //_____________________________________________________________________
+
+        String CREATE_TABLE_ANNOUNCEMENT_TABLE = "CREATE TABLE " + ANNOUNCEMENT_TABLE + "("
+                + SHIFT_NAME18 + " TEXT,"
+                + ANNOUNCEMENT_DATE18 + " TEXT,"
+                + USER_NAME18 + " TEXT,"
+                + POS_NO18 + " INTEGER,"
+                + MESSAGE18 + " TEXT,"
+                + IS_SHOW18 + " INTEGER " + ")";
+        db.execSQL(CREATE_TABLE_ANNOUNCEMENT_TABLE);
+
+
     }
 
 
@@ -1131,6 +1177,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 //                + TO_TABLE16 + " INTEGER ,"
 //                + TO_SECTION16 + " INTEGER " + ")";
 //        db.execSQL(CREATE_TABLE_TABLE_ACTIONS);
+
+
+        String CREATE_TABLE_ANNOUNCEMENT_TABLE = "CREATE TABLE " + ANNOUNCEMENT_TABLE + "("
+                + SHIFT_NAME18 + " TEXT,"
+                + ANNOUNCEMENT_DATE18 + " TEXT,"
+                + USER_NAME18 + " TEXT,"
+                + POS_NO18 + " INTEGER,"
+                + MESSAGE18 + " TEXT,"
+                + IS_SHOW18 + " INTEGER " + ")";
+        db.execSQL(CREATE_TABLE_ANNOUNCEMENT_TABLE);
+
 
     }
 
@@ -1844,6 +1901,38 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(TO_SECTION16, action.getToSection());
 
         db.insert(TABLE_ACTIONS, null, values);
+
+        db.close();
+    }
+
+
+    public void addAnnouncement(Announcemet announcemet) {
+        db = this.getReadableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(SHIFT_NAME18, announcemet.getShiftName());
+        values.put(ANNOUNCEMENT_DATE18, announcemet.getAnnouncementDate());
+        values.put(USER_NAME18, announcemet.getUserName());
+        values.put(POS_NO18, announcemet.getPosNo());
+        values.put(MESSAGE18, announcemet.getMessage());
+        values.put(IS_SHOW18, announcemet.getIsShow());
+
+        db.insert(ANNOUNCEMENT_TABLE, null, values);
+
+        db.close();
+    }
+
+    public void addZReportTable(ZReport zReport) {
+        db = this.getReadableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(DATE17, zReport.getDate());
+        values.put(USER_NAME17, zReport.getUserName());
+        values.put(USER_NO17, zReport.getUserNo());
+        values.put(POS_NO17, zReport.getPosNo());
+        values.put(SERIAL17, zReport.getSerial());
+
+        db.insert(Z_REPORT_TABLE, null, values);
 
         db.close();
     }
@@ -2575,6 +2664,25 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return max;
     }
 
+    public int getMaxZReportSerial(String posNo) {
+        ArrayList<Integer> moneys = new ArrayList<>();
+        int max;
+        String selectQuery = "SELECT " + SERIAL17 + " FROM " + Z_REPORT_TABLE +" where POS_NO = "+posNo;
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                moneys.add(cursor.getInt(0));
+
+            } while (cursor.moveToNext());
+        }
+        if (moneys.isEmpty())
+            max = 0;
+        else
+            max = Collections.max(moneys);
+        return max;
+    }
+
     public ArrayList<OrderHeader> getAllOrderHeader() {
         ArrayList<OrderHeader> orderHeaders = new ArrayList<>();
         String selectQuery = "SELECT * FROM " + ORDER_HEADER;
@@ -3292,6 +3400,57 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
 
+    public ArrayList<Announcemet> getAllTableAnnouncement() {
+        ArrayList<Announcemet> announcementArrayList = new ArrayList<>();
+
+        String selectQuery = "SELECT  * FROM " + ANNOUNCEMENT_TABLE;
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Announcemet announcemet = new Announcemet();
+
+                announcemet.setShiftName(cursor.getString(0));
+                announcemet.setAnnouncementDate(cursor.getString(1));
+                announcemet.setUserName(cursor.getString(2));
+                announcemet.setPosNo(cursor.getInt(3));
+                announcemet.setMessage(cursor.getString(4));
+                announcemet.setIsShow(cursor.getInt(5));
+
+
+                announcementArrayList.add(announcemet);
+            } while (cursor.moveToNext());
+        }
+        return announcementArrayList;
+    }
+
+
+    public ArrayList<ZReport> getAllZReport() {
+        ArrayList<ZReport> items = new ArrayList<>();
+
+        String selectQuery = "SELECT  * FROM " + Z_REPORT_TABLE;
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                ZReport zReport = new ZReport();
+
+                zReport.setDate(cursor.getString(0));
+                zReport.setUserNo(cursor.getInt(1));
+                zReport.setUserName(cursor.getString(2));
+                zReport.setPosNo(cursor.getInt(3));
+                zReport.setSerial(cursor.getInt(4));
+
+                items.add(zReport);
+            } while (cursor.moveToNext());
+        }
+        return items;
+    }
+
+
+
     public ArrayList<OrderTransactions> getXReport(String shiftName,String PosNo ,String fDate ,String toDate ) {
         ArrayList<OrderTransactions> orderTransactionsArrayList = new ArrayList<>();
 
@@ -3387,6 +3546,39 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return orderTransactionsArrayList;
     }
 
+    public ArrayList<OrderHeader> getUserNameReport(String userName,String PosNo ,String fDate ,String toDate ) {
+        ArrayList<OrderHeader> orderHeaderArrayList = new ArrayList<>();
+
+        String selectQuery ="SELECT USER_NAME , COUNT(*) , COALESCE(SUM(AMOUNT_DUE),-1) FROM ORDER_HEADER " +
+                "WHERE USER_NAME = "+userName+" and POINT_OF_SALE_NUMBER= "+PosNo+" AND VOUCHER_DATE BETWEEN '"+fDate+"' AND '"+toDate+"' GROUP BY USER_NAME" ;
+
+//        String selectQuery ="SELECT ITEM_NAME, COALESCE(SUM(TOTAL),-1),COALESCE(SUM (TAX_VLUE),-1) FROM ORDER_TRANSACTIONS " +
+//               "WHERE SHIFT_NAME = "+shiftName+" and POS_NO= "+PosNo+" GROUP BY ITEM_NAME" ;
+
+        Log.e("se123",""+selectQuery);
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                OrderHeader orderHeader = new OrderHeader();
+
+                orderHeader.setUserName(cursor.getString(0));
+                orderHeader.setTime(cursor.getString(1));
+                orderHeader.setAmountDue(Double.parseDouble(cursor.getString(2)));
+
+                orderHeaderArrayList.add(orderHeader);
+
+            } while (cursor.moveToNext());
+        }
+
+        Log.e("orderTrans ::: ",""+orderHeaderArrayList.toString());
+
+        return orderHeaderArrayList;
+    }
+
+
     public ArrayList<VoidResons> getAllVoidReasons() {
         ArrayList<VoidResons> reasons = new ArrayList<>();
 
@@ -3427,6 +3619,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         // updating row
         db.update(USED_CATEGORIES, values, CATEGORY_NAME + " = '" + usedCategories.getCategoryName() + "'", null);
     }
+
+    public void updateAnnounementIsShow(String message,String date) {
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        String filter=MESSAGE18 + " = '" + message  + "' and " +ANNOUNCEMENT_DATE18 +"= '"+date+"'";
+        values.put(IS_SHOW18, 1);
+
+        // updating row
+        db.update(ANNOUNCEMENT_TABLE, values, filter, null);
+    }
+
 
     public void updateBlindCloseDetails(int transNo, String catName, int catQty, double catValue, double catTotal, String date,
                                         String time, int userNo, String userName) {

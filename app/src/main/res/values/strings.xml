@@ -437,4 +437,10 @@
     <string name="tiller_ok">Tiller Ok</string>
     <string name="print_denomination">Print Denomination</string>
     <string name="move_change_over_to_another_user">Move Change Over To Another User</string>
+    <string name="user_order_count">User Order Count</string>
+    <string name="announ_date">Announ.Date</string>
+    <string name="message">Message</string>
+    <string name="update">Update</string>
+    <string name="user_name_">User Name</string>
+    <string name="net_total_">Net Total</string>
 </resources>

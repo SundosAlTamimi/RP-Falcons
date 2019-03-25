@@ -1,9 +1,13 @@
 package com.tamimi.sundos.restpos;
 
+import android.animation.Animator;
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -14,6 +18,7 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
@@ -21,6 +26,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextClock;
@@ -28,6 +34,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tamimi.sundos.restpos.BackOffice.BackOfficeActivity;
+import com.tamimi.sundos.restpos.Models.Announcemet;
 import com.tamimi.sundos.restpos.Models.BlindClose;
 import com.tamimi.sundos.restpos.Models.BlindCloseDetails;
 import com.tamimi.sundos.restpos.Models.Cashier;
@@ -58,6 +65,7 @@ public class Main extends AppCompatActivity {
     String today;
     TextView focusedTextView;
     TableLayout categories;
+    TableLayout AnnouncementTable;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -67,7 +75,6 @@ public class Main extends AppCompatActivity {
         setContentView(R.layout.main);
 
         mDHandler = new DatabaseHandler(Main.this);
-
         focusedTextView = null;
         initialize();
 
@@ -79,6 +86,9 @@ public class Main extends AppCompatActivity {
         date.setText(today);
         userName.setText(Settings.user_name);
         shift.setText("Shift: " + mDHandler.getOpenedShifts(today, 1).getShiftName());
+
+        showAnnouncement();
+
 
     }
 
@@ -183,6 +193,62 @@ public class Main extends AppCompatActivity {
             return false;
         }
     };
+
+
+    void showAnnouncement(){
+        ArrayList<Announcemet> announcemets=new ArrayList<>();
+        announcemets=mDHandler.getAllTableAnnouncement();
+        int count=0;
+        for(int i=0;i<announcemets.size();i++){
+            if(announcemets.get(i).getIsShow()== 0){
+                if(announcemets.get(i).getUserName().equals(Settings.user_name)||announcemets.get(i).getUserName().equals("All")) {
+                    if (announcemets.get(i).getPosNo() == (Settings.POS_number) || announcemets.get(i).getPosNo() == (-1)) {
+                        if(announcemets.get(i).getShiftName().equals(Settings.shift_name)||announcemets.get(i).getShiftName().equals("All")) {
+                        count++;
+                        final TableRow row = new TableRow(Main.this);
+
+                        TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
+                        lp.setMargins(0, 5, 0, 5);
+                        row.setLayoutParams(lp);
+
+
+                        TextView textView = new TextView(Main.this);
+                        textView.setText("" + count + ") " + announcemets.get(i).getMessage());
+
+
+                        textView.setTextColor(ContextCompat.getColor(Main.this, R.color.exit_hover));
+                        textView.setGravity(Gravity.START);
+
+                        TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+                        textView.setLayoutParams(lp2);
+                        textView.setTextSize(16);
+
+                        row.addView(textView);
+
+                        AnnouncementTable.addView(row);
+                        mDHandler.updateAnnounementIsShow(announcemets.get(i).getMessage(), announcemets.get(i).getAnnouncementDate());
+                            blinkAnnouncement(textView);
+                    }
+                }
+
+
+                    }
+                }
+            }
+        }
+
+        @SuppressLint("WrongConstant")
+        void blinkAnnouncement(TextView text){
+
+            ObjectAnimator objectAnimator= ObjectAnimator.ofInt(text,"textColor",Color.WHITE,Color.RED,Color.WHITE);
+            objectAnimator.setDuration(2000);
+            objectAnimator.setEvaluator(new ArgbEvaluator());
+            objectAnimator.setRepeatMode(Animation.REVERSE);
+            objectAnimator.setRepeatCount(Animation.INFINITE);
+            objectAnimator.start();
+
+        }
+
 
     @SuppressLint("ClickableViewAccessibility")
     void showCashierInDialog() {
@@ -1366,6 +1432,7 @@ public class Main extends AppCompatActivity {
         timeCard = (TextView) findViewById(R.id.time_card);
         safeMode = (TextView) findViewById(R.id.safe_mode);
         cashDrawer = (TextView) findViewById(R.id.cash_drawer);
+        AnnouncementTable=(TableLayout)findViewById(R.id.AnnouncmentTable);
 
         back.setOnClickListener(onClickListener);
         exit.setOnClickListener(onClickListener);
