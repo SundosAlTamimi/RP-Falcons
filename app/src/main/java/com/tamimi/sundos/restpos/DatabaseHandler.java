@@ -50,7 +50,7 @@ import java.util.List;
 public class DatabaseHandler extends SQLiteOpenHelper {
     //hellohjt
     // Database Version
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 8;
 
     // Database Name
     private static final String DATABASE_NAME = "RestPos";
@@ -387,6 +387,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String OTHER_PAYMENTS_DIFF11 = "OTHER_PAYMENTS_DIFF";
     private static final String TILL_OK11 = "TILL_OK";
     private static final String TRANS_TYPE11 = "TRANS_TYPE";
+    private static final String REASON11 = "REASON";
+    private static final String TO_USER11 = "TO_USER";
 
     //____________________________________________________________________________________
     private static final String BLIND_CLOSE_DETAILS = "BLIND_CLOSE_DETAILS";
@@ -934,7 +936,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + USER_OTHER_PAYMENTS11 + " INTEGER,"
                 + OTHER_PAYMENTS_DIFF11 + " INTEGER,"
                 + TILL_OK11 + " INTEGER,"
-                + TRANS_TYPE11 + " INTEGER" + ")";
+                + TRANS_TYPE11 + " INTEGER,"
+                + REASON11 + " TEXT,"
+                + TO_USER11 + " TEXT" + ")";
         db.execSQL(CREATE_TABLE_BLIND_CLOSE);
 
         //___________________________________________________________________________________
@@ -1106,26 +1110,27 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 //       //Create tables again
 //        onCreate(db);
 
-//        db.execSQL("ALTER TABLE CANCEL_ORDER ADD POS_NO TEXT NOT NULL DEFAULT '4'");
+        db.execSQL("ALTER TABLE BLIND_CLOSE ADD REASON TEXT NOT NULL DEFAULT ''");
+        db.execSQL("ALTER TABLE BLIND_CLOSE ADD TO_USER TEXT NOT NULL DEFAULT ''");
 //        db.execSQL("ALTER TABLE ORDER_HEADER_TEMP ADD TIME TEXT NOT NULL DEFAULT '01:30'");
 //        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS_TEMP ADD TIME TEXT NOT NULL DEFAULT '01:30'");
 //        db.execSQL("ALTER TABLE PAY_METHOD ADD TIME TEXT NOT NULL DEFAULT '01:30'");
 
 
-        String CREATE_TABLE_TABLE_ACTIONS = "CREATE TABLE " + TABLE_ACTIONS + "("
-                + POS_NO16 + " INTEGER,"
-                + USER_NO16 + " INTEGER,"
-                + USER_NAME16 + " TEXT,"
-                + SHIFT_NAME16 + " TEXT,"
-                + SHIFT_NO16 + " INTEGER,"
-                + ACTION_TYPE16 + " INTEGER,"
-                + ACTION_DATE16 + " TEXT,"
-                + ACTION_TIME16 + " TEXT,"
-                + TABLE_NO16 + " INTEGER,"
-                + SECTION_NO16 + " INTEGER ,"
-                + TO_TABLE16 + " INTEGER ,"
-                + TO_SECTION16 + " INTEGER " + ")";
-        db.execSQL(CREATE_TABLE_TABLE_ACTIONS);
+//        String CREATE_TABLE_TABLE_ACTIONS = "CREATE TABLE " + TABLE_ACTIONS + "("
+//                + POS_NO16 + " INTEGER,"
+//                + USER_NO16 + " INTEGER,"
+//                + USER_NAME16 + " TEXT,"
+//                + SHIFT_NAME16 + " TEXT,"
+//                + SHIFT_NO16 + " INTEGER,"
+//                + ACTION_TYPE16 + " INTEGER,"
+//                + ACTION_DATE16 + " TEXT,"
+//                + ACTION_TIME16 + " TEXT,"
+//                + TABLE_NO16 + " INTEGER,"
+//                + SECTION_NO16 + " INTEGER ,"
+//                + TO_TABLE16 + " INTEGER ,"
+//                + TO_SECTION16 + " INTEGER " + ")";
+//        db.execSQL(CREATE_TABLE_TABLE_ACTIONS);
 
     }
 
@@ -1291,6 +1296,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(OTHER_PAYMENTS_DIFF11, obj.getOthersDiff());
         values.put(TILL_OK11, obj.getTillOk());
         values.put(TRANS_TYPE11, obj.getTransType());
+        values.put(REASON11, obj.getReason());
+        values.put(TO_USER11, obj.getToUser());
 
         db.insert(BLIND_CLOSE, null, values);
 
@@ -3042,6 +3049,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 shift.setOthersDiff(Double.parseDouble(cursor.getString(16)));
                 shift.setTillOk(Integer.parseInt(cursor.getString(17)));
                 shift.setTransType(Integer.parseInt(cursor.getString(18)));
+                shift.setReason(cursor.getString(19));
+                shift.setToUser(cursor.getString(20));
 
                 shifts.add(shift);
 
@@ -3054,6 +3063,42 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ArrayList<BlindCloseDetails> shifts = new ArrayList<>();
 
         String selectQuery = "SELECT * FROM " + BLIND_CLOSE_DETAILS;
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                BlindCloseDetails shift = new BlindCloseDetails();
+
+                shift.setTransNo(Integer.parseInt(cursor.getString(0)));
+                shift.setDate(cursor.getString(1));
+                shift.setTime(cursor.getString(2));
+                shift.setPOSNo(Integer.parseInt(cursor.getString(3)));
+                shift.setShiftNo(Integer.parseInt(cursor.getString(4)));
+                shift.setShiftName(cursor.getString(5));
+                shift.setUserNo(Integer.parseInt(cursor.getString(6)));
+                shift.setUserName(cursor.getString(7));
+                shift.setCatName(cursor.getString(8));
+                shift.setCatQty(Integer.parseInt(cursor.getString(9)));
+                shift.setCatValue(Double.parseDouble(cursor.getString(10)));
+                shift.setCatTotal(Double.parseDouble(cursor.getString(11)));
+                shift.setType(cursor.getString(12));
+                shift.setUpdateDate(cursor.getString(13));
+                shift.setUpdateTime(cursor.getString(14));
+                shift.setUpdateUserNo(Integer.parseInt(cursor.getString(15)));
+                shift.setUpdateUserName(cursor.getString(16));
+
+                shifts.add(shift);
+
+            } while (cursor.moveToNext());
+        }
+        return shifts;
+    }
+
+    public ArrayList<BlindCloseDetails> getBlindCloseDetails(int transNo) {
+        ArrayList<BlindCloseDetails> shifts = new ArrayList<>();
+
+        String selectQuery = "SELECT * FROM " + BLIND_CLOSE_DETAILS + " where TRANS_NO = '" + transNo +"'";
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -3381,6 +3426,60 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         // updating row
         db.update(USED_CATEGORIES, values, CATEGORY_NAME + " = '" + usedCategories.getCategoryName() + "'", null);
+    }
+
+    public void updateBlindCloseDetails(int transNo, String catName, int catQty, double catValue, double catTotal, String date,
+                                        String time, int userNo, String userName) {
+
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(CAT_QTY12, catQty);
+        values.put(CAT_TOTAL12, catTotal);
+        values.put(CAT_VALUE12, catValue);
+        values.put(UPDATE_DATE12, date);
+        values.put(UPDATE_TIME12, time);
+        values.put(UPDATE_USER_NO12, userNo);
+        values.put(UPDATE_USER_NAME12, userName);
+
+        // updating row
+        db.update(BLIND_CLOSE_DETAILS, values, "TRANS_NO = '" + transNo + "' and CAT_NAME = '" + catName + "'", null);
+    }
+
+    public void updateBlindClose(int transNo, double physical, double diff, double otherPayments, double diff2) {
+
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(USER_SALES11, physical);
+        values.put(SALES_DIFF11, diff);
+        values.put(USER_OTHER_PAYMENTS11, otherPayments);
+        values.put(OTHER_PAYMENTS_DIFF11, diff2);
+
+        // updating row
+        db.update(BLIND_CLOSE, values, "TRANS_NO = '" + transNo + "'", null);
+    }
+
+    public void updateBlindCloseTillOk(int transNo) {
+
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(TILL_OK11, 1);
+
+        // updating row
+        db.update(BLIND_CLOSE, values, "TRANS_NO = '" + transNo + "'", null);
+    }
+
+    public void updateBlindCloseReason(int transNo , String reason) {
+
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(REASON11, reason);
+
+        // updating row
+        db.update(BLIND_CLOSE, values, "TRANS_NO = '" + transNo + "'", null);
     }
 
     public void moveTablesTemp(int oldSectionNo, int oldTableNo, int sectionNo, int tableNo) {

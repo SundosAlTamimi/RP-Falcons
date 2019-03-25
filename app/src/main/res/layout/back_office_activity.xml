@@ -18,7 +18,7 @@
             android:layout_gravity="center"
             android:layout_marginVertical="5dp"
             android:background="@drawable/management_lable"
-            android:orientation="vertical"/>
+            android:orientation="vertical" />
 
         <Button
             android:id="@+id/b_sales"
@@ -27,7 +27,7 @@
             android:layout_gravity="center"
             android:layout_marginVertical="5dp"
             android:background="@drawable/sales_lable"
-            android:orientation="vertical"/>
+            android:orientation="vertical" />
 
         <Button
             android:id="@+id/b_customers"
@@ -36,16 +36,16 @@
             android:layout_gravity="center"
             android:layout_marginVertical="5dp"
             android:background="@drawable/customers_lable"
-            android:orientation="vertical"/>
+            android:orientation="vertical" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="200dp"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
         android:layout_marginVertical="17dp"
         android:orientation="vertical">
 
@@ -110,135 +110,196 @@
                 android:layout_gravity="center"
                 android:background="@color/text_color" />
 
-            <LinearLayout
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="220dp"
-                android:layout_marginHorizontal="20dp"
-                android:orientation="horizontal">
-
+                android:layout_height="match_parent"
+                android:layout_marginTop="15dp">
 
                 <LinearLayout
-                    android:id="@+id/announcement"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="18dp"
-                    android:layout_weight="1"
-                    android:gravity="center"
                     android:orientation="vertical">
 
-                    <ImageView
-                        android:layout_width="70dp"
-                        android:layout_height="70dp"
-                        android:layout_marginTop="5dp"
-                        android:background="@drawable/announcement2"
-                        android:scaleType="fitCenter" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="190dp"
+                        android:layout_marginHorizontal="20dp"
+                        android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_margin="20dp"
-                        android:gravity="center_horizontal"
-                        android:lineSpacingExtra="15dp"
-                        android:text="@string/announcement_"
-                        android:textColor="@color/text_color"
-                        android:textSize="18sp" />
+
+                        <LinearLayout
+                            android:id="@+id/announcement"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_margin="18dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="70dp"
+                                android:layout_height="70dp"
+                                android:layout_marginTop="5dp"
+                                android:background="@drawable/announcement2"
+                                android:scaleType="fitCenter" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_margin="20dp"
+                                android:gravity="center_horizontal"
+                                android:lineSpacingExtra="15dp"
+                                android:text="@string/announcement_"
+                                android:textColor="@color/text_color"
+                                android:textSize="18sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/gift_card"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_margin="18dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="90dp"
+                                android:layout_height="80dp"
+                                android:layout_marginTop="5dp"
+                                android:background="@drawable/gift_card"
+                                android:scaleType="fitCenter" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_margin="20dp"
+                                android:gravity="center_horizontal"
+                                android:lineSpacingExtra="15dp"
+                                android:text="@string/gift_card"
+                                android:textColor="@color/text_color"
+                                android:textSize="18sp" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="190dp"
+                        android:layout_marginHorizontal="20dp"
+                        android:orientation="horizontal">
+
+
+                        <LinearLayout
+                            android:id="@+id/employee_click_out"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_margin="18dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="80dp"
+                                android:layout_height="80dp"
+                                android:layout_marginTop="5dp"
+                                android:background="@drawable/employee_clock"
+                                android:scaleType="fitCenter" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_margin="20dp"
+                                android:gravity="center_horizontal"
+                                android:lineSpacingExtra="15dp"
+                                android:text="@string/employee_clock_In_Out"
+                                android:textColor="@color/text_color"
+                                android:textSize="18sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/menu_search"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_margin="18dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="90dp"
+                                android:layout_height="80dp"
+                                android:layout_marginTop="5dp"
+                                android:background="@drawable/menu_search"
+                                android:scaleType="fitCenter" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_margin="20dp"
+                                android:gravity="center_horizontal"
+                                android:lineSpacingExtra="15dp"
+                                android:text="@string/menu_search"
+                                android:textColor="@color/text_color"
+                                android:textSize="18sp" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="190dp"
+                        android:layout_marginHorizontal="20dp"
+                        android:orientation="horizontal">
+
+
+                        <LinearLayout
+                            android:id="@+id/re_cancellation_supervisor"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_margin="18dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="70dp"
+                                android:layout_height="70dp"
+                                android:layout_marginTop="5dp"
+                                android:background="@drawable/recancellation"
+                                android:scaleType="fitCenter" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_margin="20dp"
+                                android:gravity="center_horizontal"
+                                android:lineSpacingExtra="15dp"
+                                android:text="@string/re_cancellation_supervisor"
+                                android:textColor="@color/text_color"
+                                android:textSize="18sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_margin="18dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
                 </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/gift_card"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_margin="18dp"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="90dp"
-                        android:layout_height="80dp"
-                        android:layout_marginTop="5dp"
-                        android:background="@drawable/gift_card"
-                        android:scaleType="fitCenter" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_margin="20dp"
-                        android:gravity="center_horizontal"
-                        android:lineSpacingExtra="15dp"
-                        android:text="@string/gift_card"
-                        android:textColor="@color/text_color"
-                        android:textSize="18sp" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="220dp"
-                android:layout_marginHorizontal="20dp"
-                android:orientation="horizontal">
-
-
-                <LinearLayout
-                    android:id="@+id/employee_click_out"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_margin="18dp"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:layout_marginTop="5dp"
-                        android:background="@drawable/employee_clock"
-                        android:scaleType="fitCenter" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_margin="20dp"
-                        android:gravity="center_horizontal"
-                        android:lineSpacingExtra="15dp"
-                        android:text="@string/employee_clock_In_Out"
-                        android:textColor="@color/text_color"
-                        android:textSize="18sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/menu_search"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_margin="18dp"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="90dp"
-                        android:layout_height="80dp"
-                        android:layout_marginTop="5dp"
-                        android:background="@drawable/menu_search"
-                        android:scaleType="fitCenter" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_margin="20dp"
-                        android:gravity="center_horizontal"
-                        android:lineSpacingExtra="15dp"
-                        android:text="@string/menu_search"
-                        android:textColor="@color/text_color"
-                        android:textSize="18sp" />
-                </LinearLayout>
-
-            </LinearLayout>
+            </ScrollView>
 
         </LinearLayout>
 
@@ -330,39 +391,41 @@
                 </LinearLayout>
 
             </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="220dp"
-            android:layout_marginHorizontal="20dp"
-            android:orientation="horizontal">
+
             <LinearLayout
-                android:id="@+id/customer_reg"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_margin="18dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
+                android:layout_marginHorizontal="20dp"
+                android:orientation="horizontal">
 
-                <ImageView
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/register_icon"
-                    android:scaleType="fitCenter"/>
+                <LinearLayout
+                    android:id="@+id/customer_reg"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="18dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_margin="20dp"
-                    android:gravity="center_horizontal"
-                    android:lineSpacingExtra="15dp"
-                    android:text="@string/Customer_Registration"
-                    android:textColor="@color/text_color"
-                    android:textSize="18sp" />
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/register_icon"
+                        android:scaleType="fitCenter" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="20dp"
+                        android:gravity="center_horizontal"
+                        android:lineSpacingExtra="15dp"
+                        android:text="@string/Customer_Registration"
+                        android:textColor="@color/text_color"
+                        android:textSize="18sp" />
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -1620,7 +1683,6 @@
                         </LinearLayout>
 
                         <LinearLayout
-                            android:id="@+id/re_cancellation_supervisor_report"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_margin="15dp"
@@ -1638,7 +1700,6 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
                                 android:layout_margin="10dp"
-                                android:text="@string/re_cancellation_supervisor_report"
                                 android:textColor="@color/text_color"
                                 android:textSize="16sp" />
                         </LinearLayout>
