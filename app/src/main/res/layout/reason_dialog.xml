@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@color/layer3"
+    android:layout_width="500dp"
+    android:padding="10dp"
+    android:layout_height="400dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="30sp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/enter_reason"
+            android:layout_marginHorizontal="20dp"
+            android:textSize="20sp"
+            android:textColor="@color/text_color"
+            android:gravity="center"/>
+
+        <EditText
+            android:id="@+id/reasonBox"
+            android:layout_width="400dp"
+            android:layout_height="200dp"
+            android:padding="10dp"
+            android:gravity="top"
+            android:layout_marginTop="10dp"
+            android:background="@color/layer1"
+            android:textColor="@color/text_color"
+            android:textSize="20sp"
+            android:inputType="text"
+            />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/done"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_margin="30dp"
+        android:background="@drawable/done_buttons"
+        android:text="@string/done"
+        android:textColor="@color/text_color"
+        android:textSize="17sp" />
+
+</LinearLayout>

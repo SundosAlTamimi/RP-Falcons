@@ -194,6 +194,8 @@
     <string name="simple_sales_total_report">Simple sales Total Report</string>
     <string name="user_order_count_report">User Order Count Report</string>
     <string name="re_cancellation_report">Re-Cancellation Report</string>
+    <string name="re_cancellation_supervisor">Re-Cancellation Supervisor</string>
+    <string name="enter_reason">Enter Reason :</string>
     <string name="re_cancellation_supervisor_report">Re-Cancellation Supervisor Report</string>
     <string name="sales_volume_by_item_type">Sales Volume By Item Type</string>
     <string name="sales_by_employee">Sales By Employee</string>
@@ -376,8 +378,10 @@
     <string name="net_sales">Net Sales :</string>
     <string name="net">Net</string>
     <string name="sales">Sales :</string>
+    <string name="sales_">Sales</string>
     <string name="user">User</string>
     <string name="shift_name">Shift Name</string>
+    <string name="shift">Shift</string>
     <string name="to_date">to Date :</string>
     <string name="from_date">From Date :</string>
     <string name="total_payMethod">Total PayMethod</string>
@@ -391,6 +395,15 @@
     <string name="master">Master</string>
     <string name="Preview"> Preview </string>
     <string name="export">Export</string>
+    <string name="final_close">Final Close</string>
+    <string name="change_over">Change Over</string>
+    <string name="physical">Physical</string>
+    <string name="difference">Difference</string>
+    <string name="reason">Reason</string>
+    <string name="to_user">To User</string>
+    <string name="update_by">Update By</string>
+    <string name="till_ok">Till Ok</string>
+    <string name="kind">Kind</string>
 
     <string name="cashier_no">Cashier No</string>
 
@@ -418,6 +431,12 @@
     <string name="net_salesM">Net Sales</string>
     <string name="sale_before_tax">Sale Before Tax</string>
     <string name="market_report">Market Report</string>
+    <string name="admin_ok">Admin Ok</string>
+
+    <string name="update_blind_close">Update Blind Close</string>
+    <string name="tiller_ok">Tiller Ok</string>
+    <string name="print_denomination">Print Denomination</string>
+    <string name="move_change_over_to_another_user">Move Change Over To Another User</string>
     <string name="user_order_count">User Order Count</string>
     <string name="announ_date">Announ.Date</string>
     <string name="message">Message</string>

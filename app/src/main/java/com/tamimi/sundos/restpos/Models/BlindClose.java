@@ -20,13 +20,15 @@ public class BlindClose {
     private double othersDiff;
     private int tillOk;
     private int transType;
+    private String reason;
+    private String toUser;
 
     public BlindClose(){
     }
 
     public BlindClose(int transNo, String date, String time, int POSNo, int shiftNo, String shiftName, int userNo, String userName,
                       double sysSales, double userSales, double salesDiff, double sysCash, double userCash, double cashDiff,
-                      double sysOthers, double userOthers, double othersDiff, int tillOk, int transType) {
+                      double sysOthers, double userOthers, double othersDiff, int tillOk, int transType, String reason, String toUser) {
         this.transNo = transNo;
         this.date = date;
         this.time = time;
@@ -46,6 +48,8 @@ public class BlindClose {
         this.othersDiff = othersDiff;
         this.tillOk = tillOk;
         this.transType = transType;
+        this.reason = reason;
+        this.toUser = toUser;
     }
 
     public int getTransNo() {
@@ -198,5 +202,21 @@ public class BlindClose {
 
     public void setTransType(int transType) {
         this.transType = transType;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
+    public String getToUser() {
+        return toUser;
+    }
+
+    public void setToUser(String toUser) {
+        this.toUser = toUser;
     }
 }

@@ -22,7 +22,10 @@ import android.view.animation.Animation;
 import android.widget.Button;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -76,7 +79,6 @@ public class Main extends AppCompatActivity {
         initialize();
 
 
-
         Date currentTimeAndDate = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
         today = df.format(currentTimeAndDate);
@@ -116,8 +118,8 @@ public class Main extends AppCompatActivity {
 ////                        intent.putExtra("flag", "0");
 //                        startActivity(intent);
 //                    } else {
-                        Intent intent = new Intent(Main.this, DineIn.class);
-                        startActivity(intent);
+                    Intent intent = new Intent(Main.this, DineIn.class);
+                    startActivity(intent);
 //                    }
                     break;
 
@@ -452,7 +454,7 @@ public class Main extends AppCompatActivity {
                             TextView text = (TextView) tableRow.getChildAt(0);
                             TextView text2 = (TextView) tableRow.getChildAt(2);
 
-                           double total = Double.parseDouble(text.getTag().toString()) * Double.parseDouble(focusedTextView.getText().toString());
+                            double total = Double.parseDouble(text.getTag().toString()) * Double.parseDouble(focusedTextView.getText().toString());
                             text2.setText("" + total);
                         }
 
@@ -519,6 +521,10 @@ public class Main extends AppCompatActivity {
         final ArrayList<Money> money = mDHandler.getAllMoneyCategory();
 
         categories = (TableLayout) dialog.findViewById(R.id.money_categories);
+        RadioGroup transType = dialog.findViewById(R.id.transType);
+        RadioButton finalClose = dialog.findViewById(R.id.finalClose);
+        RadioButton changeOver = dialog.findViewById(R.id.changeOver);
+        EditText toUser = dialog.findViewById(R.id.toUser);
         final TextView cashTotals = (TextView) dialog.findViewById(R.id.cashTotal);
         final TextView creditCard = (TextView) dialog.findViewById(R.id.creditCard);
         final TextView cheque = (TextView) dialog.findViewById(R.id.cheque);
@@ -532,6 +538,23 @@ public class Main extends AppCompatActivity {
         user.setText(Settings.user_name);
 
         date.setText(today);
+
+        final int[] tranType = {0};
+        finalClose.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                tranType[0] = 0;
+                toUser.setText("");
+                toUser.setEnabled(true);
+            }
+        });
+        changeOver.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                tranType[0] = 1;
+                toUser.setEnabled(false);
+            }
+        });
 
         Button b1, b2, b3, b4, b5, b6, b7, b8, b9, b0, clear, save;
         b1 = (Button) dialog.findViewById(R.id.b1);
@@ -635,94 +658,109 @@ public class Main extends AppCompatActivity {
                 point.setText("0.00");
                 otherPaymentTotal.setText("0.00");
                 mainTotal.setText("0.00");
+
+                toUser.setText("");
+                toUser.setEnabled(false);
+                finalClose.setChecked(true);
+                changeOver.setChecked(false);
+                tranType[0] = 0;
+
             }
         });
         save.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                ArrayList<OrderHeader> orderHeaders = mDHandler.getAllOrderHeader();
-                ArrayList<PayMethod> payMethods = mDHandler.getAllExistingPay();
+                if (finalClose.isChecked() || (changeOver.isChecked() && !toUser.getText().toString().equals(""))) {
+                    ArrayList<OrderHeader> orderHeaders = mDHandler.getAllOrderHeader();
+                    ArrayList<PayMethod> payMethods = mDHandler.getAllExistingPay();
 
-                int transNo = mDHandler.getAllBlindClose().size();
+                    int transNo = mDHandler.getAllBlindClose().size();
 
-                Date currentTimeAndDate = Calendar.getInstance().getTime();
-                SimpleDateFormat df = new SimpleDateFormat("hh:mm");
-                String time = df.format(currentTimeAndDate);
+                    Date currentTimeAndDate = Calendar.getInstance().getTime();
+                    SimpleDateFormat df = new SimpleDateFormat("hh:mm");
+                    String time = df.format(currentTimeAndDate);
 
-                double userSales = Double.parseDouble(mainTotal.getText().toString());
-                double sysSales = 0;
-                Log.e("tag***", "" + orderHeaders.get(0).getVoucherDate() + " == " + today + " && " + orderHeaders.get(0).getShiftName() + Settings.shift_name);
+                    double userSales = Double.parseDouble(mainTotal.getText().toString());
+                    double sysSales = 0;
+//                Log.e("tag***", "" + orderHeaders.get(0).getVoucherDate() + " == " + today + " && " + orderHeaders.get(0).getShiftName() + Settings.shift_name);
 
-                for (int i = 0; i < orderHeaders.size(); i++)
-                    if (orderHeaders.get(i).getVoucherDate().equals(today) && orderHeaders.get(i).getShiftName().equals(Settings.shift_name))
-                        sysSales += orderHeaders.get(i).getAmountDue();
+                    for (int i = 0; i < orderHeaders.size(); i++)
+                        if (orderHeaders.get(i).getVoucherDate().equals(today) && orderHeaders.get(i).getShiftName().equals(Settings.shift_name))
+                            sysSales += orderHeaders.get(i).getAmountDue();
 
-                double userCash = Double.parseDouble(cashTotals.getText().toString());
-                double sysCash = 0;
-                for (int i = 0; i < payMethods.size(); i++)
-                    if (payMethods.get(i).getVoucherDate().equals(today) && payMethods.get(i).getShiftName().equals(Settings.shift_name)
-                            && payMethods.get(i).getPayType().equals("Cash"))
-                        sysCash += payMethods.get(i).getPayValue();
+                    double userCash = Double.parseDouble(cashTotals.getText().toString());
+                    double sysCash = 0;
+                    for (int i = 0; i < payMethods.size(); i++)
+                        if (payMethods.get(i).getVoucherDate().equals(today) && payMethods.get(i).getShiftName().equals(Settings.shift_name)
+                                && payMethods.get(i).getPayType().equals("Cash"))
+                            sysCash += payMethods.get(i).getPayValue();
 
-                double userOthers = Double.parseDouble(otherPaymentTotal.getText().toString());
-                double sysOthers = 0;
-                for (int i = 0; i < payMethods.size(); i++)
-                    if (payMethods.get(i).getVoucherDate().equals(today) && payMethods.get(i).getShiftName().equals(Settings.shift_name)
-                            && !payMethods.get(i).getPayType().equals("Cash"))
-                        sysOthers += payMethods.get(i).getPayValue();
+                    double userOthers = Double.parseDouble(otherPaymentTotal.getText().toString());
+                    double sysOthers = 0;
+                    for (int i = 0; i < payMethods.size(); i++)
+                        if (payMethods.get(i).getVoucherDate().equals(today) && payMethods.get(i).getShiftName().equals(Settings.shift_name)
+                                && !payMethods.get(i).getPayType().equals("Cash"))
+                            sysOthers += payMethods.get(i).getPayValue();
 
-                mDHandler.addBlindClose(new BlindClose(transNo, today, time, Settings.POS_number, Settings.shift_number,
-                        Settings.shift_name, Settings.password, Settings.user_name, sysSales, userSales, userSales - sysSales,
-                        sysCash, userCash, userCash - sysCash, sysOthers, userOthers, userOthers - sysOthers, 0, 0));
+                    mDHandler.addBlindClose(new BlindClose(transNo, today, time, Settings.POS_number, Settings.shift_number,
+                            Settings.shift_name, Settings.password, Settings.user_name, sysSales, userSales, userSales - sysSales,
+                            sysCash, userCash, userCash - sysCash, sysOthers, userOthers, userOthers - sysOthers, 0, tranType[0],
+                            "", toUser.getText().toString()));
 
 
-                for (int i = 0; i < money.size(); i++) {
-                    TableRow tableRow = (TableRow) categories.getChildAt(i);
-                    TextView text = (TextView) tableRow.getChildAt(0);
-                    TextView text1 = (TextView) tableRow.getChildAt(1);
+                    for (int i = 0; i < money.size(); i++) {
+                        TableRow tableRow = (TableRow) categories.getChildAt(i);
+                        TextView text = (TextView) tableRow.getChildAt(0);
+                        TextView text1 = (TextView) tableRow.getChildAt(1);
 
-                    String catName = text.getText().toString();
-                    Double catValue = Double.parseDouble(text.getTag().toString());
-                    int catQty = Integer.parseInt(text1.getText().toString());
+                        String catName = text.getText().toString();
+                        Double catValue = Double.parseDouble(text.getTag().toString());
+                        int catQty;
+                        if (text1.getText().toString().equals(""))
+                            catQty = 0;
+                        else
+                            catQty = Integer.parseInt(text1.getText().toString());
 
-                    mDHandler.addBlindCloseDetails(new BlindCloseDetails(transNo, today, time, Settings.POS_number, Settings.shift_number,
-                            Settings.shift_name, Settings.password, Settings.user_name, catName, catQty, catValue, catQty * catValue,
-                            "Cash", today, time, -1, "no-user"));
-                }
+                        mDHandler.addBlindCloseDetails(new BlindCloseDetails(transNo, today, time, Settings.POS_number, Settings.shift_number,
+                                Settings.shift_name, Settings.password, Settings.user_name, catName, catQty, catValue, catQty * catValue,
+                                "Cash", "", "", -1, "no-user"));
+                    }
 
-                double creditCardValue = Double.parseDouble(creditCard.getText().toString());
-                double chequeValue = Double.parseDouble(cheque.getText().toString());
-                double giftCardValue = Double.parseDouble(giftCard.getText().toString());
-                double creditValue = Double.parseDouble(credit.getText().toString());
-                double pointValue = Double.parseDouble(point.getText().toString());
+                    double creditCardValue = Double.parseDouble(creditCard.getText().toString());
+                    double chequeValue = Double.parseDouble(cheque.getText().toString());
+                    double giftCardValue = Double.parseDouble(giftCard.getText().toString());
+                    double creditValue = Double.parseDouble(credit.getText().toString());
+                    double pointValue = Double.parseDouble(point.getText().toString());
 
-                if (creditCardValue != 0)
-                    mDHandler.addBlindCloseDetails(new BlindCloseDetails(transNo, today, time, Settings.POS_number, Settings.shift_number,
-                            Settings.shift_name, Settings.password, Settings.user_name, "Credit Card", 1, creditCardValue,
-                            creditCardValue, "Credit Card", today, time, -1, "no-user"));
+                    if (creditCardValue != 0)
+                        mDHandler.addBlindCloseDetails(new BlindCloseDetails(transNo, today, time, Settings.POS_number, Settings.shift_number,
+                                Settings.shift_name, Settings.password, Settings.user_name, "Credit Card", 1, creditCardValue,
+                                creditCardValue, "Credit Card", "", "", -1, "no-user"));
 
-                if (chequeValue != 0)
-                    mDHandler.addBlindCloseDetails(new BlindCloseDetails(transNo, today, time, Settings.POS_number, Settings.shift_number,
-                            Settings.shift_name, Settings.password, Settings.user_name, "Cheque", 1, chequeValue,
-                            chequeValue, "Cheque", today, time, -1, "no-user"));
+                    if (chequeValue != 0)
+                        mDHandler.addBlindCloseDetails(new BlindCloseDetails(transNo, today, time, Settings.POS_number, Settings.shift_number,
+                                Settings.shift_name, Settings.password, Settings.user_name, "Cheque", 1, chequeValue,
+                                chequeValue, "Cheque", "", "", -1, "no-user"));
 
-                if (giftCardValue != 0)
-                    mDHandler.addBlindCloseDetails(new BlindCloseDetails(transNo, today, time, Settings.POS_number, Settings.shift_number,
-                            Settings.shift_name, Settings.password, Settings.user_name, "Gift Card", 1, giftCardValue,
-                            giftCardValue, "Gift Card", today, time, -1, "no-user"));
+                    if (giftCardValue != 0)
+                        mDHandler.addBlindCloseDetails(new BlindCloseDetails(transNo, today, time, Settings.POS_number, Settings.shift_number,
+                                Settings.shift_name, Settings.password, Settings.user_name, "Gift Card", 1, giftCardValue,
+                                giftCardValue, "Gift Card", "", "", -1, "no-user"));
 
-                if (creditValue != 0)
-                    mDHandler.addBlindCloseDetails(new BlindCloseDetails(transNo, today, time, Settings.POS_number, Settings.shift_number,
-                            Settings.shift_name, Settings.password, Settings.user_name, "Credit", 1, creditValue,
-                            creditValue, "Credit", today, time, -1, "no-user"));
+                    if (creditValue != 0)
+                        mDHandler.addBlindCloseDetails(new BlindCloseDetails(transNo, today, time, Settings.POS_number, Settings.shift_number,
+                                Settings.shift_name, Settings.password, Settings.user_name, "Credit", 1, creditValue,
+                                creditValue, "Credit", "", "", -1, "no-user"));
 
-                if (pointValue != 0)
-                    mDHandler.addBlindCloseDetails(new BlindCloseDetails(transNo, today, time, Settings.POS_number, Settings.shift_number,
-                            Settings.shift_name, Settings.password, Settings.user_name, "Point", 1, pointValue,
-                            pointValue, "Point", today, time, -1, "no-user"));
+                    if (pointValue != 0)
+                        mDHandler.addBlindCloseDetails(new BlindCloseDetails(transNo, today, time, Settings.POS_number, Settings.shift_number,
+                                Settings.shift_name, Settings.password, Settings.user_name, "Point", 1, pointValue,
+                                pointValue, "Point", "", "", -1, "no-user"));
 
-                dialog.dismiss();
+                    dialog.dismiss();
+                } else
+                    Toast.makeText(Main.this, "Please enter 'to user' field", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -770,7 +808,7 @@ public class Main extends AppCompatActivity {
                             TextView text = (TextView) tableRow.getChildAt(0);
                             TextView text2 = (TextView) tableRow.getChildAt(2);
 
-                           double total = Double.parseDouble(text.getTag().toString()) * Double.parseDouble(focusedTextView.getText().toString());
+                            double total = Double.parseDouble(text.getTag().toString()) * Double.parseDouble(focusedTextView.getText().toString());
                             text2.setText("" + total);
                         }
 

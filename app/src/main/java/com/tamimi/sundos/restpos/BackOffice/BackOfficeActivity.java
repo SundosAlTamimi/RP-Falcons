@@ -10,10 +10,15 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -33,9 +38,12 @@ import android.widget.Toast;
 
 import com.tamimi.sundos.restpos.DatabaseHandler;
 import com.tamimi.sundos.restpos.DineInLayout;
+import com.tamimi.sundos.restpos.Models.BlindClose;
+import com.tamimi.sundos.restpos.Models.BlindCloseDetails;
 import com.tamimi.sundos.restpos.Models.Announcemet;
 import com.tamimi.sundos.restpos.Models.CancleOrder;
 import com.tamimi.sundos.restpos.Models.CategoryWithModifier;
+import com.tamimi.sundos.restpos.Models.Cheque;
 import com.tamimi.sundos.restpos.Models.CustomerPayment;
 import com.tamimi.sundos.restpos.Models.ForceQuestions;
 import com.tamimi.sundos.restpos.Models.ItemWithFq;
@@ -74,7 +82,7 @@ public class BackOfficeActivity extends AppCompatActivity {
 
     TableLayout jobTable;
     Button butManagement, butSales, butCustomers, butEmployees, butMenu, butSettings;
-    LinearLayout announcement, giftCard, employeeClockInOut, menuSearch;
+    LinearLayout announcement, giftCard, employeeClockInOut, menuSearch, reCancellationSupervisor;
     LinearLayout membershipGroup, membership, customerRegistration;
     LinearLayout jobGroup, employeeRegistration, employeeSchedule, payroll, vacation, editTables;
     LinearLayout menuCategory, menuRegistration, modifier, forceQuestion, voiding_reasons, menuLayout;
@@ -99,6 +107,10 @@ public class BackOfficeActivity extends AppCompatActivity {
     TableRow focusedRaw = null;
     int rawPosition = 0;
     Calendar myCalendar;
+    List<BlindCloseDetails> focusedRowData = null;
+    TableRow focusedRowReCancellation = null;
+    int visible = 0;
+    boolean clicked = false;
 
     ArrayList<ItemWithFq> itemWithFqsList;
     ArrayList<ItemWithModifier> itemWithModifiersList;
@@ -166,17 +178,16 @@ public class BackOfficeActivity extends AppCompatActivity {
                 case R.id.announcement:
                     addAnnouncementDialog();
                     break;
-
                 case R.id.gift_card:
                     break;
-
                 case R.id.employee_click_out:
                     showAddShiftDialog();
                     break;
-
                 case R.id.menu_search:
                     break;
-
+                case R.id.re_cancellation_supervisor:
+                    showReCancellationSupervisor();
+                    break;
                 case R.id.membership_group:
                     showMemberShipGroupDialog();
                     break;
@@ -184,169 +195,761 @@ public class BackOfficeActivity extends AppCompatActivity {
                     Intent intentCustomerRegistration = new Intent(BackOfficeActivity.this, CustomerRegistration.class);
                     startActivity(intentCustomerRegistration);
                     break;
-
                 case R.id.membership:
                     showCustomerPaymentDialog();
                     break;
-
                 case R.id.job_group:
                     showJobGroupDialog();
                     break;
-
                 case R.id.employee_registration:
                     Intent intentEmployeeRegistration = new Intent(BackOfficeActivity.this, EmployeeRegistration.class);
                     startActivity(intentEmployeeRegistration);
                     break;
-
                 case R.id.employee_schedule:
                     break;
-
                 case R.id.payroll:
-
                     break;
-
                 case R.id.vacation:
                     break;
-
                 case R.id.edit_tables_outhorization:
                     showEditTablesAuthorizationDialog();
                     break;
-
                 case R.id.menu_category:
-
                     break;
-
                 case R.id.menu_registration:
                     Intent intentMenuRegistration = new Intent(BackOfficeActivity.this, MenuRegistration.class);
                     startActivity(intentMenuRegistration);
                     break;
-
                 case R.id.menu_layout:
                     Intent intentOrderLayout = new Intent(BackOfficeActivity.this, OrderLayout.class);
                     startActivity(intentOrderLayout);
                     break;
-
                 case R.id.modifier:
                     showModifierDialog();
                     break;
-
                 case R.id.force_question:
                     showForceQuestionDialog();
                     break;
-
                 case R.id.voiding_reasons:
                     showAddVoidReasonsDialog();
                     break;
-
                 case R.id.store:
                     break;
-
                 case R.id.store_operation:
                     break;
-
                 case R.id.users:
-
                     break;
-
                 case R.id.money_category:
                     showMoneyCategoryDialog();
                     break;
-
                 case R.id.sales_total:
                     salesTotalReportDialog();
                     break;
-
                 case R.id.cashier_in_out:
                     cashierInOutReportDialog();
                     break;
-
                 case R.id.canceled_order_history:
                     showCanceledOrdersHistory();
                     break;
-
                 case R.id.x_report:
                     X_ReportDialog();
                     break;
-
                 case R.id.z_report:
                     Z_ReportDialog();
                     break;
-
                 case R.id.market_report_:
                     ShowMarketReport();
                     break;
-
                 case R.id.sales_report_for_day:
                     announcementReportDialog();
 
                     break;
-
                 case R.id.sales_by_houres:
                     showSalesPerHour();
                     break;
-
                 case R.id.sales_volume_by_item:
                     showSalesVolumeByItemType();
                     break;
-
                 case R.id.top_sales_item_report:
                     showTopSalesItemReport();
                     break;
-
                 case R.id.top_group_sales_report:
-
                     break;
-
                 case R.id.top_family_sales_report:
-
                     break;
-
                 case R.id.sales_report_by_cusromer:
                     break;
-
                 case R.id.sales_report_by_card_type:
                     ShowSalesReportByCardTypes();
                     break;
-
                 case R.id.waiter_sales_report:
                     waiterSalesReportDialog();
                     break;
-
                 case R.id.table_action_report:
                     showTablesActionReport();
                     break;
-
                 case R.id.profit_loss_report:
-
                     break;
-
                 case R.id.detail_sales_report:
-
                     break;
-
                 case R.id.simple_sales_total_report:
                     showSimpleSalesTotal();
                     break;
-
                 case R.id.sold_qty_report:
                     showSoldQtyReport();
                     break;
-
                 case R.id.user_order_count_report:
                     userOrderCountReportDialog();
                     break;
-
                 case R.id.re_cancellation_report:
-
+                    ShowReCancellationReport();
                     break;
-
-                case R.id.re_cancellation_supervisor_report:
-
-                    break;
-
             }
         }
     };
+
+    void showReCancellationSupervisor() {
+        dialog = new Dialog(BackOfficeActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.re_cancellationt_supervisor_dialog);
+        dialog.setCanceledOnTouchOutside(true);
+
+        LinearLayout hiddenLinear = (LinearLayout) dialog.findViewById(R.id.hiddenLinear);
+        TableLayout table = (TableLayout) dialog.findViewById(R.id.canceledTable);
+        TableLayout catTable = (TableLayout) dialog.findViewById(R.id.categoryTable);
+        EditText creditCard = (EditText) dialog.findViewById(R.id.creditCard);
+        EditText cheque = (EditText) dialog.findViewById(R.id.cheque);
+        EditText giftCard = (EditText) dialog.findViewById(R.id.giftCard);
+        EditText credit = (EditText) dialog.findViewById(R.id.credit);
+        EditText point = (EditText) dialog.findViewById(R.id.point);
+
+        Button exit = (Button) dialog.findViewById(R.id.exitReport);
+        Button preview = (Button) dialog.findViewById(R.id.doneReport);
+        Button export = (Button) dialog.findViewById(R.id.exportReport);
+        Button print = (Button) dialog.findViewById(R.id.printReport);
+
+        Button updateBlind = (Button) dialog.findViewById(R.id.updateBlindClose);
+        Button tillOk = (Button) dialog.findViewById(R.id.tillerOk);
+        Button printDenom = (Button) dialog.findViewById(R.id.print_denomination);
+        Button moveChangeOver = (Button) dialog.findViewById(R.id.move_change_over_to_another_user);
+
+        TextView date = (TextView) dialog.findViewById(R.id.frDate);
+
+        Spinner shiftName = (Spinner) dialog.findViewById(R.id.shiftName);
+        Spinner cashierNo = (Spinner) dialog.findViewById(R.id.casherNo);
+        Spinner PosNo = (Spinner) dialog.findViewById(R.id.posNo);
+
+        CheckBox adminOkCheck = dialog.findViewById(R.id.admin_ok);
+
+        date.setText(today);
+        ArrayList<String> shiftNameArray = new ArrayList<>();
+        ArrayList<String> userArray = new ArrayList<>();
+        ArrayList<String> posNoArray = new ArrayList<>();
+
+        for (int i = 0; i < mDHandler.getAllShifts().size(); i++) {
+            shiftNameArray.add(mDHandler.getAllShifts().get(i).getShiftName());
+        }
+        shiftNameArray.add(0, "All");
+
+        for (int i = 0; i < mDHandler.getAllEmployeeRegistration().size(); i++) {
+            if (mDHandler.getAllEmployeeRegistration().get(i).getEmployeeType() == 0) {
+                userArray.add(String.valueOf(mDHandler.getAllEmployeeRegistration().get(i).getEmployeeNO()));
+            }
+        }
+        userArray.add(0, "All");
+
+        posNoArray.add("All");
+        posNoArray.add("4");
+        posNoArray.add("7");
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, shiftNameArray);
+        shiftName.setAdapter(adapter);
+
+        ArrayAdapter<String> adapterUser = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, userArray);
+        cashierNo.setAdapter(adapterUser);
+
+        ArrayAdapter<String> adapterPosNo = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, posNoArray);
+        PosNo.setAdapter(adapterPosNo);
+
+
+        date.setOnClickListener(v -> new DatePickerDialog(BackOfficeActivity.this, dateListener(date), myCalendar
+                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH)).show());
+
+        List<BlindClose> blindCloseList = mDHandler.getAllBlindClose();
+        List<BlindCloseDetails> blindCloseDetailsList = mDHandler.getAllBlindCloseDetails();
+
+        preview.setOnClickListener(v -> {
+
+            table.removeAllViews();
+
+            int adminOk = adminOkCheck.isChecked() ? 1 : 0;
+
+            int CashierNo = -1;
+            if (cashierNo.getSelectedItem().toString().equals("All"))
+                CashierNo = -1;
+            else
+                CashierNo = Integer.parseInt(cashierNo.getSelectedItem().toString());
+
+            String ShiftName = shiftName.getSelectedItem().toString();
+
+            int posNoString = -1;
+            if (PosNo.getSelectedItem().toString().equals("All"))
+                posNoString = -1;
+            else
+                posNoString = Integer.parseInt(PosNo.getSelectedItem().toString());
+
+            for (int i = 0; i < blindCloseList.size(); i++) {
+                try {
+                    if (formatDate(date.getText().toString()).equals(formatDate(blindCloseList.get(i).getDate()))) {
+                        if (blindCloseList.get(i).getShiftName().equals(ShiftName) || ShiftName.equals("All")) {
+                            if (blindCloseList.get(i).getUserNo() == CashierNo || CashierNo == -1) {
+                                if (blindCloseList.get(i).getPOSNo() == posNoString || posNoString == -1) {
+                                    if (adminOk == blindCloseList.get(i).getTillOk() || adminOk == 0) {
+//
+                                        String remark = "-";
+                                        if (blindCloseList.get(i).getSalesDiff() < 0)
+                                            remark = "short";
+                                        if (blindCloseList.get(i).getSalesDiff() > 0)
+                                            remark = "over";
+
+                                        String type = "close";
+                                        if (blindCloseList.get(i).getTransType() == 1)
+                                            type = "change over";
+
+                                        double changeOverValue = 0;
+                                        for (int k = 0; k < blindCloseList.size(); k++) {
+                                            if (blindCloseList.get(i).getUserName().equals(blindCloseList.get(k).getToUser())) {
+                                                changeOverValue = blindCloseList.get(k).getUserSales();
+                                                break;
+                                            }
+                                        }
+
+                                        String updateName = "no-user";
+                                        for (int k = 0; k < blindCloseDetailsList.size(); k++) {
+                                            if (blindCloseList.get(i).getTransNo() == blindCloseDetailsList.get(k).getTransNo()
+                                                    && !blindCloseDetailsList.get(k).getUpdateUserName().equals("no-user")) {
+
+                                                updateName = blindCloseDetailsList.get(k).getUpdateUserName();
+                                                break;
+                                            }
+                                        }
+
+                                        TableRow row = new TableRow(BackOfficeActivity.this);
+
+                                        TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
+                                        row.setLayoutParams(lp);
+
+                                        for (int k = 0; k < 13; k++) {
+                                            TextView textView = new TextView(BackOfficeActivity.this);
+
+                                            switch (k) {
+                                                case 0:
+                                                    textView.setText(blindCloseList.get(i).getShiftName());
+                                                    break;
+                                                case 1:
+                                                    textView.setText(blindCloseList.get(i).getUserName());
+                                                    break;
+                                                case 2:
+                                                    textView.setText("" + blindCloseList.get(i).getPOSNo());
+                                                    break;
+                                                case 3:
+                                                    textView.setText("" + changeOverValue);
+                                                    break;
+                                                case 4:
+                                                    textView.setText("" + blindCloseList.get(i).getSysSales());
+                                                    break;
+                                                case 5:
+                                                    textView.setText("" + blindCloseList.get(i).getUserSales());
+                                                    break;
+                                                case 6:
+                                                    textView.setText("" + blindCloseList.get(i).getSalesDiff());
+                                                    break;
+                                                case 7:
+                                                    textView.setText("" + blindCloseList.get(i).getReason()); //reason
+                                                    break;
+                                                case 8:
+                                                    textView.setText("" + blindCloseList.get(i).getToUser());
+                                                    break;
+                                                case 9:
+                                                    textView.setText(remark);
+                                                    break;
+                                                case 10:
+                                                    textView.setText(updateName); //updated by
+                                                    break;
+                                                case 11:
+                                                    textView.setText("" + (blindCloseList.get(i).getTillOk() == 0 ? "no" : "yes"));
+                                                    break;
+                                                case 12:
+                                                    textView.setText(type);
+                                                    break;
+                                            }
+
+                                            textView.setTextColor(ContextCompat.getColor(BackOfficeActivity.this, R.color.text_color));
+                                            textView.setBackgroundColor(ContextCompat.getColor(BackOfficeActivity.this, R.color.jeans_blue));
+                                            textView.setGravity(Gravity.CENTER);
+                                            textView.setTextSize(16);
+
+                                            int transNom = blindCloseList.get(i).getTransNo();
+                                            if (k == 7) {
+                                                textView.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View view) {
+                                                        Dialog dialog1 = new Dialog(BackOfficeActivity.this);
+                                                        dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                                        dialog1.setCancelable(true);
+                                                        dialog1.setContentView(R.layout.reason_dialog);
+                                                        dialog1.setCanceledOnTouchOutside(true);
+
+                                                        EditText editText = dialog1.findViewById(R.id.reasonBox);
+                                                        Button done = dialog1.findViewById(R.id.done);
+                                                        done.setOnClickListener(view1 -> {
+                                                            textView.setText(editText.getText().toString());
+                                                            mDHandler.updateBlindCloseReason(transNom, editText.getText().toString());
+                                                            dialog1.dismiss();
+                                                        });
+                                                        dialog1.show();
+                                                    }
+                                                });
+                                                TableRow.LayoutParams lp2 = new TableRow.LayoutParams(100, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+                                                lp2.setMargins(1, 1, 1, 1);
+                                                textView.setLayoutParams(lp2);
+                                            } else {
+                                                TableRow.LayoutParams lp2 = new TableRow.LayoutParams(100, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+                                                lp2.setMargins(1, 1, 1, 1);
+                                                textView.setLayoutParams(lp2);
+                                            }
+
+                                            row.addView(textView);
+                                            row.setOnClickListener(view -> {
+                                                for (int j = 0; j < table.getChildCount(); j++) {
+                                                    TableRow tableRow = (TableRow) table.getChildAt(j);
+                                                    tableRow.setBackgroundDrawable(null);
+                                                }
+                                                if (!clicked) {
+                                                    row.setBackgroundResource(R.drawable.focused_table);
+                                                    focusedRowData = mDHandler.getBlindCloseDetails(transNom);
+                                                    focusedRowReCancellation = row;
+                                                    fillRowDate(catTable, creditCard, cheque, giftCard, credit, point);
+                                                    clicked = true;
+                                                    if (visible == 0)
+                                                        slideUp(hiddenLinear);
+                                                } else {
+                                                    row.setBackgroundDrawable(null);
+                                                    clicked = false;
+                                                    slideDown(hiddenLinear);
+                                                }
+                                            });
+                                        }
+                                        table.addView(row);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        updateBlind.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (focusedRowData != null) {
+
+                    for (int i = 0; i < catTable.getChildCount(); i++) {
+                        TableRow tableRow = (TableRow) catTable.getChildAt(i);
+                        EditText qty = (EditText) tableRow.getChildAt(1);
+                        if (qty.getText().toString().equals(""))
+                            qty.setText("0");
+                    }
+                    if (creditCard.getText().toString().equals(""))
+                        creditCard.setText("0.00");
+                    if (cheque.getText().toString().equals(""))
+                        cheque.setText("0.00");
+                    if (giftCard.getText().toString().equals(""))
+                        giftCard.setText("0.00");
+                    if (credit.getText().toString().equals(""))
+                        credit.setText("0.00");
+                    if (point.getText().toString().equals(""))
+                        point.setText("0.00");
+
+                    TextView textView4 = (TextView) focusedRowReCancellation.getChildAt(4);
+                    TextView textView5 = (TextView) focusedRowReCancellation.getChildAt(5);
+                    TextView textView6 = (TextView) focusedRowReCancellation.getChildAt(6);
+                    TextView textView10 = (TextView) focusedRowReCancellation.getChildAt(10);
+
+                    Date currentTimeAndDate = Calendar.getInstance().getTime();
+                    SimpleDateFormat tf = new SimpleDateFormat("hh:mm");
+                    String time = tf.format(currentTimeAndDate);
+
+                    double newPhysical = 0;
+                    double newOtherPayments = 0;
+                    double sysOtherPayments = 0;
+                    for (int i = 0; i < blindCloseList.size(); i++) {
+                        if (blindCloseList.get(i).getTransNo() == focusedRowData.get(0).getTransNo())
+                            sysOtherPayments = blindCloseList.get(i).getSysOthers();
+                    }
+
+                    for (int i = 0; i < catTable.getChildCount(); i++) {
+                        TableRow tableRow = (TableRow) catTable.getChildAt(i);
+                        TextView cat = (TextView) tableRow.getChildAt(0);
+                        EditText qty = (EditText) tableRow.getChildAt(1);
+                        TextView total = (TextView) tableRow.getChildAt(2);
+                        double catValue = focusedRowData.get(i).getCatValue();
+
+                        mDHandler.updateBlindCloseDetails(focusedRowData.get(0).getTransNo(), cat.getText().toString(),
+                                Integer.parseInt(qty.getText().toString()), catValue, Double.parseDouble(total.getText().toString()),
+                                today, time, Settings.password, Settings.user_name);
+
+                        newPhysical += Double.parseDouble(total.getText().toString());
+                    }
+                    mDHandler.updateBlindCloseDetails(focusedRowData.get(0).getTransNo(), "Credit Card", 1,
+                            Double.parseDouble(creditCard.getText().toString()), Double.parseDouble(creditCard.getText().toString()),
+                            today, time, Settings.password, Settings.user_name);
+                    mDHandler.updateBlindCloseDetails(focusedRowData.get(0).getTransNo(), "Cheque", 1,
+                            Double.parseDouble(cheque.getText().toString()), Double.parseDouble(cheque.getText().toString()),
+                            today, time, Settings.password, Settings.user_name);
+                    mDHandler.updateBlindCloseDetails(focusedRowData.get(0).getTransNo(), "Gift Card", 1,
+                            Double.parseDouble(giftCard.getText().toString()), Double.parseDouble(giftCard.getText().toString()),
+                            today, time, Settings.password, Settings.user_name);
+                    mDHandler.updateBlindCloseDetails(focusedRowData.get(0).getTransNo(), "Credit", 1,
+                            Double.parseDouble(credit.getText().toString()), Double.parseDouble(credit.getText().toString()),
+                            today, time, Settings.password, Settings.user_name);
+                    mDHandler.updateBlindCloseDetails(focusedRowData.get(0).getTransNo(), "Point", 1,
+                            Double.parseDouble(point.getText().toString()), Double.parseDouble(point.getText().toString()),
+                            today, time, Settings.password, Settings.user_name);
+
+                    newOtherPayments += Double.parseDouble(creditCard.getText().toString());
+                    newOtherPayments += Double.parseDouble(cheque.getText().toString());
+                    newOtherPayments += Double.parseDouble(giftCard.getText().toString());
+                    newOtherPayments += Double.parseDouble(credit.getText().toString());
+                    newOtherPayments += Double.parseDouble(point.getText().toString());
+
+                    mDHandler.updateBlindClose(focusedRowData.get(0).getTransNo(), newPhysical,
+                            newPhysical - Double.parseDouble(textView4.getText().toString()),
+                            newOtherPayments, newOtherPayments - sysOtherPayments);
+
+                    textView5.setText("" + newPhysical);
+                    textView6.setText("" + (newPhysical - Double.parseDouble(textView4.getText().toString())));
+                    textView10.setText(Settings.user_name);
+
+                } else // it will never be -_-
+                    Toast.makeText(BackOfficeActivity.this, "Please select user", Toast.LENGTH_LONG).show();
+
+            }
+        });
+
+        tillOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mDHandler.updateBlindCloseTillOk(focusedRowData.get(0).getTransNo());
+                TextView textView11 = (TextView) focusedRowReCancellation.getChildAt(11);
+                textView11.setText("yes");
+            }
+        });
+
+        printDenom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        moveChangeOver.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        print.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        export.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        exit.setOnClickListener(v -> dialog.dismiss());
+
+        dialog.show();
+
+    }
+
+    void ShowReCancellationReport() {
+        dialog = new Dialog(BackOfficeActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.re_cancellationt_report_dialog);
+        dialog.setCanceledOnTouchOutside(true);
+
+        TableLayout table = (TableLayout) dialog.findViewById(R.id.canceledTable);
+
+        Button exit = (Button) dialog.findViewById(R.id.exitReport);
+        Button preview = (Button) dialog.findViewById(R.id.doneReport);
+        Button export = (Button) dialog.findViewById(R.id.exportReport);
+        Button print = (Button) dialog.findViewById(R.id.printReport);
+
+        TextView fromDate = (TextView) dialog.findViewById(R.id.frDate);
+        TextView toDate = (TextView) dialog.findViewById(R.id.toDate);
+
+        Spinner shiftName = (Spinner) dialog.findViewById(R.id.shiftName);
+        Spinner cashierNo = (Spinner) dialog.findViewById(R.id.casherNo);
+        Spinner PosNo = (Spinner) dialog.findViewById(R.id.posNo);
+
+        fromDate.setText(today);
+        toDate.setText(today);
+        ArrayList<String> shiftNameArray = new ArrayList<>();
+        ArrayList<String> userArray = new ArrayList<>();
+        ArrayList<String> posNoArray = new ArrayList<>();
+
+        for (int i = 0; i < mDHandler.getAllShifts().size(); i++) {
+            shiftNameArray.add(mDHandler.getAllShifts().get(i).getShiftName());
+        }
+        shiftNameArray.add(0, "All");
+
+        for (int i = 0; i < mDHandler.getAllEmployeeRegistration().size(); i++) {
+            if (mDHandler.getAllEmployeeRegistration().get(i).getEmployeeType() == 0) {
+                userArray.add(String.valueOf(mDHandler.getAllEmployeeRegistration().get(i).getEmployeeNO()));
+            }
+        }
+        userArray.add(0, "All");
+
+        posNoArray.add("All");
+        posNoArray.add("4");
+        posNoArray.add("7");
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, shiftNameArray);
+        shiftName.setAdapter(adapter);
+
+        ArrayAdapter<String> adapterUser = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, userArray);
+        cashierNo.setAdapter(adapterUser);
+
+        ArrayAdapter<String> adapterPosNo = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, posNoArray);
+        PosNo.setAdapter(adapterPosNo);
+
+
+        fromDate.setOnClickListener(v -> new DatePickerDialog(BackOfficeActivity.this, dateListener(fromDate), myCalendar
+                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH)).show());
+
+        toDate.setOnClickListener(v -> new DatePickerDialog(BackOfficeActivity.this, dateListener(toDate), myCalendar
+                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH)).show());
+
+
+        List<BlindClose> blindClose = mDHandler.getAllBlindClose();
+        List<BlindCloseDetails> blindCloseDetails = mDHandler.getAllBlindCloseDetails();
+        preview.setOnClickListener(v -> {
+            table.removeAllViews();
+            int CashierNo = -1;
+            if (cashierNo.getSelectedItem().toString().equals("All"))
+                CashierNo = -1;
+            else
+                CashierNo = Integer.parseInt(cashierNo.getSelectedItem().toString());
+
+            String ShiftName = shiftName.getSelectedItem().toString();
+
+            int posNoString = -1;
+            if (PosNo.getSelectedItem().toString().equals("All"))
+                posNoString = -1;
+            else
+                posNoString = Integer.parseInt(PosNo.getSelectedItem().toString());
+
+            for (int i = 0; i < blindClose.size(); i++) {
+                if (filters(fromDate.getText().toString(), toDate.getText().toString(), blindClose.get(i).getDate())) {
+
+                    if (blindClose.get(i).getShiftName().equals(ShiftName) || ShiftName.equals("All")) {
+                        if (blindClose.get(i).getUserNo() == CashierNo || CashierNo == -1) {
+                            if (blindClose.get(i).getPOSNo() == posNoString || posNoString == -1) {
+
+                                double changeOverValue = 0;
+                                for (int k = 0; k < blindClose.size(); k++) {
+                                    if (blindClose.get(i).getUserName().equals(blindClose.get(k).getToUser())) {
+                                        changeOverValue = blindClose.get(k).getUserSales();
+                                        break;
+                                    }
+                                }
+
+                                String updateName = "no-user";
+                                for (int k = 0; k < blindCloseDetails.size(); k++) {
+                                    if (blindClose.get(i).getTransNo() == blindCloseDetails.get(k).getTransNo()) {
+                                        updateName = blindCloseDetails.get(k).getUpdateUserName();
+                                        break;
+                                    }
+                                }
+
+                                TableRow row = new TableRow(BackOfficeActivity.this);
+                                TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
+                                row.setLayoutParams(lp);
+
+                                for (int k = 0; k < 10; k++) {
+                                    TextView textView = new TextView(BackOfficeActivity.this);
+
+                                    switch (k) {
+                                        case 0:
+                                            textView.setText(blindClose.get(i).getDate());
+                                            break;
+                                        case 1:
+                                            textView.setText("" + blindClose.get(i).getPOSNo());
+                                            break;
+                                        case 2:
+                                            textView.setText(blindClose.get(i).getShiftName());
+                                            break;
+                                        case 3:
+                                            textView.setText(blindClose.get(i).getUserName());
+                                            break;
+                                        case 4:
+                                            textView.setText("" + changeOverValue);
+                                            break;
+                                        case 5:
+                                            textView.setText("" + blindClose.get(i).getSysSales());
+                                            break;
+                                        case 6:
+                                            textView.setText("" + blindClose.get(i).getUserSales());
+                                            break;
+                                        case 7:
+                                            textView.setText("" + blindClose.get(i).getSalesDiff());
+                                            break;
+                                        case 8:
+                                            textView.setText(updateName);
+                                            break;
+                                        case 9:
+                                            textView.setText("" + (blindClose.get(i).getTillOk() == 0 ? "no" : "yes"));
+                                            break;
+
+                                    }
+
+                                    textView.setTextColor(ContextCompat.getColor(BackOfficeActivity.this, R.color.text_color));
+                                    textView.setBackgroundColor(ContextCompat.getColor(BackOfficeActivity.this, R.color.jeans_blue));
+                                    textView.setGravity(Gravity.CENTER);
+                                    textView.setTextSize(16);
+
+                                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(70, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+                                    lp2.setMargins(1, 1, 1, 1);
+                                    textView.setLayoutParams(lp2);
+
+                                    row.addView(textView);
+                                }
+                                table.addView(row);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        print.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        export.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        exit.setOnClickListener(v -> dialog.dismiss());
+
+        dialog.show();
+
+    }
+
+    void fillRowDate(TableLayout catTable, EditText creditCard, EditText cheque, EditText giftCard,
+                     EditText credit, EditText point) {
+
+        catTable.removeAllViews();
+        for (int s = 0; s < focusedRowData.size(); s++) {
+            if (focusedRowData.get(s).getType().equals("Cash")) {
+                TableRow row1 = new TableRow(BackOfficeActivity.this);
+
+                TableRow.LayoutParams lp1 = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
+                row1.setLayoutParams(lp1);
+
+                for (int r = 0; r < 3; r++) {
+                    TextView textV = new TextView(BackOfficeActivity.this);
+                    EditText editT = new EditText(BackOfficeActivity.this);
+
+                    switch (r) {
+                        case 0:
+                            textV.setText(focusedRowData.get(s).getCatName());
+                            break;
+                        case 1:
+                            editT.setText("" + focusedRowData.get(s).getCatQty());
+                            break;
+                        case 2:
+                            textV.setText("" + focusedRowData.get(s).getCatTotal());
+                            break;
+                    }
+
+                    textV.setTextColor(ContextCompat.getColor(BackOfficeActivity.this, R.color.text_color));
+                    textV.setGravity(Gravity.CENTER);
+                    textV.setTextSize(13);
+
+                    int index = s;
+                    editT.setTextColor(ContextCompat.getColor(BackOfficeActivity.this, R.color.text_color));
+                    editT.setGravity(Gravity.CENTER);
+                    editT.setTextSize(13);
+                    editT.setInputType(InputType.TYPE_CLASS_NUMBER);
+                    editT.addTextChangedListener(new TextWatcher() {
+
+                        // the user's changes are saved here
+                        public void onTextChanged(CharSequence c, int start, int before, int count) {
+                            TextView tot = (TextView) row1.getChildAt(2);
+                            if (!editT.getText().toString().equals("")) {
+                                double total = Integer.parseInt(editT.getText().toString()) * focusedRowData.get(index).getCatValue();
+                                tot.setText("" + total);
+                            } else
+                                tot.setText("0.0");
+                        }
+
+                        public void beforeTextChanged(CharSequence c, int start, int count, int after) {
+                            // this space intentionally left blank
+                        }
+
+                        public void afterTextChanged(Editable c) {
+                            // this one too
+                        }
+                    });
+
+                    TableRow.LayoutParams lp3 = new TableRow.LayoutParams(100, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+                    lp3.setMargins(1, 1, 1, 1);
+                    textV.setLayoutParams(lp3);
+                    editT.setLayoutParams(lp3);
+
+                    if (r == 1)
+                        row1.addView(editT);
+                    else
+                        row1.addView(textV);
+                }
+                catTable.addView(row1);
+
+            } else if (focusedRowData.get(s).getType().equals("Credit Card")) {
+                creditCard.setText("" + focusedRowData.get(s).getCatTotal());
+            } else if (focusedRowData.get(s).getType().equals("Cheque")) {
+                cheque.setText("" + focusedRowData.get(s).getCatTotal());
+            } else if (focusedRowData.get(s).getType().equals("Gift Card")) {
+                giftCard.setText("" + focusedRowData.get(s).getCatTotal());
+            } else if (focusedRowData.get(s).getType().equals("Credit")) {
+                credit.setText("" + focusedRowData.get(s).getCatTotal());
+            } else if (focusedRowData.get(s).getType().equals("Point")) {
+                point.setText("" + focusedRowData.get(s).getCatTotal());
+            }
+        }
+    }
 
     void showCustomerPaymentDialog() {
 
@@ -3197,7 +3800,6 @@ public class BackOfficeActivity extends AppCompatActivity {
 
     }
 
-
     void ShowMarketReport() {
         dialog = new Dialog(BackOfficeActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -4677,6 +5279,33 @@ public class BackOfficeActivity extends AppCompatActivity {
         return !s.equals("") && !cName.equals("") && !cValue.equals("");
     }
 
+    public void slideUp(View view) {
+        visible = 1;
+        view.setVisibility(View.VISIBLE);
+        view.bringToFront();
+        TranslateAnimation animate = new TranslateAnimation(
+                0,                 // fromXDelta
+                0,                // toXDelta
+                view.getHeight(),  // fromYDelta
+                0);                // toYDelta
+        animate.setDuration(500);
+        animate.setFillAfter(true);
+        view.startAnimation(animate);
+    }
+
+    public void slideDown(View view) {
+        visible = 0;
+        TranslateAnimation animate = new TranslateAnimation(
+                0,                 // fromXDelta
+                0,                 // toXDelta
+                0,  // fromYDelta
+                view.getHeight() + 3);                // toYDelta
+        animate.setDuration(500);
+        animate.setFillAfter(true);
+        view.startAnimation(animate);
+
+    }
+
     void currentLinear(LinearLayout linearLayout) {
 
         lManagement.setVisibility(View.INVISIBLE);
@@ -4708,6 +5337,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         giftCard = (LinearLayout) findViewById(R.id.gift_card);
         employeeClockInOut = (LinearLayout) findViewById(R.id.employee_click_out);
         menuSearch = (LinearLayout) findViewById(R.id.menu_search);
+        reCancellationSupervisor = (LinearLayout) findViewById(R.id.re_cancellation_supervisor);
         membershipGroup = (LinearLayout) findViewById(R.id.membership_group);
         membership = (LinearLayout) findViewById(R.id.membership);
         customerRegistration = (LinearLayout) findViewById(R.id.customer_reg);
@@ -4749,7 +5379,6 @@ public class BackOfficeActivity extends AppCompatActivity {
         SoldQtyReport = (LinearLayout) findViewById(R.id.sold_qty_report);
         userOrderCountReport = (LinearLayout) findViewById(R.id.user_order_count_report);
         reCancellationReport = (LinearLayout) findViewById(R.id.re_cancellation_report);
-        reCancellationSupervisorReport = (LinearLayout) findViewById(R.id.re_cancellation_supervisor_report);
 
         butManagement.setOnClickListener(onClickListener);
         butSales.setOnClickListener(onClickListener);
@@ -4762,6 +5391,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         giftCard.setOnClickListener(onClickListener2);
         employeeClockInOut.setOnClickListener(onClickListener2);
         menuSearch.setOnClickListener(onClickListener2);
+        reCancellationSupervisor.setOnClickListener(onClickListener2);
         membershipGroup.setOnClickListener(onClickListener2);
         membership.setOnClickListener(onClickListener2);
         customerRegistration.setOnClickListener(onClickListener2);
@@ -4803,7 +5433,6 @@ public class BackOfficeActivity extends AppCompatActivity {
         SoldQtyReport.setOnClickListener(onClickListener2);
         userOrderCountReport.setOnClickListener(onClickListener2);
         reCancellationReport.setOnClickListener(onClickListener2);
-        reCancellationSupervisorReport.setOnClickListener(onClickListener2);
 
     }
 }
