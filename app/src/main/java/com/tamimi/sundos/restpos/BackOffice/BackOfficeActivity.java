@@ -1959,6 +1959,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                 row1.addView(button);
 
                 reasons.addView(row1);
+                reason.setText("");
             } else
                 Toast.makeText(BackOfficeActivity.this, "No text to be added ! ", Toast.LENGTH_LONG).show();
         });

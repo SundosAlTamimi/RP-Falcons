@@ -6,7 +6,7 @@
     android:background="@color/layer3"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:padding="5dp">
+    android:padding="20dp">
 
     <TextView
         android:id="@+id/textView69"
@@ -66,8 +66,8 @@
                 android:layout_width="199dp"
                 android:layout_height="wrap_content"
                 android:background="@color/cardview_light_background"
-                android:textColor="@color/text_color"
                 android:gravity="center"
+                android:textColor="@color/text_color"
                 android:textSize="18sp" />
         </TableRow>
 

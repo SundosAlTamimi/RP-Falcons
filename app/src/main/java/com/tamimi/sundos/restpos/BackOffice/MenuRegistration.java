@@ -252,8 +252,12 @@ public class MenuRegistration extends AppCompatActivity {
         showInMenuVariavle = showInMenu.isChecked() ? 1 : 0;
 
 
-        families = mDbHandler.getAllExistingFamilies();
-
+//        families = mDbHandler.getAllExistingFamilies();
+        for(int i=0;i<mDbHandler.getAllFamilyCategory().size();i++) {
+            if(mDbHandler.getAllFamilyCategory().get(i).getType()==1){
+            families.add(mDbHandler.getAllFamilyCategory().get(i).getName());
+            }
+        }
         familiesAdapter = new ArrayAdapter<String>(MenuRegistration.this, R.layout.spinner_style, families);
         familyNameSpinner.setAdapter(familiesAdapter);
 
@@ -615,7 +619,12 @@ public class MenuRegistration extends AppCompatActivity {
 
     void fillSpinners() {
 
-        categories = mDbHandler.getAllExistingCategories();
+//        categories = mDbHandler.getAllExistingCategories();
+        for(int i=0;i<mDbHandler.getAllFamilyCategory().size();i++) {
+            if(mDbHandler.getAllFamilyCategory().get(i).getType()==2){
+                categories.add(mDbHandler.getAllFamilyCategory().get(i).getName());
+            }
+        }
         unit = mDbHandler.getAllExistingUnits();
 
         printers.add("printer 1");
