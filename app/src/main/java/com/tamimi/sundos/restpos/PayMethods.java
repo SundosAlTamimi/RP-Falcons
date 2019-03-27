@@ -111,6 +111,13 @@ public class PayMethods extends AppCompatActivity {
             orderHeaderTemp = mDHandler.getOrderHeaderTemp(sectionNo, tableNo);
 
             balance.setText(orderHeaderTemp.get(0).getAmountDue() + "");
+            server.setText(orderHeaderTemp.get(0).getWaiter());
+            discount.setText(orderHeaderTemp.get(0).getAllDiscount()+"");
+            subTotal.setText(orderHeaderTemp.get(0).getSubTotal()+"");
+            tax.setText(orderHeaderTemp.get(0).getTotalTax()+"");
+            amountDue.setText(orderHeaderTemp.get(0).getAmountDue() + "");
+            deliveryCharge.setText(orderHeaderTemp.get(0).getDeliveryCharge()+"");
+
             mainBalance = balance.getText().toString();
             remainingBalance.setText("Remaining : " + balance.getText().toString());
             check.setText(check.getText().toString() + " " + orderHeaderTemp.get(0).getSectionNO());
@@ -118,7 +125,18 @@ public class PayMethods extends AppCompatActivity {
             orderType = "Dine In";
 
         } else {  // pay from takeaway
-            balance.setText(obj.getBalance() + "");
+
+
+            balance.setText( obj.getOrderHeaderObj().getAmountDue()+"");
+            orderAmount.setText(obj.getOrderHeaderObj().getTotal()+"");
+            discount.setText(obj.getOrderHeaderObj().getAllDiscount()+"");
+            deliveryCharge.setText(obj.getOrderHeaderObj().getDeliveryCharge()+"");
+            server.setText(obj.getOrderHeaderObj().getWaiter());
+            subTotal.setText(obj.getOrderHeaderObj().getSubTotal()+"");
+            tax.setText(obj.getOrderHeaderObj().getTotalTax()+"");
+            amountDue.setText(obj.getOrderHeaderObj().getAmountDue()+"");
+
+
             mainBalance = balance.getText().toString();
             remainingBalance.setText("Remaining : " + balance.getText().toString());
             check.setText(check.getText().toString() + " -");

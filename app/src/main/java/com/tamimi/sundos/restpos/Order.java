@@ -144,7 +144,7 @@ public class Order extends AppCompatActivity {
             switch (view.getId()) {
                 case R.id.pay:
                     if (orderTypeFlag == 0) {
-                        if (!amountDue.getText().toString().equals("0.00")) {
+                        if (!(Double.parseDouble(amountDue.getText().toString())==0)) {
                             saveInOrderTransactionObj();
                             saveInOrderHeaderObj();
                             Intent intentPay = new Intent(Order.this, PayMethods.class);
@@ -156,7 +156,7 @@ public class Order extends AppCompatActivity {
 
                 case R.id.order:
                     if (orderTypeFlag == 1) {
-                        if (!amountDue.getText().toString().equals("0.00")) {
+                        if (!(Double.parseDouble(amountDue.getText().toString())==0)) {
                             saveInOrderTransactionTemp();
                             saveInOrderHeaderTemp();
 
@@ -741,7 +741,8 @@ public class Order extends AppCompatActivity {
 
 //                Log.e("test " , "" + Integer.parseInt(waiterNo) );
                 TextView textViewQty = (TextView) raw.getChildAt(0);
-                TextView textViewTotal = (TextView) raw.getChildAt(3);
+                TextView textViewTotal = (TextView) raw.getChildAt(3);//+"     "+ waiter+" ---  " + Integer.parseInt(waiterNo)+ "    ---  " + wantedItems.get(index).getItemBarcode()
+                Log.e("test12",""+ waiterNo);
                 mDbHandler.addCancleOrder(new CancleOrder(voucherNo, today, Settings.user_name, Settings.password, Settings.shift_name,
                         Settings.shift_number, waiter, Integer.parseInt(waiterNo), "" + wantedItems.get(index).getItemBarcode(),
                         wantedItems.get(index).getMenuName(), Integer.parseInt(textViewQty.getText().toString()),
@@ -753,6 +754,7 @@ public class Order extends AppCompatActivity {
                     wantedItems.remove(Integer.parseInt(raw.getTag().toString()));
                     lineDiscount.remove(Integer.parseInt(raw.getTag().toString()));
                     tableLayoutPosition--;
+                    if(wantedItems.size()==0){ deliveryCharge.setText("0.0");}
                     resetPosition();
                     calculateTotal();
                 } else {
@@ -841,6 +843,8 @@ public class Order extends AppCompatActivity {
                     wantedItems.clear();
                     lineDiscount.clear();
                     tableLayoutPosition = 0;
+                    deliveryCharge.setText("0.0");
+
                     resetPosition();
                     calculateTotal();
                 } else {
@@ -1100,147 +1104,149 @@ public class Order extends AppCompatActivity {
     }
 
     void showModifierDialog() {
+if(wantedItems.size()!=0) {
+    dialog = new Dialog(Order.this);
+    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+    dialog.setCancelable(false);
+    dialog.setContentView(R.layout.pick_modifier_dialog);
+    dialog.setCanceledOnTouchOutside(true);
 
-        dialog = new Dialog(Order.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.pick_modifier_dialog);
-        dialog.setCanceledOnTouchOutside(true);
+    final Button extra = dialog.findViewById(R.id.extra);
+    final Button no = dialog.findViewById(R.id.no);
+    final Button little = dialog.findViewById(R.id.little);
+    final Button half = dialog.findViewById(R.id.half);
+    final Button save = dialog.findViewById(R.id.save);
+    final Button exit = dialog.findViewById(R.id.exit);
+    final GridView gridView = dialog.findViewById(R.id.modifiers);
 
-        final Button extra = dialog.findViewById(R.id.extra);
-        final Button no = dialog.findViewById(R.id.no);
-        final Button little = dialog.findViewById(R.id.little);
-        final Button half = dialog.findViewById(R.id.half);
-        final Button save = dialog.findViewById(R.id.save);
-        final Button exit = dialog.findViewById(R.id.exit);
-        final GridView gridView = dialog.findViewById(R.id.modifiers);
+    int itemBarcode = wantedItems.get(Integer.parseInt(focused.getTag().toString())).getItemBarcode();
+    Log.e("hi", "********" + itemBarcode);
+    final ArrayList<ItemWithModifier> modifiers = mDbHandler.getItemWithModifiers(itemBarcode);
+    final ArrayList<String> modifiersName = new ArrayList<>();
 
-        int itemBarcode = wantedItems.get(Integer.parseInt(focused.getTag().toString())).getItemBarcode();
-        Log.e("hi", "********" + itemBarcode);
-        final ArrayList<ItemWithModifier> modifiers = mDbHandler.getItemWithModifiers(itemBarcode);
-        final ArrayList<String> modifiersName = new ArrayList<>();
+    for (int i = 0; i < modifiers.size(); i++) {
+        modifiersName.add("(" + modifiers.get(i).getModifierNo() + ") " + modifiers.get(i).getModifierText());
+    }
 
-        for (int i = 0; i < modifiers.size(); i++) {
-            modifiersName.add("(" + modifiers.get(i).getModifierNo() + ") " + modifiers.get(i).getModifierText());
+    final ArrayAdapter<String> adapter = new ArrayAdapter<>(Order.this, R.layout.grid_style, modifiersName);
+    gridView.setAdapter(adapter);
+
+    gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+            for (int j = 0; j < gridView.getChildCount(); j++) {
+                gridView.getChildAt(j).setBackgroundDrawable(null);
+            }
+            gridView.getChildAt(i).setBackgroundDrawable(getResources().getDrawable(R.drawable.focused_table));
+            selectedModifier = i;
         }
+    });
 
-        final ArrayAdapter<String> adapter = new ArrayAdapter<>(Order.this, R.layout.grid_style, modifiersName);
-        gridView.setAdapter(adapter);
-
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                for (int j = 0; j < gridView.getChildCount(); j++) {
-                    gridView.getChildAt(j).setBackgroundDrawable(null);
-                }
-                gridView.getChildAt(i).setBackgroundDrawable(getResources().getDrawable(R.drawable.focused_table));
-                selectedModifier = i;
-            }
-        });
-
-        extra.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (selectedModifier != -1) {
-                    if (!modifiersName.get(selectedModifier).contains("*  Extra")) { // if contain the same string
-                        if (!modifiersName.get(selectedModifier).contains("*")) { // if contain another string
-                            modifiersName.set(selectedModifier, modifiersName.get(selectedModifier) + " \n " + "  *  Extra");
-                            adapter.notifyDataSetChanged();
-                        } else { // if it has another string it will extract it and add the new one
-                            modifiersName.set(selectedModifier, modifiersName.get(selectedModifier).substring(0, modifiersName.get(selectedModifier).indexOf('*') - 1) + " *  Extra");
-                            adapter.notifyDataSetChanged();
-                        }
-                    }
-                } else
-                    Toast.makeText(Order.this, "Please select a modifier ", Toast.LENGTH_SHORT).show();
-            }
-        });
-        no.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (selectedModifier != -1) {
-                    if (!modifiersName.get(selectedModifier).contains("*  No")) { // if contain the same string
-                        if (!modifiersName.get(selectedModifier).contains("*")) { // if contain another string
-                            modifiersName.set(selectedModifier, modifiersName.get(selectedModifier) + " \n " + "  *  No");
-                            adapter.notifyDataSetChanged();
-                        } else { // if it has another string it will extract it and add the new one
-                            modifiersName.set(selectedModifier, modifiersName.get(selectedModifier).substring(0, modifiersName.get(selectedModifier).indexOf('*') - 1) + " *  No");
-                            adapter.notifyDataSetChanged();
-                        }
-                    }
-                } else
-                    Toast.makeText(Order.this, "Please select a modifier ", Toast.LENGTH_SHORT).show();
-            }
-        });
-        little.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (selectedModifier != -1) {
-                    if (!modifiersName.get(selectedModifier).contains("*  Little")) { // if contain the same string
-                        if (!modifiersName.get(selectedModifier).contains("*")) { // if contain another string
-                            modifiersName.set(selectedModifier, modifiersName.get(selectedModifier) + " \n " + "  *  Little");
-                            adapter.notifyDataSetChanged();
-                        } else { // if it has another string it will extract it and add the new one
-                            modifiersName.set(selectedModifier, modifiersName.get(selectedModifier).substring(0, modifiersName.get(selectedModifier).indexOf('*') - 1) + " *  Little");
-                            adapter.notifyDataSetChanged();
-                        }
-                    }
-                } else
-                    Toast.makeText(Order.this, "Please select a modifier ", Toast.LENGTH_SHORT).show();
-            }
-        });
-        half.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (selectedModifier != -1) {
-                    if (!modifiersName.get(selectedModifier).contains("*  Half")) { // if contain the same string
-                        if (!modifiersName.get(selectedModifier).contains("*")) { // if contain another string
-                            modifiersName.set(selectedModifier, modifiersName.get(selectedModifier) + " \n " + "  *  Half");
-                            adapter.notifyDataSetChanged();
-                        } else { // if it has another string it will extract it and add the new one
-                            modifiersName.set(selectedModifier, modifiersName.get(selectedModifier).substring(0, modifiersName.get(selectedModifier).indexOf('*') - 1) + " *  Half");
-                            adapter.notifyDataSetChanged();
-                        }
-                    }
-                } else
-                    Toast.makeText(Order.this, "Please select a modifier ", Toast.LENGTH_SHORT).show();
-            }
-        });
-        save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                for (int i = 0; i < modifiersName.size(); i++) {
-                    if (modifiersName.get(i).contains("*")) {
-                        insertModifierRaw(modifiersName.get(i).substring(modifiersName.get(selectedModifier).indexOf('-') + 1,
-                                modifiersName.get(selectedModifier).indexOf('-') + 10) + "..");
-                        wantedItems.add(Integer.parseInt(focused.getTag().toString()) + 1,
-                                new Items("modifier", modifiers.get(i).getModifierText(), "", 0,
-                                        0, "", "", 0, 0, 0, "", 0,
-                                        0, 0, 0, "", "", 0, 0, 0, null));
-                        lineDiscount.add(0.0);
-                        focused.setBackgroundDrawable(null);
+    extra.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (selectedModifier != -1) {
+                if (!modifiersName.get(selectedModifier).contains("*  Extra")) { // if contain the same string
+                    if (!modifiersName.get(selectedModifier).contains("*")) { // if contain another string
+                        modifiersName.set(selectedModifier, modifiersName.get(selectedModifier) + " \n " + "  *  Extra");
+                        adapter.notifyDataSetChanged();
+                    } else { // if it has another string it will extract it and add the new one
+                        modifiersName.set(selectedModifier, modifiersName.get(selectedModifier).substring(0, modifiersName.get(selectedModifier).indexOf('*') - 1) + " *  Extra");
+                        adapter.notifyDataSetChanged();
                     }
                 }
-                selectedModifier = -1;
-                dialog.dismiss();
+            } else
+                Toast.makeText(Order.this, "Please select a modifier ", Toast.LENGTH_SHORT).show();
+        }
+    });
+    no.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (selectedModifier != -1) {
+                if (!modifiersName.get(selectedModifier).contains("*  No")) { // if contain the same string
+                    if (!modifiersName.get(selectedModifier).contains("*")) { // if contain another string
+                        modifiersName.set(selectedModifier, modifiersName.get(selectedModifier) + " \n " + "  *  No");
+                        adapter.notifyDataSetChanged();
+                    } else { // if it has another string it will extract it and add the new one
+                        modifiersName.set(selectedModifier, modifiersName.get(selectedModifier).substring(0, modifiersName.get(selectedModifier).indexOf('*') - 1) + " *  No");
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+            } else
+                Toast.makeText(Order.this, "Please select a modifier ", Toast.LENGTH_SHORT).show();
+        }
+    });
+    little.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (selectedModifier != -1) {
+                if (!modifiersName.get(selectedModifier).contains("*  Little")) { // if contain the same string
+                    if (!modifiersName.get(selectedModifier).contains("*")) { // if contain another string
+                        modifiersName.set(selectedModifier, modifiersName.get(selectedModifier) + " \n " + "  *  Little");
+                        adapter.notifyDataSetChanged();
+                    } else { // if it has another string it will extract it and add the new one
+                        modifiersName.set(selectedModifier, modifiersName.get(selectedModifier).substring(0, modifiersName.get(selectedModifier).indexOf('*') - 1) + " *  Little");
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+            } else
+                Toast.makeText(Order.this, "Please select a modifier ", Toast.LENGTH_SHORT).show();
+        }
+    });
+    half.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (selectedModifier != -1) {
+                if (!modifiersName.get(selectedModifier).contains("*  Half")) { // if contain the same string
+                    if (!modifiersName.get(selectedModifier).contains("*")) { // if contain another string
+                        modifiersName.set(selectedModifier, modifiersName.get(selectedModifier) + " \n " + "  *  Half");
+                        adapter.notifyDataSetChanged();
+                    } else { // if it has another string it will extract it and add the new one
+                        modifiersName.set(selectedModifier, modifiersName.get(selectedModifier).substring(0, modifiersName.get(selectedModifier).indexOf('*') - 1) + " *  Half");
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+            } else
+                Toast.makeText(Order.this, "Please select a modifier ", Toast.LENGTH_SHORT).show();
+        }
+    });
+    save.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            for (int i = 0; i < modifiersName.size(); i++) {
+                if (modifiersName.get(i).contains("*")) {
+                    insertModifierRaw(modifiersName.get(i).substring(modifiersName.get(selectedModifier).indexOf('-') + 1,
+                            modifiersName.get(selectedModifier).indexOf('-') + 10) + "..");
+                    wantedItems.add(Integer.parseInt(focused.getTag().toString()) + 1,
+                            new Items("modifier", modifiers.get(i).getModifierText(), "", 0,
+                                    0, "", "", 0, 0, 0, "", 0,
+                                    0, 0, 0, "", "", 0, 0, 0, null));
+                    lineDiscount.add(0.0);
+                    focused.setBackgroundDrawable(null);
+                }
             }
-        });
-        exit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                selectedModifier = -1;
-                focused.setBackgroundDrawable(null);
-                dialog.dismiss();
-            }
-        });
+            selectedModifier = -1;
+            dialog.dismiss();
+        }
+    });
+    exit.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            selectedModifier = -1;
+            focused.setBackgroundDrawable(null);
+            dialog.dismiss();
+        }
+    });
 
-        dialog.show();
-
+    dialog.show();
+}else {
+    Toast.makeText(this, "Modifier is not available when no have any item ", Toast.LENGTH_SHORT).show();
+}
     }
 
     void showDeliveryChangeDialog() {
-
+if(wantedItems.size()!=0){
         dialog = new Dialog(Order.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
@@ -1266,6 +1272,9 @@ public class Order extends AppCompatActivity {
             }
         });
         dialog.show();
+    }else {
+    Toast.makeText(this, "Delivery is not available when no have any item ", Toast.LENGTH_SHORT).show();
+}
     }
 
     void showLineDiscountDialog() {

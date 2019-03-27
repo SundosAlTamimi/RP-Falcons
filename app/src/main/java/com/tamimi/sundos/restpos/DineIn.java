@@ -2,7 +2,6 @@ package com.tamimi.sundos.restpos;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.ClipData;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,12 +12,9 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.TranslateAnimation;
@@ -36,9 +32,6 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.tamimi.sundos.restpos.BackOffice.BackOfficeActivity;
-import com.tamimi.sundos.restpos.BackOffice.EmployeeRegistration;
-import com.tamimi.sundos.restpos.BackOffice.MenuRegistration;
 import com.tamimi.sundos.restpos.Models.Cashier;
 import com.tamimi.sundos.restpos.Models.EmployeeRegistrationModle;
 import com.tamimi.sundos.restpos.Models.Money;
@@ -72,7 +65,7 @@ public class DineIn extends AppCompatActivity {
     TextView focusedTextView;
     LinearLayout focused = null;
     GestureDetector gestureDetector;
-    boolean CheckTrue = true;
+    boolean CheckTrue = true, waiterClick =false;
     int tableNumber;
     int current = 0;
     String waiter , waiterNo;
@@ -329,6 +322,7 @@ public class DineIn extends AppCompatActivity {
                             public void onClick(View view) {
                                 waiter = textView.getText().toString();
                                 waiterNo = textView2.getText().toString();
+                                waiterClick =true;
                                 setTableBackground(linearLayout, linearLayout1);
                             }
                         });
@@ -339,8 +333,13 @@ public class DineIn extends AppCompatActivity {
                 done.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        dialog.dismiss();
-                        openSeatsNumberDialog();
+                        if(linearLayout.getChildCount()!=0&&waiterClick ) {
+                            dialog.dismiss();
+                            openSeatsNumberDialog();
+                            waiterClick =false;
+                        }else {
+                            Toast.makeText(DineIn.this, "Please add Waiter before Continue ...", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
                 dialog.show();
