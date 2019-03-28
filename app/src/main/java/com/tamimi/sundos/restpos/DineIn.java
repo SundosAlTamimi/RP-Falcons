@@ -2,23 +2,19 @@ package com.tamimi.sundos.restpos;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.ClipData;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
-import android.text.TextWatcher;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.TranslateAnimation;
@@ -36,9 +32,6 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.tamimi.sundos.restpos.BackOffice.BackOfficeActivity;
-import com.tamimi.sundos.restpos.BackOffice.EmployeeRegistration;
-import com.tamimi.sundos.restpos.BackOffice.MenuRegistration;
 import com.tamimi.sundos.restpos.Models.Cashier;
 import com.tamimi.sundos.restpos.Models.EmployeeRegistrationModle;
 import com.tamimi.sundos.restpos.Models.Money;
@@ -57,9 +50,7 @@ import java.util.List;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
-
 public class DineIn extends AppCompatActivity {
-
 
     ArrayList<Tables> currentList, list0, list1, list2, list3, list4, list5;
 
@@ -71,7 +62,6 @@ public class DineIn extends AppCompatActivity {
     ViewGroup land;
     TextView focusedTextView;
     LinearLayout focused = null;
-    GestureDetector gestureDetector;
     boolean CheckTrue = true;
     int tableNumber;
     int current = 0;
@@ -80,7 +70,6 @@ public class DineIn extends AppCompatActivity {
     int fromSection, toSection;
     List<String> tablesNoLeft, tablesNoRight;
     int focusedLeft = -1, focusedRight = -1;
-    ImageView movingTable;
 
     TextView text;
     TableRow rows;
@@ -1172,7 +1161,7 @@ public class DineIn extends AppCompatActivity {
         ok.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (seatsNo.getText().toString() != "" && male.getText().toString() != "" && female.getText().toString() != "" && children.getText().toString() != "") {
+                if (!seatsNo.getText().toString().equals("") && !male.getText().toString().equals("") && !female.getText().toString().equals("") && !children.getText().toString().equals("")) {
                     int sum = (int) Double.parseDouble(male.getText().toString()) +
                             (int) Double.parseDouble(female.getText().toString()) +
                             (int) Double.parseDouble(children.getText().toString());

@@ -4625,17 +4625,17 @@ public class BackOfficeActivity extends AppCompatActivity {
                         new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                String AM_PM;
-                                if (hourOfDay < 12) {
-                                    AM_PM = "AM";
-
-                                } else {
-                                    AM_PM = "PM";
-                                    hourOfDay -= 12;
-                                }
-                                fromTime.setText(hourOfDay + ":" + minute + " " + AM_PM);
+//                                String AM_PM;
+//                                if (hourOfDay < 12) {
+//                                    AM_PM = "AM";
+//
+//                                } else {
+//                                    AM_PM = "PM";
+//                                    hourOfDay -= 12;
+//                                }
+                                fromTime.setText(hourOfDay + ":" + minute);
                             }
-                        }, mHour, mMinute, false);
+                        }, mHour, mMinute, true);
                 timePickerDialog.show();
             }
         });
@@ -4645,23 +4645,23 @@ public class BackOfficeActivity extends AppCompatActivity {
                 // TODO Auto-generated method stub
                 final Calendar c = Calendar.getInstance();
                 final int mHour = c.get(Calendar.HOUR_OF_DAY);
-                int mMinute = c.get(Calendar.MINUTE);
+                int mMinute = c.get(Calendar.HOUR_OF_DAY);
 
                 TimePickerDialog timePickerDialog = new TimePickerDialog(BackOfficeActivity.this,
                         new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                String AM_PM;
-                                if (hourOfDay < 12) {
-                                    AM_PM = "AM";
-
-                                } else {
-                                    AM_PM = "PM";
-                                    hourOfDay -= 12;
-                                }
-                                toTime.setText(hourOfDay + ":" + minute + " " + AM_PM);
+//                                String AM_PM;
+//                                if (hourOfDay < 12) {
+//                                    AM_PM = "AM";
+//
+//                                } else {
+//                                    AM_PM = "PM";
+//                                    hourOfDay -= 12;
+//                                }
+                                toTime.setText(hourOfDay + ":" + minute);
                             }
-                        }, mHour, mMinute, false);
+                        }, Calendar.HOUR_OF_DAY, Calendar.HOUR_OF_DAY, true);
                 timePickerDialog.show();
             }
         });

@@ -96,6 +96,9 @@ public class LogIn extends AppCompatActivity {
 
                         if (isCorrect(Integer.parseInt(password))) {
 
+                            Date currentTimeAndDate = Calendar.getInstance().getTime();
+                            SimpleDateFormat tf = new SimpleDateFormat("hh:mm");
+                            time = tf.format(currentTimeAndDate);
                             if (!isActive)
                                 mDHandler.addBlindShiftInOut(new BlindShift(date, time, 1, shiftNo, shiftName,
                                         Integer.parseInt(password), Settings.user_name, 1));
@@ -217,9 +220,6 @@ public class LogIn extends AppCompatActivity {
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
         date = df.format(currentTimeAndDate);
 
-        SimpleDateFormat tf = new SimpleDateFormat("hh:mm");
-        time = tf.format(currentTimeAndDate);
-
         ArrayList<Shift> shifts = mDHandler.getAllShifts();
 
         if (shifts.size() == 0) {
@@ -227,40 +227,39 @@ public class LogIn extends AppCompatActivity {
             shiftName = "A";
         }
 
-        try {
+//        try {
             for (int i = 0; i < shifts.size(); i++) {
-                Date time1 = new SimpleDateFormat("hh:mm").parse(shifts.get(i).getFromTime());
-                Calendar calendar1 = Calendar.getInstance();
-                calendar1.setTime(time1);
+                Date currentTime = Calendar.getInstance().getTime();
+                SimpleDateFormat tf = new SimpleDateFormat("hh:mm");
+                time = tf.format(currentTime);
 
-                Date time2 = new SimpleDateFormat("hh:mm").parse(shifts.get(i).getToTime());
-                Calendar calendar2 = Calendar.getInstance();
-                calendar2.setTime(time2);
-                calendar2.add(Calendar.DATE, 1);
-
-                Date d = new SimpleDateFormat("hh:mm").parse(time);
-                Calendar calendar3 = Calendar.getInstance();
-                calendar3.setTime(d);
-                calendar3.add(Calendar.DATE, 1);
-
-                Date x = calendar3.getTime();
-                if (x.after(calendar1.getTime()) && x.before(calendar2.getTime())) {
-                    //checkes whether the current time is between 14:49:00 and 20:11:13.
+//                Date time1 = new SimpleDateFormat("hh:mm").parse(shifts.get(i).getFromTime());
+//                Calendar calendar1 = Calendar.getInstance();
+//                calendar1.setTime(time1);
+//
+//                Date time2 = new SimpleDateFormat("hh:mm").parse(shifts.get(i).getToTime());
+//                Calendar calendar2 = Calendar.getInstance();
+//                calendar2.setTime(time2);
+//                calendar2.add(Calendar.DATE, 1);
+//
+//                Date d = new SimpleDateFormat("hh:mm").parse(time);
+//                Calendar calendar3 = Calendar.getInstance();
+//                calendar3.setTime(d);
+//                calendar3.add(Calendar.DATE, 1);
+//
+//                Date x = calendar3.getTime();
+//                Log.e("time :" , calendar1.getTime().toString() + " " + x.toString() + " " + calendar2.getTime().toString());
+//                if (x.after(calendar1.getTime()) && x.before(calendar2.getTime())) {
+                int time1 = Integer.parseInt(shifts.get(i).getFromTime().substring(0,shifts.get(i).getFromTime().indexOf(":")));
+                int time2 = Integer.parseInt(shifts.get(i).getToTime().substring(0,shifts.get(i).getToTime().indexOf(":")));
+                int current = Integer.parseInt(time.substring(0,time.indexOf(":")));
+                if ( current >= time1 && current < time2) {
                     shiftNo = shifts.get(i).getShiftNo();
                     shiftName = shifts.get(i).getShiftName();
                 }
             }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-//        LocalTime target = LocalTime.parse(time);
-//        for (int i = 0; i < shifts.size(); i++) {
-//            if (target.isAfter(LocalTime.parse(shifts.get(i).getFromTime())) &&
-//                    target.isBefore(LocalTime.parse(shifts.get(i).getToTime()))) {
-//                shiftNo = shifts.get(i).getShiftNo();
-//                shiftName = shifts.get(i).getShiftName();
-//            }
+//        } catch (ParseException e) {
+//            e.printStackTrace();
 //        }
     }
 

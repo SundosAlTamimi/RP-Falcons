@@ -254,8 +254,6 @@ public class Order extends AppCompatActivity {
             user.setText(waiter);
             seats.setText("" + seatNo);
         }
-
-        date.setText(today);
     }
 
     void setDateAndVoucherNumber() {
@@ -285,12 +283,7 @@ public class Order extends AppCompatActivity {
         } else {
             voucherSerial = transactionsTempSize + 1;
         }
-
-//        if (orderTypeFlag == 0) {
-//            voucherSerial = (transactions.size() > 0 ? transactions.size() : 0);
-//        } else {
-//            voucherSerial = (transactionsTemp.size() > 0 ? transactionsTemp.get(transactionsTemp.size() - 1).getVoucherSerial() + 1 : 0);
-//        }
+        date.setText(today);
         voucherNo = yearMonth + "-" + voucherSerial;
     }
 
@@ -325,83 +318,83 @@ public class Order extends AppCompatActivity {
 
     void fillGridView(String categoryName) {
 
-        ArrayList<UsedItems> subList = mDbHandler.getRequestedItems(categoryName);
+        if(!categoryName.equals("")) {
+            ArrayList<UsedItems> subList = mDbHandler.getRequestedItems(categoryName);
 
-        Toast.makeText(Order.this, "size " + subList.size(), Toast.LENGTH_SHORT).show();
+            if (subList.size() != 0) {
+                List<Items> items = mDbHandler.getAllItems();
+                requestedItems = new ArrayList<>();
 
-        if (subList.size() != 0) {
-            List<Items> items = mDbHandler.getAllItems();
-            requestedItems = new ArrayList<>();
-
-            for (int i = 0; i < subList.size(); i++) {
-                if (Character.isDigit(subList.get(i).getitemName().charAt(0))) { // no data in this position
-                    requestedItems.add(new Items("", "", "", 0, 0, "", "",
-                            0, 0, 0, "", 0, 0, 0, 0,
-                            "", "", 0, 0, 0, null, subList.get(i).getBackground(),
-                            subList.get(i).getBackground(), 0));
-                } else {
-                    for (int j = 0; j < items.size(); j++) {
-                        if (subList.get(i).getitemName().equals(items.get(j).getMenuName()))
-                            requestedItems.add(new Items(categoryName, items.get(j).getMenuName(), items.get(j).getFamilyName(),
-                                    items.get(j).getTax(), items.get(j).getTaxType(), items.get(j).getSecondaryName(), items.get(j).getKitchenAlias(),
-                                    items.get(j).getItemBarcode(), items.get(j).getStatus(), items.get(j).getItemType(), items.get(j).getInventoryUnit(),
-                                    items.get(j).getWastagePercent(), items.get(j).getDiscountAvailable(), items.get(j).getPointAvailable(),
-                                    items.get(j).getOpenPrice(), items.get(j).getKitchenPrinter(), items.get(j).getDescription(), items.get(j).getPrice(),
-                                    items.get(j).getUsed(), items.get(j).getShowInMenu(), items.get(j).getPic(), subList.get(i).getBackground(),
-                                    subList.get(i).getTextColor(), subList.get(i).getPosition()));
+                for (int i = 0; i < subList.size(); i++) {
+                    if (Character.isDigit(subList.get(i).getitemName().charAt(0))) { // no data in this position
+                        requestedItems.add(new Items("", "", "", 0, 0, "", "",
+                                0, 0, 0, "", 0, 0, 0, 0,
+                                "", "", 0, 0, 0, null, subList.get(i).getBackground(),
+                                subList.get(i).getBackground(), 0));
+                    } else {
+                        for (int j = 0; j < items.size(); j++) {
+                            if (subList.get(i).getitemName().equals(items.get(j).getMenuName()))
+                                requestedItems.add(new Items(categoryName, items.get(j).getMenuName(), items.get(j).getFamilyName(),
+                                        items.get(j).getTax(), items.get(j).getTaxType(), items.get(j).getSecondaryName(), items.get(j).getKitchenAlias(),
+                                        items.get(j).getItemBarcode(), items.get(j).getStatus(), items.get(j).getItemType(), items.get(j).getInventoryUnit(),
+                                        items.get(j).getWastagePercent(), items.get(j).getDiscountAvailable(), items.get(j).getPointAvailable(),
+                                        items.get(j).getOpenPrice(), items.get(j).getKitchenPrinter(), items.get(j).getDescription(), items.get(j).getPrice(),
+                                        items.get(j).getUsed(), items.get(j).getShowInMenu(), items.get(j).getPic(), subList.get(i).getBackground(),
+                                        subList.get(i).getTextColor(), subList.get(i).getPosition()));
+                        }
                     }
                 }
-            }
-            foodAdapter = new FoodAdapter1(Order.this, requestedItems);
-            gv.setAdapter(foodAdapter);
+                foodAdapter = new FoodAdapter1(Order.this, requestedItems);
+                gv.setAdapter(foodAdapter);
 
-            gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    if (!requestedItems.get(i).getMenuName().equals("")) {
-                        boolean exist = false;
-                        int index = 0;
-                        for (int k = 0; k < tableLayout.getChildCount(); k++) {
-                            TableRow tableRow = (TableRow) tableLayout.getChildAt(k);
-                            TextView textViewName = (TextView) tableRow.getChildAt(1);
-                            if (textViewName.getText().toString().equals(requestedItems.get(i).getMenuName())) {
-                                exist = true;
-                                index = k;
-                                break;
+                gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        if (!requestedItems.get(i).getMenuName().equals("")) {
+                            boolean exist = false;
+                            int index = 0;
+                            for (int k = 0; k < tableLayout.getChildCount(); k++) {
+                                TableRow tableRow = (TableRow) tableLayout.getChildAt(k);
+                                TextView textViewName = (TextView) tableRow.getChildAt(1);
+                                if (textViewName.getText().toString().equals(requestedItems.get(i).getMenuName())) {
+                                    exist = true;
+                                    index = k;
+                                    break;
+                                }
                             }
-                        }
 
-                        if (!exist) {
-                            ArrayList<ItemWithFq> questions = mDbHandler.getItemWithFqs(requestedItems.get(i).itemBarcode);
-                            if (questions.size() == 0) {
-                                wantedItems.add(requestedItems.get(i));
-                                lineDiscount.add(0.0);
-                                insertItemRaw(requestedItems.get(i));
+                            if (!exist) {
+                                ArrayList<ItemWithFq> questions = mDbHandler.getItemWithFqs(requestedItems.get(i).itemBarcode);
+                                if (questions.size() == 0) {
+                                    wantedItems.add(requestedItems.get(i));
+                                    lineDiscount.add(0.0);
+                                    insertItemRaw(requestedItems.get(i));
+                                } else {
+                                    wantedItems.add(requestedItems.get(i));
+                                    lineDiscount.add(0.0);
+                                    insertItemRaw(requestedItems.get(i));
+                                    showForceQuestionDialog(requestedItems.get(i).itemBarcode, 0);
+                                }
                             } else {
-                                wantedItems.add(requestedItems.get(i));
-                                lineDiscount.add(0.0);
-                                insertItemRaw(requestedItems.get(i));
-                                showForceQuestionDialog(requestedItems.get(i).itemBarcode, 0);
+                                TableRow tableRow = (TableRow) tableLayout.getChildAt(index);
+                                TextView textViewQty = (TextView) tableRow.getChildAt(0);
+                                TextView textViewPrice = (TextView) tableRow.getChildAt(2);
+                                TextView textViewTotal = (TextView) tableRow.getChildAt(3);
+
+                                int qty = Integer.parseInt(textViewQty.getText().toString());
+                                double price = Double.parseDouble(textViewPrice.getText().toString());
+
+                                textViewQty.setText("" + (qty + 1));
+                                textViewTotal.setText("" + (price * (qty + 1)));
+                                calculateTotal();
                             }
-                        } else {
-                            TableRow tableRow = (TableRow) tableLayout.getChildAt(index);
-                            TextView textViewQty = (TextView) tableRow.getChildAt(0);
-                            TextView textViewPrice = (TextView) tableRow.getChildAt(2);
-                            TextView textViewTotal = (TextView) tableRow.getChildAt(3);
-
-                            int qty = Integer.parseInt(textViewQty.getText().toString());
-                            double price = Double.parseDouble(textViewPrice.getText().toString());
-
-                            textViewQty.setText("" + (qty + 1));
-                            textViewTotal.setText("" + (price * (qty + 1)));
-                            calculateTotal();
-                        }
-                    } else
-                        Toast.makeText(Order.this, "No Item", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-
+                        } else
+                            Toast.makeText(Order.this, "No Item", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        } else
+            gv.setAdapter(null);
     }
 
     void insertItemRaw(Items item) {
@@ -1101,142 +1094,145 @@ public class Order extends AppCompatActivity {
 
     void showModifierDialog() {
 
-        dialog = new Dialog(Order.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.pick_modifier_dialog);
-        dialog.setCanceledOnTouchOutside(true);
+        if(focused != null) {
+            dialog = new Dialog(Order.this);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setCancelable(false);
+            dialog.setContentView(R.layout.pick_modifier_dialog);
+            dialog.setCanceledOnTouchOutside(true);
 
-        final Button extra = dialog.findViewById(R.id.extra);
-        final Button no = dialog.findViewById(R.id.no);
-        final Button little = dialog.findViewById(R.id.little);
-        final Button half = dialog.findViewById(R.id.half);
-        final Button save = dialog.findViewById(R.id.save);
-        final Button exit = dialog.findViewById(R.id.exit);
-        final GridView gridView = dialog.findViewById(R.id.modifiers);
+            final Button extra = dialog.findViewById(R.id.extra);
+            final Button no = dialog.findViewById(R.id.no);
+            final Button little = dialog.findViewById(R.id.little);
+            final Button half = dialog.findViewById(R.id.half);
+            final Button save = dialog.findViewById(R.id.save);
+            final Button exit = dialog.findViewById(R.id.exit);
+            final GridView gridView = dialog.findViewById(R.id.modifiers);
 
-        int itemBarcode = wantedItems.get(Integer.parseInt(focused.getTag().toString())).getItemBarcode();
-        Log.e("hi", "********" + itemBarcode);
-        final ArrayList<ItemWithModifier> modifiers = mDbHandler.getItemWithModifiers(itemBarcode);
-        final ArrayList<String> modifiersName = new ArrayList<>();
+            int itemBarcode = wantedItems.get(Integer.parseInt(focused.getTag().toString())).getItemBarcode();
+            Log.e("hi", "********" + itemBarcode);
+            final ArrayList<ItemWithModifier> modifiers = mDbHandler.getItemWithModifiers(itemBarcode);
+            final ArrayList<String> modifiersName = new ArrayList<>();
 
-        for (int i = 0; i < modifiers.size(); i++) {
-            modifiersName.add("(" + modifiers.get(i).getModifierNo() + ") " + modifiers.get(i).getModifierText());
+            for (int i = 0; i < modifiers.size(); i++) {
+                modifiersName.add("(" + modifiers.get(i).getModifierNo() + ") " + modifiers.get(i).getModifierText());
+            }
+
+            final ArrayAdapter<String> adapter = new ArrayAdapter<>(Order.this, R.layout.grid_style, modifiersName);
+            gridView.setAdapter(adapter);
+
+            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                    for (int j = 0; j < gridView.getChildCount(); j++) {
+                        gridView.getChildAt(j).setBackgroundDrawable(null);
+                    }
+                    gridView.getChildAt(i).setBackgroundDrawable(getResources().getDrawable(R.drawable.focused_table));
+                    selectedModifier = i;
+                }
+            });
+
+            extra.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (selectedModifier != -1) {
+                        if (!modifiersName.get(selectedModifier).contains("*  Extra")) { // if contain the same string
+                            if (!modifiersName.get(selectedModifier).contains("*")) { // if contain another string
+                                modifiersName.set(selectedModifier, modifiersName.get(selectedModifier) + " \n " + "  *  Extra");
+                                adapter.notifyDataSetChanged();
+                            } else { // if it has another string it will extract it and add the new one
+                                modifiersName.set(selectedModifier, modifiersName.get(selectedModifier).substring(0, modifiersName.get(selectedModifier).indexOf('*') - 1) + " *  Extra");
+                                adapter.notifyDataSetChanged();
+                            }
+                        }
+                    } else
+                        Toast.makeText(Order.this, "Please select a modifier ", Toast.LENGTH_SHORT).show();
+                }
+            });
+            no.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (selectedModifier != -1) {
+                        if (!modifiersName.get(selectedModifier).contains("*  No")) { // if contain the same string
+                            if (!modifiersName.get(selectedModifier).contains("*")) { // if contain another string
+                                modifiersName.set(selectedModifier, modifiersName.get(selectedModifier) + " \n " + "  *  No");
+                                adapter.notifyDataSetChanged();
+                            } else { // if it has another string it will extract it and add the new one
+                                modifiersName.set(selectedModifier, modifiersName.get(selectedModifier).substring(0, modifiersName.get(selectedModifier).indexOf('*') - 1) + " *  No");
+                                adapter.notifyDataSetChanged();
+                            }
+                        }
+                    } else
+                        Toast.makeText(Order.this, "Please select a modifier ", Toast.LENGTH_SHORT).show();
+                }
+            });
+            little.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (selectedModifier != -1) {
+                        if (!modifiersName.get(selectedModifier).contains("*  Little")) { // if contain the same string
+                            if (!modifiersName.get(selectedModifier).contains("*")) { // if contain another string
+                                modifiersName.set(selectedModifier, modifiersName.get(selectedModifier) + " \n " + "  *  Little");
+                                adapter.notifyDataSetChanged();
+                            } else { // if it has another string it will extract it and add the new one
+                                modifiersName.set(selectedModifier, modifiersName.get(selectedModifier).substring(0, modifiersName.get(selectedModifier).indexOf('*') - 1) + " *  Little");
+                                adapter.notifyDataSetChanged();
+                            }
+                        }
+                    } else
+                        Toast.makeText(Order.this, "Please select a modifier ", Toast.LENGTH_SHORT).show();
+                }
+            });
+            half.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (selectedModifier != -1) {
+                        if (!modifiersName.get(selectedModifier).contains("*  Half")) { // if contain the same string
+                            if (!modifiersName.get(selectedModifier).contains("*")) { // if contain another string
+                                modifiersName.set(selectedModifier, modifiersName.get(selectedModifier) + " \n " + "  *  Half");
+                                adapter.notifyDataSetChanged();
+                            } else { // if it has another string it will extract it and add the new one
+                                modifiersName.set(selectedModifier, modifiersName.get(selectedModifier).substring(0, modifiersName.get(selectedModifier).indexOf('*') - 1) + " *  Half");
+                                adapter.notifyDataSetChanged();
+                            }
+                        }
+                    } else
+                        Toast.makeText(Order.this, "Please select a modifier ", Toast.LENGTH_SHORT).show();
+                }
+            });
+            save.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    for (int i = 0; i < modifiersName.size(); i++) {
+                        if (modifiersName.get(i).contains("*")) {
+                            insertModifierRaw(modifiersName.get(i).substring(modifiersName.get(selectedModifier).indexOf('-') + 1,
+                                    modifiersName.get(selectedModifier).indexOf('-') + 10) + "..");
+                            wantedItems.add(Integer.parseInt(focused.getTag().toString()) + 1,
+                                    new Items("modifier", modifiers.get(i).getModifierText(), "", 0,
+                                            0, "", "", 0, 0, 0, "", 0,
+                                            0, 0, 0, "", "", 0, 0, 0, null));
+                            lineDiscount.add(0.0);
+                            focused.setBackgroundDrawable(null);
+                        }
+                    }
+                    selectedModifier = -1;
+                    dialog.dismiss();
+                }
+            });
+            exit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    selectedModifier = -1;
+                    focused.setBackgroundDrawable(null);
+                    dialog.dismiss();
+                }
+            });
+
+            dialog.show();
+        } else {
+            Toast.makeText(Order.this , "Please choose item to add modifier !" , Toast.LENGTH_SHORT).show();
         }
-
-        final ArrayAdapter<String> adapter = new ArrayAdapter<>(Order.this, R.layout.grid_style, modifiersName);
-        gridView.setAdapter(adapter);
-
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                for (int j = 0; j < gridView.getChildCount(); j++) {
-                    gridView.getChildAt(j).setBackgroundDrawable(null);
-                }
-                gridView.getChildAt(i).setBackgroundDrawable(getResources().getDrawable(R.drawable.focused_table));
-                selectedModifier = i;
-            }
-        });
-
-        extra.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (selectedModifier != -1) {
-                    if (!modifiersName.get(selectedModifier).contains("*  Extra")) { // if contain the same string
-                        if (!modifiersName.get(selectedModifier).contains("*")) { // if contain another string
-                            modifiersName.set(selectedModifier, modifiersName.get(selectedModifier) + " \n " + "  *  Extra");
-                            adapter.notifyDataSetChanged();
-                        } else { // if it has another string it will extract it and add the new one
-                            modifiersName.set(selectedModifier, modifiersName.get(selectedModifier).substring(0, modifiersName.get(selectedModifier).indexOf('*') - 1) + " *  Extra");
-                            adapter.notifyDataSetChanged();
-                        }
-                    }
-                } else
-                    Toast.makeText(Order.this, "Please select a modifier ", Toast.LENGTH_SHORT).show();
-            }
-        });
-        no.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (selectedModifier != -1) {
-                    if (!modifiersName.get(selectedModifier).contains("*  No")) { // if contain the same string
-                        if (!modifiersName.get(selectedModifier).contains("*")) { // if contain another string
-                            modifiersName.set(selectedModifier, modifiersName.get(selectedModifier) + " \n " + "  *  No");
-                            adapter.notifyDataSetChanged();
-                        } else { // if it has another string it will extract it and add the new one
-                            modifiersName.set(selectedModifier, modifiersName.get(selectedModifier).substring(0, modifiersName.get(selectedModifier).indexOf('*') - 1) + " *  No");
-                            adapter.notifyDataSetChanged();
-                        }
-                    }
-                } else
-                    Toast.makeText(Order.this, "Please select a modifier ", Toast.LENGTH_SHORT).show();
-            }
-        });
-        little.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (selectedModifier != -1) {
-                    if (!modifiersName.get(selectedModifier).contains("*  Little")) { // if contain the same string
-                        if (!modifiersName.get(selectedModifier).contains("*")) { // if contain another string
-                            modifiersName.set(selectedModifier, modifiersName.get(selectedModifier) + " \n " + "  *  Little");
-                            adapter.notifyDataSetChanged();
-                        } else { // if it has another string it will extract it and add the new one
-                            modifiersName.set(selectedModifier, modifiersName.get(selectedModifier).substring(0, modifiersName.get(selectedModifier).indexOf('*') - 1) + " *  Little");
-                            adapter.notifyDataSetChanged();
-                        }
-                    }
-                } else
-                    Toast.makeText(Order.this, "Please select a modifier ", Toast.LENGTH_SHORT).show();
-            }
-        });
-        half.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (selectedModifier != -1) {
-                    if (!modifiersName.get(selectedModifier).contains("*  Half")) { // if contain the same string
-                        if (!modifiersName.get(selectedModifier).contains("*")) { // if contain another string
-                            modifiersName.set(selectedModifier, modifiersName.get(selectedModifier) + " \n " + "  *  Half");
-                            adapter.notifyDataSetChanged();
-                        } else { // if it has another string it will extract it and add the new one
-                            modifiersName.set(selectedModifier, modifiersName.get(selectedModifier).substring(0, modifiersName.get(selectedModifier).indexOf('*') - 1) + " *  Half");
-                            adapter.notifyDataSetChanged();
-                        }
-                    }
-                } else
-                    Toast.makeText(Order.this, "Please select a modifier ", Toast.LENGTH_SHORT).show();
-            }
-        });
-        save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                for (int i = 0; i < modifiersName.size(); i++) {
-                    if (modifiersName.get(i).contains("*")) {
-                        insertModifierRaw(modifiersName.get(i).substring(modifiersName.get(selectedModifier).indexOf('-') + 1,
-                                modifiersName.get(selectedModifier).indexOf('-') + 10) + "..");
-                        wantedItems.add(Integer.parseInt(focused.getTag().toString()) + 1,
-                                new Items("modifier", modifiers.get(i).getModifierText(), "", 0,
-                                        0, "", "", 0, 0, 0, "", 0,
-                                        0, 0, 0, "", "", 0, 0, 0, null));
-                        lineDiscount.add(0.0);
-                        focused.setBackgroundDrawable(null);
-                    }
-                }
-                selectedModifier = -1;
-                dialog.dismiss();
-            }
-        });
-        exit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                selectedModifier = -1;
-                focused.setBackgroundDrawable(null);
-                dialog.dismiss();
-            }
-        });
-
-        dialog.show();
-
     }
 
     void showDeliveryChangeDialog() {
@@ -1346,6 +1342,8 @@ public class Order extends AppCompatActivity {
                         if (discPerc.isChecked()) {
                             discountValue = (Double.parseDouble(addDiscountEditText.getText().toString())) *
                                     totalItemsWithDiscount / 100;
+                            Log.e("sum " , "" + (Double.parseDouble(addDiscountEditText.getText().toString())) + "*" +
+                                    totalItemsWithDiscount + "/" + "100");
                         }
                         disCount.setText(discountValue + "");
                         calculateTotal();
@@ -1508,8 +1506,8 @@ public class Order extends AppCompatActivity {
         mDbHandler.addOrderHeaderTemp(new OrderHeader(orderTypeFlag, 0, today, Settings.POS_number, Settings.store_number,
                 voucherNo, voucherSerial, Double.parseDouble(total.getText().toString()), ldisc, disc, disc + ldisc,
                 Settings.service_value, Double.parseDouble((tax.getText().toString())), serviceTax, Double.parseDouble((subTotal.getText().toString())),
-                Double.parseDouble(amountDue.getText().toString()), Double.parseDouble(deliveryCharge.getText().toString()), tableNumber,
-                sectionNumber, 0.00, 0.00, 0.00, 0.00,
+                Double.parseDouble(amountDue.getText().toString()), Double.parseDouble(deliveryCharge.getText().toString()), sectionNumber,
+                tableNumber, 0.00, 0.00, 0.00, 0.00,
                 0.00, 0.00, Settings.shift_name, Settings.shift_number, waiter, seatNo, Settings.user_name, Settings.password , time));
     }
 

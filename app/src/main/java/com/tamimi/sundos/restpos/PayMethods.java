@@ -1510,11 +1510,11 @@ public class PayMethods extends AppCompatActivity {
             //getting the data from order activity and save it in database.
 
             obj.getOrderHeaderObj().setCashValue(cashValue1);
-            obj.getOrderHeaderObj().setPointValue(pointValue1);
             obj.getOrderHeaderObj().setCardsValue(creditCardValue1);
             obj.getOrderHeaderObj().setChequeValue(chequeValue1);
             obj.getOrderHeaderObj().setGiftValue(giftCardValue1);
             obj.getOrderHeaderObj().setCouponValue(creditValue1);
+            obj.getOrderHeaderObj().setPointValue(pointValue1);
 
             mDHandler.addOrderHeader(obj.getOrderHeaderObj());
             for (int i = 0; i < obj.getOrderTransactionObj().size(); i++)
@@ -1525,6 +1525,13 @@ public class PayMethods extends AppCompatActivity {
             startActivity(intent);
 
         } else {
+
+            orderHeaderTemp.get(0).setCashValue(cashValue1);
+            orderHeaderTemp.get(0).setCardsValue(creditCardValue1);
+            orderHeaderTemp.get(0).setChequeValue(chequeValue1);
+            orderHeaderTemp.get(0).setGiftValue(giftCardValue1);
+            orderHeaderTemp.get(0).setCouponValue(creditValue1);
+            orderHeaderTemp.get(0).setPointValue(pointValue1);
 
             mDHandler.addOrderHeader(orderHeaderTemp.get(0));
             for (int i = 0; i < orderTransTemp.size(); i++) {
