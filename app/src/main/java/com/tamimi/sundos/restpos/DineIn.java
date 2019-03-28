@@ -66,6 +66,7 @@ public class DineIn extends AppCompatActivity {
     int tableNumber;
     int current = 0;
     String waiter , waiterNo;
+    boolean waiterClick = false;
 
     int fromSection, toSection;
     List<String> tablesNoLeft, tablesNoRight;

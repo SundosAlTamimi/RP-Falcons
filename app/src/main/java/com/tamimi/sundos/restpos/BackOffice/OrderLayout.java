@@ -315,7 +315,7 @@ public class OrderLayout extends AppCompatActivity {
                     backColor, textColor, i));
         }
 
-        Toast.makeText(OrderLayout.this , "Menu Saved" , Toast.LENGTH_LONG).show();
+//        Toast.makeText(OrderLayout.this , "Menu Saved" , Toast.LENGTH_LONG).show();
     }
 
     void fillGridView(int flag) {
@@ -525,13 +525,40 @@ public class OrderLayout extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int j) {
 
+//                        UsedItems usedItems = new UsedItems(categoryName.getText().toString(), "item" + i,
+//                                getResources().getColor(R.color.layer2), getResources().getColor(R.color.text_color), i);
+
+                        String itemName = "";
                         ArrayList<UsedItems> subList = mDbHandler.getRequestedItems(focused.getText().toString());
-                        subList.remove(i);
+                        for (int k = 0; k < subList.size(); k++) {
+                            if(subList.get(k).getCategoryName().equals(focused.getText().toString()) && subList.get(k).getPosition()==i){
+                                itemName = subList.get(k).getitemName();
+                                break;
+                            }
+                        }
+                        int itemCode = -1;
+                        List<Items> items = mDbHandler.getAllItems();
+                        for (int i = 0; i < items.size(); i++) {
+                            if(items.get(i).getMenuName().equals(itemName)){
+                                itemCode = items.get(i).getItemBarcode();
+                                break;
+                            }
+                        }
+                        Log.e("delete " , " " + itemName + " " + itemCode);
+                        mDbHandler.deleteModifierAndForce(itemCode);
+
+                        mDbHandler.updateUsedItems(focused.getText().toString(), "item" + i,
+                                getResources().getColor(R.color.layer2), getResources().getColor(R.color.text_color), i);
+
+                        subList = mDbHandler.getRequestedItems(focused.getText().toString());
+
                         gv.setAdapter(null);
                         adapter = new LayoutFoodAdapter(OrderLayout.this, subList, 1);
                         gv.setAdapter(adapter);
 
                         storeItems();
+
+                        Toast.makeText(OrderLayout.this , "Item deleted !" , Toast.LENGTH_SHORT).show();
                     }
                 });
 
