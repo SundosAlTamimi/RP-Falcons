@@ -1,5 +1,6 @@
 package com.tamimi.sundos.restpos.BackOffice;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -21,7 +22,10 @@ import com.tamimi.sundos.restpos.Models.JobGroup;
 import com.tamimi.sundos.restpos.R;
 import com.tamimi.sundos.restpos.Settings;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -29,19 +33,21 @@ import androidx.core.content.ContextCompat;
 public class EmployeeRegistration extends AppCompatActivity {
 
     TableLayout tableEmployee;
-    EditText  empName, mobileNo, userPassword, hireDate, termination, payRate;
-    TextView empNo;
+    EditText  empName, mobileNo, userPassword, payRate;
+    TextView empNo, hireDate, termination;
     Button newButton, saveButton, exitButton;
     Spinner securityLevel, payBasic, holidayPay, jobGroup, employeeType;
     CheckBox active;
     DatabaseHandler mDHandler;
     ArrayAdapter<String> jobSpinner, holidayPaySpinner, securityLevelSpinner, payBasicSpinner, employeeTypeSpinner;
-
+    Calendar myCalendar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.employee_registration);
+
+        myCalendar = Calendar.getInstance();
 
         final ArrayList<String> jobList = new ArrayList<>();
         final ArrayList<String> empNameList = new ArrayList<>();
@@ -78,6 +84,16 @@ public class EmployeeRegistration extends AppCompatActivity {
         jopGroupListForSpinner = mDHandler.getAllJobGroup();
         final int[] serial = {mDHandler.getAllEmployeeRegistration().size()};
         empNo.setText(""+ serial[0]);
+
+
+
+        hireDate.setOnClickListener(v -> new DatePickerDialog(EmployeeRegistration.this, dateListener(hireDate), myCalendar
+                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH)).show());
+
+        termination.setOnClickListener(v -> new DatePickerDialog(EmployeeRegistration.this, dateListener(termination), myCalendar
+                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH)).show());
 
         for (int i = 0; i < jopGroupListForSpinner.size(); i++) {
             jopGroupSpinner.add(jopGroupListForSpinner.get(i).getJobGroup());
@@ -138,6 +154,7 @@ public class EmployeeRegistration extends AppCompatActivity {
                 if (!jopGroupSpinner.isEmpty()) {
                     if (!empName.getText().toString().equals("") && !empNo.getText().toString().equals("") && !mobileNo.getText().toString().equals("") && !hireDate.getText().toString().equals("") &&
                             !termination.getText().toString().equals("") && !payRate.getText().toString().equals("")) {
+                        if(userPassword.getText().toString().length()==4){
                         String pass = userPassword.getText().toString();
                         jobList.add(jobGroup.getSelectedItem().toString());
                         empNameList.add(empName.getText().toString());
@@ -182,7 +199,10 @@ public class EmployeeRegistration extends AppCompatActivity {
                         payRate.setText("");
 
 
-                    } else {
+                    }else {
+                            Toast.makeText(EmployeeRegistration.this, "Length of user password must 4 number Please Edit password  ", Toast.LENGTH_SHORT).show();
+                        }
+                } else {
                         Toast.makeText(EmployeeRegistration.this, "Please Insert data ", Toast.LENGTH_SHORT).show();
                     }
                 } else {
@@ -201,6 +221,23 @@ public class EmployeeRegistration extends AppCompatActivity {
         });
 
 
+    }
+
+
+    public DatePickerDialog.OnDateSetListener dateListener(TextView textView) {
+        final DatePickerDialog.OnDateSetListener date = (view, year, month, dayOfMonth) -> {
+
+            // TODO Auto-generated method stub
+            myCalendar.set(Calendar.YEAR, year);
+            myCalendar.set(Calendar.MONTH, month);
+            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+            String myFormat = "dd-MM-yyyy"; //In which you need put here
+            SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+
+            textView.setText(sdf.format(myCalendar.getTime()));
+        };
+        return date;
     }
 
     void insertRaw3(String EmpName, int empNo, int mobileNo, String
@@ -278,8 +315,8 @@ public class EmployeeRegistration extends AppCompatActivity {
             empName = (EditText) findViewById(R.id.empName);
             mobileNo = (EditText) findViewById(R.id.mobileNo);
             userPassword = (EditText) findViewById(R.id.user_password8);
-            hireDate = (EditText) findViewById(R.id.hire_date2);
-            termination = (EditText) findViewById(R.id.termination);
+            hireDate = (TextView) findViewById(R.id.hire_date2);
+            termination = (TextView) findViewById(R.id.termination);
             payRate = (EditText) findViewById(R.id.pay_rate);
 
             securityLevel = (Spinner) findViewById(R.id.spinner_security);

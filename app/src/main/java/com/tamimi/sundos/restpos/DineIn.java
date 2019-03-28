@@ -318,6 +318,7 @@ public class DineIn extends AppCompatActivity {
                             public void onClick(View view) {
                                 waiter = textView.getText().toString();
                                 waiterNo = textView2.getText().toString();
+                                waiterClick =true;
                                 setTableBackground(linearLayout, linearLayout1);
                             }
                         });
@@ -328,8 +329,13 @@ public class DineIn extends AppCompatActivity {
                 done.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        dialog.dismiss();
-                        openSeatsNumberDialog();
+                        if(linearLayout.getChildCount()!=0&&waiterClick ) {
+                            dialog.dismiss();
+                            openSeatsNumberDialog();
+                            waiterClick =false;
+                        }else {
+                            Toast.makeText(DineIn.this, "Please add Waiter before Continue ...", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
                 dialog.show();

@@ -73,7 +73,7 @@ public class MenuRegistration extends AppCompatActivity {
     List<String> categories = new ArrayList<>();
     List<String> unit = new ArrayList<>();
     List<String> printers = new ArrayList<>();
-    List<String> families = new ArrayList<>();
+    List<String> families ;
 
     private static DatabaseHandler mDbHandler;
 
@@ -250,10 +250,15 @@ public class MenuRegistration extends AppCompatActivity {
         CheckBox showInMenu = (CheckBox) dialog.findViewById(R.id.showInMenu);
 
         showInMenuVariavle = showInMenu.isChecked() ? 1 : 0;
+        families = new ArrayList<>();
 
+//        families = mDbHandler.getAllExistingFamilies();
+        for(int i=0;i<mDbHandler.getAllFamilyCategory().size();i++) {
+            if(mDbHandler.getAllFamilyCategory().get(i).getType()==1){
+            families.add(mDbHandler.getAllFamilyCategory().get(i).getName());
+            }
 
-        families = mDbHandler.getAllExistingFamilies();
-
+        }
         familiesAdapter = new ArrayAdapter<String>(MenuRegistration.this, R.layout.spinner_style, families);
         familyNameSpinner.setAdapter(familiesAdapter);
 
@@ -615,7 +620,12 @@ public class MenuRegistration extends AppCompatActivity {
 
     void fillSpinners() {
 
-        categories = mDbHandler.getAllExistingCategories();
+//        categories = mDbHandler.getAllExistingCategories();
+        for(int i=0;i<mDbHandler.getAllFamilyCategory().size();i++) {
+            if(mDbHandler.getAllFamilyCategory().get(i).getType()==2){
+                categories.add(mDbHandler.getAllFamilyCategory().get(i).getName());
+            }
+        }
         unit = mDbHandler.getAllExistingUnits();
 
         printers.add("printer 1");

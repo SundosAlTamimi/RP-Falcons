@@ -144,7 +144,7 @@ public class Order extends AppCompatActivity {
             switch (view.getId()) {
                 case R.id.pay:
                     if (orderTypeFlag == 0) {
-                        if (!amountDue.getText().toString().equals("0.00")) {
+                        if (!(Double.parseDouble(amountDue.getText().toString())==0)) {
                             saveInOrderTransactionObj();
                             saveInOrderHeaderObj();
                             Intent intentPay = new Intent(Order.this, PayMethods.class);
@@ -156,7 +156,7 @@ public class Order extends AppCompatActivity {
 
                 case R.id.order:
                     if (orderTypeFlag == 1) {
-                        if (!amountDue.getText().toString().equals("0.00")) {
+                        if (!(Double.parseDouble(amountDue.getText().toString())==0)) {
                             saveInOrderTransactionTemp();
                             saveInOrderHeaderTemp();
 
@@ -734,7 +734,8 @@ public class Order extends AppCompatActivity {
 
 //                Log.e("test " , "" + Integer.parseInt(waiterNo) );
                 TextView textViewQty = (TextView) raw.getChildAt(0);
-                TextView textViewTotal = (TextView) raw.getChildAt(3);
+                TextView textViewTotal = (TextView) raw.getChildAt(3);//+"     "+ waiter+" ---  " + Integer.parseInt(waiterNo)+ "    ---  " + wantedItems.get(index).getItemBarcode()
+                Log.e("test12",""+ waiterNo);
                 mDbHandler.addCancleOrder(new CancleOrder(voucherNo, today, Settings.user_name, Settings.password, Settings.shift_name,
                         Settings.shift_number, waiter, Integer.parseInt(waiterNo), "" + wantedItems.get(index).getItemBarcode(),
                         wantedItems.get(index).getMenuName(), Integer.parseInt(textViewQty.getText().toString()),
@@ -746,6 +747,7 @@ public class Order extends AppCompatActivity {
                     wantedItems.remove(Integer.parseInt(raw.getTag().toString()));
                     lineDiscount.remove(Integer.parseInt(raw.getTag().toString()));
                     tableLayoutPosition--;
+                    if(wantedItems.size()==0){ deliveryCharge.setText("0.0");}
                     resetPosition();
                     calculateTotal();
                 } else {
@@ -834,6 +836,8 @@ public class Order extends AppCompatActivity {
                     wantedItems.clear();
                     lineDiscount.clear();
                     tableLayoutPosition = 0;
+                    deliveryCharge.setText("0.0");
+
                     resetPosition();
                     calculateTotal();
                 } else {
@@ -1236,7 +1240,7 @@ public class Order extends AppCompatActivity {
     }
 
     void showDeliveryChangeDialog() {
-
+if(wantedItems.size()!=0){
         dialog = new Dialog(Order.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
@@ -1262,6 +1266,9 @@ public class Order extends AppCompatActivity {
             }
         });
         dialog.show();
+    }else {
+    Toast.makeText(this, "Delivery is not available when no have any item ", Toast.LENGTH_SHORT).show();
+}
     }
 
     void showLineDiscountDialog() {

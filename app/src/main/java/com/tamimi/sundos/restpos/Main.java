@@ -58,7 +58,7 @@ public class Main extends AppCompatActivity {
 
     Button back, exit;
     Button takeAway, dineIn;
-    TextView userName, shift, date, cashierIn, cashierOut, payIn, payOut, timeCard, safeMode, cashDrawer;
+    TextView userName, shift, date, cashierIn, cashierOut, payIn, payOut, timeCard, safeMode, cashDrawer,annText;
 
     DatabaseHandler mDHandler;
     Dialog dialog;
@@ -84,7 +84,7 @@ public class Main extends AppCompatActivity {
         today = df.format(currentTimeAndDate);
 
         date.setText(today);
-        userName.setText(Settings.user_name);
+        userName.setText( mDHandler.getOpenedShifts(today, 1).getUserName());
         shift.setText("Shift: " + mDHandler.getOpenedShifts(today, 1).getShiftName());
 
         showAnnouncement();
@@ -200,7 +200,7 @@ public class Main extends AppCompatActivity {
         announcemets=mDHandler.getAllTableAnnouncement();
         int count=0;
         for(int i=0;i<announcemets.size();i++){
-            if(announcemets.get(i).getIsShow()== 0){
+            if(announcemets.get(i).getAnnouncementDate().equals(today)){
                 if(announcemets.get(i).getUserName().equals(Settings.user_name)||announcemets.get(i).getUserName().equals("All")) {
                     if (announcemets.get(i).getPosNo() == (Settings.POS_number) || announcemets.get(i).getPosNo() == (-1)) {
                         if(announcemets.get(i).getShiftName().equals(Settings.shift_name)||announcemets.get(i).getShiftName().equals("All")) {
@@ -216,7 +216,7 @@ public class Main extends AppCompatActivity {
                         textView.setText("" + count + ") " + announcemets.get(i).getMessage());
 
 
-                        textView.setTextColor(ContextCompat.getColor(Main.this, R.color.exit_hover));
+                        textView.setTextColor(ContextCompat.getColor(Main.this, R.color.text_color));
                         textView.setGravity(Gravity.START);
 
                         TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
@@ -227,7 +227,8 @@ public class Main extends AppCompatActivity {
 
                         AnnouncementTable.addView(row);
                         mDHandler.updateAnnounementIsShow(announcemets.get(i).getMessage(), announcemets.get(i).getAnnouncementDate());
-                            blinkAnnouncement(textView);
+                            blinkAnnouncement(annText);
+
                     }
                 }
 
@@ -379,13 +380,18 @@ public class Main extends AppCompatActivity {
                     TextView text = (TextView) tableRow.getChildAt(0);
                     TextView text1 = (TextView) tableRow.getChildAt(1);
 
-                    cash.setCashierName(user.getText().toString());
+                    if (!text1.getText().toString().equals("")){
+
+                        cash.setCashierName(user.getText().toString());
                     cash.setCheckInDate(date.getText().toString());
                     cash.setCategoryName(text.getText().toString());
                     cash.setCategoryValue(Double.parseDouble(text.getTag().toString()));
                     cash.setCategoryQty(Integer.parseInt(text1.getText().toString()));
                     cash.setOrderKind(0);
                     cashier.add(cash);
+                }else{
+                        Toast.makeText(Main.this, "some Qty not have value ...", Toast.LENGTH_SHORT).show();
+                    }
                 }
                 mDHandler.addCashierInOut(cashier);
                 dialog.dismiss();
@@ -1432,6 +1438,8 @@ public class Main extends AppCompatActivity {
         timeCard = (TextView) findViewById(R.id.time_card);
         safeMode = (TextView) findViewById(R.id.safe_mode);
         cashDrawer = (TextView) findViewById(R.id.cash_drawer);
+
+        annText= (TextView) findViewById(R.id.annText);
         AnnouncementTable=(TableLayout)findViewById(R.id.AnnouncmentTable);
 
         back.setOnClickListener(onClickListener);

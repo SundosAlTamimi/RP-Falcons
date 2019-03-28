@@ -111,6 +111,13 @@ public class PayMethods extends AppCompatActivity {
             orderHeaderTemp = mDHandler.getOrderHeaderTemp(sectionNo, tableNo);
 
             balance.setText(orderHeaderTemp.get(0).getAmountDue() + "");
+            server.setText(orderHeaderTemp.get(0).getWaiter());
+            discount.setText(orderHeaderTemp.get(0).getAllDiscount()+"");
+            subTotal.setText(orderHeaderTemp.get(0).getSubTotal()+"");
+            tax.setText(orderHeaderTemp.get(0).getTotalTax()+"");
+            amountDue.setText(orderHeaderTemp.get(0).getAmountDue() + "");
+            deliveryCharge.setText(orderHeaderTemp.get(0).getDeliveryCharge()+"");
+
             mainBalance = balance.getText().toString();
             remainingBalance.setText("Remaining : " + balance.getText().toString());
             check.setText(check.getText().toString() + " " + orderHeaderTemp.get(0).getSectionNO());
@@ -118,7 +125,18 @@ public class PayMethods extends AppCompatActivity {
             orderType = "Dine In";
 
         } else {  // pay from takeaway
-            balance.setText(obj.getBalance() + "");
+
+
+            balance.setText( obj.getOrderHeaderObj().getAmountDue()+"");
+            orderAmount.setText(obj.getOrderHeaderObj().getTotal()+"");
+            discount.setText(obj.getOrderHeaderObj().getAllDiscount()+"");
+            deliveryCharge.setText(obj.getOrderHeaderObj().getDeliveryCharge()+"");
+            server.setText(obj.getOrderHeaderObj().getWaiter());
+            subTotal.setText(obj.getOrderHeaderObj().getSubTotal()+"");
+            tax.setText(obj.getOrderHeaderObj().getTotalTax()+"");
+            amountDue.setText(obj.getOrderHeaderObj().getAmountDue()+"");
+
+
             mainBalance = balance.getText().toString();
             remainingBalance.setText("Remaining : " + balance.getText().toString());
             check.setText(check.getText().toString() + " -");
@@ -1387,127 +1405,130 @@ public class PayMethods extends AppCompatActivity {
 
     public void saveInDataBase() {
 
-        Date currentTimeAndDate = Calendar.getInstance().getTime();
-        SimpleDateFormat df1 = new SimpleDateFormat("dd-MM-yyyy");
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM");
-        SimpleDateFormat Tf = new SimpleDateFormat("hh:mm:ss");
-        String today = df1.format(currentTimeAndDate);
-        String times = Tf.format(currentTimeAndDate);
-        int serial = mDHandler.getMaxSerial("VOUCHER_SERIAL", "PAY_METHOD");
-        String vhfSerial = df.format(currentTimeAndDate);// + "-" + (serial);
-        String newString = vhfSerial.replace("-", "")+ "-" + (serial+1);
+        String balanceTest=remainingBalance.getText().toString().substring(remainingBalance.getText().toString().indexOf(":")+1);
+        Log.e("test ...","balanceTest--->   "+Double.parseDouble(balanceTest));
+        if(Double.parseDouble(balanceTest)== 0.00) {
+            Date currentTimeAndDate = Calendar.getInstance().getTime();
+            SimpleDateFormat df1 = new SimpleDateFormat("dd-MM-yyyy");
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM");
+            SimpleDateFormat Tf = new SimpleDateFormat("hh:mm:ss");
+            String today = df1.format(currentTimeAndDate);
+            String times = Tf.format(currentTimeAndDate);
+            int serial = mDHandler.getMaxSerial("VOUCHER_SERIAL", "PAY_METHOD");
+            String vhfSerial = df.format(currentTimeAndDate);// + "-" + (serial);
+            String newString = vhfSerial.replace("-", "") + "-" + (serial + 1);
 
-        double cashValues = 0, cardValues = 0, chequeValues = 0, giftValues = 0, couponValues = 0, pointValues = 0;
+            double cashValues = 0, cardValues = 0, chequeValues = 0, giftValues = 0, couponValues = 0, pointValues = 0;
 
-        PayMethod payMethod = new PayMethod();
+            PayMethod payMethod = new PayMethod();
 
-        payMethod.setOrderType(orderType.equals("Take Away") ? 0 : 1);
-        payMethod.setOrderKind(0);
-        payMethod.setVoucherDate(today);
-        payMethod.setPointOfSaleNumber(Settings.POS_number);
-        payMethod.setStoreNumber(Settings.store_number);
-        payMethod.setVoucherNumber(newString);
-        payMethod.setVoucherSerial(serial+1);
-        payMethod.setShiftName(Settings.shift_name);
-        payMethod.setShiftNumber(Settings.shift_number);
-        payMethod.setUserNo(Settings.password);
-        payMethod.setUserName(Settings.user_name);
-        payMethod.setTime(times);
+            payMethod.setOrderType(orderType.equals("Take Away") ? 0 : 1);
+            payMethod.setOrderKind(0);
+            payMethod.setVoucherDate(today);
+            payMethod.setPointOfSaleNumber(Settings.POS_number);
+            payMethod.setStoreNumber(Settings.store_number);
+            payMethod.setVoucherNumber(newString);
+            payMethod.setVoucherSerial(serial + 1);
+            payMethod.setShiftName(Settings.shift_name);
+            payMethod.setShiftNumber(Settings.shift_number);
+            payMethod.setUserNo(Settings.password);
+            payMethod.setUserName(Settings.user_name);
+            payMethod.setTime(times);
 
-        if (cashValue != 0.00) {
-            payMethod.setPayType("Cash");
-            payMethod.setPayValue(cashValue);
-            payMethod.setPayNumber("0");
-            payMethod.setPayName("null");
-            mDHandler.addAllPayMethodItem(payMethod);
-            cashValue1=cashValue;
-            cashValue = 0.00;
-        }
-        if (creditCardValue != 0.00) {
-            for (int i = 0; i < cardNumbers.size(); i++) {
-                payMethod.setPayType("Credit Card");
-                payMethod.setPayValue(Double.parseDouble(resiveCredit.get(i)));
-                payMethod.setPayNumber(cardNumbers.get(i));
-                payMethod.setPayName(cardName.get(i));
-                mDHandler.addAllPayMethodItem(payMethod);
-                cardValues += Double.parseDouble(resiveCredit.get(i));
-                Log.e("card value", String.valueOf(cardValues));
-            }
-            cardNumbers.clear();
-            countCridit = 0;
-            cardName.clear();
-            resiveCredit.clear();
-            creditCardValue1=cardValues;
-            creditCardValue = 0.00;
-        }
-        if (chequeValue != 0.00) {
-            for (int i = 0; i < chequeNambers.size(); i++) {
-                payMethod.setPayType("Cheque");
-                payMethod.setPayValue(Double.parseDouble(resiveCheque.get(i)));
-                payMethod.setPayNumber(chequeNambers.get(i));
-                payMethod.setPayName(bankName.get(i));
-                mDHandler.addAllPayMethodItem(payMethod);
-                chequeValues += Double.parseDouble(resiveCheque.get(i));
-                Log.e("chequeValues", String.valueOf(chequeValues));
-            }
-            chequeValue1 = chequeValues;
-            chequeValue = 0.00;
-            chequeNambers.clear();
-            bankName.clear();
-            resiveCheque.clear();
-            countCheque = 0;
-        }
-        if (giftCardValue != 0.00) {
-            for (int i = 0; i < giftCardNumber.size(); i++) {
-                payMethod.setPayType("Gift Card");
-                payMethod.setPayValue(Double.parseDouble(resiveGift.get(i)));
-                payMethod.setPayNumber(giftCardNumber.get(i));
+            if (cashValue != 0.00) {
+                payMethod.setPayType("Cash");
+                payMethod.setPayValue(cashValue);
+                payMethod.setPayNumber("0");
                 payMethod.setPayName("null");
                 mDHandler.addAllPayMethodItem(payMethod);
-                giftValues += Double.parseDouble(resiveGift.get(i));
-                Log.e("giftValues", String.valueOf(giftValues));
+                cashValue1 = cashValue;
+                cashValue = 0.00;
             }
-            giftCardValue1 = giftValues;
-            giftCardValue = 0.00;
-            giftCardNumber.clear();
-            resiveGift.clear();
-            countGift = 0;
-        }
-        Log.e("creditValue", "" + creditValue);
-        if (creditValue != 0.00) {
-            for (int i = 0; i < couponNumber.size(); i++) {
-                payMethod.setPayType("Coupon");
-                payMethod.setPayValue(Double.parseDouble(couponNumber.get(i)));
-                payMethod.setPayNumber(couponNumber.get(i));
-                payMethod.setPayName("null");
-                mDHandler.addAllPayMethodItem(payMethod);
-                couponValues += Double.parseDouble(couponNumber.get(i));
-                Log.e("couponValues", String.valueOf(couponValues));
+            if (creditCardValue != 0.00) {
+                for (int i = 0; i < cardNumbers.size(); i++) {
+                    payMethod.setPayType("Credit Card");
+                    payMethod.setPayValue(Double.parseDouble(resiveCredit.get(i)));
+                    payMethod.setPayNumber(cardNumbers.get(i));
+                    payMethod.setPayName(cardName.get(i));
+                    mDHandler.addAllPayMethodItem(payMethod);
+                    cardValues += Double.parseDouble(resiveCredit.get(i));
+                    Log.e("card value", String.valueOf(cardValues));
+                }
+                cardNumbers.clear();
+                countCridit = 0;
+                cardName.clear();
+                resiveCredit.clear();
+                creditCardValue1 = cardValues;
+                creditCardValue = 0.00;
             }
-            creditValue1=couponValues;
-            creditValue = 0.00;
-            couponNumber.clear();
-            countCoupon = 0;
-        }
-        if (pointValue != 0.00) {
-            for (int i = 0; i < pointCardNumber.size(); i++) {
-                payMethod.setPayType("Point Card");
-                payMethod.setPayValue(Double.parseDouble(resivePoint.get(i)));
-                payMethod.setPayNumber(pointCardNumber.get(i));
-                payMethod.setPayName("null");
-                mDHandler.addAllPayMethodItem(payMethod);
-                pointValues += Double.parseDouble(resivePoint.get(i));
-                Log.e("pointValues", String.valueOf(pointValues));
+            if (chequeValue != 0.00) {
+                for (int i = 0; i < chequeNambers.size(); i++) {
+                    payMethod.setPayType("Cheque");
+                    payMethod.setPayValue(Double.parseDouble(resiveCheque.get(i)));
+                    payMethod.setPayNumber(chequeNambers.get(i));
+                    payMethod.setPayName(bankName.get(i));
+                    mDHandler.addAllPayMethodItem(payMethod);
+                    chequeValues += Double.parseDouble(resiveCheque.get(i));
+                    Log.e("chequeValues", String.valueOf(chequeValues));
+                }
+                chequeValue1 = chequeValues;
+                chequeValue = 0.00;
+                chequeNambers.clear();
+                bankName.clear();
+                resiveCheque.clear();
+                countCheque = 0;
             }
-            pointValue1=pointValues;
-            pointValue = 0.00;
-            countPoint = 0;
-            pointCardNumber.clear();
-            resivePoint.clear();
-        }
+            if (giftCardValue != 0.00) {
+                for (int i = 0; i < giftCardNumber.size(); i++) {
+                    payMethod.setPayType("Gift Card");
+                    payMethod.setPayValue(Double.parseDouble(resiveGift.get(i)));
+                    payMethod.setPayNumber(giftCardNumber.get(i));
+                    payMethod.setPayName("null");
+                    mDHandler.addAllPayMethodItem(payMethod);
+                    giftValues += Double.parseDouble(resiveGift.get(i));
+                    Log.e("giftValues", String.valueOf(giftValues));
+                }
+                giftCardValue1 = giftValues;
+                giftCardValue = 0.00;
+                giftCardNumber.clear();
+                resiveGift.clear();
+                countGift = 0;
+            }
+            Log.e("creditValue", "" + creditValue);
+            if (creditValue != 0.00) {
+                for (int i = 0; i < couponNumber.size(); i++) {
+                    payMethod.setPayType("Coupon");
+                    payMethod.setPayValue(Double.parseDouble(couponNumber.get(i)));
+                    payMethod.setPayNumber(couponNumber.get(i));
+                    payMethod.setPayName("null");
+                    mDHandler.addAllPayMethodItem(payMethod);
+                    couponValues += Double.parseDouble(couponNumber.get(i));
+                    Log.e("couponValues", String.valueOf(couponValues));
+                }
+                creditValue1 = couponValues;
+                creditValue = 0.00;
+                couponNumber.clear();
+                countCoupon = 0;
+            }
+            if (pointValue != 0.00) {
+                for (int i = 0; i < pointCardNumber.size(); i++) {
+                    payMethod.setPayType("Point Card");
+                    payMethod.setPayValue(Double.parseDouble(resivePoint.get(i)));
+                    payMethod.setPayNumber(pointCardNumber.get(i));
+                    payMethod.setPayName("null");
+                    mDHandler.addAllPayMethodItem(payMethod);
+                    pointValues += Double.parseDouble(resivePoint.get(i));
+                    Log.e("pointValues", String.valueOf(pointValues));
+                }
+                pointValue1 = pointValues;
+                pointValue = 0.00;
+                countPoint = 0;
+                pointCardNumber.clear();
+                resivePoint.clear();
+            }
 
-        if (orderHeaderTemp == null) {
-            //getting the data from order activity and save it in database.
+            if (orderHeaderTemp == null) {
+                //getting the data from order activity and save it in database.
 
             obj.getOrderHeaderObj().setCashValue(cashValue1);
             obj.getOrderHeaderObj().setCardsValue(creditCardValue1);
@@ -1516,15 +1537,15 @@ public class PayMethods extends AppCompatActivity {
             obj.getOrderHeaderObj().setCouponValue(creditValue1);
             obj.getOrderHeaderObj().setPointValue(pointValue1);
 
-            mDHandler.addOrderHeader(obj.getOrderHeaderObj());
-            for (int i = 0; i < obj.getOrderTransactionObj().size(); i++)
+                mDHandler.addOrderHeader(obj.getOrderHeaderObj());
+                for (int i = 0; i < obj.getOrderTransactionObj().size(); i++)
 
-                mDHandler.addOrderTransaction(obj.getOrderTransactionObj().get(i));
+                    mDHandler.addOrderTransaction(obj.getOrderTransactionObj().get(i));
 
-            Intent intent = new Intent(PayMethods.this, Order.class);
-            startActivity(intent);
+                Intent intent = new Intent(PayMethods.this, Order.class);
+                startActivity(intent);
 
-        } else {
+            } else {
 
             orderHeaderTemp.get(0).setCashValue(cashValue1);
             orderHeaderTemp.get(0).setCardsValue(creditCardValue1);
@@ -1540,12 +1561,15 @@ public class PayMethods extends AppCompatActivity {
             mDHandler.deleteFromOrderHeaderTemp(sectionNo, tableNo);
             mDHandler.deleteFromOrderTransactionTemp(sectionNo, tableNo);
 
-            Intent intent = new Intent(PayMethods.this, DineIn.class);
-            startActivity(intent);
-        }
+                Intent intent = new Intent(PayMethods.this, DineIn.class);
+                startActivity(intent);
+            }
 
-                Toast.makeText(this, "Saved Successfully", Toast.LENGTH_SHORT).show();
-        finish();
+            Toast.makeText(this, "Saved Successfully", Toast.LENGTH_SHORT).show();
+            finish();
+        }else {
+            Toast.makeText(this, "the Remaining Value is not 0.00 ", Toast.LENGTH_SHORT).show();
+        }
     }
 
     void initialize() {
