@@ -65,15 +65,15 @@ public class DineIn extends AppCompatActivity {
     boolean CheckTrue = true;
     int tableNumber;
     int current = 0;
-    String waiter , waiterNo;
-
+    String waiter, waiterNo;
+    boolean waiterClick = false;
     int fromSection, toSection;
     List<String> tablesNoLeft, tablesNoRight;
     int focusedLeft = -1, focusedRight = -1;
 
     TextView text;
     TableRow rows;
-    public String  today, time ;
+    public String today, time;
     double totalAdd = 0.0;
     double cashValues, creditValues, chequeVales, pointValues, giftCardValues, cardValues;
     double discountAdd = 0.0;
@@ -318,7 +318,7 @@ public class DineIn extends AppCompatActivity {
                             public void onClick(View view) {
                                 waiter = textView.getText().toString();
                                 waiterNo = textView2.getText().toString();
-                                waiterClick =true;
+                                waiterClick = true;
                                 setTableBackground(linearLayout, linearLayout1);
                             }
                         });
@@ -329,11 +329,11 @@ public class DineIn extends AppCompatActivity {
                 done.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if(linearLayout.getChildCount()!=0&&waiterClick ) {
+                        if (linearLayout.getChildCount() != 0 && waiterClick) {
                             dialog.dismiss();
                             openSeatsNumberDialog();
-                            waiterClick =false;
-                        }else {
+                            waiterClick = false;
+                        } else {
                             Toast.makeText(DineIn.this, "Please add Waiter before Continue ...", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -351,8 +351,8 @@ public class DineIn extends AppCompatActivity {
 
                 String waiterName = "";
                 ArrayList<OrderHeader> orderHeader = mHandler.getOrderHeaderTemp("" + current, "" + tableNumber);
-                for(int i=0 ; i<orderHeader.size() ; i++){
-                    if(orderHeader.get(i).getTableNO() == tableNumber) {
+                for (int i = 0; i < orderHeader.size(); i++) {
+                    if (orderHeader.get(i).getTableNO() == tableNumber) {
                         waiterName = orderHeader.get(i).getWaiter();
                         break;
                     }
@@ -360,14 +360,14 @@ public class DineIn extends AppCompatActivity {
 
                 String waiterNumber = "";
                 ArrayList<EmployeeRegistrationModle> employees = mHandler.getAllEmployeeRegistration();
-                for(int i=0 ; i<employees.size() ; i++){
-                    if(employees.get(i).getEmployeeName().equals(waiterName)) {
+                for (int i = 0; i < employees.size(); i++) {
+                    if (employees.get(i).getEmployeeName().equals(waiterName)) {
                         waiterNumber = "" + employees.get(i).getEmployeeNO();
                         break;
                     }
                 }
-                Log.e("test " , "" + waiterName );
-                Log.e("test " , "" + waiterNumber );
+                Log.e("test ", "" + waiterName);
+                Log.e("test ", "" + waiterNumber);
 
                 Intent intent = new Intent(DineIn.this, Order.class);
                 intent.putExtra("flag", "1");
@@ -869,7 +869,7 @@ public class DineIn extends AppCompatActivity {
                             Settings.service_value, rowRefund.get(0).getTaxValue(), rowRefund.get(0).getServiceTax(), netTotals,
                             netTotals, 1, rowRefund.get(0).getTableNo(),
                             rowRefund.get(0).getSectionNo(), cashValues, creditValues, chequeVales, cardValues,
-                            giftCardValues, pointValues, Settings.shift_name, Settings.shift_number, "No Waiter", 0, Settings.user_name, Settings.password,times);
+                            giftCardValues, pointValues, Settings.shift_name, Settings.shift_number, "No Waiter", 0, Settings.user_name, Settings.password, times);
 
                     mHandler.addOrderHeader(orderHeader);
 
@@ -881,7 +881,7 @@ public class DineIn extends AppCompatActivity {
                                 rowRefund.get(i).getItemFamily(), rowRefund.get(i).getQty(), rowRefund.get(i).getPrice(),
                                 totalAdd, DiscountArray.get(i), lineDiscount.get(i), lineDiscount.get(i) + DiscountArray.get(i), rowRefund.get(i).getTaxValue(),
                                 rowRefund.get(i).getTaxPerc(), 0, rowRefund.get(i).getService(), rowRefund.get(i).getServiceTax(),
-                                rowRefund.get(i).getTableNo(), rowRefund.get(i).getSectionNo(), Settings.shift_number, Settings.shift_name, Settings.password, Settings.user_name ,times);
+                                rowRefund.get(i).getTableNo(), rowRefund.get(i).getSectionNo(), Settings.shift_number, Settings.shift_name, Settings.password, Settings.user_name, times);
 
 
                         mHandler.addOrderTransaction(orderTransactions);
@@ -930,7 +930,7 @@ public class DineIn extends AppCompatActivity {
                                 today,
                                 Settings.POS_number,
                                 Settings.store_number, list.get(0).getVoucherNo(), list.get(0).getVoucherSerial(), listForPay.get(x),
-                                listValuePay.get(x), payNumber, payName, Settings.shift_name, Settings.shift_number, Settings.user_name, Settings.password , times);
+                                listValuePay.get(x), payNumber, payName, Settings.shift_name, Settings.shift_number, Settings.user_name, Settings.password, times);
 
                         mHandler.addAllPayMethodItem(payMethod);
                     }
@@ -1388,9 +1388,9 @@ public class DineIn extends AppCompatActivity {
                         // update on tables temp
                         mHandler.moveTablesTemp(fromSection, focusedLeft, toSection, focusedRight);
 
-                        mHandler.addTableAction(new TableActions(Settings.POS_number ,Settings.user_name ,Settings.password,
-                                Settings.shift_name , Settings.shift_number ,0 ,today ,time ,focusedLeft ,fromSection ,
-                                focusedRight ,toSection));
+                        mHandler.addTableAction(new TableActions(Settings.POS_number, Settings.user_name, Settings.password,
+                                Settings.shift_name, Settings.shift_number, 0, today, time, focusedLeft, fromSection,
+                                focusedRight, toSection));
 
                         dialog.dismiss();
 
@@ -1589,9 +1589,9 @@ public class DineIn extends AppCompatActivity {
                         // update on tables temp
                         mHandler.mergeTablesTemp(fromSection, focusedLeft, toSection, focusedRight);
 
-                        mHandler.addTableAction(new TableActions(Settings.POS_number ,Settings.user_name ,Settings.password,
-                                Settings.shift_name , Settings.shift_number ,1 ,today ,time ,focusedLeft ,fromSection ,
-                                focusedRight ,toSection));
+                        mHandler.addTableAction(new TableActions(Settings.POS_number, Settings.user_name, Settings.password,
+                                Settings.shift_name, Settings.shift_number, 1, today, time, focusedLeft, fromSection,
+                                focusedRight, toSection));
 
                         dialog.dismiss();
 

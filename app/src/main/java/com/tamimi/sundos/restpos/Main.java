@@ -58,7 +58,7 @@ public class Main extends AppCompatActivity {
 
     Button back, exit;
     Button takeAway, dineIn;
-    TextView userName, shift, date, cashierIn, cashierOut, payIn, payOut, timeCard, safeMode, cashDrawer,annText;
+    TextView userName, shift, date,  payIn, payOut, timeCard, safeMode, cashDrawer,annText;
 
     DatabaseHandler mDHandler;
     Dialog dialog;
@@ -121,14 +121,6 @@ public class Main extends AppCompatActivity {
                     Intent intent = new Intent(Main.this, DineIn.class);
                     startActivity(intent);
 //                    }
-                    break;
-
-                case R.id.cashier_in:
-                    showCashierInDialog();
-                    break;
-
-                case R.id.cashier_out:
-                    showCashierOutDialog();
                     break;
 
                 case R.id.pay_in:
@@ -253,38 +245,38 @@ public class Main extends AppCompatActivity {
 
     @SuppressLint("ClickableViewAccessibility")
     void showCashierInDialog() {
-        dialog = new Dialog(Main.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.cashier_in_dialog);
-        dialog.setCanceledOnTouchOutside(true);
+        Dialog dialogCashierIn = new Dialog(Main.this);
+        dialogCashierIn.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogCashierIn.setCancelable(false);
+        dialogCashierIn.setContentView(R.layout.cashier_in_dialog);
+        dialogCashierIn.setCanceledOnTouchOutside(true);
 
-        Window window = dialog.getWindow();
+        Window window = dialogCashierIn.getWindow();
         window.setLayout(920, 470);
 
         final ArrayList<Money> money = mDHandler.getAllMoneyCategory();
 
-        categories = (TableLayout) dialog.findViewById(R.id.money_categories);
-        final TextView mainTotal = (TextView) dialog.findViewById(R.id.mainTotal);
-        final TextView user = (TextView) dialog.findViewById(R.id.user);
-        final TextView date = (TextView) dialog.findViewById(R.id.date);
+        categories = (TableLayout) dialogCashierIn.findViewById(R.id.money_categories);
+        final TextView mainTotal = (TextView) dialogCashierIn.findViewById(R.id.mainTotal);
+        final TextView user = (TextView) dialogCashierIn.findViewById(R.id.user);
+        final TextView date = (TextView) dialogCashierIn.findViewById(R.id.date);
         user.setText(Settings.user_name);
 
         date.setText(today);
 
         Button b1, b2, b3, b4, b5, b6, b7, b8, b9, b0, clear, save;
-        b1 = (Button) dialog.findViewById(R.id.b1);
-        b2 = (Button) dialog.findViewById(R.id.b2);
-        b3 = (Button) dialog.findViewById(R.id.b3);
-        b4 = (Button) dialog.findViewById(R.id.b4);
-        b5 = (Button) dialog.findViewById(R.id.b5);
-        b6 = (Button) dialog.findViewById(R.id.b6);
-        b7 = (Button) dialog.findViewById(R.id.b7);
-        b8 = (Button) dialog.findViewById(R.id.b8);
-        b9 = (Button) dialog.findViewById(R.id.b9);
-        b0 = (Button) dialog.findViewById(R.id.b0);
-        clear = (Button) dialog.findViewById(R.id.b_clear);
-        save = (Button) dialog.findViewById(R.id.save);
+        b1 = (Button) dialogCashierIn.findViewById(R.id.b1);
+        b2 = (Button) dialogCashierIn.findViewById(R.id.b2);
+        b3 = (Button) dialogCashierIn.findViewById(R.id.b3);
+        b4 = (Button) dialogCashierIn.findViewById(R.id.b4);
+        b5 = (Button) dialogCashierIn.findViewById(R.id.b5);
+        b6 = (Button) dialogCashierIn.findViewById(R.id.b6);
+        b7 = (Button) dialogCashierIn.findViewById(R.id.b7);
+        b8 = (Button) dialogCashierIn.findViewById(R.id.b8);
+        b9 = (Button) dialogCashierIn.findViewById(R.id.b9);
+        b0 = (Button) dialogCashierIn.findViewById(R.id.b0);
+        clear = (Button) dialogCashierIn.findViewById(R.id.b_clear);
+        save = (Button) dialogCashierIn.findViewById(R.id.save);
 
         b1.setOnClickListener(new OnClickListener() {
             @Override
@@ -394,7 +386,7 @@ public class Main extends AppCompatActivity {
                     }
                 }
                 mDHandler.addCashierInOut(cashier);
-                dialog.dismiss();
+                dialogCashierIn.dismiss();
             }
         });
 
@@ -509,38 +501,38 @@ public class Main extends AppCompatActivity {
 //        }
 
 
-        dialog.show();
+        dialogCashierIn.show();
 
     }
 
     @SuppressLint("ClickableViewAccessibility")
     void showCashierOutDialog() {
-        dialog = new Dialog(Main.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.cashier_out_dialog);
-        dialog.setCanceledOnTouchOutside(true);
+        Dialog dialogCashierOut = new Dialog(Main.this);
+        dialogCashierOut.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogCashierOut.setCancelable(false);
+        dialogCashierOut.setContentView(R.layout.cashier_out_dialog);
+        dialogCashierOut.setCanceledOnTouchOutside(true);
 
-        Window window = dialog.getWindow();
+        Window window = dialogCashierOut.getWindow();
         window.setLayout(920, 490);
 
         final ArrayList<Money> money = mDHandler.getAllMoneyCategory();
 
-        categories = (TableLayout) dialog.findViewById(R.id.money_categories);
-        RadioGroup transType = dialog.findViewById(R.id.transType);
-        RadioButton finalClose = dialog.findViewById(R.id.finalClose);
-        RadioButton changeOver = dialog.findViewById(R.id.changeOver);
-        EditText toUser = dialog.findViewById(R.id.toUser);
-        final TextView cashTotals = (TextView) dialog.findViewById(R.id.cashTotal);
-        final TextView creditCard = (TextView) dialog.findViewById(R.id.creditCard);
-        final TextView cheque = (TextView) dialog.findViewById(R.id.cheque);
-        final TextView giftCard = (TextView) dialog.findViewById(R.id.giftCard);
-        final TextView credit = (TextView) dialog.findViewById(R.id.credit);
-        final TextView point = (TextView) dialog.findViewById(R.id.point);
-        final TextView otherPaymentTotal = (TextView) dialog.findViewById(R.id.otherPaymentTotal);
-        final TextView mainTotal = (TextView) dialog.findViewById(R.id.mainTotal);
-        final TextView user = (TextView) dialog.findViewById(R.id.user);
-        final TextView date = (TextView) dialog.findViewById(R.id.date);
+        categories = (TableLayout) dialogCashierOut.findViewById(R.id.money_categories);
+        RadioGroup transType = dialogCashierOut.findViewById(R.id.transType);
+        RadioButton finalClose = dialogCashierOut.findViewById(R.id.finalClose);
+        RadioButton changeOver = dialogCashierOut.findViewById(R.id.changeOver);
+        EditText toUser = dialogCashierOut.findViewById(R.id.toUser);
+        final TextView cashTotals = (TextView) dialogCashierOut.findViewById(R.id.cashTotal);
+        final TextView creditCard = (TextView) dialogCashierOut.findViewById(R.id.creditCard);
+        final TextView cheque = (TextView) dialogCashierOut.findViewById(R.id.cheque);
+        final TextView giftCard = (TextView) dialogCashierOut.findViewById(R.id.giftCard);
+        final TextView credit = (TextView) dialogCashierOut.findViewById(R.id.credit);
+        final TextView point = (TextView) dialogCashierOut.findViewById(R.id.point);
+        final TextView otherPaymentTotal = (TextView) dialogCashierOut.findViewById(R.id.otherPaymentTotal);
+        final TextView mainTotal = (TextView) dialogCashierOut.findViewById(R.id.mainTotal);
+        final TextView user = (TextView) dialogCashierOut.findViewById(R.id.user);
+        final TextView date = (TextView) dialogCashierOut.findViewById(R.id.date);
         user.setText(Settings.user_name);
 
         date.setText(today);
@@ -563,18 +555,18 @@ public class Main extends AppCompatActivity {
         });
 
         Button b1, b2, b3, b4, b5, b6, b7, b8, b9, b0, clear, save;
-        b1 = (Button) dialog.findViewById(R.id.b1);
-        b2 = (Button) dialog.findViewById(R.id.b2);
-        b3 = (Button) dialog.findViewById(R.id.b3);
-        b4 = (Button) dialog.findViewById(R.id.b4);
-        b5 = (Button) dialog.findViewById(R.id.b5);
-        b6 = (Button) dialog.findViewById(R.id.b6);
-        b7 = (Button) dialog.findViewById(R.id.b7);
-        b8 = (Button) dialog.findViewById(R.id.b8);
-        b9 = (Button) dialog.findViewById(R.id.b9);
-        b0 = (Button) dialog.findViewById(R.id.b0);
-        clear = (Button) dialog.findViewById(R.id.b_clear);
-        save = (Button) dialog.findViewById(R.id.save);
+        b1 = (Button) dialogCashierOut.findViewById(R.id.b1);
+        b2 = (Button) dialogCashierOut.findViewById(R.id.b2);
+        b3 = (Button) dialogCashierOut.findViewById(R.id.b3);
+        b4 = (Button) dialogCashierOut.findViewById(R.id.b4);
+        b5 = (Button) dialogCashierOut.findViewById(R.id.b5);
+        b6 = (Button) dialogCashierOut.findViewById(R.id.b6);
+        b7 = (Button) dialogCashierOut.findViewById(R.id.b7);
+        b8 = (Button) dialogCashierOut.findViewById(R.id.b8);
+        b9 = (Button) dialogCashierOut.findViewById(R.id.b9);
+        b0 = (Button) dialogCashierOut.findViewById(R.id.b0);
+        clear = (Button) dialogCashierOut.findViewById(R.id.b_clear);
+        save = (Button) dialogCashierOut.findViewById(R.id.save);
 
         b1.setOnClickListener(new OnClickListener() {
             @Override
@@ -764,7 +756,7 @@ public class Main extends AppCompatActivity {
                                 Settings.shift_name, Settings.password, Settings.user_name, "Point", 1, pointValue,
                                 pointValue, "Point", "", "", -1, "no-user"));
 
-                    dialog.dismiss();
+                    dialogCashierOut.dismiss();
                 } else
                     Toast.makeText(Main.this, "Please enter 'to user' field", Toast.LENGTH_LONG).show();
             }
@@ -919,7 +911,7 @@ public class Main extends AppCompatActivity {
         credit.addTextChangedListener(textWatcher);
         point.addTextChangedListener(textWatcher);
 
-        dialog.show();
+        dialogCashierOut.show();
 
     }
 
@@ -941,31 +933,278 @@ public class Main extends AppCompatActivity {
         final Button save = (Button) dialog.findViewById(R.id.save);
         final Button exit = (Button) dialog.findViewById(R.id.exit);
 
+        String signal="";
         tranType.setText(transType == 0 ? "Pay In" : "Pay Out");
-        date.setText("Date:  " + today);
+        if(transType==0){
+            signal="";
+        }else signal="-";
+        date.setText(today);
 
         ArrayList<Pay> pays = mDHandler.getAllPayInOut();
-        serial.setText(pays.size() == 0 ? "Transaction Number:  0" : "Transaction Number:  " + pays.size());
+        serial.setText(pays.size() == 0 ? "Trans.NO:  0" : "Trans.NO:  " + pays.size());
 
-        save.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!value.getText().toString().equals("")) {
-                    mDHandler.addPayInOut(new Pay(transType, Settings.POS_number, Settings.password, Settings.user_name, today,
-                            Double.parseDouble(value.getText().toString()), remark.getText().toString(), Settings.shift_number,
-                            Settings.shift_name));
-                    Toast.makeText(Main.this, "Saved successfully", Toast.LENGTH_SHORT).show();
-                    dialog.dismiss();
-                } else
-                    Toast.makeText(Main.this, "Please ensure your inputs", Toast.LENGTH_SHORT).show();
-            }
-        });
         exit.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
             }
         });
+
+
+        final ArrayList<Money> money = mDHandler.getAllMoneyCategory();
+
+        categories = (TableLayout) dialog.findViewById(R.id.money_categories);
+        final TextView mainTotal = (TextView) dialog.findViewById(R.id.mainTotal);
+
+
+        Button b1, b2, b3, b4, b5, b6, b7, b8, b9, b0, clear;
+        b1 = (Button) dialog.findViewById(R.id.b1);
+        b2 = (Button) dialog.findViewById(R.id.b2);
+        b3 = (Button) dialog.findViewById(R.id.b3);
+        b4 = (Button) dialog.findViewById(R.id.b4);
+        b5 = (Button) dialog.findViewById(R.id.b5);
+        b6 = (Button) dialog.findViewById(R.id.b6);
+        b7 = (Button) dialog.findViewById(R.id.b7);
+        b8 = (Button) dialog.findViewById(R.id.b8);
+        b9 = (Button) dialog.findViewById(R.id.b9);
+        b0 = (Button) dialog.findViewById(R.id.b0);
+        clear = (Button) dialog.findViewById(R.id.b_clear);
+
+
+        b1.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (focusedTextView != null)
+                    focusedTextView.setText(focusedTextView.getText().toString() + "1");
+            }
+        });
+        b2.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (focusedTextView != null)
+                    focusedTextView.setText(focusedTextView.getText().toString() + "2");
+            }
+        });
+        b3.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (focusedTextView != null)
+                    focusedTextView.setText(focusedTextView.getText().toString() + "3");
+            }
+        });
+        b4.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (focusedTextView != null)
+                    focusedTextView.setText(focusedTextView.getText().toString() + "4");
+            }
+        });
+        b5.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (focusedTextView != null)
+                    focusedTextView.setText(focusedTextView.getText().toString() + "5");
+            }
+        });
+        b6.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (focusedTextView != null)
+                    focusedTextView.setText(focusedTextView.getText().toString() + "6");
+            }
+        });
+        b7.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (focusedTextView != null)
+                    focusedTextView.setText(focusedTextView.getText().toString() + "7");
+            }
+        });
+        b8.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (focusedTextView != null)
+                    focusedTextView.setText(focusedTextView.getText().toString() + "8");
+            }
+        });
+        b9.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (focusedTextView != null)
+                    focusedTextView.setText(focusedTextView.getText().toString() + "9");
+            }
+        });
+        b0.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (focusedTextView != null)
+                    focusedTextView.setText(focusedTextView.getText().toString() + "0");
+            }
+        });
+        value.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+                 focusedTextView = value;
+                focusedTextView.setText("");
+                focusedTextView.setTag("*");
+
+            }
+        });
+        clear.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                for (int i = 0; i < money.size(); i++) {
+                    TableRow tableRow = (TableRow) categories.getChildAt(i);
+                    TextView text1 = (TextView) tableRow.getChildAt(1);
+                    TextView text2 = (TextView) tableRow.getChildAt(2);
+                    text1.setText("0");
+                    text2.setText("0");
+                    mainTotal.setText("0.00");
+                }
+                value.setText("0");
+            }
+        });
+        String finalSignal = signal;
+        save.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!value.getText().toString().equals("") && !mainTotal.getText().toString().equals("")){
+                    if (Double.parseDouble(value.getText().toString()) == Double.parseDouble(mainTotal.getText().toString())) {
+
+                        //SAVE IN PAY_IN_OUT TABLE ...
+                        if (!value.getText().toString().equals("")) {
+                            mDHandler.addPayInOut(new Pay(transType, Settings.POS_number, Settings.password, Settings.user_name, today,
+                                    Double.parseDouble(value.getText().toString()), remark.getText().toString(), Settings.shift_number,
+                                    Settings.shift_name));
+                            Toast.makeText(Main.this, "Saved successfully", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                        }
+
+                        //SAVE IN CASHIER_IN_OUT TABLE ...
+
+                        ArrayList<Cashier> cashier = new ArrayList<>();
+                        for (int i = 0; i < money.size(); i++) {
+                            Cashier cash = new Cashier();
+                            TableRow tableRow = (TableRow) categories.getChildAt(i);
+                            TextView text = (TextView) tableRow.getChildAt(0);
+                            TextView text1 = (TextView) tableRow.getChildAt(1);
+
+                            if (!text1.getText().toString().equals("")) {
+
+                                cash.setCashierName(Settings.user_name);
+                                cash.setCheckInDate(date.getText().toString());
+                                cash.setCategoryName(text.getText().toString());
+                                cash.setCategoryValue(Double.parseDouble(finalSignal + text.getTag().toString()));
+                                cash.setCategoryQty(Integer.parseInt(text1.getText().toString()));
+                                cash.setOrderKind(2);/// 2 --> pay in / out   1 --> trans (order - refund ) / 0 --> cashier iN
+                                cashier.add(cash);
+                            } else {
+                                Toast.makeText(Main.this, "some Qty not have value ...", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        mDHandler.addCashierInOut(cashier);
+                        dialog.dismiss();
+                    } else
+                        Toast.makeText(Main.this, "Total from cash not equal Value ... ", Toast.LENGTH_SHORT).show();
+            }else
+                    Toast.makeText(Main.this, "Please ensure your inputs", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+        for (int i = 0; i < money.size(); i++) {
+            final int position = i;
+            TableRow row = new TableRow(Main.this);
+            TableLayout.LayoutParams lp = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT);
+            lp.setMargins(0, 10, 0, 5);
+            row.setLayoutParams(lp);
+
+            TextView textView = new TextView(Main.this);
+            textView.setText(money.get(i).getCatName() + "   ");
+            textView.setTag(money.get(i).getCatValue());
+            textView.setGravity(Gravity.CENTER);
+            textView.setTextColor(getResources().getColor(R.color.text_color));
+
+            final TextView textView1 = new TextView(Main.this);
+            textView1.setBackgroundColor(getResources().getColor(R.color.layer1));
+            textView1.setHeight(26);
+            textView1.setPadding(10, 0, 0, 0);
+            textView1.setTextColor(getResources().getColor(R.color.text_color));
+            textView1.setText("0");
+            textView1.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (focusedTextView != null && focusedTextView.getText().toString().equals("")) {
+                        focusedTextView.setText("0");
+                    }
+
+                    focusedTextView = textView1;
+                    focusedTextView.setTag("" + position);
+                    focusedTextView.setText("");
+                }
+            });
+
+            textView1.addTextChangedListener(new TextWatcher() {
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (focusedTextView != null) {
+                        if (!focusedTextView.getText().toString().equals("")&&!focusedTextView.getTag().toString().equals("*")) {
+
+                            TableRow tableRow = (TableRow) categories.getChildAt(Integer.parseInt(focusedTextView.getTag().toString()));
+                            TextView text = (TextView) tableRow.getChildAt(0);
+                            TextView text2 = (TextView) tableRow.getChildAt(2);
+
+                            double total = Double.parseDouble(text.getTag().toString()) * Double.parseDouble(focusedTextView.getText().toString());
+                            text2.setText("" + total);
+                        }
+
+                        mainTotal.setText("0.000");
+                        for (int i = 0; i < money.size(); i++) {
+                            TableRow tRow = (TableRow) categories.getChildAt(i);
+                            TextView t = (TextView) tRow.getChildAt(2);
+                            mainTotal.setText("" + (Double.parseDouble(mainTotal.getText().toString()) + Double.parseDouble(t.getText().toString())));
+                        }
+
+                    }
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count,
+                                              int after) {
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                }
+            });
+
+
+            TextView textView2 = new TextView(Main.this);
+            textView2.setText("0");
+
+            TableRow.LayoutParams lp2 = new TableRow.LayoutParams(130, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+            lp2.setMargins(15, 0, 15, 0);
+            textView.setLayoutParams(lp2);
+            textView1.setLayoutParams(lp2);
+            textView2.setLayoutParams(lp2);
+            textView2.setGravity(Gravity.CENTER);
+            textView2.setTextColor(getResources().getColor(R.color.text_color));
+
+            row.addView(textView);
+            row.addView(textView1);
+            row.addView(textView2);
+
+            categories.addView(row);
+        }
+        double totals = 0;
+//        for (int i = 0; i < money.size(); i++) {
+//            totals += money.get(i).getCatValue();
+        mainTotal.setText("0.00");
+//        }
+
 
         dialog.show();
 
@@ -1239,6 +1478,7 @@ public class Main extends AppCompatActivity {
         ok.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                showCashierInDialog();
                 dialog.dismiss();
             }
         });
@@ -1297,6 +1537,8 @@ public class Main extends AppCompatActivity {
 
 
                 mDHandler.addClockInClockOut(clockInClockOut);
+                showCashierOutDialog();
+
                 dialog.dismiss();
 
             }
@@ -1431,8 +1673,7 @@ public class Main extends AppCompatActivity {
         userName = (TextView) findViewById(R.id.user_name);
         shift = (TextView) findViewById(R.id.shift);
         date = (TextView) findViewById(R.id.date);
-        cashierIn = (TextView) findViewById(R.id.cashier_in);
-        cashierOut = (TextView) findViewById(R.id.cashier_out);
+
         payIn = (TextView) findViewById(R.id.pay_in);
         payOut = (TextView) findViewById(R.id.pay_out);
         timeCard = (TextView) findViewById(R.id.time_card);
@@ -1446,8 +1687,7 @@ public class Main extends AppCompatActivity {
         exit.setOnClickListener(onClickListener);
         takeAway.setOnClickListener(onClickListener);
         dineIn.setOnClickListener(onClickListener);
-        cashierIn.setOnClickListener(onClickListener);
-        cashierOut.setOnClickListener(onClickListener);
+
         payIn.setOnClickListener(onClickListener);
         payOut.setOnClickListener(onClickListener);
         timeCard.setOnClickListener(onClickListener);

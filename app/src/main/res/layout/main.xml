@@ -220,30 +220,14 @@
 
 
         <TextView
-            android:id="@+id/cashier_in"
+            android:id="@+id/time_card"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:gravity="center"
-            android:text="@string/cashier_in"
+            android:text="@string/time_card"
             android:textColor="@color/text_color"
             android:textSize="15sp" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginHorizontal="20dp"
-            android:background="@color/text_color"
-            android:gravity="center" />
-
-
-        <TextView
-            android:id="@+id/cashier_out"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:gravity="center"
-            android:text="@string/cashier_out"
-            android:textColor="@color/text_color"
-            android:textSize="15sp" />
 
         <TextView
             android:layout_width="match_parent"
@@ -274,22 +258,6 @@
             android:layout_height="50dp"
             android:gravity="center"
             android:text="@string/pay_out"
-            android:textColor="@color/text_color"
-            android:textSize="15sp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginHorizontal="20dp"
-            android:background="@color/text_color"
-            android:gravity="center" />
-
-        <TextView
-            android:id="@+id/time_card"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:gravity="center"
-            android:text="@string/time_card"
             android:textColor="@color/text_color"
             android:textSize="15sp" />
 
