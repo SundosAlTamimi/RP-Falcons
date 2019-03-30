@@ -582,7 +582,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     TextView textView10 = (TextView) focusedRowReCancellation.getChildAt(10);
 
                     Date currentTimeAndDate = Calendar.getInstance().getTime();
-                    SimpleDateFormat tf = new SimpleDateFormat("hh:mm");
+                    SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
                     String time = tf.format(currentTimeAndDate);
 
                     double newPhysical = 0;

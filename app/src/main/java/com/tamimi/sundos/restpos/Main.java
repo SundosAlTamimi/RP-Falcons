@@ -677,7 +677,7 @@ public class Main extends AppCompatActivity {
                     int transNo = mDHandler.getAllBlindClose().size();
 
                     Date currentTimeAndDate = Calendar.getInstance().getTime();
-                    SimpleDateFormat df = new SimpleDateFormat("hh:mm");
+                    SimpleDateFormat df = new SimpleDateFormat("HH:mm");
                     String time = df.format(currentTimeAndDate);
 
                     double userSales = Double.parseDouble(mainTotal.getText().toString());

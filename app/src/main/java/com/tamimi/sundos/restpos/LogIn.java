@@ -44,8 +44,8 @@ public class LogIn extends AppCompatActivity {
     int index = 0;
     MediaPlayer mp;
 
-    String date, time, shiftName;
-    int shiftNo;
+    String date, time, shiftName = "A";
+    int shiftNo = 0;
     boolean isActive;
     int userPassword;
 
@@ -100,7 +100,7 @@ public class LogIn extends AppCompatActivity {
                         if (isCorrect(Integer.parseInt(password))) {
 
                             Date currentTimeAndDate = Calendar.getInstance().getTime();
-                            SimpleDateFormat tf = new SimpleDateFormat("hh:mm");
+                            SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
                             time = tf.format(currentTimeAndDate);
                             if (!isActive) {
                                 mDHandler.addBlindShiftInOut(new BlindShift(date, time, 1, shiftNo, shiftName,
@@ -229,15 +229,15 @@ public class LogIn extends AppCompatActivity {
 
         ArrayList<Shift> shifts = mDHandler.getAllShifts();
 
-        if (shifts.size() == 0) {
-            shiftNo = 0;
-            shiftName = "A";
-        }
+//        if (shifts.size() == 0) {
+//            shiftNo = 0;
+//            shiftName = "A";
+//        }
 
 //        try {
         for (int i = 0; i < shifts.size(); i++) {
             Date currentTime = Calendar.getInstance().getTime();
-            SimpleDateFormat tf = new SimpleDateFormat("hh:mm");
+            SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
             time = tf.format(currentTime);
 
 //                Date time1 = new SimpleDateFormat("hh:mm").parse(shifts.get(i).getFromTime());
@@ -274,7 +274,7 @@ public class LogIn extends AppCompatActivity {
 
                     if (blindCloseList.get(k).getDate().equals(date) &&
                             timeClose >= time1 && current < time2    &&
-                            blindCloseList.get(k).getTransType() == 1) {
+                            blindCloseList.get(k).getTransType() == 0) {
 
                         if(i+1 > shifts.size()-1){
                             shiftNo = shifts.get(0).getShiftNo();

@@ -133,7 +133,7 @@ public class DineIn extends AppCompatActivity {
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
         today = df.format(currentTimeAndDate);
 
-        SimpleDateFormat dfTime = new SimpleDateFormat("hh:mm");
+        SimpleDateFormat dfTime = new SimpleDateFormat("HH:mm");
         time = dfTime.format(currentTimeAndDate);
 
         fillMainFloor(); // when open the activity the main floor is active by default
@@ -825,7 +825,7 @@ public class DineIn extends AppCompatActivity {
             public void onClick(View view) {
                 Date currentTimeAndDate = Calendar.getInstance().getTime();
                 SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-                SimpleDateFormat Tf = new SimpleDateFormat("hh:mm:ss");
+                SimpleDateFormat Tf = new SimpleDateFormat("HH:mm:ss");
                 String today = df.format(currentTimeAndDate);
                 String times = Tf.format(currentTimeAndDate);
                 ArrayList<String> listForPay = new ArrayList<>();

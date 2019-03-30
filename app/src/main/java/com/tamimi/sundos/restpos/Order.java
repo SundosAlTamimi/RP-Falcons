@@ -138,7 +138,7 @@ public class Order extends AppCompatActivity {
         public void onClick(View view) {
 
             Date currentTimeAndDate = Calendar.getInstance().getTime();
-            SimpleDateFormat dfTime = new SimpleDateFormat("hh:mm:ss");
+            SimpleDateFormat dfTime = new SimpleDateFormat("HH:mm:ss");
             time = dfTime.format(currentTimeAndDate);
 
             switch (view.getId()) {
@@ -261,7 +261,7 @@ public class Order extends AppCompatActivity {
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
         today = df.format(currentTimeAndDate);
 
-        SimpleDateFormat dfTime = new SimpleDateFormat("hh:mm");
+        SimpleDateFormat dfTime = new SimpleDateFormat("HH:mm");
         time = dfTime.format(currentTimeAndDate);
 
         SimpleDateFormat df2 = new SimpleDateFormat("yyyyMM");
