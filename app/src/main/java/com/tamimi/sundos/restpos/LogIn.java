@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tamimi.sundos.restpos.BackOffice.EmployeeRegistration;
+import com.tamimi.sundos.restpos.Models.BlindClose;
 import com.tamimi.sundos.restpos.Models.BlindShift;
 import com.tamimi.sundos.restpos.Models.EmployeeRegistrationModle;
 import com.tamimi.sundos.restpos.Models.Shift;
@@ -28,6 +29,8 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -99,15 +102,19 @@ public class LogIn extends AppCompatActivity {
                             Date currentTimeAndDate = Calendar.getInstance().getTime();
                             SimpleDateFormat tf = new SimpleDateFormat("hh:mm");
                             time = tf.format(currentTimeAndDate);
-                            if (!isActive)
+                            if (!isActive) {
                                 mDHandler.addBlindShiftInOut(new BlindShift(date, time, 1, shiftNo, shiftName,
                                         Integer.parseInt(password), Settings.user_name, 1));
 
+                                Settings.shift_name = shiftName;
+                                Settings.shift_number = shiftNo;
+                            } else {
+                                Settings.shift_name = mDHandler.getOpenedShifts(date, 1).getShiftName();
+                                Settings.shift_number = mDHandler.getOpenedShifts(date, 1).getShiftNo();
+                            }
                             Settings.password = Integer.parseInt(password);
                             Settings.POS_number = 1;
                             Settings.store_number = 7;
-                            Settings.shift_name = shiftName;
-                            Settings.shift_number = shiftNo;
 
                             logIn();
                         } else
@@ -138,11 +145,11 @@ public class LogIn extends AppCompatActivity {
 
                     switch (openedShift(userText)) {
                         case "":
-                            if(userText.equals("master")){
+                            if (userText.equals("master")) {
                                 isActive = false;
                                 Settings.user_name = userText;
                                 dialog.dismiss();
-                            }else {
+                            } else {
                                 isActive = false;
                                 ArrayList<EmployeeRegistrationModle> employees = mDHandler.getAllEmployeeRegistration();
                                 boolean isExist = false;
@@ -183,7 +190,7 @@ public class LogIn extends AppCompatActivity {
         if (Settings.user_name.equals("master"))
             return password == 5555;
         else {
-            Log.e("***" , "" + password + "-" + userPassword);
+            Log.e("***", "" + password + "-" + userPassword);
             return password == userPassword;
         }
     }
@@ -228,10 +235,10 @@ public class LogIn extends AppCompatActivity {
         }
 
 //        try {
-            for (int i = 0; i < shifts.size(); i++) {
-                Date currentTime = Calendar.getInstance().getTime();
-                SimpleDateFormat tf = new SimpleDateFormat("hh:mm");
-                time = tf.format(currentTime);
+        for (int i = 0; i < shifts.size(); i++) {
+            Date currentTime = Calendar.getInstance().getTime();
+            SimpleDateFormat tf = new SimpleDateFormat("hh:mm");
+            time = tf.format(currentTime);
 
 //                Date time1 = new SimpleDateFormat("hh:mm").parse(shifts.get(i).getFromTime());
 //                Calendar calendar1 = Calendar.getInstance();
@@ -250,14 +257,37 @@ public class LogIn extends AppCompatActivity {
 //                Date x = calendar3.getTime();
 //                Log.e("time :" , calendar1.getTime().toString() + " " + x.toString() + " " + calendar2.getTime().toString());
 //                if (x.after(calendar1.getTime()) && x.before(calendar2.getTime())) {
-                int time1 = Integer.parseInt(shifts.get(i).getFromTime().substring(0,shifts.get(i).getFromTime().indexOf(":")));
-                int time2 = Integer.parseInt(shifts.get(i).getToTime().substring(0,shifts.get(i).getToTime().indexOf(":")));
-                int current = Integer.parseInt(time.substring(0,time.indexOf(":")));
-                if ( current >= time1 && current < time2) {
-                    shiftNo = shifts.get(i).getShiftNo();
-                    shiftName = shifts.get(i).getShiftName();
+
+            int time1 = Integer.parseInt(shifts.get(i).getFromTime().substring(0, shifts.get(i).getFromTime().indexOf(":")));
+            int time2 = Integer.parseInt(shifts.get(i).getToTime().substring(0, shifts.get(i).getToTime().indexOf(":")));
+            int current = Integer.parseInt(time.substring(0, time.indexOf(":")));
+            if (current >= time1 && current < time2) {
+
+                shiftNo = shifts.get(i).getShiftNo();
+                shiftName = shifts.get(i).getShiftName();
+
+                // test if the previous user closed before his ending shift
+                List<BlindClose> blindCloseList = mDHandler.getAllBlindClose();
+                for (int k = 0; k < blindCloseList.size(); k++) {
+
+                    int timeClose = Integer.parseInt(blindCloseList.get(k).getTime().substring(0, blindCloseList.get(k).getTime().indexOf(":")));
+
+                    if (blindCloseList.get(k).getDate().equals(date) &&
+                            timeClose >= time1 && current < time2    &&
+                            blindCloseList.get(k).getTransType() == 1) {
+
+                        if(i+1 > shifts.size()-1){
+                            shiftNo = shifts.get(0).getShiftNo();
+                            shiftName = shifts.get(0).getShiftName();
+                        } else {
+                            shiftNo = shifts.get(i+1).getShiftNo();
+                            shiftName = shifts.get(i+1).getShiftName();
+                        }
+                    }
+
                 }
             }
+        }
 //        } catch (ParseException e) {
 //            e.printStackTrace();
 //        }

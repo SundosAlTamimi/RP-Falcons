@@ -250,7 +250,7 @@ public class Main extends AppCompatActivity {
         dialogCashierIn.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialogCashierIn.setCancelable(false);
         dialogCashierIn.setContentView(R.layout.cashier_in_dialog);
-        dialogCashierIn.setCanceledOnTouchOutside(true);
+        dialogCashierIn.setCanceledOnTouchOutside(false);
 
         Window window = dialogCashierIn.getWindow();
         window.setLayout(920, 470);
@@ -512,7 +512,7 @@ public class Main extends AppCompatActivity {
         dialogCashierOut.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialogCashierOut.setCancelable(false);
         dialogCashierOut.setContentView(R.layout.cashier_out_dialog);
-        dialogCashierOut.setCanceledOnTouchOutside(true);
+        dialogCashierOut.setCanceledOnTouchOutside(false);
 
         Window window = dialogCashierOut.getWindow();
         window.setLayout(920, 490);

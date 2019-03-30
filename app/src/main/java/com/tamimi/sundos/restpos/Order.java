@@ -1427,6 +1427,8 @@ public class Order extends AppCompatActivity {
         double deliveryChargeValue = Double.parseDouble(deliveryCharge.getText().toString());
 
         double sum = 0;
+        double totalItemsTaxInclude = 0;
+        double totalItemsTaxExclude = 0;
         for (int k = 0; k < tableLayout.getChildCount(); k++) {
             TableRow tableRow = (TableRow) tableLayout.getChildAt(k);
             TextView textViewTotal = (TextView) tableRow.getChildAt(3);
@@ -1436,8 +1438,19 @@ public class Order extends AppCompatActivity {
                 sum += Double.parseDouble(textViewTotal.getText().toString());
                 lineDisCountValue += lineDiscount.get(k);
 
+                double totalAfterDisc = Double.parseDouble(textViewTotal.getText().toString()) - lineDiscount.get(k);
+
                 if (wantedItems.get(k).getDiscountAvailable() == 1) // items have discount available
-                    totalItemsWithDiscount += Double.parseDouble(textViewTotal.getText().toString()) - lineDiscount.get(k);
+                    totalItemsWithDiscount += totalAfterDisc;
+
+                if (wantedItems.get(k).getTaxType() == 0) {
+
+                    if(Settings.tax_type == 0){
+                        totalItemsTaxInclude += totalAfterDisc * wantedItems.get(k).getTax() / 100 ;
+                    } else {
+                        totalItemsTaxExclude += (totalAfterDisc * wantedItems.get(k).getTax() / 100) / (1 + (wantedItems.get(k).getTax() / 100)) ;
+                    }
+                }
             }
         }
 
@@ -1458,8 +1471,8 @@ public class Order extends AppCompatActivity {
         double subTotalValue = sum - (lineDisCountValue + discountValue) + deliveryChargeValue;
         double serviceValue = sum * (Settings.service_value / 100);
         double serviceTax = serviceValue * (Settings.service_tax / 100);
-        double taxValue = 0 + serviceTax;
-        double amountDueValue = subTotalValue + serviceValue + taxValue;
+        double taxValue = totalItemsTaxInclude + totalItemsTaxExclude + serviceTax;
+        double amountDueValue = subTotalValue + serviceValue + serviceTax + totalItemsTaxInclude ;
 
         total.setText("" + sum);
         lineDisCount.setText("" + lineDisCountValue);
@@ -1481,7 +1494,6 @@ public class Order extends AppCompatActivity {
 
             double totalLine = Double.parseDouble(textViewTotal.getText().toString());
             double lineDiscount_ = lineDiscount.get(k);
-            double taxValue = wantedItems.get(k).getPrice() * wantedItems.get(k).getTax();
             double disc = Double.parseDouble(disCount.getText().toString());
             double serviceTax = Double.parseDouble(service.getText().toString()) * Settings.service_tax;
 
@@ -1490,6 +1502,13 @@ public class Order extends AppCompatActivity {
                 discount = (disc / totalItemsWithDiscount) * (totalLine - lineDiscount_);
 
             Log.e("here", "******" + disc + "/" + totalItemsWithDiscount + "*" + totalLine + "-" + lineDiscount_);
+
+            double totalLineAfterDisc = totalLine - discount - lineDiscount_;
+            double taxValue ;
+            if(Settings.tax_type == 0)
+                taxValue = totalLineAfterDisc * wantedItems.get(k).getTax() /100;
+            else
+                taxValue = (totalLineAfterDisc * wantedItems.get(k).getTax() /100) / ( 1 + (wantedItems.get(k).getTax() /100));
 
 //            mDbHandler.addOrderTransaction(
             OrderTransactionsObj.add(new OrderTransactions(orderTypeFlag, 0, today, Settings.POS_number, Settings.store_number,
@@ -1536,7 +1555,6 @@ public class Order extends AppCompatActivity {
 
             double totalLine = Double.parseDouble(textViewTotal.getText().toString());
             double lineDiscount_ = lineDiscount.get(k);
-            double taxValue = wantedItems.get(k).getPrice() * wantedItems.get(k).getTax();
             double disc = Double.parseDouble(disCount.getText().toString());
             double serviceTax = Double.parseDouble(service.getText().toString()) * Settings.service_tax;
 
@@ -1545,6 +1563,13 @@ public class Order extends AppCompatActivity {
                 discount = (disc / totalItemsWithDiscount) * (totalLine - lineDiscount_);
 
             Log.e("************", "discount (" + disc + "/" + totalItemsWithDiscount + ")*(" + totalLine + "-" + lineDiscount_ + ")");
+
+            double totalLineAfterDisc = totalLine - discount - lineDiscount_;
+            double taxValue ;
+            if(Settings.tax_type == 0)
+                taxValue = totalLineAfterDisc * wantedItems.get(k).getTax() /100;
+            else
+                taxValue = (totalLineAfterDisc * wantedItems.get(k).getTax() /100) / ( 1 + (wantedItems.get(k).getTax() /100));
 
             mDbHandler.addOrderTransactionTemp(new OrderTransactions(orderTypeFlag, 0, today, Settings.POS_number, Settings.store_number,
                     voucherNo, voucherSerial, "" + wantedItems.get(k).getItemBarcode(), wantedItems.get(k).getMenuName(),

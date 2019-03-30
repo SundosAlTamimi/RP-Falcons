@@ -4512,7 +4512,6 @@ public class BackOfficeActivity extends AppCompatActivity {
         String myFormat = "dd-MM-yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
         Date d = sdf.parse(date);
-//        Log.e("date222",""+d);
         return d;
     }
 
