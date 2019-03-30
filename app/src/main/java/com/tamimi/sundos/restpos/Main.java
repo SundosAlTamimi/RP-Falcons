@@ -15,6 +15,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -1629,38 +1630,18 @@ public class Main extends AppCompatActivity {
         dialog.show();
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
 
-    void showAouthorizingDialog() {
-        dialog = new Dialog(Main.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.table_edit_outhorization_dialog);
-        dialog.setCanceledOnTouchOutside(true);
+    }
 
-        Window window = dialog.getWindow();
-        window.setLayout(610, 270);
-
-        final EditText editText = (EditText) dialog.findViewById(R.id.password);
-        Button buttonDone = (Button) dialog.findViewById(R.id.b_done);
-
-        buttonDone.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!editText.getText().toString().equals("")) {
-                    if (Integer.parseInt(editText.getText().toString()) == 4444) {
-                        Settings settings = new Settings();
-                        settings.table_edit_authorized = true;
-                        Toast.makeText(Main.this, "Your'r authorized to edit tables ", Toast.LENGTH_SHORT).show();
-                        dialog.dismiss();
-                    } else {
-                        Toast.makeText(Main.this, "Your authorization number is incorrect", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        });
-
-        dialog.show();
-
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode==KeyEvent.KEYCODE_BACK) {
+            return false;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     void initialize() {

@@ -1664,15 +1664,18 @@ public class DineIn extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                List<OrderTransactions> orderTransTemp = mHandler.getOrderTransactionsTemp("" + current, tableNo.getSelectedItem().toString());
-                if (orderTransTemp.size() != 0) {
-                    Intent intent = new Intent(DineIn.this, PayMethods.class);
-                    intent.putExtra("sectionNo", "" + current);
-                    intent.putExtra("tableNo", tableNo.getSelectedItem().toString());
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(DineIn.this, "This table has no order !", Toast.LENGTH_SHORT).show();
-                }
+                if (tableNo.getSelectedItem() != null) {
+                    List<OrderTransactions> orderTransTemp = mHandler.getOrderTransactionsTemp("" + current, tableNo.getSelectedItem().toString());
+                    if (orderTransTemp.size() != 0) {
+                        Intent intent = new Intent(DineIn.this, PayMethods.class);
+                        intent.putExtra("sectionNo", "" + current);
+                        intent.putExtra("tableNo", tableNo.getSelectedItem().toString());
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(DineIn.this, "This table has no order !", Toast.LENGTH_SHORT).show();
+                    }
+                } else
+                    Toast.makeText(DineIn.this, "No table selected !", Toast.LENGTH_SHORT).show();
             }
         });
 
