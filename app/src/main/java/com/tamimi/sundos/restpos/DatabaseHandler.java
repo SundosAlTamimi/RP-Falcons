@@ -3685,6 +3685,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.update(BLIND_CLOSE, values, "TRANS_NO = '" + transNo + "'", null);
     }
 
+    public void updateUsedItems(String catName, String itemName, int backColor, int fontColor, int position) {
+
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(ITEM_NAME, itemName);
+        values.put(ITEM_BACKGROUND, backColor);
+        values.put(ITEM_TEXT_COLOR, fontColor);
+
+        db.update(USED_ITEMS, values, "CATEGORY_NAME2 = '" + catName + "' and ITEM_POSITION = '" + position + "'", null);
+    }
+
     public void moveTablesTemp(int oldSectionNo, int oldTableNo, int sectionNo, int tableNo) {
         db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -3789,6 +3801,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void deleteFromOrderTransactionTemp2(String sectionNo, String tableNo ,String itemCode) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from ORDER_TRANSACTIONS_TEMP WHERE SECTION_NO = '" + sectionNo + "' and TABLE_NO = '" + tableNo + "' and ITEM_BARCODE1 = '" + itemCode + "'" );
+        db.close();
+    }
+
+    public void deleteModifierAndForce(int itemCode) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from ITEM_WITH_FQ WHERE ITEM_CODE = '" + itemCode + "'" );
+        db.execSQL("delete from ITEM_WITH_MODIFIER WHERE ITEM_CODE = '" + itemCode + "'" );
         db.close();
     }
 
