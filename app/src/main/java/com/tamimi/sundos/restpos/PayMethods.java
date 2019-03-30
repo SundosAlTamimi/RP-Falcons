@@ -449,6 +449,7 @@ public class PayMethods extends AppCompatActivity {
         received.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                flag = 0;
                 received.setText("");
                 focusedTextView = received;
                 return true;
@@ -690,6 +691,7 @@ public class PayMethods extends AppCompatActivity {
         received.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                flag = 0;
                 received.setText("");
                 focusedTextView = received;
                 return true;
@@ -903,6 +905,7 @@ public class PayMethods extends AppCompatActivity {
         received.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                flag = 0;
                 received.setText("");
                 focusedTextView = received;
                 return true;
@@ -1094,6 +1097,7 @@ public class PayMethods extends AppCompatActivity {
         couponNo.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                flag = 0;
                 couponNo.setText("");
                 return true;
             }
@@ -1246,6 +1250,7 @@ public class PayMethods extends AppCompatActivity {
         received.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                flag = 0;
                 received.setText("");
                 focusedTextView = received;
                 return true;
