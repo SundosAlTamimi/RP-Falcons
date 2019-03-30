@@ -65,7 +65,7 @@ public class MenuRegistration extends AppCompatActivity {
 
     Dialog dialog, dialog2;
     static final int SELECTED_PICTURE = 1;
-
+    boolean itemBarcodeFound = false;
     List<Items> items;
 
     ArrayAdapter<String> categoriesAdapter, unitAdapter, printersAdapter, familiesAdapter, menuNameAdapter;
@@ -73,7 +73,7 @@ public class MenuRegistration extends AppCompatActivity {
     List<String> categories = new ArrayList<>();
     List<String> unit = new ArrayList<>();
     List<String> printers = new ArrayList<>();
-    List<String> families ;
+    List<String> families;
 
     private static DatabaseHandler mDbHandler;
 
@@ -137,70 +137,83 @@ public class MenuRegistration extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                if (check()) {
-                    int taxType = 0;
-                    switch (taxTypRadioGroup.getCheckedRadioButtonId()) {
-                        case R.id.tax_:
-                            taxType = 0;
-                            break;
-                        case R.id.no_tax:
-                            taxType = 1;
-                            break;
+                items = mDbHandler.getAllItems();
+                String itemBarcode = itemBarcodeEditText.getText().toString();
+                for (int i = 0; i < items.size(); i++) {
+                    if (!itemBarcode.equals("") && itemBarcode.equals(String.valueOf(items.get(i).getItemBarcode()))) {
+                        itemBarcodeFound = true;
+                        break;
                     }
-                    int status = 0;
-                    switch (statusRadioGroup.getCheckedRadioButtonId()) {
-                        case R.id.available:
-                            status = 0;
-                            break;
-                        case R.id.out_of_stock:
-                            status = 1;
-                            break;
-                    }
-                    int itemType = 0;
-                    switch (itemTypeRadioGroup.getCheckedRadioButtonId()) {
-                        case R.id.ready:
-                            itemType = 0;
-                            break;
-                        case R.id.row_material:
-                            itemType = 1;
-                            break;
-                    }
+                }
+                if (!itemBarcodeFound) {
+                    if (check()) {
+                        int taxType = 0;
+                        switch (taxTypRadioGroup.getCheckedRadioButtonId()) {
+                            case R.id.tax_:
+                                taxType = 0;
+                                break;
+                            case R.id.no_tax:
+                                taxType = 1;
+                                break;
+                        }
+                        int status = 0;
+                        switch (statusRadioGroup.getCheckedRadioButtonId()) {
+                            case R.id.available:
+                                status = 0;
+                                break;
+                            case R.id.out_of_stock:
+                                status = 1;
+                                break;
+                        }
+                        int itemType = 0;
+                        switch (itemTypeRadioGroup.getCheckedRadioButtonId()) {
+                            case R.id.ready:
+                                itemType = 0;
+                                break;
+                            case R.id.row_material:
+                                itemType = 1;
+                                break;
+                        }
 
-                    storeInDatabase(
-                            categoriesSpinner.getSelectedItem().toString(),
-                            menuNameEditText.getText().toString(),
-                            familyName,
-                            ifEmptyDouble(taxPercentEditText.getText().toString()),
-                            taxType,
-                            ifEmptyString(secondaryNameEditText.getText().toString()),
-                            ifEmptyString(kitchenAliasEditText.getText().toString()),
-                            Integer.parseInt(itemBarcodeEditText.getText().toString()),
-                            status,
-                            itemType,
-                            unitSpinner.getSelectedItem().toString(),
-                            ifEmptyDouble(wastagePercentEditText.getText().toString()),
-                            discountAvailableCheckBox.isChecked() ? 1 : 0,
-                            pointAvailableCheckBox.isChecked() ? 1 : 0,
-                            openPriceCheckBox.isChecked() ? 1 : 0,
-                            printersSpinner.getSelectedItem().toString(),
-                            ifEmptyString(descriptionEditText.getText().toString()),
-                            ifEmptyDouble(priceEditText.getText().toString()),
-                            notUsedCheckBox.isChecked() ? 1 : 0,
-                            showInMenuVariavle ,
-                            itemBitmapPic);
+                        storeInDatabase(
+                                categoriesSpinner.getSelectedItem().toString(),
+                                menuNameEditText.getText().toString(),
+                                familyName,
+                                ifEmptyDouble(taxPercentEditText.getText().toString()),
+                                taxType,
+                                ifEmptyString(secondaryNameEditText.getText().toString()),
+                                ifEmptyString(kitchenAliasEditText.getText().toString()),
+                                Integer.parseInt(itemBarcodeEditText.getText().toString()),
+                                status,
+                                itemType,
+                                unitSpinner.getSelectedItem().toString(),
+                                ifEmptyDouble(wastagePercentEditText.getText().toString()),
+                                discountAvailableCheckBox.isChecked() ? 1 : 0,
+                                pointAvailableCheckBox.isChecked() ? 1 : 0,
+                                openPriceCheckBox.isChecked() ? 1 : 0,
+                                printersSpinner.getSelectedItem().toString(),
+                                ifEmptyString(descriptionEditText.getText().toString()),
+                                ifEmptyDouble(priceEditText.getText().toString()),
+                                notUsedCheckBox.isChecked() ? 1 : 0,
+                                showInMenuVariavle,
+                                itemBitmapPic);
 
-                    Toast.makeText(MenuRegistration.this, "Saved", Toast.LENGTH_SHORT).show();
-                    clearForm();
+                        Toast.makeText(MenuRegistration.this, "Saved", Toast.LENGTH_SHORT).show();
+                        clearForm();
+                        itemBarcodeFound = false;
+                    } else
+                        Toast.makeText(MenuRegistration.this, "Please input the requested fields", Toast.LENGTH_SHORT).show();
+
                 } else
-                    Toast.makeText(MenuRegistration.this, "Please input the requested fields", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MenuRegistration.this, "Please change itemBarcode - another item have this itemBarcode -", Toast.LENGTH_SHORT).show();
+                itemBarcodeFound = false;
             }
         });
 
         exitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                finish();
             }
         });
 
@@ -253,9 +266,9 @@ public class MenuRegistration extends AppCompatActivity {
         families = new ArrayList<>();
 
 //        families = mDbHandler.getAllExistingFamilies();
-        for(int i=0;i<mDbHandler.getAllFamilyCategory().size();i++) {
-            if(mDbHandler.getAllFamilyCategory().get(i).getType()==1){
-            families.add(mDbHandler.getAllFamilyCategory().get(i).getName());
+        for (int i = 0; i < mDbHandler.getAllFamilyCategory().size(); i++) {
+            if (mDbHandler.getAllFamilyCategory().get(i).getType() == 1) {
+                families.add(mDbHandler.getAllFamilyCategory().get(i).getName());
             }
 
         }
@@ -436,12 +449,12 @@ public class MenuRegistration extends AppCompatActivity {
 
         LinearLayout pics = (LinearLayout) dialog.findViewById(R.id.usedPictures);
 
-        for ( int i = items.size()-1 ; i >=0 ; i--) {
+        for (int i = items.size() - 1; i >= 0; i--) {
 
             final Bitmap pic = items.get(i).getPic();
             if (pic != null) {
                 RelativeLayout.LayoutParams imageParams = new RelativeLayout.LayoutParams(150, 150);
-                imageParams.setMargins(5,0,5,0);
+                imageParams.setMargins(5, 0, 5, 0);
 
                 ImageView newPic = new ImageView(MenuRegistration.this);
                 newPic.setLayoutParams(imageParams);
@@ -451,7 +464,7 @@ public class MenuRegistration extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         itemPic.setImageDrawable(new BitmapDrawable(getResources(), pic));
-                        itemBitmapPic = pic ;
+                        itemBitmapPic = pic;
                         dialog.dismiss();
                     }
                 });
@@ -496,7 +509,7 @@ public class MenuRegistration extends AppCompatActivity {
                 //Get image
                 itemBitmapPic = extras.getParcelable("data");
                 itemPic.setImageDrawable(new BitmapDrawable(getResources(), itemBitmapPic));
-                Log.e("******************1" , itemPic.getDrawable().toString());
+                Log.e("******************1", itemPic.getDrawable().toString());
 
             }
         }
@@ -505,11 +518,11 @@ public class MenuRegistration extends AppCompatActivity {
     void storeInDatabase(String categoryName, String menuName, String familyName, double taxPercent, int taxType, String secondaryName,
                          String kitchenAlias, int itemBarcode, int status, int itemType, String inventoryUnit,
                          double wastagePercent, int discountAvailable, int pointAvailable, int openPrice, String printer,
-                         String description, double price, int used, int showInMenu , Bitmap img) {
+                         String description, double price, int used, int showInMenu, Bitmap img) {
 
         mDbHandler.addItem(new Items(
                 categoryName, menuName, familyName, taxPercent, taxType, secondaryName, kitchenAlias, itemBarcode, status, itemType,
-                inventoryUnit, wastagePercent, discountAvailable, pointAvailable, openPrice, printer, description, price, used, showInMenu , img));
+                inventoryUnit, wastagePercent, discountAvailable, pointAvailable, openPrice, printer, description, price, used, showInMenu, img));
 
         for (int i = 0; i < recipeTable.getChildCount(); i++) {
             TableRow tableRow = (TableRow) recipeTable.getChildAt(i);
@@ -621,8 +634,8 @@ public class MenuRegistration extends AppCompatActivity {
     void fillSpinners() {
 
 //        categories = mDbHandler.getAllExistingCategories();
-        for(int i=0;i<mDbHandler.getAllFamilyCategory().size();i++) {
-            if(mDbHandler.getAllFamilyCategory().get(i).getType()==2){
+        for (int i = 0; i < mDbHandler.getAllFamilyCategory().size(); i++) {
+            if (mDbHandler.getAllFamilyCategory().get(i).getType() == 2) {
                 categories.add(mDbHandler.getAllFamilyCategory().get(i).getName());
             }
         }

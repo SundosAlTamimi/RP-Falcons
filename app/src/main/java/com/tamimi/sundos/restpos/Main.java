@@ -708,6 +708,7 @@ public class Main extends AppCompatActivity {
                             "", toUser.getText().toString()));
 
 
+
                     for (int i = 0; i < money.size(); i++) {
                         TableRow tableRow = (TableRow) categories.getChildAt(i);
                         TextView text = (TextView) tableRow.getChildAt(0);
@@ -760,6 +761,14 @@ public class Main extends AppCompatActivity {
                     dialogCashierOut.dismiss();
                 } else
                     Toast.makeText(Main.this, "Please enter 'to user' field", Toast.LENGTH_LONG).show();
+
+
+
+                mDHandler.updateStatusInBlindShiftIn(Settings.user_name,today);
+                dialogCashierOut.dismiss();
+                finish();
+                Intent logInActivate =new Intent(Main.this,LogIn.class);
+                startActivity(logInActivate);
             }
         });
 
@@ -913,6 +922,7 @@ public class Main extends AppCompatActivity {
         point.addTextChangedListener(textWatcher);
 
         dialogCashierOut.show();
+
 
     }
 
@@ -1368,16 +1378,24 @@ public class Main extends AppCompatActivity {
             public void onClick(View v) {
                 if (!focusedTextView.getText().toString().equals("")) {
                     if (Settings.password == Integer.parseInt(focusedTextView.getText().toString())) {
-                        switch (Settings.time_card) {
-                            case 0:
+
+                        int Size=mDHandler.getAllExistingClockInClockOut().size()-1;
+                        String TransType =mDHandler.getAllExistingClockInClockOut().get(Size).getTranstype();
+
+                        switch (TransType) {
+                            case "ClockOut" :
                                 dialog.dismiss();
                                 showTimeCardDialog();
                                 break;
-                            case 1:
+                            case "ClockIN":
                                 dialog.dismiss();
                                 clockTimeOut();
                                 break;
-                            case 2:
+                            case "BreakOut":
+                                dialog.dismiss();
+                                clockTimeOut();
+                                break;
+                            case "BreakIN" :
                                 dialog.dismiss();
                                 showBreakTimeOut();
                                 break;

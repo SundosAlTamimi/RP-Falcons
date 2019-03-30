@@ -1585,7 +1585,7 @@ public class BackOfficeActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 userTable.removeAllViews();
-                String posNoAll="All";
+                String posNoAll = "All";
 
                 String fromDat = fromDate.getText().toString();
                 String toDat = toDate.getText().toString();
@@ -1605,13 +1605,13 @@ public class BackOfficeActivity extends AppCompatActivity {
                     if (filters(fromDat, toDat, Announcement.get(i).getAnnouncementDate()) &&
                             (Announcement.get(i).getUserName().equals(userName.getSelectedItem().toString()) || userName.getSelectedItem().toString().equals("All")) &&
                             (Announcement.get(i).getPosNo() == posNoString || posNoString == -1)) {
-                        if(Announcement.get(i).getPosNo()== -1){
-                            posNoAll="All";
-                        }else {
-                            posNoAll=String.valueOf(Announcement.get(i).getPosNo());
+                        if (Announcement.get(i).getPosNo() == -1) {
+                            posNoAll = "All";
+                        } else {
+                            posNoAll = String.valueOf(Announcement.get(i).getPosNo());
                         }
-                        insertCashierInOutReport(userTable, Announcement.get(i).getShiftName(),posNoAll,
-                                Announcement.get(i).getMessage(), Announcement.get(i).getUserName(), String.valueOf(Announcement.get(i).getIsShow()), "", Announcement.get(i).getAnnouncementDate(),6);
+                        insertCashierInOutReport(userTable, Announcement.get(i).getShiftName(), posNoAll,
+                                Announcement.get(i).getMessage(), Announcement.get(i).getUserName(), String.valueOf(Announcement.get(i).getIsShow()), "", Announcement.get(i).getAnnouncementDate(), 6);
                     }
                 }
             }
@@ -2722,7 +2722,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         preview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                count = 0;
                 cashierTable.removeAllViews();
 
                 int cashierType = 0;
@@ -2757,8 +2757,8 @@ public class BackOfficeActivity extends AppCompatActivity {
                             if (payInData.get(i).getUserNo() == CashierNo || CashierNo == -1) {
                                 if (payInData.get(i).getPosNo() == posNoString || posNoString == -1) {
                                     if (cashierType == payInData.get(i).getTransType() || cashierType == -1) {
-
-                                        insertCashierInOutReport(cashierTable, String.valueOf(i), payInData.get(i).getTransDate()
+                                        count++;
+                                        insertCashierInOutReport(cashierTable, String.valueOf(count), payInData.get(i).getTransDate()
                                                 , String.valueOf(payInData.get(i).getPosNo()), payInData.get(i).getUserName(), String.valueOf(payInData.get(i).getTransType())
                                                 , String.valueOf(payInData.get(i).getValue()), "2-2-2000", 7);
                                     }
@@ -3667,7 +3667,6 @@ public class BackOfficeActivity extends AppCompatActivity {
         Button exit, preview, export, print;
         TableLayout cardTypeTable = (TableLayout) dialog.findViewById(R.id.cardTypeTable);
 
-
         Spinner shiftName, cardType, PosNo;
 
         exit = (Button) dialog.findViewById(R.id.exitReport);
@@ -3729,6 +3728,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         preview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                count=0;
                 double totalText = 0;
                 cardTypeTable.removeAllViews();
 
@@ -3749,8 +3749,8 @@ public class BackOfficeActivity extends AppCompatActivity {
                             (OrderPayMData.get(i).getShiftName().equals(ShiftNames) || ShiftNames.equals("All")) &&
                             (OrderPayMData.get(i).getPayType().equals("Credit Card")) &&
                             (posNoString == -1 || posNoString == OrderPayMData.get(i).getPointOfSaleNumber())) {
-
-                        insertCashierInOutReport(cardTypeTable, String.valueOf(i), "11:32",
+                        count++;
+                        insertCashierInOutReport(cardTypeTable, String.valueOf(count), "11:32",
                                 OrderPayMData.get(i).getVoucherNumber(), OrderPayMData.get(i).getVoucherDate(),
                                 String.valueOf(OrderPayMData.get(i).getPayValue()), OrderPayMData.get(i).getUserName(),
                                 String.valueOf(OrderPayMData.get(i).getPointOfSaleNumber()), 7);
@@ -4758,7 +4758,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         TextView date = (TextView) dialog.findViewById(R.id.Date);
         EditText message = (EditText) dialog.findViewById(R.id.message);
         Spinner posNo, shiftName, userName;
-        Button  save, exit;
+        Button save, exit;
 
         posNo = (Spinner) dialog.findViewById(R.id.posNo);
         shiftName = (Spinner) dialog.findViewById(R.id.shiftName);

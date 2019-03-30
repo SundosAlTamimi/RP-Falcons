@@ -282,7 +282,7 @@ public class DineIn extends AppCompatActivity {
                 dialog.setCancelable(false);
                 dialog.setContentView(R.layout.pick_waiter_dialog);
                 dialog.setCanceledOnTouchOutside(true);
-
+                waiterClick = false;
                 final LinearLayout linearLayout = dialog.findViewById(R.id.linear);
                 Button done = dialog.findViewById(R.id.b_done);
 

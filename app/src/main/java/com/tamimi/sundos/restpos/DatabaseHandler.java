@@ -3630,6 +3630,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.update(ANNOUNCEMENT_TABLE, values, filter, null);
     }
 
+    public void updateStatusInBlindShiftIn(String userName,String date) {
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        String filter=USER_NAME10 + " = '" + userName  + "' and " +DATE10 +"= '"+date+"'";
+        values.put(STATUS10, 0);
+
+        // updating row
+        db.update(BLIND_SHIFT_IN, values, filter, null);
+    }
+
 
     public void updateBlindCloseDetails(int transNo, String catName, int catQty, double catValue, double catTotal, String date,
                                         String time, int userNo, String userName) {
