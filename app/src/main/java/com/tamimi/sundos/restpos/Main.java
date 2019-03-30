@@ -1378,16 +1378,24 @@ public class Main extends AppCompatActivity {
             public void onClick(View v) {
                 if (!focusedTextView.getText().toString().equals("")) {
                     if (Settings.password == Integer.parseInt(focusedTextView.getText().toString())) {
-                        switch (Settings.time_card) {
-                            case 0:
+
+                        int Size=mDHandler.getAllExistingClockInClockOut().size()-1;
+                        String TransType =mDHandler.getAllExistingClockInClockOut().get(Size).getTranstype();
+
+                        switch (TransType) {
+                            case "ClockOut" :
                                 dialog.dismiss();
                                 showTimeCardDialog();
                                 break;
-                            case 1:
+                            case "ClockIN":
                                 dialog.dismiss();
                                 clockTimeOut();
                                 break;
-                            case 2:
+                            case "BreakOut":
+                                dialog.dismiss();
+                                clockTimeOut();
+                                break;
+                            case "BreakIN" :
                                 dialog.dismiss();
                                 showBreakTimeOut();
                                 break;
