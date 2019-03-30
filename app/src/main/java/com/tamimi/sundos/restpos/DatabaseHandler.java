@@ -3798,7 +3798,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void deleteFromOrderTransactionTemp2(String sectionNo, String tableNo ,String itemCode) {
+    public void deleteFromOrderTransactionTemp2(String sectionNo, String tableNo ,int itemCode) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from ORDER_TRANSACTIONS_TEMP WHERE SECTION_NO = '" + sectionNo + "' and TABLE_NO = '" + tableNo + "' and ITEM_BARCODE1 = '" + itemCode + "'" );
         db.close();

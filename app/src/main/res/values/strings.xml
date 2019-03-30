@@ -443,4 +443,5 @@
     <string name="update">Update</string>
     <string name="user_name_">User Name</string>
     <string name="net_total_">Net Total</string>
+    <string name="enter_void_qty">Enter Void Qty </string>
 </resources>
