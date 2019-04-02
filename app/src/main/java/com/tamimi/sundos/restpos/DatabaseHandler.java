@@ -52,7 +52,7 @@ import java.util.List;
 public class DatabaseHandler extends SQLiteOpenHelper {
     //hellohjt
     // Database Version
-    private static final int DATABASE_VERSION = 9;
+    private static final int DATABASE_VERSION = 12;
 
     // Database Name
     private static final String DATABASE_NAME = "RestPos";
@@ -1179,15 +1179,41 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 //        db.execSQL(CREATE_TABLE_TABLE_ACTIONS);
 
 
-        String CREATE_TABLE_ANNOUNCEMENT_TABLE = "CREATE TABLE " + ANNOUNCEMENT_TABLE + "("
-                + SHIFT_NAME18 + " TEXT,"
-                + ANNOUNCEMENT_DATE18 + " TEXT,"
-                + USER_NAME18 + " TEXT,"
-                + POS_NO18 + " INTEGER,"
-                + MESSAGE18 + " TEXT,"
-                + IS_SHOW18 + " INTEGER " + ")";
-        db.execSQL(CREATE_TABLE_ANNOUNCEMENT_TABLE);
+//        String CREATE_TABLE_ANNOUNCEMENT_TABLE = "CREATE TABLE " + ANNOUNCEMENT_TABLE + "("
+//                + SHIFT_NAME18 + " TEXT,"
+//                + ANNOUNCEMENT_DATE18 + " TEXT,"
+//                + USER_NAME18 + " TEXT,"
+//                + POS_NO18 + " INTEGER,"
+//                + MESSAGE18 + " TEXT,"
+//                + IS_SHOW18 + " INTEGER " + ")";
+//        db.execSQL(CREATE_TABLE_ANNOUNCEMENT_TABLE);
 
+
+//        db.execSQL("ALTER TABLE BLIND_CLOSE ADD REASON TEXT NOT NULL DEFAULT 'REASON'");
+
+        String CREATE_TABLE_BLIND_CLOSE = "CREATE TABLE " + BLIND_CLOSE + "("
+                + TRANS_NO11 + " INTEGER,"
+                + DATE11 + " TEXT,"
+                + TIME11 + " TEXT,"
+                + POS_NO11 + " INTEGER,"
+                + SHIFT_NO11 + " INTEGER,"
+                + SHIFT_NAME11 + " TEXT,"
+                + USER_NO11 + " INTEGER,"
+                + USER_NAME11 + " TEXT,"
+                + SYS_SALES11 + " INTEGER,"
+                + USER_SALES11 + " TEXT,"
+                + SALES_DIFF11 + " INTEGER,"
+                + SYS_CASH11 + " INTEGER,"
+                + USER_CASH11 + " INTEGER,"
+                + CASH_DIFF11 + " INTEGER,"
+                + SYS_OTHER_PAYMENTS11 + " INTEGER,"
+                + USER_OTHER_PAYMENTS11 + " INTEGER,"
+                + OTHER_PAYMENTS_DIFF11 + " INTEGER,"
+                + TILL_OK11 + " INTEGER,"
+                + TRANS_TYPE11 + " INTEGER,"
+                + REASON11 + " TEXT,"
+                + TO_USER11 + " TEXT" + ")";
+        db.execSQL(CREATE_TABLE_BLIND_CLOSE);
 
     }
 
