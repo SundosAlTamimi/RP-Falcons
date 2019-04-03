@@ -1659,7 +1659,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         Window window = dialog.getWindow();
         window.setLayout(860, 430);
 
-        nextSerial = mDHandler.getAllMoneyCategory().size();
+        nextSerial = mDHandler.getAllMoneyCategory().size()+1;
         final ArrayList<Money> money = new ArrayList<>();
 
         final EditText serial = (EditText) dialog.findViewById(R.id.serial);

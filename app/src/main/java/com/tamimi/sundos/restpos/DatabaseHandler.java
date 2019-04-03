@@ -2124,7 +2124,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public ArrayList<Money> getAllMoneyCategory() {
         ArrayList<Money> items = new ArrayList<>();
 
-        String selectQuery = "SELECT * FROM " + MONEY_CATEGORIES;
+        String selectQuery = "SELECT * FROM " + MONEY_CATEGORIES +" order by CATEGORY_VALUE  Asc";
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -2684,7 +2684,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         if (moneys.isEmpty())
-            max = -1;
+            max = 0;
         else
             max = Collections.max(moneys);
         return max;
