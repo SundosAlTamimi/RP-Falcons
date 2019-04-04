@@ -240,7 +240,6 @@ public class Main extends AppCompatActivity {
     }
 
 
-    @SuppressLint("ClickableViewAccessibility")
     void showCashierInDialog(String times, String dates,ClockInClockOut clockInClockOut) {
         Dialog dialogCashierIn = new Dialog(Main.this);
         dialogCashierIn.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -372,7 +371,6 @@ public class Main extends AppCompatActivity {
                             TextView text = (TextView) tableRow.getChildAt(0);
                             TextView text1 = (TextView) tableRow.getChildAt(1);
 
-                    if (!text1.getText().toString().equals("")) {
                             if (!text1.getText().toString().equals("")) {
 
                                 cash.setCashierName(user.getText().toString());
@@ -584,17 +582,20 @@ public class Main extends AppCompatActivity {
 
         date.setText(today);
 
-        finalClose.setOnClickListener(new OnClickListener() {
+        final int[] tranType = {0};
+        finalClose.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View view) {
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                tranType[0] = 0;
                 toUser.setText("");
-                toUser.setEnabled(false);
+                toUser.setEnabled(true);
             }
         });
-        changeOver.setOnClickListener(new OnClickListener() {
+        changeOver.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View view) {
-                toUser.setEnabled(true);
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                tranType[0] = 1;
+                toUser.setEnabled(false);
             }
         });
 
@@ -705,38 +706,23 @@ public class Main extends AppCompatActivity {
                 toUser.setEnabled(false);
                 finalClose.setChecked(true);
                 changeOver.setChecked(false);
+                tranType[0] = 0;
 
             }
         });
-
         save.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                int tranType = 0;
-                if (finalClose.isChecked()) {
-                    tranType = 0;
-                }
-                if (changeOver.isChecked()) {
-                    tranType = 1;
-                }
-
-                if (finalClose.isChecked() || (changeOver.isChecked() && !toUser.getText().toString().equals(""))) {
-                    ArrayList<OrderHeader> orderHeaders = mDHandler.getAllOrderHeader();
-                    ArrayList<PayMethod> payMethods = mDHandler.getAllExistingPay();
-
-                    int transNo = mDHandler.getAllBlindClose().size();
-
-                    Date currentTimeAndDate = Calendar.getInstance().getTime();
-                    SimpleDateFormat df = new SimpleDateFormat("hh:mm");
-                    String time = df.format(currentTimeAndDate);
-
-                    double userSales = Double.parseDouble(mainTotal.getText().toString());
-                    double sysSales = 0;
-//                Log.e("tag***", "" + orderHeaders.get(0).getVoucherDate() + " == " + today + " && " + orderHeaders.get(0).getShiftName() + Settings.shift_name);
                 if (!checkIsCashierInOutZero(money)) {
-
-                    saveCashierOutBase(categories, tranType[0], finalClose, changeOver, toUser, cashTotals, creditCard, cheque, giftCard,
+                    int tranType = 0;
+                    if (finalClose.isChecked()) {
+                        tranType = 0;
+                    }
+                    if (changeOver.isChecked()) {
+                        tranType = 1;
+                    }
+                    saveCashierOutBase(categories, tranType, finalClose, changeOver, toUser, cashTotals, creditCard, cheque, giftCard,
                             credit, point, otherPaymentTotal, mainTotal, money, dialogCashierOut);
 
                     Toast.makeText(Main.this, "Save Successful...", Toast.LENGTH_SHORT).show();
@@ -748,7 +734,15 @@ public class Main extends AppCompatActivity {
                     builderInner.setCancelable(false);
                     builderInner.setPositiveButton("Yes", (dialog1, which1) -> {
 
-                        saveCashierOutBase(categories, tranType[0], finalClose, changeOver, toUser, cashTotals, creditCard, cheque, giftCard,
+                        int tranType = 0;
+                        if (finalClose.isChecked()) {
+                            tranType = 0;
+                        }
+                        if (changeOver.isChecked()) {
+                            tranType = 1;
+                        }
+
+                        saveCashierOutBase(categories, tranType, finalClose, changeOver, toUser, cashTotals, creditCard, cheque, giftCard,
                                 credit, point, otherPaymentTotal, mainTotal, money, dialogCashierOut);
 
                         Toast.makeText(Main.this, "Save Successful...", Toast.LENGTH_SHORT).show();
@@ -916,6 +910,7 @@ public class Main extends AppCompatActivity {
 
 
     }
+
 
     void showPayInDialog(final int transType) {
         dialog = new Dialog(Main.this);
