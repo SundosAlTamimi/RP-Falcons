@@ -1,10 +1,10 @@
 package com.tamimi.sundos.restpos;
 
-import android.animation.Animator;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -27,7 +26,6 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextClock;
@@ -42,7 +40,6 @@ import com.tamimi.sundos.restpos.Models.Cashier;
 import com.tamimi.sundos.restpos.Models.ClockInClockOut;
 import com.tamimi.sundos.restpos.Models.Money;
 import com.tamimi.sundos.restpos.Models.OrderHeader;
-import com.tamimi.sundos.restpos.Models.OrderTransactions;
 import com.tamimi.sundos.restpos.Models.Pay;
 import com.tamimi.sundos.restpos.Models.PayMethod;
 
@@ -50,7 +47,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -245,7 +241,7 @@ public class Main extends AppCompatActivity {
 
 
     @SuppressLint("ClickableViewAccessibility")
-    void showCashierInDialog() {
+    void showCashierInDialog(String times, String dates,ClockInClockOut clockInClockOut) {
         Dialog dialogCashierIn = new Dialog(Main.this);
         dialogCashierIn.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialogCashierIn.setCancelable(false);
@@ -367,27 +363,77 @@ public class Main extends AppCompatActivity {
             public void onClick(View view) {
 
                 ArrayList<Cashier> cashier = new ArrayList<>();
-                for (int i = 0; i < money.size(); i++) {
-                    Cashier cash = new Cashier();
-                    TableRow tableRow = (TableRow) categories.getChildAt(i);
-                    TextView text = (TextView) tableRow.getChildAt(0);
-                    TextView text1 = (TextView) tableRow.getChildAt(1);
+                if (money.size() > 0) {
+                    if (!checkIsCashierInOutZero(money)) {
+
+                        for (int i = 0; i < money.size(); i++) {
+                            Cashier cash = new Cashier();
+                            TableRow tableRow = (TableRow) categories.getChildAt(i);
+                            TextView text = (TextView) tableRow.getChildAt(0);
+                            TextView text1 = (TextView) tableRow.getChildAt(1);
 
                     if (!text1.getText().toString().equals("")) {
+                            if (!text1.getText().toString().equals("")) {
 
-                        cash.setCashierName(user.getText().toString());
-                        cash.setCheckInDate(date.getText().toString());
-                        cash.setCategoryName(text.getText().toString());
-                        cash.setCategoryValue(Double.parseDouble(text.getTag().toString()));
-                        cash.setCategoryQty(Integer.parseInt(text1.getText().toString()));
-                        cash.setOrderKind(0);
-                        cashier.add(cash);
+                                cash.setCashierName(user.getText().toString());
+                                cash.setCheckInDate(date.getText().toString());
+                                cash.setCategoryName(text.getText().toString());
+                                cash.setCategoryValue(Double.parseDouble(text.getTag().toString()));
+                                cash.setCategoryQty(Integer.parseInt(text1.getText().toString()));
+                                cash.setOrderKind(0);
+                                cashier.add(cash);
+                            } else {
+                                Toast.makeText(Main.this, "some Qty not have value ...", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        mDHandler.addCashierInOut(cashier);
+                        mDHandler.addClockInClockOut(clockInClockOut);
+                        clockInSuccessful(times, dates); //this for Successful clockIn
+
+                        dialogCashierIn.dismiss();
                     } else {
-                        Toast.makeText(Main.this, "some Qty not have value ...", Toast.LENGTH_SHORT).show();
+                        AlertDialog.Builder builderInner = new AlertDialog.Builder(Main.this);
+                        builderInner.setTitle("Do you want to enter with Zero Cashier In ?");
+                        builderInner.setCancelable(false);
+                        builderInner.setPositiveButton("Yes", (dialog1, which1) -> {
+                            for (int i = 0; i < money.size(); i++) {
+                                Cashier cash = new Cashier();
+                                TableRow tableRow = (TableRow) categories.getChildAt(i);
+                                TextView text = (TextView) tableRow.getChildAt(0);
+                                TextView text1 = (TextView) tableRow.getChildAt(1);
+
+                                if (!text1.getText().toString().equals("")) {
+
+                                    cash.setCashierName(user.getText().toString());
+                                    cash.setCheckInDate(date.getText().toString());
+                                    cash.setCategoryName(text.getText().toString());
+                                    cash.setCategoryValue(Double.parseDouble(text.getTag().toString()));
+                                    cash.setCategoryQty(Integer.parseInt(text1.getText().toString()));
+                                    cash.setOrderKind(0);
+                                    cashier.add(cash);
+                                } else {
+                                    Toast.makeText(Main.this, "some Qty not have value ...", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            mDHandler.addCashierInOut(cashier);
+                            dialogCashierIn.dismiss();
+
+                            mDHandler.addClockInClockOut(clockInClockOut);
+                            Toast.makeText(Main.this, "Save Successful...", Toast.LENGTH_SHORT).show();
+                            clockInSuccessful(times, dates); //this for Successful clockIn
+                        });
+                        builderInner.setNegativeButton("No", (dialog1, i) -> {
+                            dialog1.dismiss();
+                        });
+                        builderInner.show();
                     }
+
+
+                } else {
+                    Toast.makeText(Main.this, "Please Add Money Category ", Toast.LENGTH_SHORT).show();
+                    dialogCashierIn.dismiss();
+
                 }
-                mDHandler.addCashierInOut(cashier);
-                dialogCashierIn.dismiss();
             }
         });
 
@@ -688,90 +734,32 @@ public class Main extends AppCompatActivity {
                     double userSales = Double.parseDouble(mainTotal.getText().toString());
                     double sysSales = 0;
 //                Log.e("tag***", "" + orderHeaders.get(0).getVoucherDate() + " == " + today + " && " + orderHeaders.get(0).getShiftName() + Settings.shift_name);
+                if (!checkIsCashierInOutZero(money)) {
 
-                    for (int i = 0; i < orderHeaders.size(); i++)
-                        if (orderHeaders.get(i).getVoucherDate().equals(today) && orderHeaders.get(i).getShiftName().equals(Settings.shift_name))
-                            sysSales += orderHeaders.get(i).getAmountDue();
+                    saveCashierOutBase(categories, tranType[0], finalClose, changeOver, toUser, cashTotals, creditCard, cheque, giftCard,
+                            credit, point, otherPaymentTotal, mainTotal, money, dialogCashierOut);
 
-                    double userCash = Double.parseDouble(cashTotals.getText().toString());
-                    double sysCash = 0;
-                    for (int i = 0; i < payMethods.size(); i++)
-                        if (payMethods.get(i).getVoucherDate().equals(today) && payMethods.get(i).getShiftName().equals(Settings.shift_name)
-                                && payMethods.get(i).getPayType().equals("Cash"))
-                            sysCash += payMethods.get(i).getPayValue();
+                    Toast.makeText(Main.this, "Save Successful...", Toast.LENGTH_SHORT).show();
 
-                    double userOthers = Double.parseDouble(otherPaymentTotal.getText().toString());
-                    double sysOthers = 0;
-                    for (int i = 0; i < payMethods.size(); i++)
-                        if (payMethods.get(i).getVoucherDate().equals(today) && payMethods.get(i).getShiftName().equals(Settings.shift_name)
-                                && !payMethods.get(i).getPayType().equals("Cash"))
-                            sysOthers += payMethods.get(i).getPayValue();
+                } else {
 
-                    mDHandler.addBlindClose(new BlindClose(transNo, today, time, Settings.POS_number, Settings.shift_number,
-                            Settings.shift_name, Settings.password, Settings.user_name, sysSales, userSales, userSales - sysSales,
-                            sysCash, userCash, userCash - sysCash, sysOthers, userOthers, userOthers - sysOthers, 0, tranType,
-                            "", toUser.getText().toString()));
+                    AlertDialog.Builder builderInner = new AlertDialog.Builder(Main.this);
+                    builderInner.setTitle("Do you want to exit with Zero Cashier Out ?");
+                    builderInner.setCancelable(false);
+                    builderInner.setPositiveButton("Yes", (dialog1, which1) -> {
 
+                        saveCashierOutBase(categories, tranType[0], finalClose, changeOver, toUser, cashTotals, creditCard, cheque, giftCard,
+                                credit, point, otherPaymentTotal, mainTotal, money, dialogCashierOut);
 
-                    for (int i = 0; i < money.size(); i++) {
-                        TableRow tableRow = (TableRow) categories.getChildAt(i);
-                        TextView text = (TextView) tableRow.getChildAt(0);
-                        TextView text1 = (TextView) tableRow.getChildAt(1);
+                        Toast.makeText(Main.this, "Save Successful...", Toast.LENGTH_SHORT).show();
 
-                        String catName = text.getText().toString();
-                        Double catValue = Double.parseDouble(text.getTag().toString());
-                        int catQty;
-                        if (text1.getText().toString().equals(""))
-                            catQty = 0;
-                        else
-                            catQty = Integer.parseInt(text1.getText().toString());
+                    });
+                    builderInner.setNegativeButton("No", (dialog1, i) -> {
+                        dialog1.dismiss();
+                    });
+                    builderInner.show();
 
-                        mDHandler.addBlindCloseDetails(new BlindCloseDetails(transNo, today, time, Settings.POS_number, Settings.shift_number,
-                                Settings.shift_name, Settings.password, Settings.user_name, catName, catQty, catValue, catQty * catValue,
-                                "Cash", "", "", -1, "no-user"));
-                    }
-
-                    double creditCardValue = Double.parseDouble(creditCard.getText().toString());
-                    double chequeValue = Double.parseDouble(cheque.getText().toString());
-                    double giftCardValue = Double.parseDouble(giftCard.getText().toString());
-                    double creditValue = Double.parseDouble(credit.getText().toString());
-                    double pointValue = Double.parseDouble(point.getText().toString());
-
-                    if (creditCardValue != 0)
-                        mDHandler.addBlindCloseDetails(new BlindCloseDetails(transNo, today, time, Settings.POS_number, Settings.shift_number,
-                                Settings.shift_name, Settings.password, Settings.user_name, "Credit Card", 1, creditCardValue,
-                                creditCardValue, "Credit Card", "", "", -1, "no-user"));
-
-                    if (chequeValue != 0)
-                        mDHandler.addBlindCloseDetails(new BlindCloseDetails(transNo, today, time, Settings.POS_number, Settings.shift_number,
-                                Settings.shift_name, Settings.password, Settings.user_name, "Cheque", 1, chequeValue,
-                                chequeValue, "Cheque", "", "", -1, "no-user"));
-
-                    if (giftCardValue != 0)
-                        mDHandler.addBlindCloseDetails(new BlindCloseDetails(transNo, today, time, Settings.POS_number, Settings.shift_number,
-                                Settings.shift_name, Settings.password, Settings.user_name, "Gift Card", 1, giftCardValue,
-                                giftCardValue, "Gift Card", "", "", -1, "no-user"));
-
-                    if (creditValue != 0)
-                        mDHandler.addBlindCloseDetails(new BlindCloseDetails(transNo, today, time, Settings.POS_number, Settings.shift_number,
-                                Settings.shift_name, Settings.password, Settings.user_name, "Credit", 1, creditValue,
-                                creditValue, "Credit", "", "", -1, "no-user"));
-
-                    if (pointValue != 0)
-                        mDHandler.addBlindCloseDetails(new BlindCloseDetails(transNo, today, time, Settings.POS_number, Settings.shift_number,
-                                Settings.shift_name, Settings.password, Settings.user_name, "Point", 1, pointValue,
-                                pointValue, "Point", "", "", -1, "no-user"));
-
-                    mDHandler.updateStatusInBlindShiftIn(Settings.user_name, today);
-                    dialogCashierOut.dismiss();
-                    finish();
-                    Intent logInActivate = new Intent(Main.this, LogIn.class);
-                    startActivity(logInActivate);
-
-                    dialogCashierOut.dismiss();
-                } else
-                    Toast.makeText(Main.this, "Please enter 'to user' field", Toast.LENGTH_LONG).show();
-
+                }
             }
         });
 
@@ -1270,6 +1258,145 @@ public class Main extends AppCompatActivity {
     }
 
 
+    boolean checkIsCashierInOutZero(ArrayList<Money> money) {
+        boolean isAllZero = true;
+        for (int i = 0; i < money.size(); i++) {
+
+            TableRow tableRow = (TableRow) categories.getChildAt(i);
+            TextView text = (TextView) tableRow.getChildAt(1);
+            TextView text1 = (TextView) tableRow.getChildAt(2);
+//&& !text.getText().toString().equals("")// && !text1.getText().toString().equals("")
+            if ((!text.getText().toString().equals("0") ) && (!text1.getText().toString().equals("0"))) {
+                isAllZero = false;
+                break;
+            }
+        }
+
+        return isAllZero;
+    }
+
+
+    void saveCashierOutBase(TableLayout categories, int tranType, RadioButton finalClose, RadioButton changeOver,
+                            EditText toUser, TextView cashTotals, TextView creditCard, TextView cheque, TextView giftCard, TextView credit,
+                            TextView point, TextView otherPaymentTotal, TextView mainTotal, ArrayList<Money> money, Dialog dialogCashierOut) {
+
+
+        if (finalClose.isChecked() || (changeOver.isChecked() && !toUser.getText().toString().equals(""))) {
+            ArrayList<OrderHeader> orderHeaders = mDHandler.getAllOrderHeader();
+            ArrayList<PayMethod> payMethods = mDHandler.getAllExistingPay();
+
+            int transNo = mDHandler.getAllBlindClose().size();
+
+            Date currentTimeAndDate = Calendar.getInstance().getTime();
+            SimpleDateFormat df = new SimpleDateFormat("HH:mm");
+            String time = df.format(currentTimeAndDate);
+
+            double userSales = Double.parseDouble(mainTotal.getText().toString());
+            double sysSales = 0;
+//                Log.e("tag***", "" + orderHeaders.get(0).getVoucherDate() + " == " + today + " && " + orderHeaders.get(0).getShiftName() + Settings.shift_name);
+
+            for (int i = 0; i < orderHeaders.size(); i++)
+                if (orderHeaders.get(i).getVoucherDate().equals(today) && orderHeaders.get(i).getShiftName().equals(Settings.shift_name))
+                    sysSales += orderHeaders.get(i).getAmountDue();
+
+            double userCash = Double.parseDouble(cashTotals.getText().toString());
+            double sysCash = 0;
+            for (int i = 0; i < payMethods.size(); i++)
+                if (payMethods.get(i).getVoucherDate().equals(today) && payMethods.get(i).getShiftName().equals(Settings.shift_name)
+                        && payMethods.get(i).getPayType().equals("Cash"))
+                    sysCash += payMethods.get(i).getPayValue();
+
+            double userOthers = Double.parseDouble(otherPaymentTotal.getText().toString());
+            double sysOthers = 0;
+            for (int i = 0; i < payMethods.size(); i++)
+                if (payMethods.get(i).getVoucherDate().equals(today) && payMethods.get(i).getShiftName().equals(Settings.shift_name)
+                        && !payMethods.get(i).getPayType().equals("Cash"))
+                    sysOthers += payMethods.get(i).getPayValue();
+
+            mDHandler.addBlindClose(new BlindClose(transNo, today, time, Settings.POS_number, Settings.shift_number,
+                    Settings.shift_name, Settings.password, Settings.user_name, sysSales, userSales, userSales - sysSales,
+                    sysCash, userCash, userCash - sysCash, sysOthers, userOthers, userOthers - sysOthers, 0, tranType,
+                    "", toUser.getText().toString()));
+
+
+            for (int i = 0; i < money.size(); i++) {
+                TableRow tableRow = (TableRow) categories.getChildAt(i);
+                TextView text = (TextView) tableRow.getChildAt(0);
+                TextView text1 = (TextView) tableRow.getChildAt(1);
+
+                String catName = text.getText().toString();
+                Double catValue = Double.parseDouble(text.getTag().toString());
+                int catQty;
+                if (text1.getText().toString().equals(""))
+                    catQty = 0;
+                else
+                    catQty = Integer.parseInt(text1.getText().toString());
+
+                mDHandler.addBlindCloseDetails(new BlindCloseDetails(transNo, today, time, Settings.POS_number, Settings.shift_number,
+                        Settings.shift_name, Settings.password, Settings.user_name, catName, catQty, catValue, catQty * catValue,
+                        "Cash", "", "", -1, "no-user"));
+            }
+
+            double creditCardValue=0.0;
+            double chequeValue=0.0;
+            double giftCardValue=0.0;
+            double creditValue = 0.0;
+            double pointValue = 0.0;
+            if(!creditCard.getText().toString().equals("")) {
+                 creditCardValue = Double.parseDouble(creditCard.getText().toString());
+            }
+            if(!cheque.getText().toString().equals("")) {
+                chequeValue = Double.parseDouble(cheque.getText().toString());
+            }
+            if(!giftCard.getText().toString().equals("")) {
+                giftCardValue = Double.parseDouble(giftCard.getText().toString());
+            }
+            if(!credit.getText().toString().equals("")) {
+                creditValue = Double.parseDouble(credit.getText().toString());
+            }
+            if(!point.getText().toString().equals("")) {
+                pointValue = Double.parseDouble(point.getText().toString());
+            }
+
+            if (creditCardValue != 0  )
+                mDHandler.addBlindCloseDetails(new BlindCloseDetails(transNo, today, time, Settings.POS_number, Settings.shift_number,
+                        Settings.shift_name, Settings.password, Settings.user_name, "Credit Card", 1, creditCardValue,
+                        creditCardValue, "Credit Card", "", "", -1, "no-user"));
+
+            if (chequeValue != 0 )
+                mDHandler.addBlindCloseDetails(new BlindCloseDetails(transNo, today, time, Settings.POS_number, Settings.shift_number,
+                        Settings.shift_name, Settings.password, Settings.user_name, "Cheque", 1, chequeValue,
+                        chequeValue, "Cheque", "", "", -1, "no-user"));
+
+            if (giftCardValue != 0)
+                mDHandler.addBlindCloseDetails(new BlindCloseDetails(transNo, today, time, Settings.POS_number, Settings.shift_number,
+                        Settings.shift_name, Settings.password, Settings.user_name, "Gift Card", 1, giftCardValue,
+                        giftCardValue, "Gift Card", "", "", -1, "no-user"));
+
+            if (creditValue != 0 )
+                mDHandler.addBlindCloseDetails(new BlindCloseDetails(transNo, today, time, Settings.POS_number, Settings.shift_number,
+                        Settings.shift_name, Settings.password, Settings.user_name, "Credit", 1, creditValue,
+                        creditValue, "Credit", "", "", -1, "no-user"));
+
+            if (pointValue != 0)
+                mDHandler.addBlindCloseDetails(new BlindCloseDetails(transNo, today, time, Settings.POS_number, Settings.shift_number,
+                        Settings.shift_name, Settings.password, Settings.user_name, "Point", 1, pointValue,
+                        pointValue, "Point", "", "", -1, "no-user"));
+
+            dialogCashierOut.dismiss();
+        } else
+            Toast.makeText(Main.this, "Please enter 'to user' field", Toast.LENGTH_LONG).show();
+
+
+        mDHandler.updateStatusInBlindShiftIn(Settings.user_name, today);
+        dialogCashierOut.dismiss();
+        finish();
+        Intent logInActivate = new Intent(Main.this, LogIn.class);
+        startActivity(logInActivate);
+
+    }
+
+
     void showClockInClockOutDialog() {
         dialog = new Dialog(Main.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -1456,7 +1583,7 @@ public class Main extends AppCompatActivity {
             public void onClick(View v) {
                 dialog.dismiss();
                 final String times = time.getText().toString();
-                clockInSuccessful(times, dates);
+
                 Settings.time_card = 1;
 
                 ClockInClockOut clockInClockOut = new ClockInClockOut();
@@ -1473,7 +1600,9 @@ public class Main extends AppCompatActivity {
                 clockInClockOut.setShiftName(Settings.shift_name);
 
 
-                mDHandler.addClockInClockOut(clockInClockOut);
+//                mDHandler.addClockInClockOut(clockInClockOut); // this in cashierInDialog ...
+
+                showCashierInDialog(times,  dates,clockInClockOut);
             }
         });
 
@@ -1485,7 +1614,7 @@ public class Main extends AppCompatActivity {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.clockin_successful_dialog);
-        dialog.setCanceledOnTouchOutside(true);
+        dialog.setCanceledOnTouchOutside(false);
 
         Window window = dialog.getWindow();
         // window.setLayout(590, 290);
@@ -1504,7 +1633,6 @@ public class Main extends AppCompatActivity {
         ok.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                showCashierInDialog();
                 dialog.dismiss();
             }
         });

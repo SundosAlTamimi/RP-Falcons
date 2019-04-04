@@ -581,9 +581,9 @@ public class PayMethods extends AppCompatActivity {
                 String t1 = received.getText().toString();
                 String t2 = cardNo.getText().toString();
 
-                if (t1.equals("") && t2.equals("") && spinner.getSelectedItem().toString() != "")
+                if (t1.equals("") && t2.equals("") && spinner.getSelectedItem().toString().equals("")){
                     Toast.makeText(PayMethods.this, "Please enter received value  and card number", Toast.LENGTH_LONG).show();
-                else if (Double.parseDouble(t1) <= Double.parseDouble(t0)) {
+            } else if (Double.parseDouble(t1) <= Double.parseDouble(t0)) {
 
                     creditCardValue += Double.parseDouble(t1);
                     dialog.dismiss();
@@ -631,7 +631,7 @@ public class PayMethods extends AppCompatActivity {
         final EditText ACC_card = (EditText) dialog1.findViewById(R.id.Acccode);
 
         final ArrayList<CreditCard> card = mDHandler.getAllCreditCards();
-        serial_txt.setText("" + card.size());
+        serial_txt.setText("" + card.size()+1);
 
         final CreditCard card_iteam = new CreditCard();
 
@@ -639,7 +639,7 @@ public class PayMethods extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (!Card_NA.getText().toString().equals("") && !ACC_card.getText().toString().equals("")) {
-                    card_iteam.setSerial(card.size());
+                    card_iteam.setSerial(card.size()+1);
                     card_iteam.setCardName(Card_NA.getText().toString());
                     card_iteam.setAccCode(ACC_card.getText().toString());
 
@@ -793,7 +793,8 @@ public class PayMethods extends AppCompatActivity {
         chequeListName = new ArrayList();
 
         final ArrayList<Cheque> chequeList = mDHandler.getAllCheques();
-        final int serial = chequeList.size();
+        final int serial = chequeList.size()+1;
+        Log.e("*serial*","***"+ chequeList.size()+"***  "+serial);
 
         chequeListName.add("");
         if (chequeList.size() > 0)
@@ -813,7 +814,7 @@ public class PayMethods extends AppCompatActivity {
                 String t1 = received.getText().toString();
                 String t2 = chequeNumber.getText().toString();
 
-                if (t1.equals("") && t2.equals("") && spinner2.getSelectedItem().toString() != "")
+                if (t1.equals("") && t2.equals("") && spinner2.getSelectedItem().toString().equals(""))
                     Toast.makeText(PayMethods.this, "Please enter received value  and card number", Toast.LENGTH_LONG).show();
                 else if (Double.parseDouble(t1) <= Double.parseDouble(t0)) {
 

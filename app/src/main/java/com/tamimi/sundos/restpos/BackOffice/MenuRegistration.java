@@ -292,7 +292,7 @@ public class MenuRegistration extends AppCompatActivity {
                     categories.add(0, catName.getText().toString());
                     categoriesAdapter.notifyDataSetChanged();
                     familyName = familyNameSpinner.getSelectedItem().toString();
-                    int serial = mDbHandler.getAllFamilyCategory().size();
+                    int serial = mDbHandler.getAllFamilyCategory().size()+1;
                     familyCategory.setSerial(serial);
                     familyCategory.setType(2);
                     // 1--> family type // 2--> category type
@@ -363,7 +363,7 @@ public class MenuRegistration extends AppCompatActivity {
                     families.add(0, familyEditText.getText().toString());
                     familiesAdapter.notifyDataSetChanged();
 
-                    int serial = mDbHandler.getAllFamilyCategory().size();
+                    int serial = mDbHandler.getAllFamilyCategory().size()+1;
                     familyCategory.setSerial(serial);
                     familyCategory.setType(1);
                     // 1--> family type // 2--> category type

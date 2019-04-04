@@ -34,6 +34,7 @@ import java.util.Locale;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+
 public class LogIn extends AppCompatActivity {
 
     ImageView lock;
