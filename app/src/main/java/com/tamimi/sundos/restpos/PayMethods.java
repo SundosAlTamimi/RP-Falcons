@@ -1532,9 +1532,9 @@ public class PayMethods extends AppCompatActivity {
                 resivePoint.clear();
             }
 
-            if (orderHeaderTemp == null) {
+            if (orderHeaderTemp == null) { // Takeaway
                 //getting the data from order activity and save it in database.
-
+                Log.e("creditCardValue1", " " + creditCardValue1);
             obj.getOrderHeaderObj().setCashValue(cashValue1);
             obj.getOrderHeaderObj().setCardsValue(creditCardValue1);
             obj.getOrderHeaderObj().setChequeValue(chequeValue1);
@@ -1550,7 +1550,7 @@ public class PayMethods extends AppCompatActivity {
                 Intent intent = new Intent(PayMethods.this, Order.class);
                 startActivity(intent);
 
-            } else {
+            } else { // Dine In
 
             orderHeaderTemp.get(0).setCashValue(cashValue1);
             orderHeaderTemp.get(0).setCardsValue(creditCardValue1);

@@ -59,7 +59,7 @@ public class Main extends AppCompatActivity {
 
     Button back, exit;
     Button takeAway, dineIn;
-    TextView userName, shift, date,  payIn, payOut, timeCard, safeMode, cashDrawer,annText;
+    TextView userName, shift, date, payIn, payOut, timeCard, safeMode, cashDrawer, annText;
 
     DatabaseHandler mDHandler;
     Dialog dialog;
@@ -85,7 +85,7 @@ public class Main extends AppCompatActivity {
         today = df.format(currentTimeAndDate);
 
         date.setText(today);
-        userName.setText( mDHandler.getOpenedShifts(today, 1).getUserName());
+        userName.setText(mDHandler.getOpenedShifts(today, 1).getUserName());
         shift.setText("Shift: " + mDHandler.getOpenedShifts(today, 1).getShiftName());
 
         showAnnouncement();
@@ -188,60 +188,60 @@ public class Main extends AppCompatActivity {
     };
 
 
-    void showAnnouncement(){
-        ArrayList<Announcemet> announcemets=new ArrayList<>();
-        announcemets=mDHandler.getAllTableAnnouncement();
-        int count=0;
-        for(int i=0;i<announcemets.size();i++){
-            if(announcemets.get(i).getAnnouncementDate().equals(today)){
-                if(announcemets.get(i).getUserName().equals(Settings.user_name)||announcemets.get(i).getUserName().equals("All")) {
+    void showAnnouncement() {
+        ArrayList<Announcemet> announcemets = new ArrayList<>();
+        announcemets = mDHandler.getAllTableAnnouncement();
+        int count = 0;
+        for (int i = 0; i < announcemets.size(); i++) {
+            if (announcemets.get(i).getAnnouncementDate().equals(today)) {
+                if (announcemets.get(i).getUserName().equals(Settings.user_name) || announcemets.get(i).getUserName().equals("All")) {
                     if (announcemets.get(i).getPosNo() == (Settings.POS_number) || announcemets.get(i).getPosNo() == (-1)) {
-                        if(announcemets.get(i).getShiftName().equals(Settings.shift_name)||announcemets.get(i).getShiftName().equals("All")) {
-                        count++;
-                        final TableRow row = new TableRow(Main.this);
+                        if (announcemets.get(i).getShiftName().equals(Settings.shift_name) || announcemets.get(i).getShiftName().equals("All")) {
+                            count++;
+                            final TableRow row = new TableRow(Main.this);
 
-                        TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
-                        lp.setMargins(0, 5, 0, 5);
-                        row.setLayoutParams(lp);
-
-
-                        TextView textView = new TextView(Main.this);
-                        textView.setText("" + count + ") " + announcemets.get(i).getMessage());
+                            TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
+                            lp.setMargins(0, 5, 0, 5);
+                            row.setLayoutParams(lp);
 
 
-                        textView.setTextColor(ContextCompat.getColor(Main.this, R.color.text_color));
-                        textView.setGravity(Gravity.START);
+                            TextView textView = new TextView(Main.this);
+                            textView.setText("" + count + ") " + announcemets.get(i).getMessage());
 
-                        TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
-                        textView.setLayoutParams(lp2);
-                        textView.setTextSize(16);
 
-                        row.addView(textView);
+                            textView.setTextColor(ContextCompat.getColor(Main.this, R.color.text_color));
+                            textView.setGravity(Gravity.START);
 
-                        AnnouncementTable.addView(row);
-                        mDHandler.updateAnnounementIsShow(announcemets.get(i).getMessage(), announcemets.get(i).getAnnouncementDate());
+                            TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+                            textView.setLayoutParams(lp2);
+                            textView.setTextSize(16);
+
+                            row.addView(textView);
+
+                            AnnouncementTable.addView(row);
+                            mDHandler.updateAnnounementIsShow(announcemets.get(i).getMessage(), announcemets.get(i).getAnnouncementDate());
                             blinkAnnouncement(annText);
 
+                        }
                     }
-                }
 
 
-                    }
                 }
             }
         }
+    }
 
-        @SuppressLint("WrongConstant")
-        void blinkAnnouncement(TextView text){
+    @SuppressLint("WrongConstant")
+    void blinkAnnouncement(TextView text) {
 
-            ObjectAnimator objectAnimator= ObjectAnimator.ofInt(text,"textColor",Color.WHITE,Color.RED,Color.WHITE);
-            objectAnimator.setDuration(2000);
-            objectAnimator.setEvaluator(new ArgbEvaluator());
-            objectAnimator.setRepeatMode(Animation.REVERSE);
-            objectAnimator.setRepeatCount(Animation.INFINITE);
-            objectAnimator.start();
+        ObjectAnimator objectAnimator = ObjectAnimator.ofInt(text, "textColor", Color.WHITE, Color.RED, Color.WHITE);
+        objectAnimator.setDuration(2000);
+        objectAnimator.setEvaluator(new ArgbEvaluator());
+        objectAnimator.setRepeatMode(Animation.REVERSE);
+        objectAnimator.setRepeatCount(Animation.INFINITE);
+        objectAnimator.start();
 
-        }
+    }
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -373,16 +373,16 @@ public class Main extends AppCompatActivity {
                     TextView text = (TextView) tableRow.getChildAt(0);
                     TextView text1 = (TextView) tableRow.getChildAt(1);
 
-                    if (!text1.getText().toString().equals("")){
+                    if (!text1.getText().toString().equals("")) {
 
                         cash.setCashierName(user.getText().toString());
-                    cash.setCheckInDate(date.getText().toString());
-                    cash.setCategoryName(text.getText().toString());
-                    cash.setCategoryValue(Double.parseDouble(text.getTag().toString()));
-                    cash.setCategoryQty(Integer.parseInt(text1.getText().toString()));
-                    cash.setOrderKind(0);
-                    cashier.add(cash);
-                }else{
+                        cash.setCheckInDate(date.getText().toString());
+                        cash.setCategoryName(text.getText().toString());
+                        cash.setCategoryValue(Double.parseDouble(text.getTag().toString()));
+                        cash.setCategoryQty(Integer.parseInt(text1.getText().toString()));
+                        cash.setOrderKind(0);
+                        cashier.add(cash);
+                    } else {
                         Toast.makeText(Main.this, "some Qty not have value ...", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -538,20 +538,17 @@ public class Main extends AppCompatActivity {
 
         date.setText(today);
 
-        final int[] tranType = {0};
-        finalClose.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        finalClose.setOnClickListener(new OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                tranType[0] = 0;
+            public void onClick(View view) {
                 toUser.setText("");
-                toUser.setEnabled(true);
+                toUser.setEnabled(false);
             }
         });
-        changeOver.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        changeOver.setOnClickListener(new OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                tranType[0] = 1;
-                toUser.setEnabled(false);
+            public void onClick(View view) {
+                toUser.setEnabled(true);
             }
         });
 
@@ -662,13 +659,21 @@ public class Main extends AppCompatActivity {
                 toUser.setEnabled(false);
                 finalClose.setChecked(true);
                 changeOver.setChecked(false);
-                tranType[0] = 0;
 
             }
         });
+
         save.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                int tranType = 0;
+                if (finalClose.isChecked()) {
+                    tranType = 0;
+                }
+                if (changeOver.isChecked()) {
+                    tranType = 1;
+                }
 
                 if (finalClose.isChecked() || (changeOver.isChecked() && !toUser.getText().toString().equals(""))) {
                     ArrayList<OrderHeader> orderHeaders = mDHandler.getAllOrderHeader();
@@ -677,7 +682,7 @@ public class Main extends AppCompatActivity {
                     int transNo = mDHandler.getAllBlindClose().size();
 
                     Date currentTimeAndDate = Calendar.getInstance().getTime();
-                    SimpleDateFormat df = new SimpleDateFormat("HH:mm");
+                    SimpleDateFormat df = new SimpleDateFormat("hh:mm");
                     String time = df.format(currentTimeAndDate);
 
                     double userSales = Double.parseDouble(mainTotal.getText().toString());
@@ -704,9 +709,8 @@ public class Main extends AppCompatActivity {
 
                     mDHandler.addBlindClose(new BlindClose(transNo, today, time, Settings.POS_number, Settings.shift_number,
                             Settings.shift_name, Settings.password, Settings.user_name, sysSales, userSales, userSales - sysSales,
-                            sysCash, userCash, userCash - sysCash, sysOthers, userOthers, userOthers - sysOthers, 0, tranType[0],
+                            sysCash, userCash, userCash - sysCash, sysOthers, userOthers, userOthers - sysOthers, 0, tranType,
                             "", toUser.getText().toString()));
-
 
 
                     for (int i = 0; i < money.size(); i++) {
@@ -758,17 +762,16 @@ public class Main extends AppCompatActivity {
                                 Settings.shift_name, Settings.password, Settings.user_name, "Point", 1, pointValue,
                                 pointValue, "Point", "", "", -1, "no-user"));
 
+                    mDHandler.updateStatusInBlindShiftIn(Settings.user_name, today);
+                    dialogCashierOut.dismiss();
+                    finish();
+                    Intent logInActivate = new Intent(Main.this, LogIn.class);
+                    startActivity(logInActivate);
+
                     dialogCashierOut.dismiss();
                 } else
                     Toast.makeText(Main.this, "Please enter 'to user' field", Toast.LENGTH_LONG).show();
 
-
-
-                mDHandler.updateStatusInBlindShiftIn(Settings.user_name,today);
-                dialogCashierOut.dismiss();
-                finish();
-                Intent logInActivate =new Intent(Main.this,LogIn.class);
-                startActivity(logInActivate);
             }
         });
 
@@ -944,11 +947,11 @@ public class Main extends AppCompatActivity {
         final Button save = (Button) dialog.findViewById(R.id.save);
         final Button exit = (Button) dialog.findViewById(R.id.exit);
 
-        String signal="";
+        String signal = "";
         tranType.setText(transType == 0 ? "Pay In" : "Pay Out");
-        if(transType==0){
-            signal="";
-        }else signal="-";
+        if (transType == 0) {
+            signal = "";
+        } else signal = "-";
         date.setText(today);
 
         ArrayList<Pay> pays = mDHandler.getAllPayInOut();
@@ -1057,7 +1060,7 @@ public class Main extends AppCompatActivity {
             public void onClick(View view) {
 
 
-                 focusedTextView = value;
+                focusedTextView = value;
                 focusedTextView.setText("");
                 focusedTextView.setTag("*");
 
@@ -1081,7 +1084,7 @@ public class Main extends AppCompatActivity {
         save.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!value.getText().toString().equals("") && !mainTotal.getText().toString().equals("")){
+                if (!value.getText().toString().equals("") && !mainTotal.getText().toString().equals("")) {
                     if (Double.parseDouble(value.getText().toString()) == Double.parseDouble(mainTotal.getText().toString())) {
 
                         //SAVE IN PAY_IN_OUT TABLE ...
@@ -1119,7 +1122,7 @@ public class Main extends AppCompatActivity {
                         dialog.dismiss();
                     } else
                         Toast.makeText(Main.this, "Total from cash not equal Value ... ", Toast.LENGTH_SHORT).show();
-            }else
+                } else
                     Toast.makeText(Main.this, "Please ensure your inputs", Toast.LENGTH_SHORT).show();
             }
         });
@@ -1162,7 +1165,7 @@ public class Main extends AppCompatActivity {
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     if (focusedTextView != null) {
-                        if (!focusedTextView.getText().toString().equals("")&&!focusedTextView.getTag().toString().equals("*")) {
+                        if (!focusedTextView.getText().toString().equals("") && !focusedTextView.getTag().toString().equals("*")) {
 
                             TableRow tableRow = (TableRow) categories.getChildAt(Integer.parseInt(focusedTextView.getTag().toString()));
                             TextView text = (TextView) tableRow.getChildAt(0);
@@ -1379,11 +1382,15 @@ public class Main extends AppCompatActivity {
                 if (!focusedTextView.getText().toString().equals("")) {
                     if (Settings.password == Integer.parseInt(focusedTextView.getText().toString())) {
 
-                        int Size=mDHandler.getAllExistingClockInClockOut().size()-1;
-                        String TransType =mDHandler.getAllExistingClockInClockOut().get(Size).getTranstype();
+                        int Size = mDHandler.getAllExistingClockInClockOut().size() - 1;
+                        String TransType;
+                        if (mDHandler.getAllExistingClockInClockOut().size() > 0)
+                            TransType = mDHandler.getAllExistingClockInClockOut().get(Size).getTranstype();
+                        else
+                            TransType ="ClockOut";
 
                         switch (TransType) {
-                            case "ClockOut" :
+                            case "ClockOut":
                                 dialog.dismiss();
                                 showTimeCardDialog();
                                 break;
@@ -1395,7 +1402,7 @@ public class Main extends AppCompatActivity {
                                 dialog.dismiss();
                                 clockTimeOut();
                                 break;
-                            case "BreakIN" :
+                            case "BreakIN":
                                 dialog.dismiss();
                                 showBreakTimeOut();
                                 break;
@@ -1656,7 +1663,7 @@ public class Main extends AppCompatActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode==KeyEvent.KEYCODE_BACK) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
             return false;
         }
         return super.onKeyDown(keyCode, event);
@@ -1679,8 +1686,8 @@ public class Main extends AppCompatActivity {
         safeMode = (TextView) findViewById(R.id.safe_mode);
         cashDrawer = (TextView) findViewById(R.id.cash_drawer);
 
-        annText= (TextView) findViewById(R.id.annText);
-        AnnouncementTable=(TableLayout)findViewById(R.id.AnnouncmentTable);
+        annText = (TextView) findViewById(R.id.annText);
+        AnnouncementTable = (TableLayout) findViewById(R.id.AnnouncmentTable);
 
         back.setOnClickListener(onClickListener);
         exit.setOnClickListener(onClickListener);

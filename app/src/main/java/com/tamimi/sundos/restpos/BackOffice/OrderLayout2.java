@@ -24,6 +24,7 @@ import com.tamimi.sundos.restpos.LayoutFoodAdapter;
 import com.tamimi.sundos.restpos.Models.Items;
 import com.tamimi.sundos.restpos.Models.UsedCategories;
 import com.tamimi.sundos.restpos.Models.UsedItems;
+import com.tamimi.sundos.restpos.Order;
 import com.tamimi.sundos.restpos.R;
 
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import yuku.ambilwarna.AmbilWarnaDialog;
 
-public class OrderLayout extends AppCompatActivity {
+public class OrderLayout2 extends AppCompatActivity {
 
     EditText categoryName, numOfItems, backgroundColor, textColor;
     EditText itemName, itemPosition, itemBackgroundColor, itemTextColor;
@@ -66,11 +67,11 @@ public class OrderLayout extends AppCompatActivity {
         setContentView(R.layout.order_layout);
 
         usedCategoriesList = new ArrayList<>();
-        mDbHandler = new DatabaseHandler(OrderLayout.this);
+        mDbHandler = new DatabaseHandler(OrderLayout2.this);
 
         items = mDbHandler.getAllItems();
 
-        focused = new Button(OrderLayout.this);
+        focused = new Button(OrderLayout2.this);
 
         currentColor = ContextCompat.getColor(this, R.color.layer2);
 
@@ -108,7 +109,7 @@ public class OrderLayout extends AppCompatActivity {
                 case R.id.apply:
                     setButtonAttributes(focused);
                     clearSettings();
-                    fillGridView(0);
+                    fillGridView2();
                     storeCategories();
                     break;
 
@@ -160,8 +161,7 @@ public class OrderLayout extends AppCompatActivity {
         LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 50);
         param.setMargins(0, 1, 0, 1);
 
-        gv.setAdapter(null);
-        final Button button = new Button(OrderLayout.this);
+        final Button button = new Button(OrderLayout2.this);
         button.setLayoutParams(param);
         button.setText("");
         button.setBackgroundColor(getResources().getColor(R.color.dark_blue));
@@ -173,15 +173,15 @@ public class OrderLayout extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 //                freezeItems();
-//                storeItems();
+                storeItems();
                 setting.setVisibility(View.INVISIBLE);
                 setting2.setVisibility(View.VISIBLE);
                 focused = (Button) view;
                 fillItemListView();
-                fillGridView(2);
+                fillGridView2();
                 position = -1;
                 clearSettings();
-                if(button.getText().toString().equals("")){
+                if (button.getText().toString().equals("")) {
                     gv.setAdapter(null);
                 }
             }
@@ -197,7 +197,10 @@ public class OrderLayout extends AppCompatActivity {
                 focused = (Button) view;
                 position = -1;
                 clearSettings();
-                fillGridView(0);
+                fillGridView2();
+                if (button.getText().toString().equals("")) {
+                    gv.setAdapter(null);
+                }
                 return true;
             }
 
@@ -212,13 +215,13 @@ public class OrderLayout extends AppCompatActivity {
     void addItem() {
 
         if (itemPosition.getText().toString().equals(""))
-            Toast.makeText(OrderLayout.this, "Please set position", Toast.LENGTH_SHORT).show();
+            Toast.makeText(OrderLayout2.this, "Please set position", Toast.LENGTH_SHORT).show();
         else {
             int item_position = Integer.parseInt(itemPosition.getText().toString());
             int tag = Integer.parseInt(focused.getTag().toString());
 
             if (item_position > tag - 1)
-                Toast.makeText(OrderLayout.this, "Position is greater than the number of items in category " +
+                Toast.makeText(OrderLayout2.this, "Position is greater than the number of items in category " +
                         focused.getText().toString(), Toast.LENGTH_LONG).show();
             else {
                 if (position != -1) { // position of setting itemList
@@ -230,12 +233,12 @@ public class OrderLayout extends AppCompatActivity {
                             backColor, txtColor, Integer.parseInt(itemPosition.getText().toString())));
 
 //                    gv.setAdapter(null);
-                    adapter = new LayoutFoodAdapter(OrderLayout.this, subList, 1);
+                    adapter = new LayoutFoodAdapter(OrderLayout2.this, subList, 1);
                     gv.setAdapter(adapter);
                     storeItems();
 
                 } else {
-                    Toast.makeText(OrderLayout.this, "Please choose item", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(OrderLayout2.this, "Please choose item", Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -243,68 +246,118 @@ public class OrderLayout extends AppCompatActivity {
     }
 
     void setButtonAttributes(Button button) {
-//        if (position != -1) {
-        int backColor = backgroundColor.getText().toString().equals("") ? getResources().getColor(R.color.dark_blue) : Integer.parseInt(backgroundColor.getText().toString());
-        int txtColor = textColor.getText().toString().equals("") ? getResources().getColor(R.color.text_color) : Integer.parseInt(textColor.getText().toString());
+        if (position != -1) {
 
-        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 50);
-        param.setMargins(0, 1, 0, 1);
-        button.setLayoutParams(param);
-        button.setBackgroundColor(backColor);
-        button.setTextColor(txtColor);
-        button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f);
+            String num = numOfItems.getText().toString();
+            String catName = categoryName.getText().toString();
+            String backCo = backgroundColor.getText().toString();
+            String txtCo = textColor.getText().toString();
 
-        Log.e("log1 ", button.getTag().toString() + " " + numOfItems.getText().toString());
-        if (Integer.parseInt(button.getTag().toString()) < Integer.parseInt(numOfItems.getText().toString())) {
+            if (button.getText().toString().equals("")) { // empty button
+                if (!numOfItems.getText().toString().equals("")) {
+                    int backColor = backgroundColor.getText().toString().equals("") ? getResources().getColor(R.color.dark_blue) : Integer.parseInt(backgroundColor.getText().toString());
+                    int txtColor = textColor.getText().toString().equals("") ? getResources().getColor(R.color.text_color) : Integer.parseInt(textColor.getText().toString());
 
-            int sizeDiff = Integer.parseInt(numOfItems.getText().toString()) - Integer.parseInt(button.getTag().toString());
-            int itemNo = Integer.parseInt(button.getTag().toString());
-            for (int i = 0; i < sizeDiff; i++) {
+                    LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 50);
+                    param.setMargins(0, 1, 0, 1);
 
-                UsedItems usedItems = new UsedItems(button.getText().toString(), "" + itemNo,
-                        getResources().getColor(R.color.layer2), getResources().getColor(R.color.text_color), itemNo);
-                itemNo++;
-                mDbHandler.addUsedItems(usedItems);
-                button.setText(categoryName.getText().toString());
+                    button.setLayoutParams(param);
+                    button.setText(categoryName.getText().toString());
+                    button.setBackgroundColor(backColor);
+                    button.setTextColor(txtColor);
+                    button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f);
+                    button.setTag(numOfItems.getText().toString().equals("") ? 0 : numOfItems.getText().toString());
 
+                    for (int i = 0; i < Integer.parseInt(numOfItems.getText().toString()); i++) {
+
+                        UsedItems usedItems = new UsedItems(categoryName.getText().toString(), "" + i,
+                                getResources().getColor(R.color.layer2), getResources().getColor(R.color.text_color), i);
+
+                        mDbHandler.addUsedItems(usedItems);
+                    }
+
+                    freezeCategories();
+
+                    if (categoriesArraylist.size() > 0) {
+                        categoriesArraylist.remove(position);
+                        categoriesAdapter.notifyDataSetChanged();
+                    }
+                } else {
+                    Toast.makeText(OrderLayout2.this, "Please enter number of items", Toast.LENGTH_SHORT).show();
+                }
+            } else { // button with text
+                if (!numOfItems.getText().toString().equals("")) {
+                    String oldCat = button.getText().toString();
+                    AlertDialog.Builder builderInner = new AlertDialog.Builder(OrderLayout2.this);
+                    builderInner.setTitle("Are you sure , you want to change category ?");
+                    builderInner.setCancelable(false);
+                    builderInner.setPositiveButton("Yes", (dialog1, which1) -> {
+
+                        mDbHandler.deleteUsedItems(focused.getText().toString());
+
+                        int backColor = backCo.equals("") ? ((ColorDrawable) button.getBackground()).getColor() : Integer.parseInt(backCo);
+                        int txtColor = txtCo.equals("") ? button.getCurrentTextColor() : Integer.parseInt(txtCo);
+
+                        button.setText(catName);
+                        button.setBackgroundColor(backColor);
+                        button.setTextColor(txtColor);
+                        button.setTag(num.equals("") ? 0 : num);
+
+                        for (int i = 0; i < Integer.parseInt(num); i++) {
+
+                            UsedItems usedItems = new UsedItems(catName, "" + i,
+                                    getResources().getColor(R.color.layer2), getResources().getColor(R.color.text_color), i);
+
+                            mDbHandler.addUsedItems(usedItems);
+                        }
+
+                        freezeCategories();
+                        fillGridView2();
+
+                        if (categoriesArraylist.size() > 0) {
+                            categoriesArraylist.remove(position);
+                            categoriesArraylist.add(oldCat);
+                            categoriesAdapter.notifyDataSetChanged();
+                        }
+
+                    });
+                    builderInner.setNegativeButton("No", null);
+                    builderInner.show();
+
+                } else {
+                    Toast.makeText(OrderLayout2.this, "Please enter number of items", Toast.LENGTH_SHORT).show();
+                }
             }
-            Log.e("log2 ", mDbHandler.getRequestedItems(button.getText().toString()).get(0).getitemName());
-            button.setTag(numOfItems.getText().toString());
+        } else { // change will be on items no
+//            Toast.makeText(OrderLayout2.this, "Please choose Category", Toast.LENGTH_SHORT).show();
+            if (!numOfItems.getText().toString().equals("")) {
+//                Log.e("log1 ", button.getTag().toString() + " " + numOfItems.getText().toString());
+                if (Integer.parseInt(button.getTag().toString()) < Integer.parseInt(numOfItems.getText().toString())) {
 
+                    int sizeDiff = Integer.parseInt(numOfItems.getText().toString()) - Integer.parseInt(button.getTag().toString());
+                    int itemNo = Integer.parseInt(button.getTag().toString());
+                    for (int i = 0; i < sizeDiff; i++) {
 
-        } else if (Integer.parseInt(button.getTag().toString()) > Integer.parseInt(numOfItems.getText().toString())) {
-            Toast.makeText(OrderLayout.this, "Please enter size greater than " + Integer.parseInt(button.getTag().toString()), Toast.LENGTH_SHORT).show();
+                        UsedItems usedItems = new UsedItems(button.getText().toString(), "" + itemNo,
+                                getResources().getColor(R.color.layer2), getResources().getColor(R.color.text_color), itemNo);
+                        itemNo++;
+                        mDbHandler.addUsedItems(usedItems);
+//                        button.setText(categoryName.getText().toString());
 
-        } else if (Integer.parseInt(button.getTag().toString()) == 0) {
-            if (!button.getText().toString().equals("") && position != -1) {
-                for (int i = 0; i < Integer.parseInt(numOfItems.getText().toString()); i++) {
+                    }
+//                    Log.e("log2 ", mDbHandler.getRequestedItems(button.getText().toString()).get(0).getitemName());
+                    button.setTag(numOfItems.getText().toString());
 
-                    UsedItems usedItems = new UsedItems(categoryName.getText().toString(), "item" + i,
-                            getResources().getColor(R.color.layer2), getResources().getColor(R.color.text_color), i);
+                    fillGridView2();
 
-                    mDbHandler.addUsedItems(usedItems);
+                } else if (Integer.parseInt(button.getTag().toString()) > Integer.parseInt(numOfItems.getText().toString())) {
+                    Toast.makeText(OrderLayout2.this, "Please enter size greater than " + Integer.parseInt(button.getTag().toString()), Toast.LENGTH_SHORT).show();
+
                 }
-
-                button.setText(categoryName.getText().toString());
-                button.setTag(numOfItems.getText().toString());
-
-
-                if (categoriesArraylist.size() > 0) {
-                    categoriesArraylist.remove(position);
-                    categoriesAdapter.notifyDataSetChanged();
-                }
-            } else
-                Toast.makeText(OrderLayout.this, "Please choose Category", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(OrderLayout2.this, "Please enter number of items", Toast.LENGTH_SHORT).show();
+            }
         }
-
-        freezeCategories();
-
-        Log.e("log3 ", mDbHandler.getRequestedItems(button.getText().toString()).get(0).getitemName());
-
-
-//        } else {
-//            Toast.makeText(OrderLayout.this, "Please choose Category", Toast.LENGTH_SHORT).show();
-//        }
     }
 
     void freezeCategories() {
@@ -317,6 +370,7 @@ public class OrderLayout extends AppCompatActivity {
             usedCategoriesList.add(new UsedCategories(button.getText().toString(), Integer.parseInt(button.getTag().toString()),
                     backColor, button.getCurrentTextColor(), i));
         }
+        storeCategories();
     }
 
     void storeCategories() {
@@ -349,35 +403,23 @@ public class OrderLayout extends AppCompatActivity {
             mDbHandler.addUsedItems(new UsedItems(focused.getText().toString(), textView.getText().toString(),
                     backColor, textColor, i));
         }
+
+        Toast.makeText(OrderLayout2.this, "Menu Saved", Toast.LENGTH_LONG).show();
+
     }
 
-    void fillGridView(int flag) {
+    void fillGridView2() {
 
         String categoryName = focused.getText().toString();
         int noi = Integer.parseInt(focused.getTag().toString());
 
-        if (flag == 0) {
-            ArrayList<UsedItems> emptyList = new ArrayList<>();
-            for (int i = 0; i < noi; i++) {
-                emptyList.add(new UsedItems(categoryName, "item" + i, getResources().getColor(R.color.layer2), getResources().getColor(R.color.text_color), i));
-            }
+        subList = mDbHandler.getRequestedItems(categoryName);
 
-            Toast.makeText(OrderLayout.this, "tag " + focused.getTag().toString(), Toast.LENGTH_SHORT).show();
+        if (subList.size() != 0) {
             gv.setAdapter(null);
-            adapter = new LayoutFoodAdapter(OrderLayout.this, emptyList, 0);
+            adapter = new LayoutFoodAdapter(OrderLayout2.this, subList, 1);
+            Toast.makeText(OrderLayout2.this, "tag " + focused.getText().toString(), Toast.LENGTH_SHORT).show();
             gv.setAdapter(adapter);
-
-        } else if (flag == 1) {
-
-        } else { // flag == 2
-            subList = mDbHandler.getRequestedItems(categoryName);
-
-            if (subList.size() != 0) {
-                gv.setAdapter(null);
-                adapter = new LayoutFoodAdapter(OrderLayout.this, subList, 1);
-                Toast.makeText(OrderLayout.this, "size " + subList.size(), Toast.LENGTH_SHORT).show();
-                gv.setAdapter(adapter);
-            }
         }
     }
 
@@ -392,7 +434,7 @@ public class OrderLayout extends AppCompatActivity {
             }
         }
 
-        categoriesAdapter = new ArrayAdapter<String>(OrderLayout.this, R.layout.categories_list_style, categoriesArraylist);
+        categoriesAdapter = new ArrayAdapter<String>(OrderLayout2.this, R.layout.categories_list_style, categoriesArraylist);
         categorieslist.setAdapter(categoriesAdapter);
 
         categorieslist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -413,7 +455,7 @@ public class OrderLayout extends AppCompatActivity {
                 itemsNamelist.add(items.get(i).getMenuName());
         }
 
-        itemsNameAdapter = new ArrayAdapter<String>(OrderLayout.this, R.layout.categories_list_style, itemsNamelist);
+        itemsNameAdapter = new ArrayAdapter<String>(OrderLayout2.this, R.layout.categories_list_style, itemsNamelist);
         itemsList.setAdapter(itemsNameAdapter);
 
         itemsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -432,7 +474,7 @@ public class OrderLayout extends AppCompatActivity {
 
         for (int i = 0; i < categories.size(); i++) {
 
-            final Button button = new Button(OrderLayout.this);
+            final Button button = new Button(OrderLayout2.this);
 
             LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 50);
             param.setMargins(0, 1, 0, 1);
@@ -447,15 +489,15 @@ public class OrderLayout extends AppCompatActivity {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    storeItems();
+                    storeItems();
                     setting.setVisibility(View.INVISIBLE);
                     setting2.setVisibility(View.VISIBLE);
                     focused = (Button) view;
                     fillItemListView();
-                    fillGridView(2);
+                    fillGridView2();
                     clearSettings();
                     position = -1;
-                    if(button.getText().toString().equals("")){
+                    if (button.getText().toString().equals("")) {
                         gv.setAdapter(null);
                     }
                 }
@@ -470,7 +512,10 @@ public class OrderLayout extends AppCompatActivity {
                     focused = (Button) view;
                     position = -1;
                     clearSettings();
-                    fillGridView(0);
+                    fillGridView2();
+                    if (button.getText().toString().equals("")) {
+                        gv.setAdapter(null);
+                    }
                     return true;
                 }
 
@@ -490,7 +535,11 @@ public class OrderLayout extends AppCompatActivity {
         if (!focused.getText().toString().equals(""))
             categoriesArraylist.add(focused.getText().toString());
 
-        focused = null;
+        mDbHandler.deleteUsedItems(focused.getText().toString());
+
+        String text = focused.getText().toString();
+        focused = new Button(OrderLayout2.this);
+        focused.setText(text);
         setting.setVisibility(View.INVISIBLE);
         setting2.setVisibility(View.INVISIBLE);
         clearSettings();
@@ -554,44 +603,30 @@ public class OrderLayout extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int i, long l) {
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(OrderLayout.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(OrderLayout2.this);
                 builder.setTitle("Are you sure, you want delete this item ?");
                 builder.setCancelable(false);
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int j) {
-//
-//                        String itemName = "";
-//                        ArrayList<UsedItems> subList = mDbHandler.getRequestedItems(focused.getText().toString());
-//                        for (int k = 0; k < subList.size(); k++) {
-//                            if (subList.get(k).getCategoryName().equals(focused.getText().toString()) && subList.get(k).getPosition() == i) {
-//                                itemName = subList.get(k).getitemName();
-//                                break;
-//                            }
-//                        }
-//                        int itemCode = -1;
-//                        List<Items> items = mDbHandler.getAllItems();
-//                        for (int i = 0; i < items.size(); i++) {
-//                            if (items.get(i).getMenuName().equals(itemName)) {
-//                                itemCode = items.get(i).getItemBarcode();
-//                                break;
-//                            }
-//                        }
-//                        Log.e("delete ", " " + itemName + " " + itemCode);
-//                        mDbHandler.deleteModifierAndForce(itemCode);
 
-                        mDbHandler.updateUsedItems(focused.getText().toString(), "item" + i,
-                                getResources().getColor(R.color.layer2), getResources().getColor(R.color.text_color), i);
+                        ViewGroup gridChild = (ViewGroup) gv.getChildAt(i);
+                        LinearLayout linearLayout = (LinearLayout) gridChild.getChildAt(1);
+                        TextView textView = (TextView) linearLayout.getChildAt(0);
 
-                        subList = mDbHandler.getRequestedItems(focused.getText().toString());
+                        if(Character.isDigit(textView.getText().toString().charAt(0))){
+                            //do nothing
+                        } else {
+                            mDbHandler.updateUsedItems(focused.getText().toString(), "" + i,
+                                    getResources().getColor(R.color.layer2), getResources().getColor(R.color.text_color), i);
 
-                        gv.setAdapter(null);
-                        adapter = new LayoutFoodAdapter(OrderLayout.this, subList, 1);
-                        gv.setAdapter(adapter);
+                            ArrayList<UsedItems> subList = mDbHandler.getRequestedItems(focused.getText().toString());
+                            gv.setAdapter(null);
+                            adapter = new LayoutFoodAdapter(OrderLayout2.this, subList, 1);
+                            gv.setAdapter(adapter);
 
-                        storeItems();
-
-                        Toast.makeText(OrderLayout.this, "Item deleted !", Toast.LENGTH_SHORT).show();
+                            storeItems();
+                        }
                     }
                 });
 
