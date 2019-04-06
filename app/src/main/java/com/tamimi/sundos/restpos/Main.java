@@ -240,7 +240,6 @@ public class Main extends AppCompatActivity {
     }
 
 
-    @SuppressLint("ClickableViewAccessibility")
     void showCashierInDialog(String times, String dates,ClockInClockOut clockInClockOut) {
         Dialog dialogCashierIn = new Dialog(Main.this);
         dialogCashierIn.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -716,8 +715,14 @@ public class Main extends AppCompatActivity {
             public void onClick(View view) {
 
                 if (!checkIsCashierInOutZero(money)) {
-
-                    saveCashierOutBase(categories, tranType[0], finalClose, changeOver, toUser, cashTotals, creditCard, cheque, giftCard,
+                    int tranType = 0;
+                    if (finalClose.isChecked()) {
+                        tranType = 0;
+                    }
+                    if (changeOver.isChecked()) {
+                        tranType = 1;
+                    }
+                    saveCashierOutBase(categories, tranType, finalClose, changeOver, toUser, cashTotals, creditCard, cheque, giftCard,
                             credit, point, otherPaymentTotal, mainTotal, money, dialogCashierOut);
 
                     Toast.makeText(Main.this, "Save Successful...", Toast.LENGTH_SHORT).show();
@@ -729,7 +734,15 @@ public class Main extends AppCompatActivity {
                     builderInner.setCancelable(false);
                     builderInner.setPositiveButton("Yes", (dialog1, which1) -> {
 
-                        saveCashierOutBase(categories, tranType[0], finalClose, changeOver, toUser, cashTotals, creditCard, cheque, giftCard,
+                        int tranType = 0;
+                        if (finalClose.isChecked()) {
+                            tranType = 0;
+                        }
+                        if (changeOver.isChecked()) {
+                            tranType = 1;
+                        }
+
+                        saveCashierOutBase(categories, tranType, finalClose, changeOver, toUser, cashTotals, creditCard, cheque, giftCard,
                                 credit, point, otherPaymentTotal, mainTotal, money, dialogCashierOut);
 
                         Toast.makeText(Main.this, "Save Successful...", Toast.LENGTH_SHORT).show();
@@ -897,6 +910,7 @@ public class Main extends AppCompatActivity {
 
 
     }
+
 
     void showPayInDialog(final int transType) {
         dialog = new Dialog(Main.this);
@@ -1491,7 +1505,11 @@ public class Main extends AppCompatActivity {
                     if (Settings.password == Integer.parseInt(focusedTextView.getText().toString())) {
 
                         int Size = mDHandler.getAllExistingClockInClockOut().size() - 1;
-                        String TransType = mDHandler.getAllExistingClockInClockOut().get(Size).getTranstype();
+                        String TransType;
+                        if (mDHandler.getAllExistingClockInClockOut().size() > 0)
+                            TransType = mDHandler.getAllExistingClockInClockOut().get(Size).getTranstype();
+                        else
+                            TransType ="ClockOut";
 
                         switch (TransType) {
                             case "ClockOut":
