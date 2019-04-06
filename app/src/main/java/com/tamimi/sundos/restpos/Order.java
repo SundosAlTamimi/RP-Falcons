@@ -758,64 +758,68 @@ public class Order extends AppCompatActivity {
                         reasons.addView(row);
 
                         save.setOnClickListener(view1 -> {
-                            if (!selectedReason[0].equals("")) {
-                                int index = Integer.parseInt(raw.getTag().toString());
 
-                                mDbHandler.addCancleOrder(new CancleOrder(voucherNo, today, Settings.user_name, Settings.password, Settings.shift_name,
-                                        Settings.shift_number, waiter, Integer.parseInt(waiterNo), "" + wantedItems.get(index).getItemBarcode(),
-                                        wantedItems.get(index).getMenuName(), Integer.parseInt(textViewQty.getText().toString()),
-                                        wantedItems.get(index).getPrice(), Double.parseDouble(textViewTotal.getText().toString()),
-                                        selectedReason[0], 0, time, Settings.POS_number));
+                                if (!selectedReason[0].equals("")||resons.size() == 0) {
 
-                                if (voidQty.getText().toString().equals(textViewQty.getText().toString())) {
+                                    int index = Integer.parseInt(raw.getTag().toString());
 
-                                    tableLayout.removeView(raw);
-                                    wantedItems.remove(index);
-                                    lineDiscount.remove(index);
-                                    tableLayoutPosition--;
-                                    resetPosition();
-                                    calculateTotal();
+                                    mDbHandler.addCancleOrder(new CancleOrder(voucherNo, today, Settings.user_name, Settings.password, Settings.shift_name,
+                                            Settings.shift_number, waiter, Integer.parseInt(waiterNo), "" + wantedItems.get(index).getItemBarcode(),
+                                            wantedItems.get(index).getMenuName(), Integer.parseInt(textViewQty.getText().toString()),
+                                            wantedItems.get(index).getPrice(), Double.parseDouble(textViewTotal.getText().toString()),
+                                            selectedReason[0], 0, time, Settings.POS_number));
 
-                                    for (int i = index; i < tableLayout.getChildCount(); i++) {
-                                        TableRow tableRow = (TableRow) tableLayout.getChildAt(i);
-                                        TextView qty = (TextView) tableRow.getChildAt(0);
+                                    if (voidQty.getText().toString().equals(textViewQty.getText().toString())) {
 
-                                        if (qty.getText().toString().equals("0")) {
-                                            tableLayout.removeView(tableRow);
-                                            wantedItems.remove(i);
-                                            lineDiscount.remove(i);
-                                            tableLayoutPosition--;
-                                            i--;
-                                            resetPosition();
-                                        } else
-                                            break;
+                                        tableLayout.removeView(raw);
+                                        wantedItems.remove(index);
+                                        lineDiscount.remove(index);
+                                        tableLayoutPosition--;
+                                        resetPosition();
+                                        calculateTotal();
+
+                                        for (int i = index; i < tableLayout.getChildCount(); i++) {
+                                            TableRow tableRow = (TableRow) tableLayout.getChildAt(i);
+                                            TextView qty = (TextView) tableRow.getChildAt(0);
+
+                                            if (qty.getText().toString().equals("0")) {
+                                                tableLayout.removeView(tableRow);
+                                                wantedItems.remove(i);
+                                                lineDiscount.remove(i);
+                                                tableLayoutPosition--;
+                                                i--;
+                                                resetPosition();
+                                            } else
+                                                break;
+                                        }
+
+                                        if (orderTypeFlag == 0 && wantedItems.size() == 0)
+                                            deliveryCharge.setText("0.0");
+
+                                        if (orderTypeFlag == 1 && tableLayout.getChildCount() == 0) {
+                                            Intent intent = new Intent(Order.this, DineIn.class);
+                                            startActivity(intent);
+                                        }
+
+                                    } else {
+
+                                        int newQty = Integer.parseInt(textViewQty.getText().toString()) - Integer.parseInt(voidQty.getText().toString());
+                                        double newTotal = newQty * Double.parseDouble(textViewPrice.getText().toString());
+                                        double originalDisc = lineDiscount.get(index) * 100 / Double.parseDouble(textViewTotal.getText().toString());
+                                        double newDiscountValue = originalDisc * newTotal / 100;
+
+                                        textViewQty.setText("" + newQty);
+                                        textViewTotal.setText("" + newTotal);
+                                        lineDiscount.set(index, newDiscountValue);
+                                        calculateTotal();
                                     }
-
-                                    if (orderTypeFlag == 0 && wantedItems.size() == 0)
-                                        deliveryCharge.setText("0.0");
-
-                                    if (orderTypeFlag == 1 && tableLayout.getChildCount() == 0) {
-                                        Intent intent = new Intent(Order.this, DineIn.class);
-                                        startActivity(intent);
-                                    }
-
-                                } else {
-
-                                    int newQty = Integer.parseInt(textViewQty.getText().toString()) - Integer.parseInt(voidQty.getText().toString());
-                                    double newTotal = newQty * Double.parseDouble(textViewPrice.getText().toString());
-                                    double originalDisc = lineDiscount.get(index) * 100 / Double.parseDouble(textViewTotal.getText().toString());
-                                    double newDiscountValue = originalDisc * newTotal / 100;
-
-                                    textViewQty.setText("" + newQty);
-                                    textViewTotal.setText("" + newTotal);
-                                    lineDiscount.set(index, newDiscountValue);
-                                    calculateTotal();
-                                }
-                                dialog1.dismiss();
-                                dialog.dismiss();
-                            } else
-                                Toast.makeText(Order.this, "Please select reason of cancel", Toast.LENGTH_LONG).show();
+                                    dialog1.dismiss();
+                                    dialog.dismiss();
+                                } else
+                                    Toast.makeText(Order.this, "Please select reason of cancel", Toast.LENGTH_LONG).show();
                         });
+
+
 
                         dialog1.show();
                     } else
@@ -874,7 +878,9 @@ public class Order extends AppCompatActivity {
         reasons.addView(row);
 
         save.setOnClickListener(view -> {
-            if (!selectedReason[0].equals("")) {
+            if (!selectedReason[0].equals("")||resons.size() == 0) {
+
+
 
                 for (int k = 0; k < tableLayout.getChildCount(); k++) {
                     TableRow raw = (TableRow) tableLayout.getChildAt(k);
@@ -910,8 +916,10 @@ public class Order extends AppCompatActivity {
                     startActivity(intent);
                 }
                 dialog.dismiss();
-            } else
+            } else {
                 Toast.makeText(Order.this, "Please select reason of cancel", Toast.LENGTH_LONG).show();
+
+            }
         });
         dialog.show();
     }
@@ -1530,6 +1538,7 @@ public class Order extends AppCompatActivity {
     }
 
     void saveInOrderTransactionObj() {
+        OrderTransactionsObj.clear();
         for (int k = 0; k < tableLayout.getChildCount(); k++) {
             TableRow tableRow = (TableRow) tableLayout.getChildAt(k);
             TextView textViewQty = (TextView) tableRow.getChildAt(0);

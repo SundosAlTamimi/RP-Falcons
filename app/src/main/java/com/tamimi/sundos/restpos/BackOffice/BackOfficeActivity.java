@@ -1142,12 +1142,18 @@ public class BackOfficeActivity extends AppCompatActivity {
                 }
 
                 orderTransactionData = mDHandler.getXReport(ShiftNa, posNoString, fromDat, toDat);
-
+double NetTotal=0.0;
                 for (int i = 0; i < orderTransactionData.size(); i++) {
+                    if(Settings.tax_type==0){
+                        NetTotal= orderTransactionData.get(i).getTotal() - (orderTransactionData.get(i).getTaxValue()+orderTransactionData.get(i).getDiscount());
+                    }else {
+                        NetTotal= orderTransactionData.get(i).getTotal() - orderTransactionData.get(i).getDiscount();
+                    }
+                    Log.e("",""+NetTotal);
 
                     insertCashierInOutReport(tableXreport, orderTransactionData.get(i).getItemName(), String.valueOf(orderTransactionData.get(i).getTaxValue()),
                             "", String.valueOf(orderTransactionData.get(i).getTotal())
-                            , "", "", String.valueOf(orderTransactionData.get(i).getTotal() + orderTransactionData.get(i).getTaxValue()), 4);
+                            , "", "", String.valueOf(NetTotal), 4);
                 }
 
                 for (int a = 0; a < tableXreport.getChildCount(); a++) {
@@ -1303,11 +1309,19 @@ public class BackOfficeActivity extends AppCompatActivity {
 
                 orderTransactionData = mDHandler.getXReport("SHIFT_NAME", posNoString, fromDat, fromDat);
 
+                double NetTotal=0.0;
+
                 for (int i = 0; i < orderTransactionData.size(); i++) {
+
+                    if(Settings.tax_type==0){
+                        NetTotal= orderTransactionData.get(i).getTotal() - (orderTransactionData.get(i).getTaxValue()+orderTransactionData.get(i).getDiscount());
+                    }else {
+                        NetTotal= orderTransactionData.get(i).getTotal() - orderTransactionData.get(i).getDiscount();
+                    }
 
                     insertCashierInOutReport(tableXreport, orderTransactionData.get(i).getItemName(), String.valueOf(orderTransactionData.get(i).getTaxValue()),
                             "", String.valueOf(orderTransactionData.get(i).getTotal())
-                            , "", "", String.valueOf(orderTransactionData.get(i).getTotal() + orderTransactionData.get(i).getTaxValue()), 4);
+                            , "", "", String.valueOf(NetTotal), 4);
                 }
 
                 for (int a = 0; a < tableXreport.getChildCount(); a++) {
@@ -2844,7 +2858,7 @@ dialog.dismiss();
                                         count++;
                                         insertCashierInOutReport(cashierTable, String.valueOf(count), payInData.get(i).getTransDate()
                                                 , String.valueOf(payInData.get(i).getPosNo()), payInData.get(i).getUserName(), String.valueOf(payInData.get(i).getTransType())
-                                                , String.valueOf(payInData.get(i).getValue()), "2-2-2000", 7);
+                                                , String.valueOf(payInData.get(i).getValue()), payInData.get(i).getTime(), 7);
                                     }
 
                                 }

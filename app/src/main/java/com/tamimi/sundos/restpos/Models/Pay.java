@@ -10,13 +10,14 @@ public class Pay {
     private String remark;
     private int shiftNo;
     private String shiftName;
+    private String time;
 
     public Pay(){
 
     }
 
     public Pay(int transType, int posNo, int userNo, String userName, String transDate, double value, String remark ,
-               int shiftNo , String shiftName) {
+               int shiftNo , String shiftName ,String time) {
         this.transType = transType;
         this.posNo = posNo;
         this.userNo = userNo;
@@ -26,7 +27,10 @@ public class Pay {
         this.remark = remark;
         this.shiftNo = shiftNo;
         this.shiftName = shiftName;
+        this.time = time;
     }
+
+
 
     public int getTransType() {
         return transType;
@@ -98,5 +102,13 @@ public class Pay {
 
     public void setShiftName(String shiftName) {
         this.shiftName = shiftName;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 }
