@@ -3816,6 +3816,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+
+    public void deleteAllMoneyCategory() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + MONEY_CATEGORIES);
+        db.close();
+    }
+
     public void deleteUsedItems(String categoryName) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from USED_ITEMS where CATEGORY_NAME2 = '" + categoryName + "'");

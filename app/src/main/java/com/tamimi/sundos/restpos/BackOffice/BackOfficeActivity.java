@@ -1,5 +1,6 @@
 package com.tamimi.sundos.restpos.BackOffice;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -8,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
@@ -64,6 +66,7 @@ import com.tamimi.sundos.restpos.Models.ZReport;
 import com.tamimi.sundos.restpos.R;
 import com.tamimi.sundos.restpos.Settings;
 
+import java.lang.invoke.MethodHandle;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -73,6 +76,7 @@ import java.util.List;
 import java.util.Locale;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -104,6 +108,7 @@ public class BackOfficeActivity extends AppCompatActivity {
     List<OrderTransactions> orderTransactionData;
     ArrayList<Pay> payInData;
     ArrayList<Announcemet> Announcement;
+    ArrayList<Money> finalMoneyArray;
     TableRow focusedRaw = null;
     int rawPosition = 0;
     Calendar myCalendar;
@@ -171,6 +176,7 @@ public class BackOfficeActivity extends AppCompatActivity {
     };
 
     View.OnClickListener onClickListener2 = new View.OnClickListener() {
+        @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
         @Override
         public void onClick(View view) {
 
@@ -1649,6 +1655,7 @@ public class BackOfficeActivity extends AppCompatActivity {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     void showMoneyCategoryDialog() {
         dialog = new Dialog(BackOfficeActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -1657,9 +1664,12 @@ public class BackOfficeActivity extends AppCompatActivity {
         dialog.setCanceledOnTouchOutside(true);
 
         Window window = dialog.getWindow();
-        window.setLayout(860, 430);
+//        window.setLayout(860, 430);
 
-        nextSerial = mDHandler.getAllMoneyCategory().size()+1;
+        rawPosition=0;
+        finalMoneyArray =new ArrayList<>();
+        finalMoneyArray=mDHandler.getAllMoneyCategory();
+        nextSerial =finalMoneyArray.size() + 1;
         final ArrayList<Money> money = new ArrayList<>();
 
         final EditText serial = (EditText) dialog.findViewById(R.id.serial);
@@ -1671,6 +1681,14 @@ public class BackOfficeActivity extends AppCompatActivity {
         Button save = (Button) dialog.findViewById(R.id.save);
         Button exit = (Button) dialog.findViewById(R.id.exit);
         serial.setText("" + nextSerial);
+        TableLayout moneyTable=(TableLayout)dialog.findViewById(R.id.monyCatTable);
+
+        for(int i=0;i<finalMoneyArray.size();i++){
+            Money m1=new Money();
+            m1=finalMoneyArray.get(i);
+            insertRowInMoneyCategory(moneyTable,m1);
+
+        }
 
         moneyPicImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1680,11 +1698,48 @@ public class BackOfficeActivity extends AppCompatActivity {
             }
         });
 
+
         add.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void onClick(View view) {
                 if (checkMoneyInputs(serial.getText().toString(), catName.getText().toString(),
                         catValue.getText().toString(), imageBitmap)) {
+                    boolean isFound = false;
+
+                    finalMoneyArray.clear();
+                    Log.e("**yy",""+moneyTable.getChildCount());
+                    for(int i=0; i<moneyTable.getChildCount();i++){
+                        TableRow row = (TableRow) moneyTable.getChildAt(i);
+                        TextView serial= (TextView) row.getChildAt(0);
+                        TextView categotyN= (TextView) row.getChildAt(1);
+                        TextView categotyV= (TextView) row.getChildAt(2);
+                        TextView isShow= (TextView) row.getChildAt(3);
+                        ImageView pictiure = (ImageView) row.getChildAt(4);
+
+                        Money m=new Money();
+                        m.setSerial(Integer.parseInt(serial.getText().toString()));
+                        m.setCatName(categotyN.getText().toString());
+                        m.setCatValue(Double.parseDouble(categotyV.getText().toString()));
+                        m.setShow(Integer.parseInt(isShow.getText().toString()));
+                        m.setPicture((Bitmap) pictiure.getTag());
+
+                        finalMoneyArray.add(m);
+
+                    }
+
+                    for (int t = 0; t < finalMoneyArray.size(); t++) {
+
+                        if (finalMoneyArray.get(t).getCatValue() == Double.parseDouble(catValue.getText().toString())) {
+
+                            isFound = true;
+                            break;
+                        }
+
+                    }
+
+
+                    if (!isFound) {
 
                     Money m = new Money();
                     m.setSerial(Integer.parseInt(serial.getText().toString()));
@@ -1695,7 +1750,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                         m.setShow(1);
                     else
                         m.setShow(0);
-                    money.add(m);
+                        finalMoneyArray.add(m);
 
                     serial.setText("" + (nextSerial + 1));
                     catName.setText("");
@@ -1704,21 +1759,49 @@ public class BackOfficeActivity extends AppCompatActivity {
                     imageBitmap = null;
                     show.setChecked(true);
                     nextSerial++;
+
+                    insertRowInMoneyCategory(moneyTable, m);
                     Toast.makeText(BackOfficeActivity.this, "Added to list", Toast.LENGTH_SHORT).show();
+                }else { Toast.makeText(BackOfficeActivity.this, "This Value saved Before", Toast.LENGTH_SHORT).show();}
                 } else
                     Toast.makeText(BackOfficeActivity.this, "Please insure your inputs", Toast.LENGTH_SHORT).show();
+//                insertRowInMoneyCategory(moneyTable,m);
             }
+
+
+
+
+
         });
 
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                if (!catName.getText().toString().equals("") && !catValue.getText().toString().equals("")) {
-                if (money.size() != 0) {
-                    mDHandler.addMoneyCategory(money);
-                    dialog.dismiss();
-                } else
-                    Toast.makeText(BackOfficeActivity.this, "Please insure your inputs", Toast.LENGTH_SHORT).show();
+                mDHandler.deleteAllMoneyCategory();
+                for(int i=0; i<moneyTable.getChildCount();i++){
+
+                    TableRow row = (TableRow) moneyTable.getChildAt(i);
+                    TextView serial= (TextView) row.getChildAt(0);
+                    TextView categotyN= (TextView) row.getChildAt(1);
+                    TextView categotyV= (TextView) row.getChildAt(2);
+                    TextView isShow= (TextView) row.getChildAt(3);
+                    ImageView pictiure = (ImageView) row.getChildAt(4);
+
+                    Money m=new Money();
+                    m.setSerial(i+1);
+                    m.setCatName(categotyN.getText().toString());
+                    m.setCatValue(Double.parseDouble(categotyV.getText().toString()));
+                    m.setShow(Integer.parseInt(isShow.getText().toString()));
+
+                    m.setPicture((Bitmap) pictiure.getTag());
+                    finalMoneyArray.clear();
+                    finalMoneyArray.add(m);
+
+                    mDHandler.addMoneyCategory(finalMoneyArray);
+                }
+
+                Toast.makeText(BackOfficeActivity.this, " Save Successful ", Toast.LENGTH_SHORT).show();
+dialog.dismiss();
             }
         });
 
@@ -1749,6 +1832,7 @@ public class BackOfficeActivity extends AppCompatActivity {
 
         dialog.show();
     }
+
 
     void showAddPictureDialog() {
 
@@ -3728,7 +3812,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         preview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                count=0;
+                count = 0;
                 double totalText = 0;
                 cardTypeTable.removeAllViews();
 
@@ -3981,12 +4065,14 @@ public class BackOfficeActivity extends AppCompatActivity {
                         if (headerData.get(i).getShiftName().equals(ShiftName) || ShiftName.equals("All")) {
                             if (headerData.get(i).getWaiter().equals(CashierNo) || CashierNo.equals("All")) {
                                 if (headerData.get(i).getPointOfSaleNumber() == posNoString || posNoString == -1) {
+                                    if(headerData.get(i).getOrderType()==1 ){
 
                                     insertCashierInOutReport(waiterTable, headerData.get(i).getWaiter(), String.valueOf(headerData.get(i).getTotalDiscount()),
                                             String.valueOf(headerData.get(i).getAmountDue()),
                                             String.valueOf(headerData.get(i).getTotal()), String.valueOf(headerData.get(i).getTotalService()),
                                             String.valueOf(headerData.get(i).getTotalServiceTax()), String.valueOf(headerData.get(i).getTotalTax()), 7);
                                 }
+                            }
                             }
                         }
                     }
@@ -5178,6 +5264,108 @@ public class BackOfficeActivity extends AppCompatActivity {
         }
         itemsTableLayout.addView(row);
         rawPosition += 1;
+    }
+
+
+
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    void insertRowInMoneyCategory(TableLayout MoneyTable,Money moneyCategory ) {
+
+
+        final TableRow row = new TableRow(BackOfficeActivity.this);
+
+        TableLayout.LayoutParams lp = new TableLayout.LayoutParams();
+        lp.setMargins(2, 2, 2, 0);
+        row.setLayoutParams(lp);
+        row.setTag(rawPosition);
+        for (int k = 0; k < 5; k++) {
+            TextView textView = new TextView(BackOfficeActivity.this);
+
+            switch (k) {
+                case 0:
+                    textView.setText(""+moneyCategory.getSerial());
+                    row.addView(textView);
+                    break;
+                case 1:
+                    textView.setText(""+moneyCategory.getCatName());
+                    row.addView(textView);
+                    break;
+                case 2:
+                    textView.setText(""+moneyCategory.getCatValue());
+                    row.addView(textView);
+                    break;
+                case 3:
+                    textView.setText(""+moneyCategory.getShow());
+                    row.addView(textView);
+                    break;
+
+                case 4:
+                    ImageView imageView = new ImageView(BackOfficeActivity.this);
+                    TableRow.LayoutParams lp3 = new TableRow.LayoutParams(100,  50, 1.0f);
+                    imageView.setLayoutParams(lp3);
+                    imageView.setTag(imageBitmap);
+                    if(moneyCategory.getPicture()!=null)
+                    imageView.setImageBitmap(moneyCategory.getPicture());
+
+                    else
+                        imageView.setBackground(getResources().getDrawable(R.drawable.focused_table));
+                    row.addView(imageView);
+                    break;
+
+            }
+
+            textView.setTextColor(ContextCompat.getColor(BackOfficeActivity.this, R.color.text_color));
+            textView.setGravity(Gravity.CENTER);
+
+            TableRow.LayoutParams lp2 = new TableRow.LayoutParams(100, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+            textView.setLayoutParams(lp2);
+
+            row.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+
+                    for (int k = 0; k < MoneyTable.getChildCount(); k++) {
+                        TableRow tableRow = (TableRow) MoneyTable.getChildAt(k);
+                        tableRow.setBackgroundColor(getResources().getColor(R.color.layer3));
+                    }
+                    focusedRaw = row;
+                    focusedRaw.setBackgroundColor(getResources().getColor(R.color.layer4));
+
+                    AlertDialog.Builder builder1 = new AlertDialog.Builder(BackOfficeActivity.this);
+                    builder1.setMessage("sure you delete this Money Category ?");
+                    builder1.setCancelable(false);
+
+                    builder1.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog1, int id) {
+                            dialog1.cancel();
+
+                            MoneyTable.removeView(row);
+
+                        }
+                    });
+
+                    builder1.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog1, int id) {
+                            dialog1.cancel();
+                            focusedRaw.setBackgroundColor(getResources().getColor(R.color.layer3));
+                        }
+                    });
+
+                    AlertDialog alert11 = builder1.create();
+                    alert11.show();
+
+
+
+                    return false;
+                }
+            });
+        }
+        MoneyTable.addView(row);
+        rawPosition += 1;
+
+
     }
 
     void insertRaw2(Modifier items, final TableLayout itemsTableLayout, String text) {

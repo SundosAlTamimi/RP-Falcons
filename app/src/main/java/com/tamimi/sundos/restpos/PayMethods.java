@@ -226,7 +226,7 @@ public class PayMethods extends AppCompatActivity {
             public void onClick(View view) {
                 received.setText("");
                 cashMoney.setText("0.00");
-
+                flag=0;
                 for(int i=0;i<moneyList.size();i++){
                     TableRow tRaw =(TableRow) tableLayout.getChildAt(i);
                     TextView text=(TextView)tRaw.getChildAt(2);
@@ -483,7 +483,7 @@ public class PayMethods extends AppCompatActivity {
 
         final ArrayList<CreditCard> creditCards = mDHandler.getAllCreditCards();
         creditCardsName = new ArrayList();
-        creditCardsName.add("");
+//        creditCardsName.add("");
 
         if (creditCards.size() > 0)
             for (int i = creditCards.size() - 1; i >= 0; i--) {
@@ -580,8 +580,8 @@ public class PayMethods extends AppCompatActivity {
                 String t0 = balance.getText().toString();
                 String t1 = received.getText().toString();
                 String t2 = cardNo.getText().toString();
-
-                if (t1.equals("") && t2.equals("") && spinner.getSelectedItem().toString().equals("")){
+                //&& spinner.getSelectedItem().toString().equals("")
+                if (t1.equals("") && t2.equals("") ){
                     Toast.makeText(PayMethods.this, "Please enter received value  and card number", Toast.LENGTH_LONG).show();
             } else if (Double.parseDouble(t1) <= Double.parseDouble(t0)) {
 
