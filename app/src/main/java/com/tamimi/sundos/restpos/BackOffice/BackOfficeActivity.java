@@ -179,6 +179,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     addAnnouncementDialog();
                     break;
                 case R.id.gift_card:
+                    kitchenOrderDialog();
                     break;
                 case R.id.employee_click_out:
                     showAddShiftDialog();
@@ -262,7 +263,6 @@ public class BackOfficeActivity extends AppCompatActivity {
                     break;
                 case R.id.sales_report_for_day:
                     announcementReportDialog();
-
                     break;
                 case R.id.sales_by_houres:
                     showSalesPerHour();
@@ -4747,6 +4747,16 @@ public class BackOfficeActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    void kitchenOrderDialog() {
+        dialog = new Dialog(BackOfficeActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.kitchen_order);
+        dialog.setCanceledOnTouchOutside(true);
+
+        dialog.show();
+
+    }
 
     void addAnnouncementDialog() {
         dialog = new Dialog(BackOfficeActivity.this);

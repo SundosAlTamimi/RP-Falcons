@@ -1191,30 +1191,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 //        db.execSQL("ALTER TABLE BLIND_CLOSE ADD REASON TEXT NOT NULL DEFAULT 'REASON'");
 
-        String CREATE_TABLE_BLIND_CLOSE = "CREATE TABLE " + BLIND_CLOSE + "("
-                + TRANS_NO11 + " INTEGER,"
-                + DATE11 + " TEXT,"
-                + TIME11 + " TEXT,"
-                + POS_NO11 + " INTEGER,"
-                + SHIFT_NO11 + " INTEGER,"
-                + SHIFT_NAME11 + " TEXT,"
-                + USER_NO11 + " INTEGER,"
-                + USER_NAME11 + " TEXT,"
-                + SYS_SALES11 + " INTEGER,"
-                + USER_SALES11 + " TEXT,"
-                + SALES_DIFF11 + " INTEGER,"
-                + SYS_CASH11 + " INTEGER,"
-                + USER_CASH11 + " INTEGER,"
-                + CASH_DIFF11 + " INTEGER,"
-                + SYS_OTHER_PAYMENTS11 + " INTEGER,"
-                + USER_OTHER_PAYMENTS11 + " INTEGER,"
-                + OTHER_PAYMENTS_DIFF11 + " INTEGER,"
-                + TILL_OK11 + " INTEGER,"
-                + TRANS_TYPE11 + " INTEGER,"
-                + REASON11 + " TEXT,"
-                + TO_USER11 + " TEXT" + ")";
-        db.execSQL(CREATE_TABLE_BLIND_CLOSE);
-
     }
 
     //Insert values to the table Items
