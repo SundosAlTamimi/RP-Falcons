@@ -3834,6 +3834,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void deleteCategory(String categorySerial) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from FAMILY_CATEGORY_TABLE where SERIAL = '" + categorySerial + "'");
+        db.close();
+    }
+
     public void deleteFromOrderHeaderTemp(String sectionNo, String tableNo) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from ORDER_HEADER_TEMP WHERE SECTION_NUMBER = '" + sectionNo + "' and TABLE_NUMBER = '" + tableNo + "'");

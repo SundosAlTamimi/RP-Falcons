@@ -50,13 +50,13 @@ import androidx.core.content.ContextCompat;
 
 public class MenuRegistration extends AppCompatActivity {
 
-    TableLayout recipeTable;
+    TableLayout recipeTable, catTable;
     Spinner categoriesSpinner, unitSpinner, printersSpinner;
     RadioGroup taxTypRadioGroup, statusRadioGroup, itemTypeRadioGroup;
     CheckBox notUsedCheckBox, discountAvailableCheckBox, pointAvailableCheckBox, openPriceCheckBox;
     EditText menuNameEditText, priceEditText, taxPercentEditText, secondaryNameEditText,
             kitchenAliasEditText, itemBarcodeEditText, descriptionEditText, wastagePercentEditText;
-    Button newButton, saveButton, exitButton, addMenuCategory, addInventoryUnit, addRecipe;
+    Button newButton, saveButton, exitButton, addMenuCategory, addInventoryUnit, addRecipe, deleteCat;
     ImageView itemPic;
 
     String familyName = "Baverage";
@@ -67,7 +67,7 @@ public class MenuRegistration extends AppCompatActivity {
     static final int SELECTED_PICTURE = 1;
     boolean itemBarcodeFound = false;
     List<Items> items;
-
+    boolean noOpen = false;
     ArrayAdapter<String> categoriesAdapter, unitAdapter, printersAdapter, familiesAdapter, menuNameAdapter;
 
     List<String> categories = new ArrayList<>();
@@ -93,6 +93,7 @@ public class MenuRegistration extends AppCompatActivity {
         addInventoryUnit.setOnClickListener(onClickListener);
         addRecipe.setOnClickListener(onClickListener);
         itemPic.setOnClickListener(onClickListener);
+        deleteCat.setOnClickListener(onClickListener);
 
         itemBitmapPic = null;
 
@@ -240,6 +241,20 @@ public class MenuRegistration extends AppCompatActivity {
                 case R.id.itemPicture:
                     showAddPictureDialog();
                     break;
+                case R.id.deletC:
+                    if (!noOpen) {
+                        deleteCatDialog( "categories Name","Serial" );
+                        List<FamilyCategory> category = mDbHandler.getAllFamilyCategory();
+                        for (int i = 0; i < category.size(); i++) {
+                            if (category.get(i).getType() == 2)
+                                deleteCatDialog(category.get(i).getName(), String.valueOf(category.get(i).getSerial()));
+                        }
+                        noOpen = true;
+                    } else {
+                        catTable.removeAllViews();
+                        noOpen = false;
+                    }
+                    break;
 
             }
 
@@ -259,6 +274,7 @@ public class MenuRegistration extends AppCompatActivity {
         final EditText catName = (EditText) dialog.findViewById(R.id.cat_name);
         final Spinner familyNameSpinner = (Spinner) dialog.findViewById(R.id.family_name);
         Button buttonAdd = (Button) dialog.findViewById(R.id.addFamily);
+        Button exit = (Button) dialog.findViewById(R.id.exit);
         Button buttonDone = (Button) dialog.findViewById(R.id.b_done);
         CheckBox showInMenu = (CheckBox) dialog.findViewById(R.id.showInMenu);
 
@@ -292,7 +308,7 @@ public class MenuRegistration extends AppCompatActivity {
                     categories.add(0, catName.getText().toString());
                     categoriesAdapter.notifyDataSetChanged();
                     familyName = familyNameSpinner.getSelectedItem().toString();
-                    int serial = mDbHandler.getAllFamilyCategory().size()+1;
+                    int serial = mDbHandler.getAllFamilyCategory().size() + 1;
                     familyCategory.setSerial(serial);
                     familyCategory.setType(2);
                     // 1--> family type // 2--> category type
@@ -300,11 +316,18 @@ public class MenuRegistration extends AppCompatActivity {
 
                     mDbHandler.addFamilyCategory(familyCategory);
 
-                    dialog.dismiss();
 
                 } else {
                     Toast.makeText(MenuRegistration.this, "Please input category name", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+
+        exit.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
             }
         });
 
@@ -363,7 +386,7 @@ public class MenuRegistration extends AppCompatActivity {
                     families.add(0, familyEditText.getText().toString());
                     familiesAdapter.notifyDataSetChanged();
 
-                    int serial = mDbHandler.getAllFamilyCategory().size()+1;
+                    int serial = mDbHandler.getAllFamilyCategory().size() + 1;
                     familyCategory.setSerial(serial);
                     familyCategory.setType(1);
                     // 1--> family type // 2--> category type
@@ -603,6 +626,78 @@ public class MenuRegistration extends AppCompatActivity {
         }
     }
 
+    void deleteCatDialog(String category, String serial) {
+
+
+        final TableRow row = new TableRow(MenuRegistration.this);
+        TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
+        lp.setMargins(5, 5, 5, 30);
+
+        row.setLayoutParams(lp);
+        row.setTag(serial);
+        for (int i = 0; i < 2; i++) {
+
+            TextView textView = new TextView(MenuRegistration.this);
+            switch (i) {
+                case 0:
+                    textView.setText(serial);
+                    break;
+                case 1:
+                    textView.setText(category);
+                    break;
+            }
+            textView.setTextColor(ContextCompat.getColor(MenuRegistration.this, R.color.text_color));
+            textView.setGravity(Gravity.CENTER);
+            textView.setBackgroundColor(getResources().getColor(R.color.gray));
+
+            TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+            lp2.setMargins(3, 3, 3, 3);
+            textView.setTextSize(18);
+            textView.setLayoutParams(lp2);
+
+            row.addView(textView);
+        }
+        catTable.addView(row);
+
+        TextView textView2 = new TextView(MenuRegistration.this);
+        textView2.setBackgroundColor(getResources().getColor(R.color.text_color));
+
+        row.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(MenuRegistration.this);
+                builder.setTitle("Do you want to delete this Category ?");
+                builder.setCancelable(false);
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        catTable.removeView(row);
+                        categories.clear();
+
+                        mDbHandler.deleteCategory(row.getTag().toString());
+                        List<FamilyCategory> category = mDbHandler.getAllFamilyCategory();
+
+                        for (int i1 = 0; i1 < category.size(); i1++) {
+                            if (category.get(i1).getType() == 2)
+                                categories.add(category.get(i1).getName());
+
+                        }
+                        categoriesAdapter.notifyDataSetChanged();
+
+
+                    }
+                });
+                builder.setNegativeButton("No", null);
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+
+                return true;
+            }
+        });
+    }
+
+
     boolean check() {
         if (!menuNameEditText.getText().toString().equals("") &&
                 !priceEditText.getText().toString().equals("") &&
@@ -683,6 +778,7 @@ public class MenuRegistration extends AppCompatActivity {
 
     void initialize() {
         recipeTable = (TableLayout) findViewById(R.id.recipeTable);
+        catTable = (TableLayout) findViewById(R.id.menu_);
         itemPic = (ImageView) findViewById(R.id.itemPicture);
 
         categoriesSpinner = (Spinner) findViewById(R.id.categoriesSpinner);
@@ -713,5 +809,6 @@ public class MenuRegistration extends AppCompatActivity {
         addMenuCategory = (Button) findViewById(R.id.addMenuCategory);
         addInventoryUnit = (Button) findViewById(R.id.addInventoryUnit);
         addRecipe = (Button) findViewById(R.id.addRecipe);
+        deleteCat = (Button) findViewById(R.id.deletC);
     }
 }

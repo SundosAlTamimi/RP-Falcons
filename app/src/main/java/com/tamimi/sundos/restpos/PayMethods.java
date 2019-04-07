@@ -581,25 +581,28 @@ public class PayMethods extends AppCompatActivity {
                 String t1 = received.getText().toString();
                 String t2 = cardNo.getText().toString();
                 //&& spinner.getSelectedItem().toString().equals("")
-                if (t1.equals("") && t2.equals("") ){
-                    Toast.makeText(PayMethods.this, "Please enter received value  and card number", Toast.LENGTH_LONG).show();
-            } else if (Double.parseDouble(t1) <= Double.parseDouble(t0)) {
+                if (!t1.equals("") && !t2.equals("")&& creditCardsName.size()!=0 ){
 
-                    creditCardValue += Double.parseDouble(t1);
-                    dialog.dismiss();
-                    Toast.makeText(PayMethods.this, "Saved", Toast.LENGTH_SHORT).show();
-                    if (creditCardValue != 0) {
-                        creditCard.setText("Credit Card : " + creditCardValue);
-                        creditCard.setBackgroundDrawable(getResources().getDrawable(R.drawable.clear_buttons));
-                        mainBalance = "" + (Double.parseDouble(mainBalance) - Double.parseDouble(t1));
-                        remainingBalance.setText("Remaining : " + mainBalance);
+                    if (Double.parseDouble(t1) <= Double.parseDouble(t0)) {
 
-                        resiveCredit.add(countCridit, received.getText().toString());
-                        cardNumbers.add(countCridit, cardNo.getText().toString());
-                        cardName.add(countCridit, spinner.getSelectedItem().toString());
-                    }
+                        creditCardValue += Double.parseDouble(t1);
+                        dialog.dismiss();
+                        Toast.makeText(PayMethods.this, "Saved", Toast.LENGTH_SHORT).show();
+                        if (creditCardValue != 0) {
+                            creditCard.setText("Credit Card : " + creditCardValue);
+                            creditCard.setBackgroundDrawable(getResources().getDrawable(R.drawable.clear_buttons));
+                            mainBalance = "" + (Double.parseDouble(mainBalance) - Double.parseDouble(t1));
+                            remainingBalance.setText("Remaining : " + mainBalance);
+
+                            resiveCredit.add(countCridit, received.getText().toString());
+                            cardNumbers.add(countCridit, cardNo.getText().toString());
+                            cardName.add(countCridit, spinner.getSelectedItem().toString());
+                        }
+                    } else
+                        Toast.makeText(PayMethods.this, "Invalid inputs", Toast.LENGTH_SHORT).show();
+
                 } else
-                    Toast.makeText(PayMethods.this, "Invalid inputs", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PayMethods.this, "Please enter received value  and card number", Toast.LENGTH_LONG).show();
 
             }
         });

@@ -54,7 +54,7 @@ import androidx.core.content.ContextCompat;
 public class Order extends AppCompatActivity {
 
     Button modifier, void_, delivery, discount, lDiscount, split, priceChange;
-    TextView total, lineDisCount, disCount, deliveryCharge, subTotal, service, tax, amountDue;
+    TextView total, lineDisCount, disCount, deliveryCharge, subTotal, service, tax, amountDue,vhSerial;
     Button pay, order;
     TextView orderType, tableNo, check, date, user, seats;
     LinearLayout categoriesLinearLayout;
@@ -122,8 +122,10 @@ public class Order extends AppCompatActivity {
             seatNo = extras.getInt("seatNo");
 
         }
-        setOrder(orderTypeFlag);
+
         setDateAndVoucherNumber();
+        setOrder(orderTypeFlag);
+
 
         tableLayoutPosition = 0;
         currentColor = ContextCompat.getColor(this, R.color.layer2);
@@ -248,6 +250,7 @@ public class Order extends AppCompatActivity {
             seats.setText("0");
             tableNumber = -1;
             sectionNumber = -1;
+            vhSerial.setText(voucherNo);
         } else {
             orderType.setText("Dine In");
             tableNo.setText("Table:  " + tableNumber);
@@ -1797,6 +1800,7 @@ public class Order extends AppCompatActivity {
         tax = (TextView) findViewById(R.id.tax);
         service = (TextView) findViewById(R.id.service);
         amountDue = (TextView) findViewById(R.id.amount_due);
+        vhSerial=(TextView) findViewById(R.id.vhSerial);
 
         pay.setOnTouchListener(onTouchListener);
         order.setOnTouchListener(onTouchListener);
