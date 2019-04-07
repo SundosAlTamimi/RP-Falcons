@@ -26,6 +26,7 @@ import com.tamimi.sundos.restpos.Models.FamilyCategory;
 import com.tamimi.sundos.restpos.Models.ForceQuestions;
 import com.tamimi.sundos.restpos.Models.ItemWithFq;
 import com.tamimi.sundos.restpos.Models.ItemWithModifier;
+import com.tamimi.sundos.restpos.Models.ItemWithScreen;
 import com.tamimi.sundos.restpos.Models.Items;
 import com.tamimi.sundos.restpos.Models.JobGroup;
 import com.tamimi.sundos.restpos.Models.MemberShipGroup;
@@ -52,7 +53,7 @@ import java.util.List;
 public class DatabaseHandler extends SQLiteOpenHelper {
     //hellohjt
     // Database Version
-    private static final int DATABASE_VERSION = 15;
+    private static final int DATABASE_VERSION = 17;
 
     // Database Name
     private static final String DATABASE_NAME = "RestPos";
@@ -289,6 +290,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String ITEM_CODE = "ITEM_CODE";
     private static final String MODIFIER_NO = "MODIFIER_NO";
     private static final String MODIFIER_TEXT = "MODIFIER_TEXT";
+
+    //___________________________________________________________________________________
+    private static final String ITEM_WITH_SCREEN = "ITEM_WITH_SCREEN";
+
+    private static final String ITEM_CODE3 = "ITEM_CODE";
+    private static final String ITEM_NAME3 = "ITEM_NAME";
+    private static final String SCREEN_NO3 = "SCREEN_NO";
+    private static final String SCREEN_NAME3 = "SCREEN_NAME";
 
     //___________________________________________________________________________________
     private static final String ITEM_WITH_FQ = "ITEM_WITH_FQ";
@@ -860,6 +869,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_ITEM_WITH_MODIFIER);
 
         //_______________________________________________________________________________
+        String CREATE_TABLE_ITEM_WITH_SCREEN = "CREATE TABLE " + ITEM_WITH_SCREEN + "("
+                + ITEM_CODE3 + " INTEGER ,"
+                + ITEM_NAME3 + " TEXT,"
+                + SCREEN_NO3 + " INTEGER,"
+                + SCREEN_NAME3 + " TEXT " + ")";
+        db.execSQL(CREATE_TABLE_ITEM_WITH_SCREEN);
+
+        //_______________________________________________________________________________
         String CREATE_TABLE_ITEM_WITH_FQ = "CREATE TABLE " + ITEM_WITH_FQ + "("
                 + ITEM_CODE2 + " INTEGER ,"
                 + QUESTION_NO2 + " TEXT,"
@@ -1164,61 +1181,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 //        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS_TEMP ADD TIME TEXT NOT NULL DEFAULT '01:30'");
 //        db.execSQL("ALTER TABLE PAY_METHOD ADD TIME TEXT NOT NULL DEFAULT '01:30'");
 
-
-//        String CREATE_TABLE_TABLE_ACTIONS = "CREATE TABLE " + TABLE_ACTIONS + "("
-//                + POS_NO16 + " INTEGER,"
-//                + USER_NO16 + " INTEGER,"
-//                + USER_NAME16 + " TEXT,"
-//                + SHIFT_NAME16 + " TEXT,"
-//                + SHIFT_NO16 + " INTEGER,"
-//                + ACTION_TYPE16 + " INTEGER,"
-//                + ACTION_DATE16 + " TEXT,"
-//                + ACTION_TIME16 + " TEXT,"
-//                + TABLE_NO16 + " INTEGER,"
-//                + SECTION_NO16 + " INTEGER ,"
-//                + TO_TABLE16 + " INTEGER ,"
-//                + TO_SECTION16 + " INTEGER " + ")";
-//        db.execSQL(CREATE_TABLE_TABLE_ACTIONS);
-
-
-//        String CREATE_TABLE_ANNOUNCEMENT_TABLE = "CREATE TABLE " + ANNOUNCEMENT_TABLE + "("
-//                + SHIFT_NAME18 + " TEXT,"
-//                + ANNOUNCEMENT_DATE18 + " TEXT,"
-//                + USER_NAME18 + " TEXT,"
-//                + POS_NO18 + " INTEGER,"
-//                + MESSAGE18 + " TEXT,"
-//                + IS_SHOW18 + " INTEGER " + ")";
-//        db.execSQL(CREATE_TABLE_ANNOUNCEMENT_TABLE);
-
-
-//        db.execSQL("ALTER TABLE BLIND_CLOSE ADD REASON TEXT NOT NULL DEFAULT 'REASON'");
-
-//        String CREATE_TABLE_BLIND_CLOSE = "CREATE TABLE " + BLIND_CLOSE + "("
-//                + TRANS_NO11 + " INTEGER,"
-//                + DATE11 + " TEXT,"
-//                + TIME11 + " TEXT,"
-//                + POS_NO11 + " INTEGER,"
-//                + SHIFT_NO11 + " INTEGER,"
-//                + SHIFT_NAME11 + " TEXT,"
-//                + USER_NO11 + " INTEGER,"
-//                + USER_NAME11 + " TEXT,"
-//                + SYS_SALES11 + " INTEGER,"
-//                + USER_SALES11 + " TEXT,"
-//                + SALES_DIFF11 + " INTEGER,"
-//                + SYS_CASH11 + " INTEGER,"
-//                + USER_CASH11 + " INTEGER,"
-//                + CASH_DIFF11 + " INTEGER,"
-//                + SYS_OTHER_PAYMENTS11 + " INTEGER,"
-//                + USER_OTHER_PAYMENTS11 + " INTEGER,"
-//                + OTHER_PAYMENTS_DIFF11 + " INTEGER,"
-//                + TILL_OK11 + " INTEGER,"
-//                + TRANS_TYPE11 + " INTEGER,"
-//                + REASON11 + " TEXT,"
-//                + TO_USER11 + " TEXT" + ")";
-//        db.execSQL(CREATE_TABLE_BLIND_CLOSE);
-
         db.execSQL("ALTER TABLE PAY_IN_OUT ADD TIME TEXT NOT NULL DEFAULT ''");
 
+        String CREATE_TABLE_ITEM_WITH_SCREEN = "CREATE TABLE " + ITEM_WITH_SCREEN + "("
+                + ITEM_CODE3 + " INTEGER ,"
+                + ITEM_NAME3 + " TEXT,"
+                + SCREEN_NO3 + " INTEGER,"
+                + SCREEN_NAME3 + " TEXT " + ")";
+        db.execSQL(CREATE_TABLE_ITEM_WITH_SCREEN);
     }
 
     //Insert values to the table Items
@@ -1695,6 +1665,19 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(MODIFIER_TEXT, modifier.getModifierText());
 
         db.insert(ITEM_WITH_MODIFIER, null, values);
+        db.close();
+    }
+
+    public void addItemWithScreen(ItemWithScreen screen) {
+        db = this.getReadableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(ITEM_CODE3, screen.getItemCode());
+        values.put(ITEM_NAME3, screen.getItemName());
+        values.put(SCREEN_NO3, screen.getScreenNo());
+        values.put(SCREEN_NAME3, screen.getScreenName());
+
+        db.insert(ITEM_WITH_SCREEN, null, values);
         db.close();
     }
 

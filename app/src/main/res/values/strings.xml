@@ -240,6 +240,12 @@
     <string name="modifier_name">Modifier Name</string>
     <string name="modifiers">Modifiers</string>
 
+    <string name="kitchen_screen">Kitchen Screen</string>
+    <string name="screen_no">Screen No</string>
+    <string name="screen_name">Screen Name</string>
+    <string name="add_kitchen_screen">Add Kitchen Screen</string>
+    <string name="join_item_with_kitchen_screen">Join Item With Kitchen Screen</string>
+
     <string name="tender">Tender</string>
     <string name="voucher_number">Voucher Number</string>
     <string name="voucher_no">Voucher No</string>

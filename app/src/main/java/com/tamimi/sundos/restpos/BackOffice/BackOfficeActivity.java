@@ -47,9 +47,11 @@ import com.tamimi.sundos.restpos.Models.CancleOrder;
 import com.tamimi.sundos.restpos.Models.CategoryWithModifier;
 import com.tamimi.sundos.restpos.Models.Cheque;
 import com.tamimi.sundos.restpos.Models.CustomerPayment;
+import com.tamimi.sundos.restpos.Models.FamilyCategory;
 import com.tamimi.sundos.restpos.Models.ForceQuestions;
 import com.tamimi.sundos.restpos.Models.ItemWithFq;
 import com.tamimi.sundos.restpos.Models.ItemWithModifier;
+import com.tamimi.sundos.restpos.Models.ItemWithScreen;
 import com.tamimi.sundos.restpos.Models.Items;
 import com.tamimi.sundos.restpos.Models.JobGroup;
 import com.tamimi.sundos.restpos.Models.MemberShipGroup;
@@ -61,6 +63,7 @@ import com.tamimi.sundos.restpos.Models.Pay;
 import com.tamimi.sundos.restpos.Models.PayMethod;
 import com.tamimi.sundos.restpos.Models.Shift;
 import com.tamimi.sundos.restpos.Models.TableActions;
+import com.tamimi.sundos.restpos.Models.UsedItems;
 import com.tamimi.sundos.restpos.Models.VoidResons;
 import com.tamimi.sundos.restpos.Models.ZReport;
 import com.tamimi.sundos.restpos.R;
@@ -90,7 +93,7 @@ public class BackOfficeActivity extends AppCompatActivity {
     LinearLayout membershipGroup, membership, customerRegistration;
     LinearLayout jobGroup, employeeRegistration, employeeSchedule, payroll, vacation, editTables;
     LinearLayout menuCategory, menuRegistration, modifier, forceQuestion, voiding_reasons, menuLayout;
-    LinearLayout store, storeOperation, users, moneyCategory;
+    LinearLayout store, storeOperation, users, moneyCategory, kitchenScreen;
     LinearLayout salesTotal, cashierInOut, canceledOrderHistory, x_report, z_report, market_report_,
             salesReportForDay, salesByHours, salesVolumeByItem, topSalesItemReport, topGroupSalesReport, topFamilySalesReport,
             salesReportByCustomer, salesReportByCardType, waiterSalesReport, tableActionReport, profitLossReport, detailSalesReport,
@@ -120,6 +123,7 @@ public class BackOfficeActivity extends AppCompatActivity {
     ArrayList<ItemWithFq> itemWithFqsList;
     ArrayList<ItemWithModifier> itemWithModifiersList;
     ArrayList<CategoryWithModifier> categoryWithModifiersList;
+    ArrayList<ItemWithScreen> itemWithScreensList;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -135,6 +139,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         itemWithFqsList = new ArrayList<>();
         itemWithModifiersList = new ArrayList<>();
         categoryWithModifiersList = new ArrayList<>();
+        itemWithScreensList = new ArrayList<>();
         headerData = new ArrayList<OrderHeader>();
 
         initialize();
@@ -248,6 +253,9 @@ public class BackOfficeActivity extends AppCompatActivity {
                     break;
                 case R.id.money_category:
                     showMoneyCategoryDialog();
+                    break;
+                case R.id.kitchen_screen:
+                    showKitchenScreenDialog();
                     break;
                 case R.id.sales_total:
                     salesTotalReportDialog();
@@ -1142,14 +1150,14 @@ public class BackOfficeActivity extends AppCompatActivity {
                 }
 
                 orderTransactionData = mDHandler.getXReport(ShiftNa, posNoString, fromDat, toDat);
-double NetTotal=0.0;
+                double NetTotal = 0.0;
                 for (int i = 0; i < orderTransactionData.size(); i++) {
-                    if(Settings.tax_type==0){
-                        NetTotal= orderTransactionData.get(i).getTotal() - (orderTransactionData.get(i).getTaxValue()+orderTransactionData.get(i).getDiscount());
-                    }else {
-                        NetTotal= orderTransactionData.get(i).getTotal() - orderTransactionData.get(i).getDiscount();
+                    if (Settings.tax_type == 0) {
+                        NetTotal = orderTransactionData.get(i).getTotal() - (orderTransactionData.get(i).getTaxValue() + orderTransactionData.get(i).getDiscount());
+                    } else {
+                        NetTotal = orderTransactionData.get(i).getTotal() - orderTransactionData.get(i).getDiscount();
                     }
-                    Log.e("",""+NetTotal);
+                    Log.e("", "" + NetTotal);
 
                     insertCashierInOutReport(tableXreport, orderTransactionData.get(i).getItemName(), String.valueOf(orderTransactionData.get(i).getTaxValue()),
                             "", String.valueOf(orderTransactionData.get(i).getTotal())
@@ -1309,14 +1317,14 @@ double NetTotal=0.0;
 
                 orderTransactionData = mDHandler.getXReport("SHIFT_NAME", posNoString, fromDat, fromDat);
 
-                double NetTotal=0.0;
+                double NetTotal = 0.0;
 
                 for (int i = 0; i < orderTransactionData.size(); i++) {
 
-                    if(Settings.tax_type==0){
-                        NetTotal= orderTransactionData.get(i).getTotal() - (orderTransactionData.get(i).getTaxValue()+orderTransactionData.get(i).getDiscount());
-                    }else {
-                        NetTotal= orderTransactionData.get(i).getTotal() - orderTransactionData.get(i).getDiscount();
+                    if (Settings.tax_type == 0) {
+                        NetTotal = orderTransactionData.get(i).getTotal() - (orderTransactionData.get(i).getTaxValue() + orderTransactionData.get(i).getDiscount());
+                    } else {
+                        NetTotal = orderTransactionData.get(i).getTotal() - orderTransactionData.get(i).getDiscount();
                     }
 
                     insertCashierInOutReport(tableXreport, orderTransactionData.get(i).getItemName(), String.valueOf(orderTransactionData.get(i).getTaxValue()),
@@ -1680,10 +1688,10 @@ double NetTotal=0.0;
         Window window = dialog.getWindow();
 //        window.setLayout(860, 430);
 
-        rawPosition=0;
-        finalMoneyArray =new ArrayList<>();
-        finalMoneyArray=mDHandler.getAllMoneyCategory();
-        nextSerial =finalMoneyArray.size() + 1;
+        rawPosition = 0;
+        finalMoneyArray = new ArrayList<>();
+        finalMoneyArray = mDHandler.getAllMoneyCategory();
+        nextSerial = finalMoneyArray.size() + 1;
         final ArrayList<Money> money = new ArrayList<>();
 
         final EditText serial = (EditText) dialog.findViewById(R.id.serial);
@@ -1695,12 +1703,12 @@ double NetTotal=0.0;
         Button save = (Button) dialog.findViewById(R.id.save);
         Button exit = (Button) dialog.findViewById(R.id.exit);
         serial.setText("" + nextSerial);
-        TableLayout moneyTable=(TableLayout)dialog.findViewById(R.id.monyCatTable);
+        TableLayout moneyTable = (TableLayout) dialog.findViewById(R.id.monyCatTable);
 
-        for(int i=0;i<finalMoneyArray.size();i++){
-            Money m1=new Money();
-            m1=finalMoneyArray.get(i);
-            insertRowInMoneyCategory(moneyTable,m1);
+        for (int i = 0; i < finalMoneyArray.size(); i++) {
+            Money m1 = new Money();
+            m1 = finalMoneyArray.get(i);
+            insertRowInMoneyCategory(moneyTable, m1);
 
         }
 
@@ -1722,16 +1730,16 @@ double NetTotal=0.0;
                     boolean isFound = false;
 
                     finalMoneyArray.clear();
-                    Log.e("**yy",""+moneyTable.getChildCount());
-                    for(int i=0; i<moneyTable.getChildCount();i++){
+                    Log.e("**yy", "" + moneyTable.getChildCount());
+                    for (int i = 0; i < moneyTable.getChildCount(); i++) {
                         TableRow row = (TableRow) moneyTable.getChildAt(i);
-                        TextView serial= (TextView) row.getChildAt(0);
-                        TextView categotyN= (TextView) row.getChildAt(1);
-                        TextView categotyV= (TextView) row.getChildAt(2);
-                        TextView isShow= (TextView) row.getChildAt(3);
+                        TextView serial = (TextView) row.getChildAt(0);
+                        TextView categotyN = (TextView) row.getChildAt(1);
+                        TextView categotyV = (TextView) row.getChildAt(2);
+                        TextView isShow = (TextView) row.getChildAt(3);
                         ImageView pictiure = (ImageView) row.getChildAt(4);
 
-                        Money m=new Money();
+                        Money m = new Money();
                         m.setSerial(Integer.parseInt(serial.getText().toString()));
                         m.setCatName(categotyN.getText().toString());
                         m.setCatValue(Double.parseDouble(categotyV.getText().toString()));
@@ -1755,35 +1763,34 @@ double NetTotal=0.0;
 
                     if (!isFound) {
 
-                    Money m = new Money();
-                    m.setSerial(Integer.parseInt(serial.getText().toString()));
-                    m.setCatName(catName.getText().toString());
-                    m.setCatValue(Double.parseDouble(catValue.getText().toString()));
-                    m.setPicture(imageBitmap);
-                    if (show.isChecked())
-                        m.setShow(1);
-                    else
-                        m.setShow(0);
+                        Money m = new Money();
+                        m.setSerial(Integer.parseInt(serial.getText().toString()));
+                        m.setCatName(catName.getText().toString());
+                        m.setCatValue(Double.parseDouble(catValue.getText().toString()));
+                        m.setPicture(imageBitmap);
+                        if (show.isChecked())
+                            m.setShow(1);
+                        else
+                            m.setShow(0);
                         finalMoneyArray.add(m);
 
-                    serial.setText("" + (nextSerial + 1));
-                    catName.setText("");
-                    catValue.setText("");
-                    moneyPicImageView.setImageDrawable(getResources().getDrawable(R.drawable.focused_table));
-                    imageBitmap = null;
-                    show.setChecked(true);
-                    nextSerial++;
+                        serial.setText("" + (nextSerial + 1));
+                        catName.setText("");
+                        catValue.setText("");
+                        moneyPicImageView.setImageDrawable(getResources().getDrawable(R.drawable.focused_table));
+                        imageBitmap = null;
+                        show.setChecked(true);
+                        nextSerial++;
 
-                    insertRowInMoneyCategory(moneyTable, m);
-                    Toast.makeText(BackOfficeActivity.this, "Added to list", Toast.LENGTH_SHORT).show();
-                }else { Toast.makeText(BackOfficeActivity.this, "This Value saved Before", Toast.LENGTH_SHORT).show();}
+                        insertRowInMoneyCategory(moneyTable, m);
+                        Toast.makeText(BackOfficeActivity.this, "Added to list", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(BackOfficeActivity.this, "This Value saved Before", Toast.LENGTH_SHORT).show();
+                    }
                 } else
                     Toast.makeText(BackOfficeActivity.this, "Please insure your inputs", Toast.LENGTH_SHORT).show();
 //                insertRowInMoneyCategory(moneyTable,m);
             }
-
-
-
 
 
         });
@@ -1792,17 +1799,17 @@ double NetTotal=0.0;
             @Override
             public void onClick(View view) {
                 mDHandler.deleteAllMoneyCategory();
-                for(int i=0; i<moneyTable.getChildCount();i++){
+                for (int i = 0; i < moneyTable.getChildCount(); i++) {
 
                     TableRow row = (TableRow) moneyTable.getChildAt(i);
-                    TextView serial= (TextView) row.getChildAt(0);
-                    TextView categotyN= (TextView) row.getChildAt(1);
-                    TextView categotyV= (TextView) row.getChildAt(2);
-                    TextView isShow= (TextView) row.getChildAt(3);
+                    TextView serial = (TextView) row.getChildAt(0);
+                    TextView categotyN = (TextView) row.getChildAt(1);
+                    TextView categotyV = (TextView) row.getChildAt(2);
+                    TextView isShow = (TextView) row.getChildAt(3);
                     ImageView pictiure = (ImageView) row.getChildAt(4);
 
-                    Money m=new Money();
-                    m.setSerial(i+1);
+                    Money m = new Money();
+                    m.setSerial(i + 1);
                     m.setCatName(categotyN.getText().toString());
                     m.setCatValue(Double.parseDouble(categotyV.getText().toString()));
                     m.setShow(Integer.parseInt(isShow.getText().toString()));
@@ -1815,7 +1822,7 @@ double NetTotal=0.0;
                 }
 
                 Toast.makeText(BackOfficeActivity.this, " Save Successful ", Toast.LENGTH_SHORT).show();
-dialog.dismiss();
+                dialog.dismiss();
             }
         });
 
@@ -1938,6 +1945,33 @@ dialog.dismiss();
             @Override
             public void onClick(View view) {
                 showJoinCategoryWithModifier();
+            }
+        });
+
+        dialog.show();
+    }
+
+    void showKitchenScreenDialog() {
+
+        final Dialog dialog = new Dialog(BackOfficeActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.kitchen_screen_dialog);
+        dialog.setCanceledOnTouchOutside(true);
+
+        LinearLayout addScr = (LinearLayout) dialog.findViewById(R.id.add_screen);
+        LinearLayout itemWithScr = (LinearLayout) dialog.findViewById(R.id.item_with_screen);
+
+        addScr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                showAddModifierDialog();
+            }
+        });
+        itemWithScr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showJoinItemWithKitchenScreenDialog();
             }
         });
 
@@ -2210,6 +2244,173 @@ dialog.dismiss();
         exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+
+    void showJoinItemWithKitchenScreenDialog() {
+
+        dialog = new Dialog(BackOfficeActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.join_item_with_kitchen_screen_dialog);
+        dialog.setCanceledOnTouchOutside(true);
+
+        final Spinner paperSpinner = (Spinner) dialog.findViewById(R.id.category);
+        final LinearLayout screensLinearLayout = (LinearLayout) dialog.findViewById(R.id.screens);
+        final TableLayout itemsTableLayout = (TableLayout) dialog.findViewById(R.id.items);
+        final Button add = (Button) dialog.findViewById(R.id.add_modifier);
+        final Button save = (Button) dialog.findViewById(R.id.save);
+        final Button exit = (Button) dialog.findViewById(R.id.exit);
+
+        List<Items> items = mDHandler.getAllItems();
+
+        final List<FamilyCategory> familyCategories = mDHandler.getAllFamilyCategory();
+        final ArrayList<String> categories = new ArrayList<>();
+        categories.add("");
+        for (int i = 0; i < familyCategories.size(); i++) {
+            if (familyCategories.get(i).getType() == 2)
+                categories.add(familyCategories.get(i).getName());
+        }
+        ArrayAdapter<String> paperAdapter = new ArrayAdapter<String>(BackOfficeActivity.this, R.layout.spinner_style, categories);
+        paperAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        paperSpinner.setAdapter(paperAdapter);
+        paperSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (!paperSpinner.getSelectedItem().toString().equals("")) {
+//                    insertRaw(items.get(i - 1), itemsTableLayout, "modifier");
+                    itemsTableLayout.removeAllViews();
+                    rawPosition = 0;
+                    ArrayList<Items> filteredItems = new ArrayList<>();
+                    for(int k = 0 ; k<items.size() ; k++){
+                        if(items.get(k).getMenuCategory().equals(paperSpinner.getSelectedItem().toString()))
+                            filteredItems.add(items.get(k));
+                    }
+
+                    for(int k = 0 ; k<filteredItems.size() ; k++){
+                        final TableRow row = new TableRow(BackOfficeActivity.this);
+
+                        TableLayout.LayoutParams lp = new TableLayout.LayoutParams();
+                        lp.setMargins(2, 2, 2, 0);
+                        row.setLayoutParams(lp);
+                        row.setTag(rawPosition);
+                        for (int r = 0; r < 4; r++) {
+                            TextView textView = new TextView(BackOfficeActivity.this);
+
+                            switch (r) {
+                                case 0:
+                                    textView.setText("" + filteredItems.get(k).getItemBarcode());
+                                    break;
+                                case 1:
+                                    textView.setText(filteredItems.get(k).getMenuName());
+                                    break;
+                                case 2:
+                                    textView.setText("" + -1);
+                                    break;
+                                case 3:
+                                    textView.setText("no screen");
+                                    break;
+                            }
+
+                            textView.setTextColor(ContextCompat.getColor(BackOfficeActivity.this, R.color.text_color));
+                            textView.setGravity(Gravity.CENTER);
+
+                            TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+                            textView.setLayoutParams(lp2);
+
+                            row.addView(textView);
+
+
+                        }
+                        row.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                // remove focused rows
+                                for (int k = 0; k < itemsTableLayout.getChildCount(); k++) {
+                                    TableRow tableRow = (TableRow) itemsTableLayout.getChildAt(k);
+                                    tableRow.setBackgroundColor(getResources().getColor(R.color.layer3));
+                                }
+                                focusedRaw = row;
+                                focusedRaw.setBackgroundColor(getResources().getColor(R.color.layer4));
+                            }
+                        });
+
+                        itemsTableLayout.addView(row);
+                        rawPosition += 1;
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        ArrayList<Modifier> modifiers = mDHandler.getAllModifiers();
+        for (int i = 0; i < modifiers.size(); i++) {
+            CheckBox checkBox = new CheckBox(BackOfficeActivity.this);
+            checkBox.setText("- " + modifiers.get(i).getModifierName());
+            checkBox.setTag(modifiers.get(i).getModifierNumber());
+            checkBox.setTextColor(getResources().getColor(R.color.text_color));
+            checkBox.setTextSize(20);
+
+            screensLinearLayout.addView(checkBox);
+        }
+
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (focusedRaw != null) {
+                    if (screensLinearLayout.getChildCount() != 0) {
+                        int childCount = screensLinearLayout.getChildCount();
+                        for (int i = childCount - 1; i >= 0; i--) {
+                            CheckBox checkBox = (CheckBox) screensLinearLayout.getChildAt(i);
+                            if (checkBox.isChecked()) {
+                                checkBox.setChecked(false);
+
+                                TextView itemBa = (TextView) focusedRaw.getChildAt(0);
+                                TextView itemNa = (TextView) focusedRaw.getChildAt(1);
+                                TextView scrNo = (TextView) focusedRaw.getChildAt(2);
+                                TextView scrNa = (TextView) focusedRaw.getChildAt(3);
+
+                                if (scrNa.getText().toString().equals("no screen")) {
+                                    scrNo.setText(checkBox.getTag().toString());
+                                    scrNa.setText(checkBox.getText().toString());
+                                } else {
+                                    scrNo.setText(scrNo.getText().toString() + " , " + checkBox.getTag().toString());
+                                    scrNa.setText(scrNa.getText().toString() + "\n" + checkBox.getText().toString());
+                                }
+                                itemWithScreensList.add(new ItemWithScreen(Integer.parseInt(itemBa.getText().toString()),
+                                        itemNa.getText().toString(), Integer.parseInt(checkBox.getTag().toString()),
+                                        checkBox.getText().toString()));
+                            }
+                        }
+                    } else
+                        Toast.makeText(BackOfficeActivity.this, "No screen to be added !", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                for (int i = 0; i < itemWithScreensList.size(); i++) {
+                    if (itemWithScreensList.get(i).getScreenNo() != -1) {
+                        mDHandler.addItemWithScreen(itemWithScreensList.get(i));
+                    }
+                }
+                focusedRaw = null;
+                dialog.dismiss();
+            }
+        });
+        exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                focusedRaw = null;
                 dialog.dismiss();
             }
         });
@@ -4079,14 +4280,14 @@ dialog.dismiss();
                         if (headerData.get(i).getShiftName().equals(ShiftName) || ShiftName.equals("All")) {
                             if (headerData.get(i).getWaiter().equals(CashierNo) || CashierNo.equals("All")) {
                                 if (headerData.get(i).getPointOfSaleNumber() == posNoString || posNoString == -1) {
-                                    if(headerData.get(i).getOrderType()==1 ){
+                                    if (headerData.get(i).getOrderType() == 1) {
 
-                                    insertCashierInOutReport(waiterTable, headerData.get(i).getWaiter(), String.valueOf(headerData.get(i).getTotalDiscount()),
-                                            String.valueOf(headerData.get(i).getAmountDue()),
-                                            String.valueOf(headerData.get(i).getTotal()), String.valueOf(headerData.get(i).getTotalService()),
-                                            String.valueOf(headerData.get(i).getTotalServiceTax()), String.valueOf(headerData.get(i).getTotalTax()), 7);
+                                        insertCashierInOutReport(waiterTable, headerData.get(i).getWaiter(), String.valueOf(headerData.get(i).getTotalDiscount()),
+                                                String.valueOf(headerData.get(i).getAmountDue()),
+                                                String.valueOf(headerData.get(i).getTotal()), String.valueOf(headerData.get(i).getTotalService()),
+                                                String.valueOf(headerData.get(i).getTotalServiceTax()), String.valueOf(headerData.get(i).getTotalTax()), 7);
+                                    }
                                 }
-                            }
                             }
                         }
                     }
@@ -5291,11 +5492,9 @@ dialog.dismiss();
     }
 
 
-
-
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    void insertRowInMoneyCategory(TableLayout MoneyTable,Money moneyCategory ) {
+    void insertRowInMoneyCategory(TableLayout MoneyTable, Money moneyCategory) {
 
 
         final TableRow row = new TableRow(BackOfficeActivity.this);
@@ -5309,29 +5508,29 @@ dialog.dismiss();
 
             switch (k) {
                 case 0:
-                    textView.setText(""+moneyCategory.getSerial());
+                    textView.setText("" + moneyCategory.getSerial());
                     row.addView(textView);
                     break;
                 case 1:
-                    textView.setText(""+moneyCategory.getCatName());
+                    textView.setText("" + moneyCategory.getCatName());
                     row.addView(textView);
                     break;
                 case 2:
-                    textView.setText(""+moneyCategory.getCatValue());
+                    textView.setText("" + moneyCategory.getCatValue());
                     row.addView(textView);
                     break;
                 case 3:
-                    textView.setText(""+moneyCategory.getShow());
+                    textView.setText("" + moneyCategory.getShow());
                     row.addView(textView);
                     break;
 
                 case 4:
                     ImageView imageView = new ImageView(BackOfficeActivity.this);
-                    TableRow.LayoutParams lp3 = new TableRow.LayoutParams(100,  50, 1.0f);
+                    TableRow.LayoutParams lp3 = new TableRow.LayoutParams(100, 50, 1.0f);
                     imageView.setLayoutParams(lp3);
                     imageView.setTag(imageBitmap);
-                    if(moneyCategory.getPicture()!=null)
-                    imageView.setImageBitmap(moneyCategory.getPicture());
+                    if (moneyCategory.getPicture() != null)
+                        imageView.setImageBitmap(moneyCategory.getPicture());
 
                     else
                         imageView.setBackground(getResources().getDrawable(R.drawable.focused_table));
@@ -5379,7 +5578,6 @@ dialog.dismiss();
 
                     AlertDialog alert11 = builder1.create();
                     alert11.show();
-
 
 
                     return false;
@@ -5569,6 +5767,7 @@ dialog.dismiss();
         storeOperation = (LinearLayout) findViewById(R.id.store_operation);
         users = (LinearLayout) findViewById(R.id.users);
         moneyCategory = (LinearLayout) findViewById(R.id.money_category);
+        kitchenScreen = (LinearLayout) findViewById(R.id.kitchen_screen);
         salesTotal = (LinearLayout) findViewById(R.id.sales_total);
         cashierInOut = (LinearLayout) findViewById(R.id.cashier_in_out);
         canceledOrderHistory = (LinearLayout) findViewById(R.id.canceled_order_history);
@@ -5623,6 +5822,7 @@ dialog.dismiss();
         storeOperation.setOnClickListener(onClickListener2);
         users.setOnClickListener(onClickListener2);
         moneyCategory.setOnClickListener(onClickListener2);
+        kitchenScreen.setOnClickListener(onClickListener2);
         salesTotal.setOnClickListener(onClickListener2);
         cashierInOut.setOnClickListener(onClickListener2);
         canceledOrderHistory.setOnClickListener(onClickListener2);

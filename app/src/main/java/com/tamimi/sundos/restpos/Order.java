@@ -54,7 +54,7 @@ import androidx.core.content.ContextCompat;
 public class Order extends AppCompatActivity {
 
     Button modifier, void_, delivery, discount, lDiscount, split, priceChange;
-    TextView total, lineDisCount, disCount, deliveryCharge, subTotal, service, tax, amountDue,vhSerial;
+    TextView total, lineDisCount, disCount, deliveryCharge, subTotal, service, tax, amountDue, vhSerial;
     Button pay, order;
     TextView orderType, tableNo, check, date, user, seats;
     LinearLayout categoriesLinearLayout;
@@ -762,66 +762,65 @@ public class Order extends AppCompatActivity {
 
                         save.setOnClickListener(view1 -> {
 
-                                if (!selectedReason[0].equals("")||resons.size() == 0) {
+                            if (!selectedReason[0].equals("") || resons.size() == 0) {
 
-                                    int index = Integer.parseInt(raw.getTag().toString());
+                                int index = Integer.parseInt(raw.getTag().toString());
 
-                                    mDbHandler.addCancleOrder(new CancleOrder(voucherNo, today, Settings.user_name, Settings.password, Settings.shift_name,
-                                            Settings.shift_number, waiter, Integer.parseInt(waiterNo), "" + wantedItems.get(index).getItemBarcode(),
-                                            wantedItems.get(index).getMenuName(), Integer.parseInt(textViewQty.getText().toString()),
-                                            wantedItems.get(index).getPrice(), Double.parseDouble(textViewTotal.getText().toString()),
-                                            selectedReason[0], 0, time, Settings.POS_number));
+                                mDbHandler.addCancleOrder(new CancleOrder(voucherNo, today, Settings.user_name, Settings.password, Settings.shift_name,
+                                        Settings.shift_number, waiter, Integer.parseInt(waiterNo), "" + wantedItems.get(index).getItemBarcode(),
+                                        wantedItems.get(index).getMenuName(), Integer.parseInt(textViewQty.getText().toString()),
+                                        wantedItems.get(index).getPrice(), Double.parseDouble(textViewTotal.getText().toString()),
+                                        selectedReason[0], 0, time, Settings.POS_number));
 
-                                    if (voidQty.getText().toString().equals(textViewQty.getText().toString())) {
+                                if (voidQty.getText().toString().equals(textViewQty.getText().toString())) {
 
-                                        tableLayout.removeView(raw);
-                                        wantedItems.remove(index);
-                                        lineDiscount.remove(index);
-                                        tableLayoutPosition--;
-                                        resetPosition();
-                                        calculateTotal();
+                                    tableLayout.removeView(raw);
+                                    wantedItems.remove(index);
+                                    lineDiscount.remove(index);
+                                    tableLayoutPosition--;
+                                    resetPosition();
+                                    calculateTotal();
 
-                                        for (int i = index; i < tableLayout.getChildCount(); i++) {
-                                            TableRow tableRow = (TableRow) tableLayout.getChildAt(i);
-                                            TextView qty = (TextView) tableRow.getChildAt(0);
+                                    for (int i = index; i < tableLayout.getChildCount(); i++) {
+                                        TableRow tableRow = (TableRow) tableLayout.getChildAt(i);
+                                        TextView qty = (TextView) tableRow.getChildAt(0);
 
-                                            if (qty.getText().toString().equals("0")) {
-                                                tableLayout.removeView(tableRow);
-                                                wantedItems.remove(i);
-                                                lineDiscount.remove(i);
-                                                tableLayoutPosition--;
-                                                i--;
-                                                resetPosition();
-                                            } else
-                                                break;
-                                        }
-
-                                        if (orderTypeFlag == 0 && wantedItems.size() == 0)
-                                            deliveryCharge.setText("0.0");
-
-                                        if (orderTypeFlag == 1 && tableLayout.getChildCount() == 0) {
-                                            Intent intent = new Intent(Order.this, DineIn.class);
-                                            startActivity(intent);
-                                        }
-
-                                    } else {
-
-                                        int newQty = Integer.parseInt(textViewQty.getText().toString()) - Integer.parseInt(voidQty.getText().toString());
-                                        double newTotal = newQty * Double.parseDouble(textViewPrice.getText().toString());
-                                        double originalDisc = lineDiscount.get(index) * 100 / Double.parseDouble(textViewTotal.getText().toString());
-                                        double newDiscountValue = originalDisc * newTotal / 100;
-
-                                        textViewQty.setText("" + newQty);
-                                        textViewTotal.setText("" + newTotal);
-                                        lineDiscount.set(index, newDiscountValue);
-                                        calculateTotal();
+                                        if (qty.getText().toString().equals("0")) {
+                                            tableLayout.removeView(tableRow);
+                                            wantedItems.remove(i);
+                                            lineDiscount.remove(i);
+                                            tableLayoutPosition--;
+                                            i--;
+                                            resetPosition();
+                                        } else
+                                            break;
                                     }
-                                    dialog1.dismiss();
-                                    dialog.dismiss();
-                                } else
-                                    Toast.makeText(Order.this, "Please select reason of cancel", Toast.LENGTH_LONG).show();
-                        });
 
+                                    if (orderTypeFlag == 0 && wantedItems.size() == 0)
+                                        deliveryCharge.setText("0.0");
+
+                                    if (orderTypeFlag == 1 && tableLayout.getChildCount() == 0) {
+                                        Intent intent = new Intent(Order.this, DineIn.class);
+                                        startActivity(intent);
+                                    }
+
+                                } else {
+
+                                    int newQty = Integer.parseInt(textViewQty.getText().toString()) - Integer.parseInt(voidQty.getText().toString());
+                                    double newTotal = newQty * Double.parseDouble(textViewPrice.getText().toString());
+                                    double originalDisc = lineDiscount.get(index) * 100 / Double.parseDouble(textViewTotal.getText().toString());
+                                    double newDiscountValue = originalDisc * newTotal / 100;
+
+                                    textViewQty.setText("" + newQty);
+                                    textViewTotal.setText("" + newTotal);
+                                    lineDiscount.set(index, newDiscountValue);
+                                    calculateTotal();
+                                }
+                                dialog1.dismiss();
+                                dialog.dismiss();
+                            } else
+                                Toast.makeText(Order.this, "Please select reason of cancel", Toast.LENGTH_LONG).show();
+                        });
 
 
                         dialog1.show();
@@ -881,8 +880,7 @@ public class Order extends AppCompatActivity {
         reasons.addView(row);
 
         save.setOnClickListener(view -> {
-            if (!selectedReason[0].equals("")||resons.size() == 0) {
-
+            if (!selectedReason[0].equals("") || resons.size() == 0) {
 
 
                 for (int k = 0; k < tableLayout.getChildCount(); k++) {
@@ -1340,47 +1338,49 @@ public class Order extends AppCompatActivity {
 
     void showLineDiscountDialog() {
 
-        if (focused != null) {
-            if (wantedItems.get(Integer.parseInt(focused.getTag().toString())).discountAvailable == 1) {
-                dialog = new Dialog(Order.this);
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setCancelable(false);
-                dialog.setContentView(R.layout.line_discount_dialog);
-                dialog.setCanceledOnTouchOutside(true);
+        if (wantedItems.size() != 0) {
+            if (focused != null) {
+                if (wantedItems.get(Integer.parseInt(focused.getTag().toString())).discountAvailable == 1) {
+                    dialog = new Dialog(Order.this);
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.setCancelable(false);
+                    dialog.setContentView(R.layout.line_discount_dialog);
+                    dialog.setCanceledOnTouchOutside(true);
 
-                Window window = dialog.getWindow();
-                window.setLayout(470, 280);
+                    Window window = dialog.getWindow();
+                    window.setLayout(470, 280);
 
-                final EditText addLineDiscountEditText = (EditText) dialog.findViewById(R.id.add_line_discount);
-                Button buttonDone = (Button) dialog.findViewById(R.id.b_done);
-                final CheckBox radioButton = (CheckBox) dialog.findViewById(R.id.discount_perc);
+                    final EditText addLineDiscountEditText = (EditText) dialog.findViewById(R.id.add_line_discount);
+                    Button buttonDone = (Button) dialog.findViewById(R.id.b_done);
+                    final CheckBox radioButton = (CheckBox) dialog.findViewById(R.id.discount_perc);
 
-                buttonDone.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (!addLineDiscountEditText.getText().toString().equals("")) {
-                            lineDiscountValue = Double.parseDouble(addLineDiscountEditText.getText().toString());
+                    buttonDone.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (!addLineDiscountEditText.getText().toString().equals("")) {
+                                lineDiscountValue = Double.parseDouble(addLineDiscountEditText.getText().toString());
 
-                            if (radioButton.isChecked()) {
-                                TableRow tableRow = (TableRow) tableLayout.getChildAt(Integer.parseInt(focused.getTag().toString()));
-                                TextView textViewTotal = (TextView) tableRow.getChildAt(3);
+                                if (radioButton.isChecked()) {
+                                    TableRow tableRow = (TableRow) tableLayout.getChildAt(Integer.parseInt(focused.getTag().toString()));
+                                    TextView textViewTotal = (TextView) tableRow.getChildAt(3);
 
-                                lineDiscountValue = (Double.parseDouble(addLineDiscountEditText.getText().toString())) *
-                                        (Double.parseDouble(textViewTotal.getText().toString())) / 100;
+                                    lineDiscountValue = (Double.parseDouble(addLineDiscountEditText.getText().toString())) *
+                                            (Double.parseDouble(textViewTotal.getText().toString())) / 100;
+                                }
+                                lineDiscount.set(Integer.parseInt(focused.getTag().toString()), lineDiscountValue);
+                                calculateTotal();
+                                dialog.dismiss();
+                            } else {
+                                Toast.makeText(Order.this, "Please Enter Line Discount", Toast.LENGTH_SHORT).show();
                             }
-                            lineDiscount.set(Integer.parseInt(focused.getTag().toString()), lineDiscountValue);
-                            calculateTotal();
-                            dialog.dismiss();
-                        } else {
-                            Toast.makeText(Order.this, "Please Enter Line Discount", Toast.LENGTH_SHORT).show();
                         }
-                    }
-                });
-                dialog.show();
+                    });
+                    dialog.show();
+                } else
+                    Toast.makeText(Order.this, "Discount is not available for this item", Toast.LENGTH_SHORT).show();
             } else
-                Toast.makeText(Order.this, "Discount is not available for this item", Toast.LENGTH_SHORT).show();
-        } else
-            Toast.makeText(Order.this, "Please choose item to add line discount", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Order.this, "Please choose item to add line discount", Toast.LENGTH_SHORT).show();
+        }
     }
 
     void showDiscountDialog() {
@@ -1470,9 +1470,9 @@ public class Order extends AppCompatActivity {
             if (discPerc != null) {
                 if (discPerc.isChecked()) {
                     discountValue = voucherDiscount * totalItemsWithDiscount / 100;
-                    disCount.setText((discNotAvailableForAll ? "0.0" : "" + String.format("%.3f", (double)discountValue)));
+                    disCount.setText((discNotAvailableForAll ? "0.0" : "" + String.format("%.3f", (double) discountValue)));
                 } else
-                    disCount.setText((discNotAvailableForAll ? "0.0" : "" + String.format("%.3f", (double)discountValue)));
+                    disCount.setText((discNotAvailableForAll ? "0.0" : "" + String.format("%.3f", (double) discountValue)));
             }
         } else { // Dine In Discount
             if (!discChanged) {
@@ -1484,11 +1484,11 @@ public class Order extends AppCompatActivity {
             } else { // if we entered another discount
                 if (discPerc != null) {
                     if (discPerc.isChecked()) {
-                        Log.e("disc   ", "" + voucherDiscount +"*" + totalItemsWithDiscount + "/100" );
+                        Log.e("disc   ", "" + voucherDiscount + "*" + totalItemsWithDiscount + "/100");
                         discountValue = voucherDiscount * totalItemsWithDiscount / 100;
-                        disCount.setText((discNotAvailableForAll ? "0.0" : "" + String.format("%.3f", (double)discountValue)));
+                        disCount.setText((discNotAvailableForAll ? "0.0" : "" + String.format("%.3f", (double) discountValue)));
                     } else
-                        disCount.setText((discNotAvailableForAll ? "0.0" : "" + String.format("%.3f", (double)discountValue)));
+                        disCount.setText((discNotAvailableForAll ? "0.0" : "" + String.format("%.3f", (double) discountValue)));
                 }
             }
         }
@@ -1510,12 +1510,11 @@ public class Order extends AppCompatActivity {
 
 //                    Log.e("************", "discount (" + discountValue + "/" + totalItemsWithDiscount + ")*(" +totalAfterDisc +")");
 
-                    double totalLineAfterDisc = totalAfterDisc - itemDiscount ;
-                    if (Settings.tax_type == 0){
+                    double totalLineAfterDisc = totalAfterDisc - itemDiscount;
+                    if (Settings.tax_type == 0) {
                         totalItemsTaxInclude += totalLineAfterDisc * wantedItems.get(k).getTax() / 100;
 //                        Log.e("**********", "totalItemsTaxInclude = " + totalLineAfterDisc +"*"+ wantedItems.get(k).getTax()+"/100 = " + totalAfterDisc * wantedItems.get(k).getTax() / 100);
-                    }
-                    else
+                    } else
                         totalItemsTaxExclude += (totalAfterDisc * wantedItems.get(k).getTax() / 100) / (1 + (wantedItems.get(k).getTax() / 100));
                 }
             }
@@ -1530,13 +1529,13 @@ public class Order extends AppCompatActivity {
 
 //        System.out.println(Math.round(d));
         total.setText("" + sum);
-        lineDisCount.setText("" + String.format("%.3f", (double)lineDisCountValue));
+        lineDisCount.setText("" + String.format("%.3f", (double) lineDisCountValue));
 //        disCount.setText("" + discountValue);
-        deliveryCharge.setText("" + String.format("%.2f", (double)deliveryChargeValue));
-        subTotal.setText("" + String.format("%.2f", (double)subTotalValue));
-        service.setText("" + String.format("%.2f", (double)serviceValue));
-        tax.setText("" + String.format("%.2f", (double)taxValue));
-        amountDue.setText("" + String.format("%.2f", (double)amountDueValue));
+        deliveryCharge.setText("" + String.format("%.2f", (double) deliveryChargeValue));
+        subTotal.setText("" + String.format("%.2f", (double) subTotalValue));
+        service.setText("" + String.format("%.2f", (double) serviceValue));
+        tax.setText("" + String.format("%.2f", (double) taxValue));
+        amountDue.setText("" + String.format("%.2f", (double) amountDueValue));
         balance = amountDueValue;
     }
 
@@ -1800,7 +1799,7 @@ public class Order extends AppCompatActivity {
         tax = (TextView) findViewById(R.id.tax);
         service = (TextView) findViewById(R.id.service);
         amountDue = (TextView) findViewById(R.id.amount_due);
-        vhSerial=(TextView) findViewById(R.id.vhSerial);
+        vhSerial = (TextView) findViewById(R.id.vhSerial);
 
         pay.setOnTouchListener(onTouchListener);
         order.setOnTouchListener(onTouchListener);
