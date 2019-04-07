@@ -921,7 +921,7 @@ public class Main extends AppCompatActivity {
         dialog.setCanceledOnTouchOutside(true);
 
         Window window = dialog.getWindow();
-        window.setLayout(920, 470);
+        window.setLayout(920, 490);
 
         final TextView tranType = (TextView) dialog.findViewById(R.id.trans_type);
         final TextView date = (TextView) dialog.findViewById(R.id.date);
@@ -1508,7 +1508,7 @@ public class Main extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (!focusedTextView.getText().toString().equals("")) {
-                    if (Settings.password == Integer.parseInt(focusedTextView.getText().toString())) {
+                    if (String.valueOf(Settings.password ).equals(focusedTextView.getText().toString())) {
 
                         int Size = mDHandler.getAllExistingClockInClockOut().size() - 1;
                         String TransType;

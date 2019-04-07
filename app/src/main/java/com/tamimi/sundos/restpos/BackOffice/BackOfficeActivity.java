@@ -38,7 +38,9 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.tamimi.sundos.restpos.DatabaseHandler;
+import com.tamimi.sundos.restpos.DineIn;
 import com.tamimi.sundos.restpos.DineInLayout;
+import com.tamimi.sundos.restpos.Main;
 import com.tamimi.sundos.restpos.Models.BlindClose;
 import com.tamimi.sundos.restpos.Models.BlindCloseDetails;
 import com.tamimi.sundos.restpos.Models.Announcemet;
@@ -5774,6 +5776,12 @@ public class BackOfficeActivity extends AppCompatActivity {
         lSettings.setVisibility(View.INVISIBLE);
 
         linearLayout.setVisibility(View.VISIBLE);
+    }
+
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(BackOfficeActivity.this, Main.class);
+        startActivity(intent);
     }
 
     void initialize() {
