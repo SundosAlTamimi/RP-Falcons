@@ -579,17 +579,17 @@
                                 android:background="@drawable/money"
                                 android:scaleType="fitCenter" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_horizontal"
-                                android:layout_margin="20dp"
-                                android:gravity="center_horizontal"
-                                android:lineSpacingExtra="15dp"
-                                android:text="@string/money_category"
-                                android:textColor="@color/text_color"
-                                android:textSize="18sp" />
-                        </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="20dp"
+                        android:gravity="center_horizontal"
+                        android:lineSpacingExtra="15dp"
+                        android:text="@string/money_category"
+                        android:textColor="@color/text_color"
+                        android:textSize="18sp" />
+                </LinearLayout>
 
                     </LinearLayout>
 

@@ -246,6 +246,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     showAddVoidReasonsDialog();
                     break;
                 case R.id.store:
+
                     break;
                 case R.id.store_operation:
                     break;
@@ -5153,6 +5154,51 @@ public class BackOfficeActivity extends AppCompatActivity {
 
         dialog.show();
 
+    }
+
+   void  kitchenScreenDialog(){
+
+       dialog = new Dialog(BackOfficeActivity.this);
+       dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+       dialog.setCancelable(false);
+       dialog.setContentView(R.layout.kitchen_dialog);
+       dialog.setCanceledOnTouchOutside(true);
+
+
+       Button save,exit ;
+       TextView kitchenNo,kitchenName;
+
+       save =(Button)dialog.findViewById(R.id.save);
+       exit =(Button)dialog.findViewById(R.id.exit);
+
+       kitchenNo=(TextView)dialog.findViewById(R.id.kitNo);
+       kitchenName =(TextView)dialog.findViewById(R.id.kitName);
+
+save.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+
+        if(!kitchenName.getText().toString().equals("")&& !kitchenNo.getText().toString().equals("")){
+
+
+
+            Toast.makeText(BackOfficeActivity.this, "Save Successful", Toast.LENGTH_SHORT).show();
+
+        }else {
+            Toast.makeText(BackOfficeActivity.this, "Please Insert All data  ", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+});
+
+exit.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+        dialog.dismiss();
+    }
+});
+
+       dialog.show();
     }
 
     void showMemberShipGroupDialog() {
