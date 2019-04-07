@@ -3485,7 +3485,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public ArrayList<OrderTransactions> getXReport(String shiftName,String PosNo ,String fDate ,String toDate ) {
         ArrayList<OrderTransactions> orderTransactionsArrayList = new ArrayList<>();
 
-        String selectQuery ="SELECT ITEM_NAME, COALESCE(SUM(TOTAL),-1),COALESCE(SUM (TAX_VLUE),-1) , COALESCE(SUM (TOTAL_DISCOUNT),-1) FROM ORDER_TRANSACTIONS " +
+        String selectQuery ="SELECT ITEM_NAME, COALESCE(SUM(TOTAL),-1),COALESCE(SUM (TAX_VLUE),-1) FROM ORDER_TRANSACTIONS " +
                 "WHERE SHIFT_NAME = "+shiftName+" and POS_NO= "+PosNo+" AND VOUCHER_DATE BETWEEN '"+fDate+"' AND '"+toDate+"' GROUP BY ITEM_BARCODE1" ;
 
 //        String selectQuery ="SELECT ITEM_NAME, COALESCE(SUM(TOTAL),-1),COALESCE(SUM (TAX_VLUE),-1) FROM ORDER_TRANSACTIONS " +
