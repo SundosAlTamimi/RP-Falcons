@@ -17,7 +17,6 @@ import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.animation.TranslateAnimation;
@@ -45,7 +44,6 @@ import com.tamimi.sundos.restpos.Models.BlindCloseDetails;
 import com.tamimi.sundos.restpos.Models.Announcemet;
 import com.tamimi.sundos.restpos.Models.CancleOrder;
 import com.tamimi.sundos.restpos.Models.CategoryWithModifier;
-import com.tamimi.sundos.restpos.Models.Cheque;
 import com.tamimi.sundos.restpos.Models.CustomerPayment;
 import com.tamimi.sundos.restpos.Models.FamilyCategory;
 import com.tamimi.sundos.restpos.Models.ForceQuestions;
@@ -63,13 +61,11 @@ import com.tamimi.sundos.restpos.Models.Pay;
 import com.tamimi.sundos.restpos.Models.PayMethod;
 import com.tamimi.sundos.restpos.Models.Shift;
 import com.tamimi.sundos.restpos.Models.TableActions;
-import com.tamimi.sundos.restpos.Models.UsedItems;
 import com.tamimi.sundos.restpos.Models.VoidResons;
 import com.tamimi.sundos.restpos.Models.ZReport;
 import com.tamimi.sundos.restpos.R;
 import com.tamimi.sundos.restpos.Settings;
 
-import java.lang.invoke.MethodHandle;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -1966,7 +1962,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         addScr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                showAddModifierDialog();
+                showAddKitchenScreenDialog();
             }
         });
         itemWithScr.setOnClickListener(new View.OnClickListener() {
@@ -2286,12 +2282,12 @@ public class BackOfficeActivity extends AppCompatActivity {
                     itemsTableLayout.removeAllViews();
                     rawPosition = 0;
                     ArrayList<Items> filteredItems = new ArrayList<>();
-                    for(int k = 0 ; k<items.size() ; k++){
-                        if(items.get(k).getMenuCategory().equals(paperSpinner.getSelectedItem().toString()))
+                    for (int k = 0; k < items.size(); k++) {
+                        if (items.get(k).getMenuCategory().equals(paperSpinner.getSelectedItem().toString()))
                             filteredItems.add(items.get(k));
                     }
 
-                    for(int k = 0 ; k<filteredItems.size() ; k++){
+                    for (int k = 0; k < filteredItems.size(); k++) {
                         final TableRow row = new TableRow(BackOfficeActivity.this);
 
                         TableLayout.LayoutParams lp = new TableLayout.LayoutParams();
@@ -5156,49 +5152,48 @@ public class BackOfficeActivity extends AppCompatActivity {
 
     }
 
-   void  kitchenScreenDialog(){
+    void showAddKitchenScreenDialog() {
 
-       dialog = new Dialog(BackOfficeActivity.this);
-       dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-       dialog.setCancelable(false);
-       dialog.setContentView(R.layout.kitchen_dialog);
-       dialog.setCanceledOnTouchOutside(true);
-
-
-       Button save,exit ;
-       TextView kitchenNo,kitchenName;
-
-       save =(Button)dialog.findViewById(R.id.save);
-       exit =(Button)dialog.findViewById(R.id.exit);
-
-       kitchenNo=(TextView)dialog.findViewById(R.id.kitNo);
-       kitchenName =(TextView)dialog.findViewById(R.id.kitName);
-
-save.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View v) {
-
-        if(!kitchenName.getText().toString().equals("")&& !kitchenNo.getText().toString().equals("")){
+        dialog = new Dialog(BackOfficeActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.add_kitchen_screen_dialog);
+        dialog.setCanceledOnTouchOutside(true);
 
 
+        Button save, exit;
+        TextView kitchenNo, kitchenName;
 
-            Toast.makeText(BackOfficeActivity.this, "Save Successful", Toast.LENGTH_SHORT).show();
+        save = (Button) dialog.findViewById(R.id.save);
+        exit = (Button) dialog.findViewById(R.id.exit);
 
-        }else {
-            Toast.makeText(BackOfficeActivity.this, "Please Insert All data  ", Toast.LENGTH_SHORT).show();
-        }
+        kitchenNo = (TextView) dialog.findViewById(R.id.kitNo);
+        kitchenName = (TextView) dialog.findViewById(R.id.kitName);
 
-    }
-});
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-exit.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View v) {
-        dialog.dismiss();
-    }
-});
+                if (!kitchenName.getText().toString().equals("") && !kitchenNo.getText().toString().equals("")) {
 
-       dialog.show();
+
+                    Toast.makeText(BackOfficeActivity.this, "Save Successful", Toast.LENGTH_SHORT).show();
+
+                } else {
+                    Toast.makeText(BackOfficeActivity.this, "Please Insert All data  ", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
+        exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 
     void showMemberShipGroupDialog() {
