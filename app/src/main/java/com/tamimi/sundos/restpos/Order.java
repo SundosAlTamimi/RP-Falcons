@@ -257,6 +257,7 @@ public class Order extends AppCompatActivity {
             check.setText("Check:  " + sectionNumber);
             user.setText(waiter);
             seats.setText("" + seatNo);
+            vhSerial.setText(voucherNo);
         }
     }
 
@@ -614,58 +615,59 @@ public class Order extends AppCompatActivity {
     }
 
     void deleteRaw(final TableRow row) {
-        if (focused != null) {
-            row.setBackgroundColor(getResources().getColor(R.color.layer4));
+        if(wantedItems.size()!=0) {
+            if (focused != null) {
+                row.setBackgroundColor(getResources().getColor(R.color.layer4));
 
-            AlertDialog.Builder builderSingle = new AlertDialog.Builder(Order.this);
-            builderSingle.setCancelable(false);
-            builderSingle.setTitle("What Kind Of Delete :");
+                AlertDialog.Builder builderSingle = new AlertDialog.Builder(Order.this);
+                builderSingle.setCancelable(false);
+                builderSingle.setTitle("What Kind Of Delete :");
 
-            final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(Order.this, android.R.layout.select_dialog_singlechoice);
-            arrayAdapter.add("Selected Item");
-            arrayAdapter.add("Current Order");
+                final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(Order.this, android.R.layout.select_dialog_singlechoice);
+                arrayAdapter.add("Selected Item");
+                arrayAdapter.add("Current Order");
 
-            builderSingle.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
-
-            builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    String strName = arrayAdapter.getItem(which);
-                    if (strName.equals("Selected Item")) {
-                        AlertDialog.Builder builderInner = new AlertDialog.Builder(Order.this);
-                        builderInner.setTitle("Do you want to delete this item ?");
-                        builderInner.setCancelable(false);
-                        builderInner.setPositiveButton("Yes", (dialog1, which1) -> {
-
-                            showVoidReasonDialog(row);
-                        });
-                        builderInner.setNegativeButton("No", (dialogInterface, i) -> {
-                            row.setBackgroundDrawable(null);
-                        });
-                        builderInner.show();
-
-                    } else {
-                        AlertDialog.Builder builderInner = new AlertDialog.Builder(Order.this);
-                        builderInner.setTitle("Do you want to delete the current order ?");
-                        builderInner.setCancelable(false);
-                        builderInner.setPositiveButton("Yes", (dialog1, which1) -> {
-
-                            showVoidReasonDialog2();
-                        });
-                        builderInner.setNegativeButton("No", (dialog1, i) -> {
-//                            row.setBackgroundDrawable(null);
-                            dialog1.dismiss();
-                        });
-                        builderInner.show();
+                builderSingle.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
                     }
-                }
-            });
-            builderSingle.show();
+                });
+
+                builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String strName = arrayAdapter.getItem(which);
+                        if (strName.equals("Selected Item")) {
+                            AlertDialog.Builder builderInner = new AlertDialog.Builder(Order.this);
+                            builderInner.setTitle("Do you want to delete this item ?");
+                            builderInner.setCancelable(false);
+                            builderInner.setPositiveButton("Yes", (dialog1, which1) -> {
+
+                                showVoidReasonDialog(row);
+                            });
+                            builderInner.setNegativeButton("No", (dialogInterface, i) -> {
+                                row.setBackgroundDrawable(null);
+                            });
+                            builderInner.show();
+
+                        } else {
+                            AlertDialog.Builder builderInner = new AlertDialog.Builder(Order.this);
+                            builderInner.setTitle("Do you want to delete the current order ?");
+                            builderInner.setCancelable(false);
+                            builderInner.setPositiveButton("Yes", (dialog1, which1) -> {
+
+                                showVoidReasonDialog2();
+                            });
+                            builderInner.setNegativeButton("No", (dialog1, i) -> {
+//                            row.setBackgroundDrawable(null);
+                                dialog1.dismiss();
+                            });
+                            builderInner.show();
+                        }
+                    }
+                });
+                builderSingle.show();
 
 //            AlertDialog.Builder builder = new AlertDialog.Builder(Order.this);
 //            builder.setTitle("Do you want to delete this recipe ?");
@@ -692,8 +694,11 @@ public class Order extends AppCompatActivity {
 //            });
 //            AlertDialog alertDialog = builder.create();
 //            alertDialog.show();
-        } else
-            Toast.makeText(Order.this, " Please choose item to be deleted", Toast.LENGTH_SHORT).show();
+            } else
+                Toast.makeText(Order.this, " Please choose item to be deleted", Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(Order.this, " No Item  ", Toast.LENGTH_SHORT).show();
+        }
     }
 
     void showVoidReasonDialog(TableRow raw) {
@@ -1164,7 +1169,7 @@ public class Order extends AppCompatActivity {
     }
 
     void showModifierDialog() {
-
+        if(wantedItems.size()!=0) {
         if (focused != null) {
             dialog = new Dialog(Order.this);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -1303,7 +1308,8 @@ public class Order extends AppCompatActivity {
             dialog.show();
         } else {
             Toast.makeText(Order.this, "Please choose item to add modifier !", Toast.LENGTH_SHORT).show();
-        }
+        }}else Toast.makeText(this, "No Item ", Toast.LENGTH_SHORT).show();
+
     }
 
     void showDeliveryChangeDialog() {

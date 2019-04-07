@@ -1073,7 +1073,7 @@ public class Main extends AppCompatActivity {
                 SimpleDateFormat dfTime = new SimpleDateFormat("HH:mm:ss");
                 String time = dfTime.format(currentTimeAndDate);
                 Log.e("time123", "" + time);
-                if (!value.getText().toString().equals("") && !mainTotal.getText().toString().equals("")) {
+                if (!value.getText().toString().equals("") && !mainTotal.getText().toString().equals("")&&(Double.parseDouble(value.getText().toString())!=0)) {
                     if (Double.parseDouble(value.getText().toString()) == Double.parseDouble(mainTotal.getText().toString())) {
 
                         //SAVE IN PAY_IN_OUT TABLE ...
