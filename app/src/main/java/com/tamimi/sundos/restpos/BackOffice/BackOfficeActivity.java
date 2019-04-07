@@ -91,7 +91,7 @@ public class BackOfficeActivity extends AppCompatActivity {
     LinearLayout jobGroup, employeeRegistration, employeeSchedule, payroll, vacation, editTables;
     LinearLayout menuCategory, menuRegistration, modifier, forceQuestion, voiding_reasons, menuLayout;
     LinearLayout store, storeOperation, users, moneyCategory;
-    LinearLayout salesTotal, cashierInOut, canceledOrderHistory, x_report, z_report, market_report_,
+    LinearLayout salesTotal, cashierInOut, canceledOrderHistory, x_report, z_report, market_report_,kitchen_screen,
             salesReportForDay, salesByHours, salesVolumeByItem, topSalesItemReport, topGroupSalesReport, topFamilySalesReport,
             salesReportByCustomer, salesReportByCardType, waiterSalesReport, tableActionReport, profitLossReport, detailSalesReport,
             simpleSalesTotalReport, SoldQtyReport, userOrderCountReport, reCancellationReport, reCancellationSupervisorReport;
@@ -241,7 +241,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     showAddVoidReasonsDialog();
                     break;
                 case R.id.store:
-                    kitchenScreenDialog();
+
                     break;
                 case R.id.store_operation:
                     break;
@@ -310,6 +310,9 @@ public class BackOfficeActivity extends AppCompatActivity {
                     break;
                 case R.id.re_cancellation_report:
                     ShowReCancellationReport();
+                    break;
+                case R.id.kitchen:
+                    kitchenScreenDialog();
                     break;
             }
         }
@@ -5637,6 +5640,7 @@ exit.setOnClickListener(new View.OnClickListener() {
         SoldQtyReport = (LinearLayout) findViewById(R.id.sold_qty_report);
         userOrderCountReport = (LinearLayout) findViewById(R.id.user_order_count_report);
         reCancellationReport = (LinearLayout) findViewById(R.id.re_cancellation_report);
+        kitchen_screen= (LinearLayout) findViewById(R.id.kitchen);
 
         butManagement.setOnClickListener(onClickListener);
         butSales.setOnClickListener(onClickListener);
@@ -5691,6 +5695,7 @@ exit.setOnClickListener(new View.OnClickListener() {
         SoldQtyReport.setOnClickListener(onClickListener2);
         userOrderCountReport.setOnClickListener(onClickListener2);
         reCancellationReport.setOnClickListener(onClickListener2);
+        kitchen_screen.setOnClickListener(onClickListener2);
 
     }
 }
