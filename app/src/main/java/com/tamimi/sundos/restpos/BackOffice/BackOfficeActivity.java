@@ -52,6 +52,7 @@ import com.tamimi.sundos.restpos.Models.ItemWithModifier;
 import com.tamimi.sundos.restpos.Models.ItemWithScreen;
 import com.tamimi.sundos.restpos.Models.Items;
 import com.tamimi.sundos.restpos.Models.JobGroup;
+import com.tamimi.sundos.restpos.Models.KitchenScreen;
 import com.tamimi.sundos.restpos.Models.MemberShipGroup;
 import com.tamimi.sundos.restpos.Models.Modifier;
 import com.tamimi.sundos.restpos.Models.Money;
@@ -5176,6 +5177,12 @@ public class BackOfficeActivity extends AppCompatActivity {
 
                 if (!kitchenName.getText().toString().equals("") && !kitchenNo.getText().toString().equals("")) {
 
+                    KitchenScreen kitchenScreen = new KitchenScreen(Integer.parseInt(kitchenNo.getText().toString()), kitchenName.getText().toString());
+
+                    mDHandler.addKitchenScreen(kitchenScreen);
+
+                    kitchenName.setText("");
+                    kitchenNo.setText("");
 
                     Toast.makeText(BackOfficeActivity.this, "Save Successful", Toast.LENGTH_SHORT).show();
 
