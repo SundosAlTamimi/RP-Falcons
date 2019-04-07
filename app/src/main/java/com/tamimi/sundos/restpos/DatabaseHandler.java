@@ -29,6 +29,7 @@ import com.tamimi.sundos.restpos.Models.ItemWithModifier;
 import com.tamimi.sundos.restpos.Models.ItemWithScreen;
 import com.tamimi.sundos.restpos.Models.Items;
 import com.tamimi.sundos.restpos.Models.JobGroup;
+import com.tamimi.sundos.restpos.Models.KitchenScreen;
 import com.tamimi.sundos.restpos.Models.MemberShipGroup;
 import com.tamimi.sundos.restpos.Models.Modifier;
 import com.tamimi.sundos.restpos.Models.Money;
@@ -53,7 +54,7 @@ import java.util.List;
 public class DatabaseHandler extends SQLiteOpenHelper {
     //hellohjt
     // Database Version
-    private static final int DATABASE_VERSION = 17;
+    private static final int DATABASE_VERSION = 18;
 
     // Database Name
     private static final String DATABASE_NAME = "RestPos";
@@ -541,6 +542,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String POS_NO18 = "POS_NO";
     private static final String MESSAGE18 = "MESSAGE";
     private static final String IS_SHOW18 = "IS_SHOW";
+
+    //____________________________________________________________________________________
+    private static final String KITCHEN_SCREEN_TABLE = "KITCHEN_SCREEN_TABLE";
+
+    private static final String KITCHEN_NO = "KITCHEN_NO";
+    private static final String KITCHEN_NAME = "KITCHEN_NAME";
 
 
     //___________________________________________________________________________________
@@ -1133,6 +1140,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + IS_SHOW18 + " INTEGER " + ")";
         db.execSQL(CREATE_TABLE_ANNOUNCEMENT_TABLE);
 
+        //_____________________________________________________________________
+
+        String CREATE_TABLE_KITCHEN_SCREEN_TABLE = "CREATE TABLE " + KITCHEN_SCREEN_TABLE + "("
+                + KITCHEN_NAME + " TEXT,"
+                + KITCHEN_NO + " INTEGER " + ")";
+        db.execSQL(CREATE_TABLE_KITCHEN_SCREEN_TABLE);
 
     }
 
@@ -1181,14 +1194,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 //        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS_TEMP ADD TIME TEXT NOT NULL DEFAULT '01:30'");
 //        db.execSQL("ALTER TABLE PAY_METHOD ADD TIME TEXT NOT NULL DEFAULT '01:30'");
 
-        db.execSQL("ALTER TABLE PAY_IN_OUT ADD TIME TEXT NOT NULL DEFAULT ''");
+//        db.execSQL("ALTER TABLE PAY_IN_OUT ADD TIME TEXT NOT NULL DEFAULT ''");
 
-        String CREATE_TABLE_ITEM_WITH_SCREEN = "CREATE TABLE " + ITEM_WITH_SCREEN + "("
-                + ITEM_CODE3 + " INTEGER ,"
-                + ITEM_NAME3 + " TEXT,"
-                + SCREEN_NO3 + " INTEGER,"
-                + SCREEN_NAME3 + " TEXT " + ")";
-        db.execSQL(CREATE_TABLE_ITEM_WITH_SCREEN);
+        String CREATE_TABLE_KITCHEN_SCREEN_TABLE = "CREATE TABLE " + KITCHEN_SCREEN_TABLE + "("
+                + KITCHEN_NAME + " TEXT,"
+                + KITCHEN_NO + " INTEGER " + ")";
+        db.execSQL(CREATE_TABLE_KITCHEN_SCREEN_TABLE);
     }
 
     //Insert values to the table Items
@@ -1931,6 +1942,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(IS_SHOW18, announcemet.getIsShow());
 
         db.insert(ANNOUNCEMENT_TABLE, null, values);
+
+        db.close();
+    }
+
+
+    public void addKitchenScreen(KitchenScreen kitchenScreen) {
+        db = this.getReadableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(KITCHEN_NAME, kitchenScreen.getKitchenName());
+        values.put(KITCHEN_NO, kitchenScreen.getKitchenNo());
+
+
+        db.insert(KITCHEN_SCREEN_TABLE, null, values);
 
         db.close();
     }
@@ -3437,6 +3462,29 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         return announcementArrayList;
+    }
+
+
+    public ArrayList<KitchenScreen> getAllKitchenScreen() {
+        ArrayList<KitchenScreen> kitchenScreens = new ArrayList<>();
+
+        String selectQuery = "SELECT  * FROM " + KITCHEN_SCREEN_TABLE;
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                KitchenScreen kitchenScreen = new KitchenScreen();
+
+                kitchenScreen.setKitchenName(cursor.getString(0));
+                kitchenScreen.setKitchenNo(cursor.getInt(1));
+
+
+
+                kitchenScreens.add(kitchenScreen);
+            } while (cursor.moveToNext());
+        }
+        return kitchenScreens;
     }
 
 

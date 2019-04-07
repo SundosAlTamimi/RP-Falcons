@@ -51,7 +51,7 @@
                     android:background="@color/layer2"
                     android:ems="10"
                     android:gravity="center"
-                    android:inputType="textPersonName"
+                    android:inputType="number"
                     android:textColor="@color/text_color" />
             </TableRow>
 
