@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -240,7 +241,7 @@ public class Main extends AppCompatActivity {
     }
 
 
-    void showCashierInDialog(String times, String dates,ClockInClockOut clockInClockOut) {
+    void showCashierInDialog(String times, String dates, ClockInClockOut clockInClockOut) {
         Dialog dialogCashierIn = new Dialog(Main.this);
         dialogCashierIn.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialogCashierIn.setCancelable(false);
@@ -938,7 +939,7 @@ public class Main extends AppCompatActivity {
         date.setText(today);
 
         ArrayList<Pay> pays = mDHandler.getAllPayInOut();
-        serial.setText(pays.size() == 0 ? "Trans.NO:  0" : "Trans.NO:  " + pays.size());
+        serial.setText(pays.size() == 0 ? "Trans.NO:  1" : "Trans.NO:  " + pays.size() + 1);
 
         exit.setOnClickListener(new OnClickListener() {
             @Override
@@ -1067,6 +1068,11 @@ public class Main extends AppCompatActivity {
         save.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                Date currentTimeAndDate = Calendar.getInstance().getTime();
+                SimpleDateFormat dfTime = new SimpleDateFormat("HH:mm:ss");
+                String time = dfTime.format(currentTimeAndDate);
+                Log.e("time123", "" + time);
                 if (!value.getText().toString().equals("") && !mainTotal.getText().toString().equals("")) {
                     if (Double.parseDouble(value.getText().toString()) == Double.parseDouble(mainTotal.getText().toString())) {
 
@@ -1074,7 +1080,7 @@ public class Main extends AppCompatActivity {
                         if (!value.getText().toString().equals("")) {
                             mDHandler.addPayInOut(new Pay(transType, Settings.POS_number, Settings.password, Settings.user_name, today,
                                     Double.parseDouble(value.getText().toString()), remark.getText().toString(), Settings.shift_number,
-                                    Settings.shift_name));
+                                    Settings.shift_name, time));
                             Toast.makeText(Main.this, "Saved successfully", Toast.LENGTH_SHORT).show();
                             dialog.dismiss();
                         }
@@ -1261,7 +1267,7 @@ public class Main extends AppCompatActivity {
             TextView text = (TextView) tableRow.getChildAt(1);
             TextView text1 = (TextView) tableRow.getChildAt(2);
 //&& !text.getText().toString().equals("")// && !text1.getText().toString().equals("")
-            if ((!text.getText().toString().equals("0") ) && (!text1.getText().toString().equals("0"))) {
+            if ((!text.getText().toString().equals("0")) && (!text1.getText().toString().equals("0"))) {
                 isAllZero = false;
                 break;
             }
@@ -1332,33 +1338,33 @@ public class Main extends AppCompatActivity {
                         "Cash", "", "", -1, "no-user"));
             }
 
-            double creditCardValue=0.0;
-            double chequeValue=0.0;
-            double giftCardValue=0.0;
+            double creditCardValue = 0.0;
+            double chequeValue = 0.0;
+            double giftCardValue = 0.0;
             double creditValue = 0.0;
             double pointValue = 0.0;
-            if(!creditCard.getText().toString().equals("")) {
-                 creditCardValue = Double.parseDouble(creditCard.getText().toString());
+            if (!creditCard.getText().toString().equals("")) {
+                creditCardValue = Double.parseDouble(creditCard.getText().toString());
             }
-            if(!cheque.getText().toString().equals("")) {
+            if (!cheque.getText().toString().equals("")) {
                 chequeValue = Double.parseDouble(cheque.getText().toString());
             }
-            if(!giftCard.getText().toString().equals("")) {
+            if (!giftCard.getText().toString().equals("")) {
                 giftCardValue = Double.parseDouble(giftCard.getText().toString());
             }
-            if(!credit.getText().toString().equals("")) {
+            if (!credit.getText().toString().equals("")) {
                 creditValue = Double.parseDouble(credit.getText().toString());
             }
-            if(!point.getText().toString().equals("")) {
+            if (!point.getText().toString().equals("")) {
                 pointValue = Double.parseDouble(point.getText().toString());
             }
 
-            if (creditCardValue != 0  )
+            if (creditCardValue != 0)
                 mDHandler.addBlindCloseDetails(new BlindCloseDetails(transNo, today, time, Settings.POS_number, Settings.shift_number,
                         Settings.shift_name, Settings.password, Settings.user_name, "Credit Card", 1, creditCardValue,
                         creditCardValue, "Credit Card", "", "", -1, "no-user"));
 
-            if (chequeValue != 0 )
+            if (chequeValue != 0)
                 mDHandler.addBlindCloseDetails(new BlindCloseDetails(transNo, today, time, Settings.POS_number, Settings.shift_number,
                         Settings.shift_name, Settings.password, Settings.user_name, "Cheque", 1, chequeValue,
                         chequeValue, "Cheque", "", "", -1, "no-user"));
@@ -1368,7 +1374,7 @@ public class Main extends AppCompatActivity {
                         Settings.shift_name, Settings.password, Settings.user_name, "Gift Card", 1, giftCardValue,
                         giftCardValue, "Gift Card", "", "", -1, "no-user"));
 
-            if (creditValue != 0 )
+            if (creditValue != 0)
                 mDHandler.addBlindCloseDetails(new BlindCloseDetails(transNo, today, time, Settings.POS_number, Settings.shift_number,
                         Settings.shift_name, Settings.password, Settings.user_name, "Credit", 1, creditValue,
                         creditValue, "Credit", "", "", -1, "no-user"));
@@ -1509,7 +1515,7 @@ public class Main extends AppCompatActivity {
                         if (mDHandler.getAllExistingClockInClockOut().size() > 0)
                             TransType = mDHandler.getAllExistingClockInClockOut().get(Size).getTranstype();
                         else
-                            TransType ="ClockOut";
+                            TransType = "ClockOut";
 
                         switch (TransType) {
                             case "ClockOut":
@@ -1597,7 +1603,7 @@ public class Main extends AppCompatActivity {
 
 //                mDHandler.addClockInClockOut(clockInClockOut); // this in cashierInDialog ...
 
-                showCashierInDialog(times,  dates,clockInClockOut);
+                showCashierInDialog(times, dates, clockInClockOut);
             }
         });
 

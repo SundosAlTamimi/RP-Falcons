@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="600dp"
-    android:layout_height="420dp"
+    android:layout_height="440dp"
     android:background="@color/layer3"
     android:orientation="vertical"
     android:padding="40dp">
@@ -120,7 +120,7 @@
             android:layout_weight="1"
             android:text="@string/shift_no"
             android:textColor="@color/text_color"
-            android:textSize="17sp"/>
+            android:textSize="17sp" />
 
         <TextView
             android:layout_width="0dp"
@@ -129,7 +129,7 @@
             android:layout_weight="1"
             android:text="@string/shift_name"
             android:textColor="@color/text_color"
-            android:textSize="17sp"/>
+            android:textSize="17sp" />
 
         <TextView
             android:layout_width="0dp"
@@ -138,7 +138,7 @@
             android:layout_weight="1"
             android:text="@string/from_time"
             android:textColor="@color/text_color"
-            android:textSize="17sp"/>
+            android:textSize="17sp" />
 
         <TextView
             android:layout_width="0dp"
@@ -147,7 +147,7 @@
             android:layout_weight="1"
             android:text="@string/to_time"
             android:textColor="@color/text_color"
-            android:textSize="17sp"/>
+            android:textSize="17sp" />
 
     </LinearLayout>
 
@@ -159,52 +159,52 @@
         <EditText
             android:id="@+id/shift_no"
             android:layout_width="0dp"
-            android:layout_height="25dp"
+            android:layout_height="40dp"
             android:layout_margin="3dp"
-            android:paddingHorizontal="2dp"
             android:layout_weight="1"
             android:background="@color/layer1"
             android:inputType="number"
+            android:paddingHorizontal="2dp"
             android:textColor="@color/text_color"
-            android:textSize="17sp"/>
+            android:textSize="17sp" />
 
         <EditText
             android:id="@+id/shift_name"
             android:layout_width="0dp"
-            android:layout_height="25dp"
+            android:layout_height="40dp"
             android:layout_margin="3dp"
-            android:paddingHorizontal="2dp"
             android:layout_weight="1"
             android:background="@color/layer1"
+            android:paddingHorizontal="2dp"
             android:textColor="@color/text_color"
-            android:textSize="17sp"/>
+            android:textSize="17sp" />
 
 
         <EditText
             android:id="@+id/from"
             android:layout_width="0dp"
-            android:layout_height="25dp"
+            android:layout_height="40dp"
             android:layout_margin="3dp"
-            android:paddingHorizontal="2dp"
             android:layout_weight="1"
             android:background="@color/layer1"
-            android:textColor="@color/text_color"
-            android:textSize="17sp"
+            android:focusable="false"
             android:inputType="date"
-            android:focusable="false"/>
+            android:paddingHorizontal="2dp"
+            android:textColor="@color/text_color"
+            android:textSize="17sp" />
 
         <EditText
             android:id="@+id/to"
             android:layout_width="0dp"
-            android:layout_height="25dp"
+            android:layout_height="40dp"
             android:layout_margin="3dp"
-            android:paddingHorizontal="2dp"
             android:layout_weight="1"
             android:background="@color/layer1"
-            android:textColor="@color/text_color"
-            android:textSize="17sp"
+            android:focusable="false"
             android:inputType="date"
-            android:focusable="false"/>
+            android:paddingHorizontal="2dp"
+            android:textColor="@color/text_color"
+            android:textSize="17sp" />
 
     </LinearLayout>
 

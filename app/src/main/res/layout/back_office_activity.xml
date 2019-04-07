@@ -205,7 +205,7 @@
                                 android:layout_width="80dp"
                                 android:layout_height="80dp"
                                 android:layout_marginTop="5dp"
-                                android:background="@drawable/employee_clock"
+                                android:background="@drawable/register_icon"
                                 android:scaleType="fitCenter" />
 
                             <TextView
@@ -215,7 +215,7 @@
                                 android:layout_margin="20dp"
                                 android:gravity="center_horizontal"
                                 android:lineSpacingExtra="15dp"
-                                android:text="@string/employee_clock_In_Out"
+                                android:text="@string/shift_registration"
                                 android:textColor="@color/text_color"
                                 android:textSize="18sp" />
                         </LinearLayout>

@@ -80,15 +80,33 @@
         android:checked="true"
         android:textColor="@color/text_color" />
 
-    <Button
-        android:id="@+id/b_done"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:layout_gravity="center"
-        android:layout_margin="30dp"
-        android:background="@drawable/done_buttons"
-        android:text="@string/done"
-        android:textColor="@color/text_color"
-        android:textSize="17sp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/b_done"
+            android:layout_width="151dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:background="@drawable/done_buttons"
+            android:text="@string/add"
+            android:textColor="@color/text_color"
+            android:textSize="17sp" />
+
+        <Button
+            android:id="@+id/exit"
+            android:layout_width="151dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:background="@drawable/clear_buttons"
+            android:text="@string/exit"
+            android:textColor="@color/text_color"
+            android:textSize="17sp" />
+    </LinearLayout>
 
 </LinearLayout>

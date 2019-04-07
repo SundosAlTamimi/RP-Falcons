@@ -43,7 +43,7 @@
 
                 <Spinner
                     android:id="@+id/categoriesSpinner"
-                    android:layout_width="239dp"
+                    android:layout_width="232dp"
                     android:layout_height="30dp"
                     android:paddingEnd="20sp"
                     android:paddingRight="20dp"
@@ -58,12 +58,35 @@
                     android:layout_marginHorizontal="2dp"
                     android:background="@drawable/add" />
 
+                <Button
+                    android:id="@+id/deletC"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginHorizontal="2dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/delete_m" />
+
             </LinearLayout>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/focused_table">
+
+                <TableLayout
+                    android:id="@+id/menu_"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </TableLayout>
+            </ScrollView>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="20dp"
                 android:orientation="horizontal">
 
                 <TextView

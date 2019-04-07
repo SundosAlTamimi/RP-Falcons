@@ -52,7 +52,7 @@ import java.util.List;
 public class DatabaseHandler extends SQLiteOpenHelper {
     //hellohjt
     // Database Version
-    private static final int DATABASE_VERSION = 12;
+    private static final int DATABASE_VERSION = 15;
 
     // Database Name
     private static final String DATABASE_NAME = "RestPos";
@@ -152,6 +152,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String REMARK = "REMARK";
     private static final String SHEFT_NO = "SHIFT_NO";
     private static final String SHEFT_NAME = "SHIFT_NAME";
+    private static final String TIME = "TIME";
 
     //___________________________________________________________________________________
     private static final String CREDIT_CARDS = "CREDIT_CARDS";
@@ -642,7 +643,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + VALUE + " INTEGER,"
                 + REMARK + " TEXT,"
                 + SHEFT_NO + " INTEGER,"
-                + SHEFT_NAME + " TEXT" + ")";
+                + SHEFT_NAME + " TEXT,"
+                + TIME + " TEXT" + ")";
         db.execSQL(CREATE_TABLE_PAY_IN_OUT);
 
         //___________________________________________________________________________________
@@ -1191,6 +1193,32 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 //        db.execSQL("ALTER TABLE BLIND_CLOSE ADD REASON TEXT NOT NULL DEFAULT 'REASON'");
 
+//        String CREATE_TABLE_BLIND_CLOSE = "CREATE TABLE " + BLIND_CLOSE + "("
+//                + TRANS_NO11 + " INTEGER,"
+//                + DATE11 + " TEXT,"
+//                + TIME11 + " TEXT,"
+//                + POS_NO11 + " INTEGER,"
+//                + SHIFT_NO11 + " INTEGER,"
+//                + SHIFT_NAME11 + " TEXT,"
+//                + USER_NO11 + " INTEGER,"
+//                + USER_NAME11 + " TEXT,"
+//                + SYS_SALES11 + " INTEGER,"
+//                + USER_SALES11 + " TEXT,"
+//                + SALES_DIFF11 + " INTEGER,"
+//                + SYS_CASH11 + " INTEGER,"
+//                + USER_CASH11 + " INTEGER,"
+//                + CASH_DIFF11 + " INTEGER,"
+//                + SYS_OTHER_PAYMENTS11 + " INTEGER,"
+//                + USER_OTHER_PAYMENTS11 + " INTEGER,"
+//                + OTHER_PAYMENTS_DIFF11 + " INTEGER,"
+//                + TILL_OK11 + " INTEGER,"
+//                + TRANS_TYPE11 + " INTEGER,"
+//                + REASON11 + " TEXT,"
+//                + TO_USER11 + " TEXT" + ")";
+//        db.execSQL(CREATE_TABLE_BLIND_CLOSE);
+
+        db.execSQL("ALTER TABLE PAY_IN_OUT ADD TIME TEXT NOT NULL DEFAULT ''");
+
     }
 
     //Insert values to the table Items
@@ -1403,7 +1431,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(REMARK, pay.getRemark());
         values.put(SHEFT_NO, pay.getShiftNo());
         values.put(SHEFT_NAME, pay.getShiftName());
-
+        values.put(TIME, pay.getTime());
         db.insert(PAY_IN_OUT, null, values);
 
         db.close();
@@ -2090,6 +2118,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 pay.setRemark(cursor.getString(6));
                 pay.setShiftNo(Integer.parseInt(cursor.getString(7)));
                 pay.setShiftName(cursor.getString(8));
+                pay.setTime(cursor.getString(9));
                 pays.add(pay);
 
             } while (cursor.moveToNext());
@@ -3792,9 +3821,22 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+
+    public void deleteAllMoneyCategory() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + MONEY_CATEGORIES);
+        db.close();
+    }
+
     public void deleteUsedItems(String categoryName) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from USED_ITEMS where CATEGORY_NAME2 = '" + categoryName + "'");
+        db.close();
+    }
+
+    public void deleteCategory(String categorySerial) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from FAMILY_CATEGORY_TABLE where SERIAL = '" + categorySerial + "'");
         db.close();
     }
 
