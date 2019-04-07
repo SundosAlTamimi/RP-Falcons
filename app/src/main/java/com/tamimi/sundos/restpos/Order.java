@@ -805,6 +805,9 @@ public class Order extends AppCompatActivity {
                                         deliveryCharge.setText("0.0");
 
                                     if (orderTypeFlag == 1 && tableLayout.getChildCount() == 0) {
+                                        mDbHandler.deleteFromOrderHeaderTemp("" + sectionNumber, "" + tableNumber);
+                                        mDbHandler.deleteFromOrderTransactionTemp("" + sectionNumber, "" + tableNumber);
+
                                         Intent intent = new Intent(Order.this, DineIn.class);
                                         startActivity(intent);
                                     }

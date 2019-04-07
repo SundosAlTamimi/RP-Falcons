@@ -2348,11 +2348,11 @@ public class BackOfficeActivity extends AppCompatActivity {
             }
         });
 
-        ArrayList<Modifier> modifiers = mDHandler.getAllModifiers();
-        for (int i = 0; i < modifiers.size(); i++) {
+        ArrayList<KitchenScreen> screens = mDHandler.getAllKitchenScreen();
+        for (int i = 0; i < screens.size(); i++) {
             CheckBox checkBox = new CheckBox(BackOfficeActivity.this);
-            checkBox.setText("- " + modifiers.get(i).getModifierName());
-            checkBox.setTag(modifiers.get(i).getModifierNumber());
+            checkBox.setText("- " + screens.get(i).getKitchenName());
+            checkBox.setTag(screens.get(i).getKitchenNo());
             checkBox.setTextColor(getResources().getColor(R.color.text_color));
             checkBox.setTextSize(20);
 
