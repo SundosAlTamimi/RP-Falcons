@@ -43,7 +43,7 @@
                     android:layout_marginBottom="5dp"
                     android:layout_weight="3"
                     android:gravity="center"
-                    android:text="Waiter Report"
+                    android:text="@string/waiter_sales_report"
                     android:textColor="@color/text_color"
                     android:textSize="25sp" />
 
