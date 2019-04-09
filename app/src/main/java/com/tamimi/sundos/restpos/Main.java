@@ -248,8 +248,8 @@ public class Main extends AppCompatActivity {
         dialogCashierIn.setContentView(R.layout.cashier_in_dialog);
         dialogCashierIn.setCanceledOnTouchOutside(false);
 
-        Window window = dialogCashierIn.getWindow();
-        window.setLayout(920, 470);
+//        Window window = dialogCashierIn.getWindow();
+//        window.setLayout(920, 470);
 
         final ArrayList<Money> money = mDHandler.getAllMoneyCategory();
 
@@ -559,8 +559,8 @@ public class Main extends AppCompatActivity {
         dialogCashierOut.setContentView(R.layout.cashier_out_dialog);
         dialogCashierOut.setCanceledOnTouchOutside(false);
 
-        Window window = dialogCashierOut.getWindow();
-        window.setLayout(920, 490);
+//        Window window = dialogCashierOut.getWindow();
+//        window.setLayout(920, 490);
 
         final ArrayList<Money> money = mDHandler.getAllMoneyCategory();
 
@@ -920,8 +920,8 @@ public class Main extends AppCompatActivity {
         dialog.setContentView(R.layout.pay_in_out_dialog);
         dialog.setCanceledOnTouchOutside(true);
 
-        Window window = dialog.getWindow();
-        window.setLayout(920, 490);
+//        Window window = dialog.getWindow();
+//        window.setLayout(920, 490);
 
         final TextView tranType = (TextView) dialog.findViewById(R.id.trans_type);
         final TextView date = (TextView) dialog.findViewById(R.id.date);

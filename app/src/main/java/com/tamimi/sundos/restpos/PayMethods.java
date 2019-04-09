@@ -208,8 +208,8 @@ public class PayMethods extends AppCompatActivity {
         dialog.setContentView(R.layout.cash_dialog);
         dialog.setCanceledOnTouchOutside(true);
 
-        Window window = dialog.getWindow();
-        window.setLayout(780, 460);
+//        Window window = dialog.getWindow();
+//        window.setLayout(780, 460);
         final TextView balance = (TextView) dialog.findViewById(R.id.balance);
         final TextView received = (TextView) dialog.findViewById(R.id.receivedCash);
         final TextView cashMoney = (TextView) dialog.findViewById(R.id.cashMoney);
@@ -437,8 +437,8 @@ public class PayMethods extends AppCompatActivity {
         dialog.setContentView(R.layout.credit_card_dialog);
         dialog.setCanceledOnTouchOutside(true);
 
-        Window window = dialog.getWindow();
-        window.setLayout(900, 415);
+//        Window window = dialog.getWindow();
+//        window.setLayout(900, 415);
 
         final TextView balance = (TextView) dialog.findViewById(R.id.balance);
         final TextView received = (TextView) dialog.findViewById(R.id.received);
@@ -625,8 +625,8 @@ public class PayMethods extends AppCompatActivity {
         dialog1.setContentView(R.layout.add_credit_card_dialog);
         dialog1.setCanceledOnTouchOutside(true);
 
-        Window window = dialog1.getWindow();
-        window.setLayout(600, 310);
+//        Window window = dialog1.getWindow();
+//        window.setLayout(600, 310);
 
         Button Addindb = (Button) dialog1.findViewById(R.id.addcard);
         TextView serial_txt = (TextView) dialog1.findViewById(R.id.serial_t);
@@ -666,8 +666,8 @@ public class PayMethods extends AppCompatActivity {
         dialog.setContentView(R.layout.cheque_dialog);
         dialog.setCanceledOnTouchOutside(true);
 
-        Window window = dialog.getWindow();
-        window.setLayout(940, 415);
+//        Window window = dialog.getWindow();
+//        window.setLayout(940, 415);
 
         final TextView balance = (TextView) dialog.findViewById(R.id.balance);
         final TextView received = (TextView) dialog.findViewById(R.id.received);
@@ -864,8 +864,8 @@ public class PayMethods extends AppCompatActivity {
         dialog1.setContentView(R.layout.add_bank_dialog);
         dialog1.setCanceledOnTouchOutside(true);
 
-        Window window = dialog1.getWindow();
-        window.setLayout(500, 270);
+//        Window window = dialog1.getWindow();
+//        window.setLayout(500, 270);
 
         Button add = (Button) dialog1.findViewById(R.id.ADDBank);
         final EditText bankNameEditText = (EditText) dialog1.findViewById(R.id.bank);
@@ -895,8 +895,8 @@ public class PayMethods extends AppCompatActivity {
         dialog.setContentView(R.layout.gift_card_dialog);
         dialog.setCanceledOnTouchOutside(true);
 
-        Window window = dialog.getWindow();
-        window.setLayout(970, 460);
+//        Window window = dialog.getWindow();
+//        window.setLayout(970, 460);
 
         flag = 0;
         final Button confirm = (Button) dialog.findViewById(R.id.confirm);
@@ -1074,8 +1074,8 @@ public class PayMethods extends AppCompatActivity {
         dialog.setContentView(R.layout.card_dialog);
         dialog.setCanceledOnTouchOutside(true);
 
-        Window window = dialog.getWindow();
-        window.setLayout(970, 420);
+//        Window window = dialog.getWindow();
+//        window.setLayout(970, 420);
 
         flag = 0;
         final Button accept = (Button) dialog.findViewById(R.id.accept);
@@ -1240,8 +1240,8 @@ public class PayMethods extends AppCompatActivity {
         dialog.setContentView(R.layout.point_dialog);
         dialog.setCanceledOnTouchOutside(true);
 
-        Window window = dialog.getWindow();
-        window.setLayout(970, 480);
+//        Window window = dialog.getWindow();
+//        window.setLayout(970, 480);
 
         flag = 0;
         final Button confirm = (Button) dialog.findViewById(R.id.confirm);

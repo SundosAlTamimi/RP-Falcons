@@ -1356,8 +1356,8 @@ public class Order extends AppCompatActivity {
                     dialog.setContentView(R.layout.line_discount_dialog);
                     dialog.setCanceledOnTouchOutside(true);
 
-                    Window window = dialog.getWindow();
-                    window.setLayout(470, 280);
+//                    Window window = dialog.getWindow();
+//                    window.setLayout(470, 280);
 
                     final EditText addLineDiscountEditText = (EditText) dialog.findViewById(R.id.add_line_discount);
                     Button buttonDone = (Button) dialog.findViewById(R.id.b_done);
@@ -1408,8 +1408,8 @@ public class Order extends AppCompatActivity {
             dialog.setContentView(R.layout.discount_dialog);
             dialog.setCanceledOnTouchOutside(true);
 
-            Window window = dialog.getWindow();
-            window.setLayout(470, 280);
+//            Window window = dialog.getWindow();
+//            window.setLayout(470, 280);
 
             final EditText addDiscountEditText = (EditText) dialog.findViewById(R.id.add_discount);
             Button buttonDone = (Button) dialog.findViewById(R.id.b_done);

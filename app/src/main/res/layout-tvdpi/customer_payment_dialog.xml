@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="800dp"
+    android:layout_height="450dp"
+    android:background="@color/layer3"
+    android:padding="20dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textView14"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:text="@string/customer_payment_type"
+        android:textColor="@color/text_color"
+        android:textSize="25sp"
+        android:textStyle="normal" />
+
+    <TextView
+        android:id="@+id/textLine"
+        android:layout_width="800dp"
+        android:layout_height="1dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:background="@color/gray" />
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:text="@string/customer_no"
+                android:textColor="@color/text_color"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/customerno"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:background="@color/layer2"
+                android:layout_marginHorizontal="10dp"
+                android:ems="10"
+                android:paddingHorizontal="10dp"
+                android:inputType="numberDecimal"
+                android:textColor="@color/text_color"
+                android:textSize="20sp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:id="@+id/textView7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:text="@string/customer_name"
+                android:textColor="@color/text_color"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/customername"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginBottom="5dp"
+                android:paddingHorizontal="10dp"
+                android:background="@color/layer2"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:textColor="@color/text_color"
+                android:textSize="20sp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:text="@string/customer_balance"
+                android:textColor="@color/text_color"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/customerbal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginBottom="5dp"
+                android:background="@color/layer2"
+                android:ems="10"
+                android:paddingHorizontal="10dp"
+                android:inputType="numberDecimal"
+                android:textColor="@color/text_color"
+                android:textSize="20sp" />
+        </TableRow>
+
+    </TableLayout>
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="400dp"
+        android:layout_height="1dp"
+        android:layout_gravity="center"
+        android:background="@color/gray" />
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:text="@string/trans_no"
+                android:textColor="@color/text_color"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/transno"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_marginHorizontal="10dp"
+                android:ems="10"
+                android:paddingHorizontal="10dp"
+                android:inputType="textPersonName"
+                android:textColor="@color/text_color"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="5dp"
+                android:text="@string/trans_date"
+                android:textColor="@color/text_color"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/transndate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:ems="10"
+                android:paddingHorizontal="10dp"
+                android:inputType="textPersonName"
+                android:textColor="@color/text_color"
+                android:textSize="18sp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:id="@+id/textView13"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:text="@string/value"
+                android:textColor="@color/text_color"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/values"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:background="@color/layer2"
+                android:ems="10"
+                android:paddingHorizontal="10dp"
+                android:inputType="number"
+                android:textColor="@color/text_color"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
+                android:text="@string/payment_type"
+                android:textColor="@color/text_color"
+                android:textSize="18sp" />
+
+            <Spinner
+                android:id="@+id/spinner1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1" />
+        </TableRow>
+
+    </TableLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/save"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_margin="10dp"
+            android:background="@color/colorPrimary"
+            android:text="@string/save"
+            android:textAllCaps="false"
+            android:textColor="@color/layer1"
+            android:textSize="17sp" />
+
+        <Button
+            android:id="@+id/exit"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_margin="10dp"
+            android:background="@color/exit"
+            android:text="@string/exit"
+            android:textAllCaps="false"
+            android:textColor="@color/layer1"
+            android:textSize="17sp" />
+    </LinearLayout>
+</LinearLayout>

@@ -2424,9 +2424,6 @@ public class BackOfficeActivity extends AppCompatActivity {
         dialog.setContentView(R.layout.join_category_with_modifier_dialog);
         dialog.setCanceledOnTouchOutside(true);
 
-        Window window = dialog.getWindow();
-        window.setLayout(950, 500);
-
         final Spinner paperSpinner = (Spinner) dialog.findViewById(R.id.modifier_list);
         final LinearLayout modifiersLinearLayout = (LinearLayout) dialog.findViewById(R.id.categories);
         final TableLayout itemsTableLayout = (TableLayout) dialog.findViewById(R.id.items);

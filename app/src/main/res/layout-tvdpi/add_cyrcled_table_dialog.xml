@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/layer3"
+    android:layout_width="850dp"
+    android:padding="20dp"
+    android:layout_height="300dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="30sp">
+
+        <ImageView
+            android:id="@+id/eight_c"
+            android:layout_width="180dp"
+            android:layout_height="140dp"
+            android:background="@drawable/circled_table_with_8"
+            android:layout_marginHorizontal="20sp"/>
+
+        <ImageView
+            android:id="@+id/six_c"
+            android:layout_width="160dp"
+            android:layout_height="120dp"
+            android:background="@drawable/circled_table_with_6"
+            android:layout_marginHorizontal="20sp"/>
+
+        <ImageView
+            android:id="@+id/four_c"
+            android:layout_width="130dp"
+            android:layout_height="110dp"
+            android:background="@drawable/circled_table_with_4"
+            android:layout_marginHorizontal="20sp"/>
+
+        <ImageView
+            android:id="@+id/two_c"
+            android:layout_width="110dp"
+            android:layout_height="100dp"
+            android:background="@drawable/circled_table_with_2"
+            android:layout_marginHorizontal="20sp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:text="@string/eight_chairs"
+            android:layout_marginHorizontal="20dp"
+            android:textSize="25sp"
+            android:textColor="@color/text_color"
+            android:gravity="center"/>
+
+        <TextView
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:text="@string/six_chairs"
+            android:layout_marginHorizontal="20dp"
+            android:textSize="25sp"
+            android:textColor="@color/text_color"
+            android:gravity="center"/>
+
+        <TextView
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:text="@string/four_chairs"
+            android:layout_marginHorizontal="20dp"
+            android:textSize="25sp"
+            android:textColor="@color/text_color"
+            android:gravity="center"/>
+
+        <TextView
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:text="@string/two_chairs"
+            android:layout_marginHorizontal="20dp"
+            android:textSize="25sp"
+            android:textColor="@color/text_color"
+            android:gravity="center"/>
+
+
+
+    </LinearLayout>
+
+</LinearLayout>
