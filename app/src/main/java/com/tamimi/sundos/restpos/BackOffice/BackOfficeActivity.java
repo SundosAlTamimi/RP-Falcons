@@ -2699,11 +2699,11 @@ public class BackOfficeActivity extends AppCompatActivity {
             }
         });
 
-        ArrayList<Modifier> modifiers = mDHandler.getAllModifiers();
-        for (int i = 0; i < modifiers.size(); i++) {
+        ArrayList<KitchenScreen> screens = mDHandler.getAllKitchenScreen();
+        for (int i = 0; i < screens.size(); i++) {
             CheckBox checkBox = new CheckBox(BackOfficeActivity.this);
-            checkBox.setText("- " + modifiers.get(i).getModifierName());
-            checkBox.setTag(modifiers.get(i).getModifierNumber());
+            checkBox.setText("- " + screens.get(i).getKitchenName());
+            checkBox.setTag(screens.get(i).getKitchenNo());
             checkBox.setTextColor(getResources().getColor(R.color.text_color));
             checkBox.setTextSize(20);
 
@@ -2772,9 +2772,6 @@ public class BackOfficeActivity extends AppCompatActivity {
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.join_category_with_modifier_dialog);
         dialog.setCanceledOnTouchOutside(true);
-
-        Window window = dialog.getWindow();
-        window.setLayout(950, 500);
 
         final Spinner paperSpinner = (Spinner) dialog.findViewById(R.id.modifier_list);
         final LinearLayout modifiersLinearLayout = (LinearLayout) dialog.findViewById(R.id.categories);

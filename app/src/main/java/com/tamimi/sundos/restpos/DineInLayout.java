@@ -3,6 +3,7 @@ package com.tamimi.sundos.restpos;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.text.Layout;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.GestureDetector;
@@ -141,8 +142,8 @@ public class DineInLayout extends AppCompatActivity {
                     dialog.setContentView(R.layout.add_squared_table_dialog);
                     dialog.setCanceledOnTouchOutside(true);
 
-                    Window window = dialog.getWindow();
-                    window.setLayout(900, 350);
+//                    Window window = dialog.getWindow();
+//                    window.setLayout(900, 350);
 
                     ImageView eightC = (ImageView) dialog.findViewById(R.id.eight_c);
                     ImageView sixC = (ImageView) dialog.findViewById(R.id.six_c);
@@ -165,8 +166,8 @@ public class DineInLayout extends AppCompatActivity {
                     dialog.setContentView(R.layout.add_cyrcled_table_dialog);
                     dialog.setCanceledOnTouchOutside(true);
 
-                    Window window1 = dialog.getWindow();
-                    window1.setLayout(900, 350);
+//                    Window window1 = dialog.getWindow();
+//                    window1.setLayout(900, 350);
 
                     ImageView eightC1 = (ImageView) dialog.findViewById(R.id.eight_c);
                     ImageView sixC1 = (ImageView) dialog.findViewById(R.id.six_c);
@@ -248,7 +249,7 @@ public class DineInLayout extends AppCompatActivity {
                 LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(currentList.get(i).getHeight() - 20, currentList.get(i).getWidth());
                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(currentList.get(i).getHeight(), currentList.get(i).getWidth());
 
-                RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(50, 15);
+                LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(60, 20);
                 textView.setLayoutParams(params2);
                 textView.setText("" + i);
                 textView.setTextColor(getResources().getColor(R.color.text_color));
@@ -350,7 +351,7 @@ public class DineInLayout extends AppCompatActivity {
             newLinear.setOrientation(LinearLayout.HORIZONTAL);
             newLinear.setLayoutParams(linearParams);
 
-            RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(50, 15);
+            LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(60, 20);
             TextView textView = new TextView(DineInLayout.this);
             textView.setLayoutParams(params2);
             textView.setText("" + tableNumber);
@@ -420,7 +421,7 @@ public class DineInLayout extends AppCompatActivity {
             newLinear.setOrientation(LinearLayout.HORIZONTAL);
             newLinear.setLayoutParams(linearParams);
 
-            RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(50, 15);
+            LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(60, 20);
             TextView textView = new TextView(DineInLayout.this);
             textView.setLayoutParams(params2);
             textView.setText("" + tableNumber);
@@ -738,7 +739,7 @@ public class DineInLayout extends AppCompatActivity {
             LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(currentList.get(i).getHeight() - 20, currentList.get(i).getWidth());
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(currentList.get(i).getHeight(), currentList.get(i).getWidth());
 
-            RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(50, 15);
+            LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(60, 20);
             textView.setLayoutParams(params2);
             textView.setText("" + i);
             textView.setTextColor(getResources().getColor(R.color.text_color));

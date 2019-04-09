@@ -79,7 +79,7 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:layout_width="677dp"
+        android:layout_width="660dp"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"

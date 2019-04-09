@@ -240,7 +240,7 @@ public class DineIn extends AppCompatActivity {
                 LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(currentList.get(i).getHeight() - 20, currentList.get(i).getWidth());
                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(currentList.get(i).getHeight(), currentList.get(i).getWidth());
 
-                RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(50, 15);
+                LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(60, 20);
                 textView.setLayoutParams(params2);
                 textView.setText("" + i);
                 textView.setTextColor(getResources().getColor(R.color.text_color));
@@ -1765,7 +1765,7 @@ public class DineIn extends AppCompatActivity {
             LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(currentList.get(i).getHeight() - 20, currentList.get(i).getWidth());
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(currentList.get(i).getHeight(), currentList.get(i).getWidth());
 
-            RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(50, 15);
+            LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(60, 20);
             textView.setLayoutParams(params2);
             textView.setText("" + i);
             textView.setTextColor(getResources().getColor(R.color.text_color));
