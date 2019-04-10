@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.InputType;
@@ -37,6 +38,20 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.fonts.otf.Language;
+import com.itextpdf.text.pdf.languages.ArabicLigaturizer;
 import com.tamimi.sundos.restpos.DatabaseHandler;
 import com.tamimi.sundos.restpos.DineIn;
 import com.tamimi.sundos.restpos.DineInLayout;
@@ -69,6 +84,10 @@ import com.tamimi.sundos.restpos.Models.ZReport;
 import com.tamimi.sundos.restpos.R;
 import com.tamimi.sundos.restpos.Settings;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -82,7 +101,18 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import static com.itextpdf.text.Element.ALIGN_CENTER;
+
 public class BackOfficeActivity extends AppCompatActivity {
+
+    int pageNumber = 0;
+    Document doc;
+    File file;
+    PdfWriter docWriter = null;
+    //    PDFView pdfView;
+    String pdfFileName;
+    Font arabicFont, arabicFontHeader;
+
 
     LinearLayout lManagement, lSales, lCustomers, lEmployees, lMenu, lSettings;
 
@@ -108,7 +138,7 @@ public class BackOfficeActivity extends AppCompatActivity {
     ArrayList<OrderHeader> headerData, headerDataMarket;
     ArrayList<PayMethod> payData, OrderPayMData;
     List<OrderTransactions> orderTransactionData;
-    ArrayList<Pay> payInData;
+    ArrayList<Pay> payInData, PayCashier;
     ArrayList<Announcemet> Announcement;
     ArrayList<Money> finalMoneyArray;
     TableRow focusedRaw = null;
@@ -129,6 +159,17 @@ public class BackOfficeActivity extends AppCompatActivity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.back_office_activity);
 
+        BaseFont base = null; ///for arabic languag
+        try {
+            base = BaseFont.createFont("/assets/arialuni.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        arabicFont = new Font(base, 11f);
+        arabicFontHeader = new Font(base, 12f);
+
         myCalendar = Calendar.getInstance();
 
         Date currentTimeAndDate = Calendar.getInstance().getTime();
@@ -140,7 +181,8 @@ public class BackOfficeActivity extends AppCompatActivity {
         categoryWithModifiersList = new ArrayList<>();
         itemWithScreensList = new ArrayList<>();
         headerData = new ArrayList<OrderHeader>();
-
+        headerDataMarket = new ArrayList<>();
+        orderTransactionData = new ArrayList<>();
         initialize();
         currentLinear(lManagement);
         mDHandler = new DatabaseHandler(BackOfficeActivity.this);
@@ -761,7 +803,11 @@ public class BackOfficeActivity extends AppCompatActivity {
                 myCalendar.get(Calendar.DAY_OF_MONTH)).show());
 
 
+        final String[] fromDateT = {""};
+        final String[] toDateT = {""};
+
         List<BlindClose> blindClose = mDHandler.getAllBlindClose();
+        List<BlindClose> blindClosePdf = new ArrayList<>();
         List<BlindCloseDetails> blindCloseDetails = mDHandler.getAllBlindCloseDetails();
         preview.setOnClickListener(v -> {
             table.removeAllViews();
@@ -778,6 +824,9 @@ public class BackOfficeActivity extends AppCompatActivity {
                 posNoString = -1;
             else
                 posNoString = Integer.parseInt(PosNo.getSelectedItem().toString());
+
+            fromDateT[0] = fromDate.getText().toString();
+            toDateT[0] = toDate.getText().toString();
 
             for (int i = 0; i < blindClose.size(); i++) {
                 if (filters(fromDate.getText().toString(), toDate.getText().toString(), blindClose.get(i).getDate())) {
@@ -855,6 +904,19 @@ public class BackOfficeActivity extends AppCompatActivity {
                                     row.addView(textView);
                                 }
                                 table.addView(row);
+                                BlindClose blindClose1 = new BlindClose();
+                                blindClose1.setDate(blindClose.get(i).getDate());
+                                blindClose1.setPOSNo(blindClose.get(i).getPOSNo());
+                                blindClose1.setShiftName(blindClose.get(i).getShiftName());
+                                blindClose1.setUserName(blindClose.get(i).getUserName());
+                                blindClose1.setUserCash(changeOverValue);
+                                blindClose1.setSysSales(blindClose.get(i).getSysSales());
+                                blindClose1.setUserSales(blindClose.get(i).getUserSales());
+                                blindClose1.setSalesDiff(blindClose.get(i).getSalesDiff());
+                                blindClose1.setReason(updateName);
+                                blindClose1.setTillOk(blindClose.get(i).getTillOk());
+                                blindClosePdf.add(blindClose1);
+
                             }
                         }
                     }
@@ -872,6 +934,58 @@ public class BackOfficeActivity extends AppCompatActivity {
         export.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                PdfPTable pdfPTable = new PdfPTable(10);
+                PdfPTable pdfPTableHeader = new PdfPTable(4);
+
+                createPDF("Re_CancellationReport_" + today + "_.pdf");
+                pdfPTable.setWidthPercentage(100f);
+                pdfPTableHeader.setWidthPercentage(100f);
+                pdfPTableHeader.setSpacingAfter(20);
+
+                insertCell(pdfPTable, getResources().getString(R.string.date), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.pos), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.shift), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.user), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.change_over), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.sales), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.physical), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.difference), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.update_by), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.till_ok), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+                for (int i = 0; i < blindClosePdf.size(); i++) {
+                    insertCell(pdfPTable, String.valueOf(blindClosePdf.get(i).getDate()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(blindClosePdf.get(i).getPOSNo()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(blindClosePdf.get(i).getShiftName()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(blindClosePdf.get(i).getUserName()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(blindClosePdf.get(i).getUserCash()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(blindClosePdf.get(i).getSysSales()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(blindClosePdf.get(i).getUserSales()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(blindClosePdf.get(i).getSalesDiff()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(blindClosePdf.get(i).getReason()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf((blindClose.get(i).getTillOk() == 0 ? "no" : "yes")), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+                }
+
+                insertCell(pdfPTableHeader, "Falcon Soft ", Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, getResources().getString(R.string.re_cancellation_report), Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 4, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, getResources().getString(R.string.from_date) + fromDateT[0], Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 2, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, getResources().getString(R.string.to_date) + toDateT[0], Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+
+                try {
+
+                    doc.add(pdfPTableHeader);
+                    doc.add(pdfPTable);
+                    Toast.makeText(BackOfficeActivity.this, "Export to pdf Successful", Toast.LENGTH_SHORT).show();
+
+                } catch (DocumentException e) {
+                    e.printStackTrace();
+                }
+                endDocPdf();
+
 
             }
         });
@@ -1081,7 +1195,9 @@ public class BackOfficeActivity extends AppCompatActivity {
 
         TableLayout tableXreport = (TableLayout) dialog.findViewById(R.id.taxTable);
         ArrayList<OrderTransactions> orderTransactionsTax = new ArrayList<>();
-        orderTransactionData = new ArrayList<>();
+
+        List<OrderTransactions> orderTransactionDataPdf = new ArrayList<>();
+        List<OrderTransactions> orderTransactionDataPdf2 = new ArrayList<>();
         ArrayList<String> shiftNameArray = new ArrayList<>();
         ArrayList<String> userArray = new ArrayList<>();
         ArrayList<String> posNoArray = new ArrayList<>();
@@ -1121,6 +1237,8 @@ public class BackOfficeActivity extends AppCompatActivity {
                 myCalendar.get(Calendar.DAY_OF_MONTH)).show());
 
         orderTransactionData = mDHandler.getAllOrderTransactions();
+        final String[] fromDat = {""};
+        final String[] toDat = {""};
 
         preview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1129,8 +1247,8 @@ public class BackOfficeActivity extends AppCompatActivity {
                 tableXreportTax.removeAllViews();
 
                 String ShiftNa = "SHIFT_NAME";
-                String fromDat = fromDate.getText().toString();
-                String toDat = toDate.getText().toString();
+                fromDat[0] = fromDate.getText().toString();
+                toDat[0] = toDate.getText().toString();
                 double totalText = 0.0, tatText = 0.0, netText = 0.0;
 
                 String posNoString = "POS_NO";
@@ -1149,7 +1267,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     posNoString = "'" + PosNo.getSelectedItem().toString() + "'";
                 }
 
-                orderTransactionData = mDHandler.getXReport(ShiftNa, posNoString, fromDat, toDat);
+                orderTransactionData = mDHandler.getXReport(ShiftNa, posNoString, fromDat[0], toDat[0]);
                 double NetTotal = 0.0;
                 for (int i = 0; i < orderTransactionData.size(); i++) {
                     if (Settings.tax_type == 0) {
@@ -1162,6 +1280,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     insertCashierInOutReport(tableXreport, orderTransactionData.get(i).getItemName(), String.valueOf(orderTransactionData.get(i).getTaxValue()),
                             "", String.valueOf(orderTransactionData.get(i).getTotal())
                             , "", "", String.valueOf(NetTotal), 4);
+                    orderTransactionDataPdf.add(orderTransactionData.get(i));
                 }
 
                 for (int a = 0; a < tableXreport.getChildCount(); a++) {
@@ -1185,22 +1304,88 @@ public class BackOfficeActivity extends AppCompatActivity {
                 totalTax.setText("" + totalText);
                 net.setText("" + netText);
 
-                orderTransactionData = mDHandler.getXReportPercent(ShiftNa, posNoString, fromDat, toDat);
+                orderTransactionData = mDHandler.getXReportPercent(ShiftNa, posNoString, fromDat[0], toDat[0]);
                 for (int i = 0; i < orderTransactionData.size(); i++) {
-
                     insertCashierInOutReport(tableXreportTax, String.valueOf(orderTransactionData.get(i).getTaxPerc()),
                             String.valueOf(orderTransactionData.get(i).getTaxValue()), "",
                             String.valueOf(orderTransactionData.get(i).getTotal()), "", "", "", 3);
-
+                    orderTransactionDataPdf2.add(orderTransactionData.get(i));
                 }
-
-
             }
         });
 
         export.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                PdfPTable pdfPTable = new PdfPTable(4);
+                PdfPTable pdfPTableDetal = new PdfPTable(3);
+                PdfPTable pdfPTableHeader = new PdfPTable(4);
+                PdfPTable pdfPTableTax = new PdfPTable(3);
+
+                createPDF("X_Report_" + today + "_.pdf");
+
+                pdfPTable.setWidthPercentage(100f);
+                pdfPTableDetal.setWidthPercentage(100f);
+                pdfPTableHeader.setWidthPercentage(100f);
+                pdfPTableTax.setWidthPercentage(100f);
+
+                pdfPTableHeader.setSpacingAfter(20);
+                pdfPTable.setSpacingAfter(5);
+                pdfPTableDetal.setSpacingAfter(15);
+
+                insertCell(pdfPTable, "Item Name", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, "Total", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, "Tax", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, "Net", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+
+                for (int i = 0; i < orderTransactionDataPdf.size(); i++) {
+                    insertCell(pdfPTable, String.valueOf(orderTransactionDataPdf.get(i).getItemName()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(orderTransactionDataPdf.get(i).getTotal()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(orderTransactionDataPdf.get(i).getTaxValue()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(orderTransactionDataPdf.get(i).getTotal() - (orderTransactionDataPdf.get(i).getTaxValue() + orderTransactionDataPdf.get(i).getDiscount())), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+                }
+
+                insertCell(pdfPTableHeader, "Falcon Soft ", Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "X_Report", Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 4, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "From Date : " + fromDat[0], Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 2, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "To Date   : " + toDat[0], Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+
+                insertCell(pdfPTableDetal, "Total Before Tax  : " + totalBeforTax.getText().toString(), Element.ALIGN_RIGHT, 1, arabicFontHeader, BaseColor.WHITE);
+                insertCell(pdfPTableDetal, "Tax :" + tax.getText().toString(), Element.ALIGN_RIGHT, 1, arabicFontHeader, BaseColor.WHITE);
+                insertCell(pdfPTableDetal, "Total After Tax :" + totalAfterTax.getText().toString(), Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableDetal, "Service :" + services.getText().toString(), Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableDetal, "Service Tax :" + servicesTax.getText().toString(), Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableDetal, "Total Tax: " + totalTax.getText().toString(), Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableDetal, "Net Total : " + net.getText().toString(), Element.ALIGN_RIGHT, 3, arabicFont, BaseColor.WHITE);
+
+                insertCell(pdfPTableTax, "Tax Percent", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTableTax, "Total", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTableTax, "Tax", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+                for (int i = 0; i < orderTransactionDataPdf2.size(); i++) {
+                    insertCell(pdfPTableTax, String.valueOf(orderTransactionDataPdf2.get(i).getTaxPerc()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTableTax, String.valueOf(orderTransactionDataPdf2.get(i).getTotal()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTableTax, String.valueOf(orderTransactionDataPdf2.get(i).getTaxValue()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+                }
+
+                try {
+
+                    doc.add(pdfPTableHeader);
+                    doc.add(pdfPTable);
+                    doc.add(pdfPTableDetal);
+                    doc.add(pdfPTableTax);
+
+                    Toast.makeText(BackOfficeActivity.this, "Export to pdf Successful", Toast.LENGTH_SHORT).show();
+                } catch (DocumentException e) {
+                    e.printStackTrace();
+                }
+                endDocPdf();
 
 
             }
@@ -1264,6 +1449,9 @@ public class BackOfficeActivity extends AppCompatActivity {
         TableLayout tableXreport = (TableLayout) dialog.findViewById(R.id.taxTable);
         ArrayList<OrderTransactions> orderTransactionsTax = new ArrayList<>();
         orderTransactionData = new ArrayList<>();
+        List<OrderTransactions> orderTransactionDataPdf2 = new ArrayList<>();
+        List<OrderTransactions> orderTransactionDataPdf = new ArrayList<>();
+        final String[] fromDat = {""};
 
 //        ArrayList<String> posNoArray = new ArrayList<>();
 //
@@ -1293,13 +1481,14 @@ public class BackOfficeActivity extends AppCompatActivity {
         preview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                orderTransactionDataPdf2.clear();
+                orderTransactionDataPdf.clear();
 
                 tableXreport.removeAllViews();
                 tableXreportTax.removeAllViews();
 
 
-                String fromDat = fromDate.getText().toString();
+                fromDat[0] = fromDate.getText().toString();
                 double totalText = 0.0, tatText = 0.0, netText = 0.0;
                 String posNoString = "POS_NO";
 
@@ -1315,7 +1504,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                 serial.setText("" + serials);
                 Log.e("testSerial", "" + mDHandler.getMaxZReportSerial(posNoString));
 
-                orderTransactionData = mDHandler.getXReport("SHIFT_NAME", posNoString, fromDat, fromDat);
+                orderTransactionData = mDHandler.getXReport("SHIFT_NAME", posNoString, fromDat[0], fromDat[0]);
 
                 double NetTotal = 0.0;
 
@@ -1330,6 +1519,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     insertCashierInOutReport(tableXreport, orderTransactionData.get(i).getItemName(), String.valueOf(orderTransactionData.get(i).getTaxValue()),
                             "", String.valueOf(orderTransactionData.get(i).getTotal())
                             , "", "", String.valueOf(NetTotal), 4);
+                    orderTransactionDataPdf.add(orderTransactionData.get(i));
                 }
 
                 for (int a = 0; a < tableXreport.getChildCount(); a++) {
@@ -1353,13 +1543,13 @@ public class BackOfficeActivity extends AppCompatActivity {
                 totalTax.setText("" + totalText);
                 net.setText("" + netText);
 
-                orderTransactionData = mDHandler.getXReportPercent("SHIFT_NAME", posNoString, fromDat, fromDat);
+                orderTransactionData = mDHandler.getXReportPercent("SHIFT_NAME", posNoString, fromDat[0], fromDat[0]);
                 for (int i = 0; i < orderTransactionData.size(); i++) {
 
                     insertCashierInOutReport(tableXreportTax, String.valueOf(orderTransactionData.get(i).getTaxPerc()),
                             String.valueOf(orderTransactionData.get(i).getTaxValue()), "",
                             String.valueOf(orderTransactionData.get(i).getTotal()), "", "", "", 3);
-
+                    orderTransactionDataPdf2.add(orderTransactionData.get(i));
                 }
 
 
@@ -1370,6 +1560,74 @@ public class BackOfficeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                PdfPTable pdfPTable = new PdfPTable(4);
+                PdfPTable pdfPTableDetal = new PdfPTable(3);
+                PdfPTable pdfPTableHeader = new PdfPTable(4);
+                PdfPTable pdfPTableTax = new PdfPTable(3);
+
+                createPDF("Z_Report_" + today + "_.pdf");
+
+                pdfPTable.setWidthPercentage(100f);
+                pdfPTableDetal.setWidthPercentage(100f);
+                pdfPTableHeader.setWidthPercentage(100f);
+                pdfPTableTax.setWidthPercentage(100f);
+
+                pdfPTableHeader.setSpacingAfter(20);
+                pdfPTable.setSpacingAfter(5);
+                pdfPTableDetal.setSpacingAfter(15);
+
+                insertCell(pdfPTable, "Item Name", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, "Total", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, "Tax", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, "Net", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+
+                for (int i = 0; i < orderTransactionDataPdf.size(); i++) {
+                    insertCell(pdfPTable, String.valueOf(orderTransactionDataPdf.get(i).getItemName()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(orderTransactionDataPdf.get(i).getTotal()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(orderTransactionDataPdf.get(i).getTaxValue()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(orderTransactionDataPdf.get(i).getTotal() - (orderTransactionDataPdf.get(i).getTaxValue() + orderTransactionDataPdf.get(i).getDiscount())), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+                }
+
+                insertCell(pdfPTableHeader, "Falcon Soft ", Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "Z_Report", Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 4, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "From Date : " + fromDat[0], Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 2, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "Pos No : " + PosNo.getText().toString(), Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+
+                insertCell(pdfPTableDetal, "Total Before Tax  : " + totalBeforTax.getText().toString(), Element.ALIGN_RIGHT, 1, arabicFontHeader, BaseColor.WHITE);
+                insertCell(pdfPTableDetal, "Tax :" + tax.getText().toString(), Element.ALIGN_RIGHT, 1, arabicFontHeader, BaseColor.WHITE);
+                insertCell(pdfPTableDetal, "Total After Tax :" + totalAfterTax.getText().toString(), Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableDetal, "Service :" + services.getText().toString(), Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableDetal, "Service Tax :" + servicesTax.getText().toString(), Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableDetal, "Total : " + totalTax.getText().toString(), Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableDetal, "Net Total : " + net.getText().toString(), Element.ALIGN_RIGHT, 3, arabicFont, BaseColor.WHITE);
+
+                insertCell(pdfPTableTax, "Tax Percent", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTableTax, "Total", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTableTax, "Tax", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+                for (int i = 0; i < orderTransactionDataPdf2.size(); i++) {
+                    insertCell(pdfPTableTax, String.valueOf(orderTransactionDataPdf2.get(i).getTaxPerc()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTableTax, String.valueOf(orderTransactionDataPdf2.get(i).getTotal()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTableTax, String.valueOf(orderTransactionDataPdf2.get(i).getTaxValue()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+                }
+
+                try {
+
+                    doc.add(pdfPTableHeader);
+                    doc.add(pdfPTable);
+                    doc.add(pdfPTableDetal);
+                    doc.add(pdfPTableTax);
+
+                    Toast.makeText(BackOfficeActivity.this, "Export to pdf Successful", Toast.LENGTH_SHORT).show();
+                } catch (DocumentException e) {
+                    e.printStackTrace();
+                }
+                endDocPdf();
 
             }
         });
@@ -1477,17 +1735,19 @@ public class BackOfficeActivity extends AppCompatActivity {
         toDate.setOnClickListener(v -> new DatePickerDialog(BackOfficeActivity.this, dateListener(toDate), myCalendar
                 .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                 myCalendar.get(Calendar.DAY_OF_MONTH)).show());
-
+        final String[] fromDat = {""};
+        final String[] toDat = {""};
 
         preview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                headerDataMarket.clear();
 
                 userTable.removeAllViews();
 
                 String ShiftNa = "USER_NAME";
-                String fromDat = fromDate.getText().toString();
-                String toDat = toDate.getText().toString();
+                fromDat[0] = fromDate.getText().toString();
+                toDat[0] = toDate.getText().toString();
                 double totalText = 0.0, tatText = 0.0, netText = 0.0;
 
                 String posNoString = "POINT_OF_SALE_NUMBER";
@@ -1506,13 +1766,13 @@ public class BackOfficeActivity extends AppCompatActivity {
                     posNoString = "'" + PosNo.getSelectedItem().toString() + "'";
                 }
 
-                headerData = mDHandler.getUserNameReport(ShiftNa, posNoString, fromDat, toDat);
+                headerData = mDHandler.getUserNameReport(ShiftNa, posNoString, fromDat[0], toDat[0]);
                 for (int i = 0; i < headerData.size(); i++) {
 
                     insertCashierInOutReport(userTable, String.valueOf(headerData.get(i).getUserName()),
                             String.valueOf(headerData.get(i).getAmountDue()), "",
                             String.valueOf(headerData.get(i).getTime()), "", "", "", 3);
-
+                    headerDataMarket.add(headerData.get(i));
                 }
             }
         });
@@ -1520,6 +1780,42 @@ public class BackOfficeActivity extends AppCompatActivity {
         export.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                PdfPTable pdfPTable = new PdfPTable(3);
+                PdfPTable pdfPTableHeader = new PdfPTable(4);
+
+                createPDF("UserOrderCountReport_" + today + "_.pdf");
+                pdfPTable.setWidthPercentage(100f);
+                pdfPTableHeader.setWidthPercentage(100f);
+                pdfPTableHeader.setSpacingAfter(20);
+
+                insertCell(pdfPTable, getResources().getString(R.string.user_name), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.order_count), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.net_total_), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+                for (int i = 0; i < headerDataMarket.size(); i++) {
+                    insertCell(pdfPTable, String.valueOf(headerDataMarket.get(i).getUserName()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(headerDataMarket.get(i).getTime()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(headerDataMarket.get(i).getAmountDue()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+                }
+
+                insertCell(pdfPTableHeader, "Falcon Soft ", Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, getResources().getString(R.string.user_order_count), Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 4, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, getResources().getString(R.string.from_date) + fromDat[0], Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 2, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, getResources().getString(R.string.to_date) + toDat[0], Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+
+                try {
+                    doc.add(pdfPTableHeader);
+                    doc.add(pdfPTable);
+                    Toast.makeText(BackOfficeActivity.this, "Export to pdf Successful", Toast.LENGTH_SHORT).show();
+
+                } catch (DocumentException e) {
+                    e.printStackTrace();
+                }
+                endDocPdf();
 
 
             }
@@ -1574,6 +1870,11 @@ public class BackOfficeActivity extends AppCompatActivity {
         TableLayout userTable = (TableLayout) dialog.findViewById(R.id.userTable);
         Announcement = new ArrayList<>();
 
+        final String[] fromDat = {""};
+        final String[] toDat = {""};
+        final String[] userNameText = {""};
+        final String[] posNoAll = {"All"};
+
         ArrayList<String> userArray = new ArrayList<>();
         ArrayList<String> posNoArray = new ArrayList<>();
 
@@ -1589,7 +1890,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         posNoArray.add("4");
         posNoArray.add("7");
 
-
+        List<Announcemet> AnnounPdf = new ArrayList<>();
         ArrayAdapter<String> adapter = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, userArray);
         userName.setAdapter(adapter);
 
@@ -1613,10 +1914,10 @@ public class BackOfficeActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 userTable.removeAllViews();
-                String posNoAll = "All";
 
-                String fromDat = fromDate.getText().toString();
-                String toDat = toDate.getText().toString();
+
+                fromDat[0] = fromDate.getText().toString();
+                toDat[0] = toDate.getText().toString();
 
 
                 int posNoString = -1;
@@ -1630,16 +1931,19 @@ public class BackOfficeActivity extends AppCompatActivity {
 
                 Announcement = mDHandler.getAllTableAnnouncement();
                 for (int i = 0; i < Announcement.size(); i++) {
-                    if (filters(fromDat, toDat, Announcement.get(i).getAnnouncementDate()) &&
+                    userNameText[0] = userName.getSelectedItem().toString();
+
+                    if (filters(fromDat[0], toDat[0], Announcement.get(i).getAnnouncementDate()) &&
                             (Announcement.get(i).getUserName().equals(userName.getSelectedItem().toString()) || userName.getSelectedItem().toString().equals("All")) &&
                             (Announcement.get(i).getPosNo() == posNoString || posNoString == -1)) {
                         if (Announcement.get(i).getPosNo() == -1) {
-                            posNoAll = "All";
+                            posNoAll[0] = "All";
                         } else {
-                            posNoAll = String.valueOf(Announcement.get(i).getPosNo());
+                            posNoAll[0] = String.valueOf(Announcement.get(i).getPosNo());
                         }
-                        insertCashierInOutReport(userTable, Announcement.get(i).getShiftName(), posNoAll,
+                        insertCashierInOutReport(userTable, Announcement.get(i).getShiftName(), posNoAll[0],
                                 Announcement.get(i).getMessage(), Announcement.get(i).getUserName(), String.valueOf(Announcement.get(i).getIsShow()), "", Announcement.get(i).getAnnouncementDate(), 6);
+                        AnnounPdf.add(Announcement.get(i));
                     }
                 }
             }
@@ -1648,7 +1952,52 @@ public class BackOfficeActivity extends AppCompatActivity {
         export.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                PdfPTable pdfPTable = new PdfPTable(6);
+                PdfPTable pdfPTableHeader = new PdfPTable(4);
 
+                createPDF("AnnouReport_" + today + "_.pdf");
+                pdfPTable.setWidthPercentage(100f);
+                pdfPTableHeader.setWidthPercentage(100f);
+                pdfPTableHeader.setSpacingAfter(20);
+
+                insertCell(pdfPTable, "Shift Name", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, "User Name", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, "Pos No", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, "Date", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, "Message", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, "Is Show", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+
+                for (int i = 0; i < AnnounPdf.size(); i++) {
+                    insertCell(pdfPTable, AnnounPdf.get(i).getShiftName(), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, AnnounPdf.get(i).getUserName(), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(AnnounPdf.get(i).getPosNo()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(AnnounPdf.get(i).getAnnouncementDate()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(AnnounPdf.get(i).getMessage()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(AnnounPdf.get(i).getIsShow()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+                }
+
+                insertCell(pdfPTableHeader, "Falcon Soft ", Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "Announcement Report", Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "From Date : " + fromDat[0], Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 2, arabicFontHeader, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "User Name : " + userNameText[0], Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "To Date   : " + toDat[0], Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 2, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "Pos No :" + posNoAll[0], Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+
+
+                try {
+
+                    doc.add(pdfPTableHeader);
+                    doc.add(pdfPTable);
+                    Toast.makeText(BackOfficeActivity.this, "Export to pdf Successful", Toast.LENGTH_SHORT).show();
+
+                } catch (DocumentException e) {
+                    e.printStackTrace();
+                }
+                endDocPdf();
 
             }
         });
@@ -3004,6 +3353,8 @@ public class BackOfficeActivity extends AppCompatActivity {
         ArrayAdapter<String> adapterPosNo = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, posNoArray);
         PosNo.setAdapter(adapterPosNo);
 
+        final String[] fromDateT = {""};
+        final String[] toDateT = {""};
 
         fromDate.setOnClickListener(v -> new DatePickerDialog(BackOfficeActivity.this, dateListener(fromDate), myCalendar
                 .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
@@ -3014,10 +3365,12 @@ public class BackOfficeActivity extends AppCompatActivity {
                 myCalendar.get(Calendar.DAY_OF_MONTH)).show());
 
         payInData = new ArrayList<Pay>();
+        PayCashier = new ArrayList<Pay>();
         payInData = mDHandler.getAllPayInOut();
         preview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                PayCashier.clear();
                 count = 0;
                 cashierTable.removeAllViews();
 
@@ -3046,7 +3399,8 @@ public class BackOfficeActivity extends AppCompatActivity {
                 } else {
                     posNoString = Integer.parseInt(PosNo.getSelectedItem().toString());
                 }
-
+                fromDateT[0] = fromDate.getText().toString();
+                toDateT[0] = toDate.getText().toString();
                 for (int i = 0; i < payInData.size(); i++) {
                     if (filters(fromDate.getText().toString(), toDate.getText().toString(), payInData.get(i).getTransDate())) {
                         if (payInData.get(i).getShiftName().equals(ShiftName) || ShiftName.equals("All")) {
@@ -3057,6 +3411,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                                         insertCashierInOutReport(cashierTable, String.valueOf(count), payInData.get(i).getTransDate()
                                                 , String.valueOf(payInData.get(i).getPosNo()), payInData.get(i).getUserName(), String.valueOf(payInData.get(i).getTransType())
                                                 , String.valueOf(payInData.get(i).getValue()), payInData.get(i).getTime(), 7);
+                                        PayCashier.add(payInData.get(i));
                                     }
 
                                 }
@@ -3081,6 +3436,50 @@ public class BackOfficeActivity extends AppCompatActivity {
         export.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                PdfPTable pdfPTable = new PdfPTable(7);
+                PdfPTable pdfPTableHeader = new PdfPTable(4);
+
+                createPDF("CashierInOutReport_" + today + "_.pdf");
+                pdfPTable.setWidthPercentage(100f);
+                pdfPTableHeader.setWidthPercentage(100f);
+                pdfPTableHeader.setSpacingAfter(20);
+
+                insertCell(pdfPTable, getResources().getString(R.string.number), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.cashier_name), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.date), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.time), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.point_of_sale), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.trans_type), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.amount), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+                for (int i = 0; i < PayCashier.size(); i++) {
+                    insertCell(pdfPTable, String.valueOf(i + 1), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, PayCashier.get(i).getUserName(), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, PayCashier.get(i).getTransDate(), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, PayCashier.get(i).getTime(), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(PayCashier.get(i).getPosNo()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(PayCashier.get(i).getTransType()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(PayCashier.get(i).getValue()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                }
+
+                insertCell(pdfPTableHeader, "Falcon Soft ", Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, getResources().getString(R.string.cashier_in_out_report), Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 4, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, getResources().getString(R.string.from_date) + fromDateT[0], Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 2, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, getResources().getString(R.string.to_date) + toDateT[0], Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+
+
+                try {
+
+                    doc.add(pdfPTableHeader);
+                    doc.add(pdfPTable);
+                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.export_to_pdf), Toast.LENGTH_SHORT).show();
+                } catch (DocumentException e) {
+                    e.printStackTrace();
+                }
+                endDocPdf();
 
             }
         });
@@ -3165,12 +3564,15 @@ public class BackOfficeActivity extends AppCompatActivity {
                 .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                 myCalendar.get(Calendar.DAY_OF_MONTH)).show());
 
+        final String[] fromDateT = {""};
+        final String[] toDateT = {""};
 
         List<CancleOrder> canceledOrders = mDHandler.getAllCanselOrder();
+        List<CancleOrder> canceledOrdersPdf = new ArrayList<>();
         preview.setOnClickListener(v -> {
 
             canceledTable.removeAllViews();
-
+            canceledOrdersPdf.clear();
             int voidingType = -1;
             switch (voidType.getCheckedRadioButtonId()) {
                 case R.id.All:
@@ -3200,6 +3602,9 @@ public class BackOfficeActivity extends AppCompatActivity {
             else
                 posNoString = Integer.parseInt(PosNo.getSelectedItem().toString());
 
+            fromDateT[0] = fromDate.getText().toString();
+            toDateT[0] = toDate.getText().toString();
+
             int serial = 0;
             for (int i = 0; i < canceledOrders.size(); i++) {
                 if (filters(fromDate.getText().toString(), toDate.getText().toString(), canceledOrders.get(i).getTransDate())) {
@@ -3209,6 +3614,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                             if (canceledOrders.get(i).getPosNO() == posNoString || posNoString == -1) {
                                 if (voidingType == canceledOrders.get(i).getIsAllCancel() || voidingType == -1) {
 
+                                    canceledOrdersPdf.add(canceledOrders.get(i));
                                     TableRow row = new TableRow(BackOfficeActivity.this);
 
                                     TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
@@ -3284,6 +3690,52 @@ public class BackOfficeActivity extends AppCompatActivity {
         export.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                PdfPTable pdfPTable = new PdfPTable(8);
+                PdfPTable pdfPTableHeader = new PdfPTable(4);
+
+                createPDF("CancelOrderReport_" + today + "_.pdf");
+                pdfPTable.setWidthPercentage(100f);
+                pdfPTableHeader.setWidthPercentage(100f);
+                pdfPTableHeader.setSpacingAfter(20);
+
+                insertCell(pdfPTable, getResources().getString(R.string.number), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.date), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.time), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.item_code), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.item_name), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.qty), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.total_price), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.void_reason), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+                for (int i = 0; i < canceledOrdersPdf.size(); i++) {
+                    insertCell(pdfPTable, String.valueOf(i + 1), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, canceledOrdersPdf.get(i).getTransDate(), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, canceledOrdersPdf.get(i).getTime(), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, canceledOrdersPdf.get(i).getItemCode(), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, canceledOrdersPdf.get(i).getItemName(), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(canceledOrdersPdf.get(i).getQty()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(canceledOrdersPdf.get(i).getTotal()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, canceledOrdersPdf.get(i).getReason(), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                }
+
+                insertCell(pdfPTableHeader, "Falcon Soft ", Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "Cashier In Out Report", Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 4, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "From Date : " + fromDateT[0], Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 2, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "To Date   : " + toDateT[0], Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+
+
+                try {
+
+                    doc.add(pdfPTableHeader);
+                    doc.add(pdfPTable);
+                    Toast.makeText(BackOfficeActivity.this, "Export to pdf Successful", Toast.LENGTH_SHORT).show();
+                } catch (DocumentException e) {
+                    e.printStackTrace();
+                }
+                endDocPdf();
 
             }
         });
@@ -3361,8 +3813,10 @@ public class BackOfficeActivity extends AppCompatActivity {
                 .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                 myCalendar.get(Calendar.DAY_OF_MONTH)).show());
 
-
+        final String[] fromDateT = {""};
+        final String[] toDateT = {""};
         List<TableActions> actions = mDHandler.getAllTableActions();
+        List<TableActions> actionsPdf = new ArrayList<>();
         preview.setOnClickListener(v -> {
 
             canceledTable.removeAllViews();
@@ -3397,6 +3851,9 @@ public class BackOfficeActivity extends AppCompatActivity {
             else
                 posNoString = Integer.parseInt(PosNo.getSelectedItem().toString());
 
+            fromDateT[0] = fromDate.getText().toString();
+            toDateT[0] = toDate.getText().toString();
+
             for (int i = 0; i < actions.size(); i++) {
                 if (filters(fromDate.getText().toString(), toDate.getText().toString(), actions.get(i).getActionDate())) {
 
@@ -3417,6 +3874,8 @@ public class BackOfficeActivity extends AppCompatActivity {
                                             type = "Split";
                                             break;
                                     }
+
+                                    actionsPdf.add(actions.get(i));
 
                                     TableRow row = new TableRow(BackOfficeActivity.this);
 
@@ -3483,6 +3942,67 @@ public class BackOfficeActivity extends AppCompatActivity {
         export.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
+                PdfPTable pdfPTable = new PdfPTable(8);
+                PdfPTable pdfPTableHeader = new PdfPTable(4);
+
+                createPDF("TablesActionReport_" + today + "_.pdf");
+                pdfPTable.setWidthPercentage(100f);
+                pdfPTableHeader.setWidthPercentage(100f);
+                pdfPTableHeader.setSpacingAfter(20);
+
+                insertCell(pdfPTable, "Date", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, "Time", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, "Table No", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, "Section", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, "Action", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, "To Table", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, "To Section", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, "Cashier", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+                for (int i = 0; i < actionsPdf.size(); i++) {
+
+                    String type = "";
+                    switch (actionsPdf.get(i).getActionType()) {
+                        case 0:
+                            type = "Move";
+                            break;
+                        case 1:
+                            type = "Merge";
+                            break;
+                        case 2:
+                            type = "Split";
+                            break;
+                    }
+
+                    insertCell(pdfPTable, actionsPdf.get(i).getActionDate(), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, actionsPdf.get(i).getActionTime(), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(actionsPdf.get(i).getTableNo()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(actionsPdf.get(i).getSectionNo()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, type, Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(actionsPdf.get(i).getToTable()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(actionsPdf.get(i).getToSection()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(actionsPdf.get(i).getUserName()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                }
+
+                insertCell(pdfPTableHeader, "Falcon Soft ", Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "Table Action Report", Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 4, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "From Date : " + fromDateT[0], Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 2, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "To Date   : " + toDateT[0], Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+
+
+                try {
+                    doc.add(pdfPTableHeader);
+                    doc.add(pdfPTable);
+                    Toast.makeText(BackOfficeActivity.this, "Export to pdf Successful", Toast.LENGTH_SHORT).show();
+
+                } catch (DocumentException e) {
+                    e.printStackTrace();
+                }
+                endDocPdf();
 
             }
         });
@@ -3558,11 +4078,13 @@ public class BackOfficeActivity extends AppCompatActivity {
         toDate.setOnClickListener(v -> new DatePickerDialog(BackOfficeActivity.this, dateListener(toDate), myCalendar
                 .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                 myCalendar.get(Calendar.DAY_OF_MONTH)).show());
-
-
+        final String[] fromDateT = {""};
+        final String[] toDateT = {""};
         List<OrderHeader> orderHeaders = mDHandler.getAllOrderHeader();
+        List<String> orderTotal =new ArrayList<>();
         preview.setOnClickListener(v -> {
-
+            orderTotal.clear();
+            headerData.clear();
             table.removeAllViews();
 
             int orderTyp = -1;
@@ -3595,6 +4117,9 @@ public class BackOfficeActivity extends AppCompatActivity {
                 posNoString = -1;
             else
                 posNoString = Integer.parseInt(PosNo.getSelectedItem().toString());
+
+             fromDateT[0] =fromDate.getText().toString();
+             toDateT[0] =toDate.getText().toString();
 
             int serial = 0;
             double totalTotal = 0;
@@ -3676,6 +4201,8 @@ public class BackOfficeActivity extends AppCompatActivity {
                                     }
                                     table.addView(row);
                                     serial++;
+                                    orderHeaders.get(i).setTime(payMethods);
+                                    headerData.add(orderHeaders.get(i));
                                 }
                             }
                         }
@@ -3728,6 +4255,10 @@ public class BackOfficeActivity extends AppCompatActivity {
                 row.addView(textView);
             }
             table.addView(row);
+            orderTotal.add(String.valueOf(totalTotal));
+            orderTotal.add("" + totalDiscount);
+            orderTotal.add("" + totalTax);
+            orderTotal.add("" + totalNet);
 
         });
 
@@ -3741,6 +4272,59 @@ public class BackOfficeActivity extends AppCompatActivity {
         export.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                PdfPTable pdfPTable = new PdfPTable(8);
+                PdfPTable pdfPTableHeader = new PdfPTable(4);
+
+                createPDF("SimpleSalesReport_" + today + "_.pdf");
+                pdfPTable.setWidthPercentage(100f);
+                pdfPTableHeader.setWidthPercentage(100f);
+                pdfPTableHeader.setSpacingAfter(20);
+
+                insertCell(pdfPTable, getResources().getString(R.string.date_), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.pos), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.voucher_no), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.total), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.discount), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.tax), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.net), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.pay_method), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+                for (int i = 0; i < headerData.size(); i++) {
+                    insertCell(pdfPTable, String.valueOf(headerData.get(i).getVoucherDate()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(headerData.get(i).getPointOfSaleNumber()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(headerData.get(i).getVoucherNumber()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(headerData.get(i).getTotal()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(headerData.get(i).getAllDiscount()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(headerData.get(i).getTotalTax()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(headerData.get(i).getAmountDue()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(headerData.get(i).getTime()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                }
+                insertCell(pdfPTable, getResources().getString(R.string.total), Element.ALIGN_LEFT, 3, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, String.valueOf(orderTotal.get(0)), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, String.valueOf(orderTotal.get(1)), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, String.valueOf(orderTotal.get(2)), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, String.valueOf(orderTotal.get(3)), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, "", Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+
+                insertCell(pdfPTableHeader, "Falcon Soft ", Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, getResources().getString(R.string.simple_sales_total), Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 4, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, getResources().getString(R.string.from_date) + fromDateT[0], Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 2, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, getResources().getString(R.string.to_date) + toDateT[0], Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+
+                try {
+
+                    doc.add(pdfPTableHeader);
+                    doc.add(pdfPTable);
+                    Toast.makeText(BackOfficeActivity.this, "Export to pdf Successful", Toast.LENGTH_SHORT).show();
+
+                } catch (DocumentException e) {
+                    e.printStackTrace();
+                }
+                endDocPdf();
 
             }
         });
@@ -3816,10 +4400,15 @@ public class BackOfficeActivity extends AppCompatActivity {
                 .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                 myCalendar.get(Calendar.DAY_OF_MONTH)).show());
 
+        final String[] fromDateT = {""};
+        final String[] toDateT = {""};
 
         List<OrderHeader> orderHeaders = mDHandler.getAllOrderHeader();
+        List<OrderHeader> headerList = new ArrayList<>();
         preview.setOnClickListener(v -> {
-
+            headerList.clear();
+            fromDateT[0] = fromDate.getText().toString();
+            toDateT[0] = toDate.getText().toString();
             table.removeAllViews();
 
             int typ = 0;
@@ -3908,6 +4497,17 @@ public class BackOfficeActivity extends AppCompatActivity {
                     row.addView(textView);
                 }
                 table.addView(row);
+
+                OrderHeader orderHeader = new OrderHeader();
+
+                orderHeader.setTime(("" + i + ":00 - " + (i + 1) + ":00"));
+                orderHeader.setTotalTax(totalGusts);
+                orderHeader.setTotalDiscount(numOfTrans);
+                orderHeader.setTotal(totalSales);
+                orderHeader.setAmountDue((totalSales / numOfTrans));
+                orderHeader.setAllDiscount((totalSales / totalGusts));
+
+                headerList.add(orderHeader);
             }
         });
 
@@ -3922,6 +4522,49 @@ public class BackOfficeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+
+                PdfPTable pdfPTable = new PdfPTable(6);
+                PdfPTable pdfPTableHeader = new PdfPTable(4);
+
+                createPDF("salesByHours_" + today + "_.pdf");
+                pdfPTable.setWidthPercentage(100f);
+                pdfPTableHeader.setWidthPercentage(100f);
+                pdfPTableHeader.setSpacingAfter(20);
+
+                insertCell(pdfPTable, "Hour", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, "TotalGusts", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, "No Of Trans", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, "No of Sales", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, "Avg Per Trans", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, "Avg Per Gusts", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+                for (int i = 0; i < headerList.size(); i++) {
+
+                    insertCell(pdfPTable, headerList.get(i).getTime(), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(headerList.get(i).getTotalTax()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(headerList.get(i).getTotalDiscount()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(headerList.get(i).getTotal()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(headerList.get(i).getAmountDue()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(headerList.get(i).getAllDiscount()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                }
+
+                insertCell(pdfPTableHeader, "Falcon Soft ", Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "Sales By Hour Report", Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 4, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "From Date : " + fromDateT[0], Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 2, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "To Date   : " + toDateT[0], Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+
+
+                try {
+                    doc.add(pdfPTableHeader);
+                    doc.add(pdfPTable);
+                    Toast.makeText(BackOfficeActivity.this, R.string.export_to_pdf, Toast.LENGTH_SHORT).show();
+
+                } catch (DocumentException e) {
+                    e.printStackTrace();
+                }
+                endDocPdf();
             }
         });
 
@@ -4020,10 +4663,14 @@ public class BackOfficeActivity extends AppCompatActivity {
 
 
         OrderPayMData = new ArrayList<>();
+        List<PayMethod> OrderPayMDataPdf = new ArrayList<>();
+        final String[] fromDateT = {""};
+        final String[] toDateT = {""};
 
         preview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                OrderPayMDataPdf.clear();
                 count = 0;
                 double totalText = 0;
                 cardTypeTable.removeAllViews();
@@ -4035,6 +4682,10 @@ public class BackOfficeActivity extends AppCompatActivity {
                 } else {
                     posNoString = Integer.parseInt(PosNo.getSelectedItem().toString());
                 }
+
+                fromDateT[0] = fromDate2.getText().toString();
+                toDateT[0] = toDate2.getText().toString();
+
                 String cardTypes = cardType.getSelectedItem().toString();
                 String ShiftNames = shiftName.getSelectedItem().toString();
 
@@ -4046,10 +4697,12 @@ public class BackOfficeActivity extends AppCompatActivity {
                             (OrderPayMData.get(i).getPayType().equals("Credit Card")) &&
                             (posNoString == -1 || posNoString == OrderPayMData.get(i).getPointOfSaleNumber())) {
                         count++;
-                        insertCashierInOutReport(cardTypeTable, String.valueOf(count), "11:32",
+                        insertCashierInOutReport(cardTypeTable, String.valueOf(count), OrderPayMData.get(i).getTime(),
                                 OrderPayMData.get(i).getVoucherNumber(), OrderPayMData.get(i).getVoucherDate(),
                                 String.valueOf(OrderPayMData.get(i).getPayValue()), OrderPayMData.get(i).getUserName(),
                                 String.valueOf(OrderPayMData.get(i).getPointOfSaleNumber()), 7);
+
+                        OrderPayMDataPdf.add(OrderPayMData.get(i));
 
                     }
                 }
@@ -4078,6 +4731,53 @@ public class BackOfficeActivity extends AppCompatActivity {
         export.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                PdfPTable pdfPTable = new PdfPTable(7);
+                PdfPTable pdfPTableHeader = new PdfPTable(4);
+
+                createPDF("SalesByCardReport_" + today + "_.pdf");
+                pdfPTable.setWidthPercentage(100f);
+                pdfPTableHeader.setWidthPercentage(100f);
+                pdfPTableHeader.setSpacingAfter(20);
+
+                insertCell(pdfPTable, getResources().getString(R.string.number), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.date), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.time), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.point_of_sale), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.voucher_no), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.net_total_), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.customer_name), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+
+                for (int i = 0; i < OrderPayMDataPdf.size(); i++) {
+                    insertCell(pdfPTable, String.valueOf(i + 1), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(OrderPayMDataPdf.get(i).getVoucherDate()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(OrderPayMDataPdf.get(i).getTime()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(OrderPayMDataPdf.get(i).getPointOfSaleNumber()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(OrderPayMDataPdf.get(i).getVoucherNumber()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(OrderPayMDataPdf.get(i).getPayValue()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(OrderPayMDataPdf.get(i).getUserName()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+                }
+
+                insertCell(pdfPTableHeader, "Falcon Soft ", Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, getResources().getString(R.string.sales_report_by_card_type), Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 4, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, getResources().getString(R.string.from_date) + " : " + fromDateT[0], Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 2, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, getResources().getString(R.string.to_date) + " : " + toDateT[0], Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+
+
+                try {
+
+                    doc.add(pdfPTableHeader);
+                    doc.add(pdfPTable);
+                    Toast.makeText(BackOfficeActivity.this, "Export to pdf Successful", Toast.LENGTH_SHORT).show();
+
+                } catch (DocumentException e) {
+                    e.printStackTrace();
+                }
+                endDocPdf();
 
             }
         });
@@ -4121,6 +4821,8 @@ public class BackOfficeActivity extends AppCompatActivity {
         fromDate2.setText(today);
         toDate2.setText(today);
 
+        final String[] fromDateT = {""};
+        final String[] ToDateT = {""};
 
         fromDate2.setOnClickListener(v -> new DatePickerDialog(BackOfficeActivity.this, dateListener(fromDate2), myCalendar
                 .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
@@ -4130,7 +4832,6 @@ public class BackOfficeActivity extends AppCompatActivity {
                 .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                 myCalendar.get(Calendar.DAY_OF_MONTH)).show());
 
-        headerDataMarket = new ArrayList<>();
 
         preview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -4140,13 +4841,18 @@ public class BackOfficeActivity extends AppCompatActivity {
 
                 int posNoString = -1;
 
+                fromDateT[0] = fromDate2.getText().toString();
+                ToDateT[0] = toDate2.getText().toString();
                 headerDataMarket = mDHandler.getMarketReport(fromDate2.getText().toString(), toDate2.getText().toString());
+                headerData.clear();
                 for (int i = 0; i < headerDataMarket.size(); i++) {
                     if (filters(fromDate2.getText().toString(), toDate2.getText().toString(), headerDataMarket.get(i).getVoucherDate())) {
                         insertCashierInOutReport(marketTable, String.valueOf(headerDataMarket.get(i).getPointOfSaleNumber()),
-                                String.valueOf(headerDataMarket.get(i).getTotalTax()), headerDataMarket.get(i).getTime(),
+                                String.valueOf(headerDataMarket.get(i).getTotalTax()), String.valueOf(headerDataMarket.get(i).getTime()),
                                 String.valueOf(headerDataMarket.get(i).getTotal()), String.valueOf(headerDataMarket.get(i).getAmountDue() / Integer.parseInt(headerDataMarket.get(i).getTime())), "",
                                 String.valueOf(headerDataMarket.get(i).getAmountDue()), 6);
+                        headerData.add(headerDataMarket.get(i));
+
                     }
                 }
             }
@@ -4163,6 +4869,51 @@ public class BackOfficeActivity extends AppCompatActivity {
         export.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                PdfPTable pdfPTable = new PdfPTable(6);
+                PdfPTable pdfPTableHeader = new PdfPTable(4);
+
+                createPDF("MarketReport_" + today + "_.pdf");
+                pdfPTable.setWidthPercentage(100f);
+                pdfPTableHeader.setWidthPercentage(100f);
+                pdfPTableHeader.setSpacingAfter(20);
+
+                insertCell(pdfPTable, "Pos No", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, "Sale Before Tax", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, "Tax", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, "Net Sales", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, "Order Count", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, "Average", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+
+                for (int i = 0; i < headerData.size(); i++) {
+                    insertCell(pdfPTable, String.valueOf(headerData.get(i).getPointOfSaleNumber()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(headerData.get(i).getTotal()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(headerData.get(i).getTotalTax()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(headerData.get(i).getAmountDue()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(headerData.get(i).getTime()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(headerData.get(i).getAmountDue() / Integer.parseInt(headerData.get(i).getTime())), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+                }
+
+                insertCell(pdfPTableHeader, "Falcon Soft ", Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "Market Report", Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 4, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "From Date : " + fromDateT[0], Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 2, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "To Date   : " + ToDateT[0], Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+
+
+                try {
+
+                    doc.add(pdfPTableHeader);
+                    doc.add(pdfPTable);
+                    Toast.makeText(BackOfficeActivity.this, "Export to pdf Successful", Toast.LENGTH_SHORT).show();
+
+                } catch (DocumentException e) {
+                    e.printStackTrace();
+                }
+                endDocPdf();
 
             }
         });
@@ -4250,7 +5001,8 @@ public class BackOfficeActivity extends AppCompatActivity {
         toDate.setOnClickListener(v -> new DatePickerDialog(BackOfficeActivity.this, dateListener(toDate), myCalendar
                 .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                 myCalendar.get(Calendar.DAY_OF_MONTH)).show());
-
+        final String[] fromDateT = {""};
+        final String[] toDateT = {""};
 
         headerData = mDHandler.getAllOrderHeader();
         preview.setOnClickListener(new View.OnClickListener() {
@@ -4272,6 +5024,10 @@ public class BackOfficeActivity extends AppCompatActivity {
                     posNoString = Integer.parseInt(PosNo.getSelectedItem().toString());
                 }
 
+
+                fromDateT[0] = fromDate.getText().toString();
+                toDateT[0] = toDate.getText().toString();
+
                 for (int i = 0; i < headerData.size(); i++) {
                     if (filters(fromDate.getText().toString(), toDate.getText().toString(), headerData.get(i).getVoucherDate())) {
                         if (headerData.get(i).getShiftName().equals(ShiftName) || ShiftName.equals("All")) {
@@ -4283,6 +5039,8 @@ public class BackOfficeActivity extends AppCompatActivity {
                                                 String.valueOf(headerData.get(i).getAmountDue()),
                                                 String.valueOf(headerData.get(i).getTotal()), String.valueOf(headerData.get(i).getTotalService()),
                                                 String.valueOf(headerData.get(i).getTotalServiceTax()), String.valueOf(headerData.get(i).getTotalTax()), 7);
+                                        headerDataMarket.add(headerData.get(i));
+
                                     }
                                 }
                             }
@@ -4306,6 +5064,51 @@ public class BackOfficeActivity extends AppCompatActivity {
         export.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                PdfPTable pdfPTable = new PdfPTable(7);
+                PdfPTable pdfPTableHeader = new PdfPTable(4);
+
+                createPDF("WaiterReport_" + today + "_.pdf");
+                pdfPTable.setWidthPercentage(100f);
+                pdfPTableHeader.setWidthPercentage(100f);
+                pdfPTableHeader.setSpacingAfter(20);
+
+                insertCell(pdfPTable, getResources().getString(R.string.waiter_name), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.total), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.discount), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.tax), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.net), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.service), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.service_tax), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+                for (int i = 0; i < headerDataMarket.size(); i++) {
+                    insertCell(pdfPTable, String.valueOf(headerDataMarket.get(i).getWaiter()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(headerDataMarket.get(i).getTotal()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(headerDataMarket.get(i).getTotalDiscount()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(headerDataMarket.get(i).getTotalTax()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(headerDataMarket.get(i).getAmountDue()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(headerDataMarket.get(i).getTotalService()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(headerDataMarket.get(i).getTotalServiceTax()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                }
+
+                insertCell(pdfPTableHeader, "Falcon Soft ", Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, getResources().getString(R.string.waiter_report), Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 4, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, getResources().getString(R.string.from_date) + fromDateT[0], Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 2, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, getResources().getString(R.string.to_date) + toDateT[0], Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+
+
+                try {
+
+                    doc.add(pdfPTableHeader);
+                    doc.add(pdfPTable);
+                    Toast.makeText(BackOfficeActivity.this, "Export to pdf Successful", Toast.LENGTH_SHORT).show();
+
+                } catch (DocumentException e) {
+                    e.printStackTrace();
+                }
+                endDocPdf();
 
             }
         });
@@ -4386,10 +5189,15 @@ public class BackOfficeActivity extends AppCompatActivity {
                 myCalendar.get(Calendar.DAY_OF_MONTH)).show());
 
 
+        final String[] fromDateT = {""};
+        final String[] toDateT = {""};
         List<String> categories = mDHandler.getAllOrderedCategories();
         preview.setOnClickListener(v -> {
+            orderTransactionData.clear();
             table.removeAllViews();
             for (int i = 0; i < categories.size(); i++) {
+                fromDateT[0] =fromDate.getText().toString();
+                toDateT[0] =toDate.getText().toString();
                 List<OrderTransactions> transactions = mDHandler.getOrdersTransactionsByCategory(categories.get(i));
                 insertSalesVolumeByItem(table, transactions, cashierNo, shiftName, PosNo, fromDate, toDate);
             }
@@ -4405,6 +5213,55 @@ public class BackOfficeActivity extends AppCompatActivity {
         export.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                PdfPTable pdfPTable = new PdfPTable(5);
+                PdfPTable pdfPTableHeader = new PdfPTable(4);
+
+                createPDF("salesVolumeItemReport_" + today + "_.pdf");
+                pdfPTable.setWidthPercentage(100f);
+                pdfPTableHeader.setWidthPercentage(100f);
+                pdfPTableHeader.setSpacingAfter(20);
+
+                insertCell(pdfPTable, "Item Code ", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, "Item Name ", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, "Qty", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, "Price", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, "Total", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+
+                for (int i = 0; i < orderTransactionData.size(); i++) {
+                      if(!orderTransactionData.get(i).getTime().equals("*")) {
+                          insertCell(pdfPTable, orderTransactionData.get(i).getItemBarcode(), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                          insertCell(pdfPTable, String.valueOf(orderTransactionData.get(i).getItemName()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                          insertCell(pdfPTable, String.valueOf(orderTransactionData.get(i).getQty()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                          insertCell(pdfPTable, String.valueOf(orderTransactionData.get(i).getPrice()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                          insertCell(pdfPTable, String.valueOf(orderTransactionData.get(i).getTotal()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                      }else {
+                          insertCell(pdfPTable, orderTransactionData.get(i).getItemCategory(), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                          insertCell(pdfPTable, "", Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                          insertCell(pdfPTable, String.valueOf(orderTransactionData.get(i).getQty()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                          insertCell(pdfPTable,"", Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                          insertCell(pdfPTable, String.valueOf(orderTransactionData.get(i).getTotal()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                      }
+                }
+
+                insertCell(pdfPTableHeader, "Falcon Soft ", Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "Sales Volume Item Report", Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 4, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "From Date : " + fromDateT[0], Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 2, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "To Date   : " + toDateT[0], Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+
+
+                try {
+                    doc.add(pdfPTableHeader);
+                    doc.add(pdfPTable);
+                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.export_to_pdf), Toast.LENGTH_SHORT).show();
+
+                } catch (DocumentException e) {
+                    e.printStackTrace();
+                }
+                endDocPdf();
 
             }
         });
@@ -4430,7 +5287,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         Button print = (Button) dialog.findViewById(R.id.printReport);
 
         TextView fromDate = (TextView) dialog.findViewById(R.id.frDate);
-        TextView toDate = (TextView) dialog.findViewById(R.id.toDate);
+        final TextView[] toDate = {(TextView) dialog.findViewById(R.id.toDate)};
 
         Spinner shiftName = (Spinner) dialog.findViewById(R.id.shiftName);
         Spinner cashierNo = (Spinner) dialog.findViewById(R.id.casherNo);
@@ -4439,7 +5296,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         Spinner family = (Spinner) dialog.findViewById(R.id.family);
 
         fromDate.setText(today);
-        toDate.setText(today);
+        toDate[0].setText(today);
         ArrayList<String> shiftNameArray = new ArrayList<>();
         ArrayList<String> userArray = new ArrayList<>();
         ArrayList<String> posNoArray = new ArrayList<>();
@@ -4491,13 +5348,17 @@ public class BackOfficeActivity extends AppCompatActivity {
                 .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                 myCalendar.get(Calendar.DAY_OF_MONTH)).show());
 
-        toDate.setOnClickListener(v -> new DatePickerDialog(BackOfficeActivity.this, dateListener(toDate), myCalendar
+        toDate[0].setOnClickListener(v -> new DatePickerDialog(BackOfficeActivity.this, dateListener(toDate[0]), myCalendar
                 .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                 myCalendar.get(Calendar.DAY_OF_MONTH)).show());
 
+        final String[] fromDateT = {""};
+        final String[] ToDateT = {""};
 
+        List<OrderTransactions> transactionsPdf = new ArrayList<>();
         List<OrderTransactions> transactions = mDHandler.getAllOrderTransactions();
         preview.setOnClickListener(v -> {
+            transactionsPdf.clear();
             table.removeAllViews();
             int CashierNo = -1;
             if (cashierNo.getSelectedItem().toString().equals("All"))
@@ -4515,8 +5376,11 @@ public class BackOfficeActivity extends AppCompatActivity {
             else
                 posNoString = Integer.parseInt(PosNo.getSelectedItem().toString());
 
+            fromDateT[0] = fromDate.getText().toString();
+            ToDateT[0] = toDate[0].getText().toString();
+
             for (int i = 0; i < transactions.size(); i++) {
-                if (filters(fromDate.getText().toString(), toDate.getText().toString(), transactions.get(i).getVoucherDate())) {
+                if (filters(fromDate.getText().toString(), toDate[0].getText().toString(), transactions.get(i).getVoucherDate())) {
 
                     if (transactions.get(i).getShiftName().equals(ShiftName) || ShiftName.equals("All")) {
                         if (transactions.get(i).getUserNo() == CashierNo || CashierNo == -1) {
@@ -4583,6 +5447,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                                             row.addView(textView);
                                         }
                                         table.addView(row);
+                                        transactionsPdf.add(transactions.get(i));
                                     }
                                 }
                             }
@@ -4602,6 +5467,58 @@ public class BackOfficeActivity extends AppCompatActivity {
         export.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                PdfPTable pdfPTable = new PdfPTable(10);
+                PdfPTable pdfPTableHeader = new PdfPTable(4);
+
+                createPDF("SoldQtyReport_" + today + "_.pdf");
+                pdfPTable.setWidthPercentage(100f);
+                pdfPTableHeader.setWidthPercentage(100f);
+                pdfPTableHeader.setSpacingAfter(20);
+
+                insertCell(pdfPTable, getResources().getString(R.string.family), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.category), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.item_code), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.item_name), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.qty), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.price), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.gross), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.discount), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.tax), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, getResources().getString(R.string.net), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+                for (int i = 0; i < transactionsPdf.size(); i++) {
+                    insertCell(pdfPTable, String.valueOf(transactionsPdf.get(i).getItemFamily()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(transactionsPdf.get(i).getItemCategory()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(transactionsPdf.get(i).getItemBarcode()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(transactionsPdf.get(i).getItemName()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(transactionsPdf.get(i).getQty()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(transactionsPdf.get(i).getPrice()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(transactions.get(i).getQty() * (transactions.get(i).getPrice())), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(transactionsPdf.get(i).getDiscount()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(transactionsPdf.get(i).getTaxValue()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(transactionsPdf.get(i).getTotal()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+                }
+
+                insertCell(pdfPTableHeader, "Falcon Soft ", Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, getResources().getString(R.string.sold_qty_report), Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 4, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, getResources().getString(R.string.from_date) + fromDateT[0], Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 2, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, getResources().getString(R.string.to_date) + ToDateT[0], Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+
+                try {
+
+                    doc.add(pdfPTableHeader);
+                    doc.add(pdfPTable);
+                    Toast.makeText(BackOfficeActivity.this, "Export to pdf Successful", Toast.LENGTH_SHORT).show();
+
+                } catch (DocumentException e) {
+                    e.printStackTrace();
+                }
+                endDocPdf();
+
 
             }
         });
@@ -4677,9 +5594,12 @@ public class BackOfficeActivity extends AppCompatActivity {
                 .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                 myCalendar.get(Calendar.DAY_OF_MONTH)).show());
 
+        final String[] fromDateT = {""};
+        final String[] toDateT = {""};
 
+        List<OrderTransactions> transactionsPdf = new ArrayList<>();
         preview.setOnClickListener(v -> {
-
+            transactionsPdf.clear();
             List<OrderTransactions> transactions = new ArrayList<>();
             table.removeAllViews();
 
@@ -4708,6 +5628,8 @@ public class BackOfficeActivity extends AppCompatActivity {
             else
                 posNoString = Integer.parseInt(PosNo.getSelectedItem().toString());
 
+            fromDateT[0] = fromDate.getText().toString();
+            toDateT[0] = toDate.getText().toString();
             for (int i = 0; i < transactions.size(); i++) {
                 if (filters(fromDate.getText().toString(), toDate.getText().toString(), transactions.get(i).getVoucherDate())) {
 
@@ -4750,6 +5672,8 @@ public class BackOfficeActivity extends AppCompatActivity {
                                     row.addView(textView);
                                 }
                                 table.addView(row);
+                                transactionsPdf.add(transactions.get(i));
+
                             }
                         }
                     }
@@ -4767,6 +5691,47 @@ public class BackOfficeActivity extends AppCompatActivity {
         export.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
+                PdfPTable pdfPTable = new PdfPTable(4);
+                PdfPTable pdfPTableHeader = new PdfPTable(4);
+
+                createPDF("TopSalesItemReport_" + today + "_.pdf");
+                pdfPTable.setWidthPercentage(100f);
+                pdfPTableHeader.setWidthPercentage(100f);
+                pdfPTableHeader.setSpacingAfter(20);
+
+                insertCell(pdfPTable, "Item Code ", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, "Item Name ", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, "Qty", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                insertCell(pdfPTable, "Total", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+
+
+                for (int i = 0; i < transactionsPdf.size(); i++) {
+
+                    insertCell(pdfPTable, transactionsPdf.get(i).getItemBarcode(), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, transactionsPdf.get(i).getItemName(), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(transactionsPdf.get(i).getQty()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                    insertCell(pdfPTable, String.valueOf(transactionsPdf.get(i).getTotal()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+                }
+
+                insertCell(pdfPTableHeader, "Falcon Soft ", Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "Top Sales Item Report", Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 4, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "From Date : " + fromDateT[0], Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 2, arabicFont, BaseColor.WHITE);
+                insertCell(pdfPTableHeader, "To Date   : " + toDateT[0], Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+
+
+                try {
+                    doc.add(pdfPTableHeader);
+                    doc.add(pdfPTable);
+                    Toast.makeText(BackOfficeActivity.this, R.string.export_to_pdf, Toast.LENGTH_SHORT).show();
+
+                } catch (DocumentException e) {
+                    e.printStackTrace();
+                }
+                endDocPdf();
 
             }
         });
@@ -5441,6 +6406,8 @@ public class BackOfficeActivity extends AppCompatActivity {
                                 row.addView(textView);
                             }
                             table.addView(row);
+
+                            orderTransactionData.add(transactions.get(i));
                         }
                     }
                 }
@@ -5485,6 +6452,12 @@ public class BackOfficeActivity extends AppCompatActivity {
                 row.addView(textView);
             }
             table.addView(row);
+            OrderTransactions transactions1=new OrderTransactions();
+            transactions1.setTime("*");
+            transactions1.setItemCategory(transactions.get(0).getItemCategory());
+            transactions1.setQty((int) totalQty);
+
+            orderTransactionData.add(transactions1);
         }
     }
 
@@ -5780,6 +6753,76 @@ public class BackOfficeActivity extends AppCompatActivity {
         Intent intent = new Intent(BackOfficeActivity.this, Main.class);
         startActivity(intent);
     }
+
+    void createPDF(String fileName) {
+        doc = new Document();
+        docWriter = null;
+        Log.e("path45", "create" + "-->" + Environment.getExternalStorageDirectory().getPath());
+        try {
+
+
+            String directory_path = Environment.getExternalStorageDirectory().getPath() + "/ReportRos/";
+            file = new File(directory_path);
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+            String targetPdf = directory_path + fileName;
+            File path = new File(targetPdf);
+
+            docWriter = PdfWriter.getInstance(doc, new FileOutputStream(path));
+            doc.setPageSize(PageSize.A4);//size of page
+            //open document
+            doc.open();
+            Paragraph paragraph = new Paragraph();
+            paragraph.add("");
+            doc.add(paragraph);
+
+            Log.e("path44", "" + targetPdf);
+
+
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    void endDocPdf() {
+
+        if (doc != null) {
+            //close the document
+            doc.close();
+        }
+        if (docWriter != null) {
+            //close the writer
+            docWriter.close();
+        }
+    }
+
+
+    public void insertCell(PdfPTable table, String text, int align, int colspan, Font font, BaseColor border) {
+
+        //create a new cell with the specified Text and Font
+        PdfPCell cell = new PdfPCell(new Phrase(text.trim(), font));
+        //set the cell alignment
+        cell.setHorizontalAlignment(align);
+        //set the cell column span in case you want to merge two or more cells
+        cell.setColspan(colspan);
+        cell.setBorderColor(border);
+        //in case there is no text and you wan to create an empty row
+        if (text.trim().equalsIgnoreCase("")) {
+            cell.setMinimumHeight(10f);
+        }
+
+        cell.setRunDirection(PdfWriter.RUN_DIRECTION_RTL); //for make arabic string from right to left ...
+
+//        cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+        //add the call to the table
+        table.addCell(cell);
+
+    }
+
 
     void initialize() {
         butManagement = (Button) findViewById(R.id.b_management);
