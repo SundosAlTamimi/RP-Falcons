@@ -1,19 +1,23 @@
 package com.tamimi.sundos.restpos.Models;
 
+import android.graphics.Bitmap;
+
 public class FamilyCategory {
 
     public int serial;
     public int type;
     public String name;
+    public Bitmap catPic;
 
     public FamilyCategory() {
 
     }
 
-    public FamilyCategory(int serial, int type, String name) {
+    public FamilyCategory(int serial, int type, String name, Bitmap catPic) {
         this.serial = serial;
         this.type = type;
         this.name = name;
+        this.catPic = catPic;
     }
 
     public int getSerial() {
@@ -38,5 +42,13 @@ public class FamilyCategory {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Bitmap getCatPic() {
+        return catPic;
+    }
+
+    public void setCatPic(Bitmap catPic) {
+        this.catPic = catPic;
     }
 }
