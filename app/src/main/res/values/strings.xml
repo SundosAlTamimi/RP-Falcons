@@ -455,4 +455,5 @@
     <string name="export_to_pdf">Export to pdf Successful</string>
     <string name="waiter_report">Waiter Report</string>
     <string name="waiter_name">Waiter Name</string>
+    <string name="card_type">Card Type :</string>
 </resources>
