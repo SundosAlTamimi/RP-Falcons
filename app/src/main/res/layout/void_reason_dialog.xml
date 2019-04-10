@@ -18,14 +18,15 @@
 
     <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1.1"
             android:background="@drawable/focused_table"
+        android:paddingBottom="10dp"
             android:orientation="vertical">
 
             <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
                 <TableLayout
                     android:id="@+id/tableOfReasons"
@@ -36,6 +37,17 @@
 
                 </TableLayout>
             </ScrollView>
+
+        <EditText
+            android:id="@+id/newReason"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:hint="@string/new_reason"
+            android:background="@color/layer1"
+            android:textColor="@color/text_color"
+            android:textColorHint="@color/gray"
+            android:layout_marginHorizontal="10dp"
+            android:paddingHorizontal="10dp"/>
 
         </LinearLayout>
 

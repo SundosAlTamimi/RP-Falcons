@@ -407,57 +407,61 @@ public class MenuRegistration extends AppCompatActivity {
 
     void showAddRecipeDialog() {
 
-        dialog = new Dialog(MenuRegistration.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(true);
-        dialog.setContentView(R.layout.add_recipe_dialog);
-        dialog.setCanceledOnTouchOutside(true);
+        if(!itemBarcodeEditText.getText().toString().equals("")) {
+            dialog = new Dialog(MenuRegistration.this);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setCancelable(true);
+            dialog.setContentView(R.layout.add_recipe_dialog);
+            dialog.setCanceledOnTouchOutside(true);
 
-        final EditText unit = (EditText) dialog.findViewById(R.id.unit);
-        final EditText qty = (EditText) dialog.findViewById(R.id.qty);
-        final Spinner recipeSpinner = (Spinner) dialog.findViewById(R.id.recipe_name);
-        Button buttonDone = (Button) dialog.findViewById(R.id.b_done);
+            final EditText unit = (EditText) dialog.findViewById(R.id.unit);
+            final EditText qty = (EditText) dialog.findViewById(R.id.qty);
+            final Spinner recipeSpinner = (Spinner) dialog.findViewById(R.id.recipe_name);
+            Button buttonDone = (Button) dialog.findViewById(R.id.b_done);
 
-        items = mDbHandler.getAllItems();
-        List<String> categoryName = new ArrayList<>();
-        for (int i = 0; i < items.size(); i++) {
-            categoryName.add(items.get(i).getMenuName());
-        }
-
-        menuNameAdapter = new ArrayAdapter<>(MenuRegistration.this, R.layout.spinner_style, categoryName);
-        recipeSpinner.setAdapter(menuNameAdapter);
-
-        recipeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                unit.setText(items.get(i).getInventoryUnit());
+            items = mDbHandler.getAllItems();
+            List<String> categoryName = new ArrayList<>();
+            for (int i = 0; i < items.size(); i++) {
+                categoryName.add(items.get(i).getMenuName());
             }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
+            menuNameAdapter = new ArrayAdapter<>(MenuRegistration.this, R.layout.spinner_style, categoryName);
+            recipeSpinner.setAdapter(menuNameAdapter);
 
-            }
-        });
-
-        buttonDone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!qty.getText().toString().equals("") && recipeSpinner.getCount() != 0) {
-
-                    int position = recipeSpinner.getSelectedItemPosition();
-                    insertRow(Integer.parseInt(itemBarcodeEditText.getText().toString()), items.get(position).getMenuName(),
-                            items.get(position).getInventoryUnit(), Integer.parseInt(qty.getText().toString()),
-                            items.get(position).getPrice());
-
-                    dialog.dismiss();
-
-                } else {
-                    Toast.makeText(MenuRegistration.this, "Please input requested fields", Toast.LENGTH_SHORT).show();
+            recipeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    unit.setText(items.get(i).getInventoryUnit());
                 }
-            }
-        });
 
-        dialog.show();
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+
+                }
+            });
+
+            buttonDone.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (!qty.getText().toString().equals("") && recipeSpinner.getCount() != 0) {
+
+                        int position = recipeSpinner.getSelectedItemPosition();
+                        insertRow(Integer.parseInt(itemBarcodeEditText.getText().toString()), items.get(position).getMenuName(),
+                                items.get(position).getInventoryUnit(), Integer.parseInt(qty.getText().toString()),
+                                items.get(position).getPrice());
+
+                        dialog.dismiss();
+
+                    } else {
+                        Toast.makeText(MenuRegistration.this, "Please input requested fields", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+            dialog.show();
+        } else {
+            Toast.makeText(MenuRegistration.this, "Please add ready item first", Toast.LENGTH_SHORT).show();
+        }
     }
 
     void showAddPictureDialog() {
@@ -556,7 +560,7 @@ public class MenuRegistration extends AppCompatActivity {
             TextView textView4 = (TextView) tableRow.getChildAt(3);
             TextView textView5 = (TextView) tableRow.getChildAt(4);
 
-            mDbHandler.addRecipe(new Recipes(Integer.parseInt(textView1.getText().toString()), textView2.getText().toString(),
+            mDbHandler.addRecipe(new Recipes(itemBarcode, textView2.getText().toString(),
                     textView3.getText().toString(), Integer.parseInt(textView4.getText().toString()),
                     Double.parseDouble(textView5.getText().toString())));
         }
