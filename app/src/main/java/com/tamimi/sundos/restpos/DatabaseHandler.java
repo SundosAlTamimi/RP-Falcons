@@ -54,7 +54,7 @@ import java.util.List;
 public class DatabaseHandler extends SQLiteOpenHelper {
     //hellohjt
     // Database Version
-    private static final int DATABASE_VERSION = 18;
+    private static final int DATABASE_VERSION = 19;
 
     // Database Name
     private static final String DATABASE_NAME = "RestPos";
@@ -474,6 +474,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String SERIAL2 = "SERIAL";
     private static final String TYPE2 = "TYPE";
     private static final String NAME_CATEGORY_FAMILY2 = "NAME_CATEGORY_FAMILY";
+    private static final String CATEGORY_PIC2 = "CATEGORY_PIC";
 
     //____________________________________________________________________________________
     private static final String VOID_REASONS = "VOID_REASONS";
@@ -1063,7 +1064,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String CREATE_TABLE_FAMILY_CATEGORY_TABLE = "CREATE TABLE " + FAMILY_CATEGORY_TABLE + "("
                 + SERIAL2 + " INTEGER ,"
                 + TYPE2 + " INTEGER ,"
-                + NAME_CATEGORY_FAMILY2 + " TEXT " + ")";
+                + NAME_CATEGORY_FAMILY2 + " TEXT ,"
+                + CATEGORY_PIC2 + " BLOB " + ")";
         db.execSQL(CREATE_TABLE_FAMILY_CATEGORY_TABLE);
 
         //___________________________________________________________________________________
@@ -1194,12 +1196,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 //        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS_TEMP ADD TIME TEXT NOT NULL DEFAULT '01:30'");
 //        db.execSQL("ALTER TABLE PAY_METHOD ADD TIME TEXT NOT NULL DEFAULT '01:30'");
 
-//        db.execSQL("ALTER TABLE PAY_IN_OUT ADD TIME TEXT NOT NULL DEFAULT ''");
+        db.execSQL("ALTER TABLE FAMILY_CATEGORY_TABLE ADD CATEGORY_PIC BLOB DEFAULT null");
 
-        String CREATE_TABLE_KITCHEN_SCREEN_TABLE = "CREATE TABLE " + KITCHEN_SCREEN_TABLE + "("
-                + KITCHEN_NAME + " TEXT,"
-                + KITCHEN_NO + " INTEGER " + ")";
-        db.execSQL(CREATE_TABLE_KITCHEN_SCREEN_TABLE);
+//        String CREATE_TABLE_KITCHEN_SCREEN_TABLE = "CREATE TABLE " + KITCHEN_SCREEN_TABLE + "("
+//                + KITCHEN_NAME + " TEXT,"
+//                + KITCHEN_NO + " INTEGER " + ")";
+//        db.execSQL(CREATE_TABLE_KITCHEN_SCREEN_TABLE);
     }
 
     //Insert values to the table Items
@@ -1871,9 +1873,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
+        byte[] byteImage = {};
+        if (familyCategory.getCatPic() != null) {
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            familyCategory.getCatPic().compress(Bitmap.CompressFormat.PNG, 0, stream);
+            byteImage = stream.toByteArray();
+        }
+
         values.put(SERIAL2, familyCategory.getSerial());
         values.put(TYPE2, familyCategory.getType());
         values.put(NAME_CATEGORY_FAMILY2, familyCategory.getName());
+        values.put(CATEGORY_PIC2, byteImage);
 
         db.insert(FAMILY_CATEGORY_TABLE, null, values);
 

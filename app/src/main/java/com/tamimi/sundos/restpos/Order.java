@@ -732,6 +732,7 @@ public class Order extends AppCompatActivity {
 
                         TableLayout reasons = (TableLayout) dialog1.findViewById(R.id.tableOfReasons);
                         Button save = (Button) dialog1.findViewById(R.id.done);
+                        EditText newReason = (EditText) dialog1.findViewById(R.id.newReason);
 
                         ArrayList<VoidResons> resons = mDbHandler.getAllVoidReasons();
 
@@ -767,7 +768,15 @@ public class Order extends AppCompatActivity {
 
                         save.setOnClickListener(view1 -> {
 
-                            if (!selectedReason[0].equals("") || resons.size() == 0) {
+                            if (!selectedReason[0].equals("") || !newReason.getText().toString().equals("")) {
+                                String reasonText ;
+                                if(newReason.getText().toString().equals("")){
+                                    reasonText = selectedReason[0] ;
+                                } else {
+                                    reasonText = newReason.getText().toString();
+                                    mDbHandler.addVoidReason(new VoidResons(Settings.shift_number, Settings.shift_name,
+                                            Settings.password, Settings.user_name, reasonText, today, 1));
+                                }
 
                                 int index = Integer.parseInt(raw.getTag().toString());
 
@@ -775,7 +784,7 @@ public class Order extends AppCompatActivity {
                                         Settings.shift_number, waiter, Integer.parseInt(waiterNo), "" + wantedItems.get(index).getItemBarcode(),
                                         wantedItems.get(index).getMenuName(), Integer.parseInt(textViewQty.getText().toString()),
                                         wantedItems.get(index).getPrice(), Double.parseDouble(textViewTotal.getText().toString()),
-                                        selectedReason[0], 0, time, Settings.POS_number));
+                                        reasonText, 0, time, Settings.POS_number));
 
                                 if (voidQty.getText().toString().equals(textViewQty.getText().toString())) {
 
@@ -852,6 +861,7 @@ public class Order extends AppCompatActivity {
 
         TableLayout reasons = (TableLayout) dialog.findViewById(R.id.tableOfReasons);
         Button save = (Button) dialog.findViewById(R.id.done);
+        EditText newReason = (EditText) dialog.findViewById(R.id.newReason);
 
         ArrayList<VoidResons> resons = mDbHandler.getAllVoidReasons();
 
@@ -888,8 +898,15 @@ public class Order extends AppCompatActivity {
         reasons.addView(row);
 
         save.setOnClickListener(view -> {
-            if (!selectedReason[0].equals("") || resons.size() == 0) {
-
+            if (!selectedReason[0].equals("") || !newReason.getText().toString().equals("")) {
+                String reasonText ;
+                if(newReason.getText().toString().equals("")){
+                    reasonText = selectedReason[0] ;
+                } else {
+                    reasonText = newReason.getText().toString();
+                    mDbHandler.addVoidReason(new VoidResons(Settings.shift_number, Settings.shift_name,
+                            Settings.password, Settings.user_name, reasonText, today, 1));
+                }
 
                 for (int k = 0; k < tableLayout.getChildCount(); k++) {
                     TableRow raw = (TableRow) tableLayout.getChildAt(k);
@@ -900,7 +917,7 @@ public class Order extends AppCompatActivity {
                             Settings.shift_number, waiter, Integer.parseInt(waiterNo), "" + wantedItems.get(k).getItemBarcode(),
                             wantedItems.get(k).getMenuName(), Integer.parseInt(textViewQty.getText().toString()),
                             wantedItems.get(k).getPrice(), Double.parseDouble(textViewTotal.getText().toString()),
-                            selectedReason[0], 1, time, Settings.POS_number));
+                            reasonText, 1, time, Settings.POS_number));
                 }
                 if (orderTypeFlag == 0) {
                     tableLayout.removeAllViews();

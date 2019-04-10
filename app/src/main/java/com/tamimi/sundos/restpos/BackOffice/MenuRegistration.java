@@ -58,10 +58,12 @@ public class MenuRegistration extends AppCompatActivity {
             kitchenAliasEditText, itemBarcodeEditText, descriptionEditText, wastagePercentEditText;
     Button newButton, saveButton, exitButton, addMenuCategory, addInventoryUnit, addRecipe, deleteCat;
     ImageView itemPic;
+    ImageView catPic;
 
     String familyName = "Baverage";
     int showInMenuVariavle = 0;
-    Bitmap itemBitmapPic;
+    Bitmap itemBitmapPic, categoryPic;
+    int picFlag;
 
     Dialog dialog, dialog2;
     static final int SELECTED_PICTURE = 1;
@@ -96,6 +98,7 @@ public class MenuRegistration extends AppCompatActivity {
         deleteCat.setOnClickListener(onClickListener);
 
         itemBitmapPic = null;
+        categoryPic = null;
 
         mDbHandler = new DatabaseHandler(MenuRegistration.this);
         fillSpinners();
@@ -243,7 +246,7 @@ public class MenuRegistration extends AppCompatActivity {
                     break;
                 case R.id.deletC:
                     if (!noOpen) {
-                        deleteCatDialog( "categories Name","Serial" );
+                        deleteCatDialog("categories Name", "Serial");
                         List<FamilyCategory> category = mDbHandler.getAllFamilyCategory();
                         for (int i = 0; i < category.size(); i++) {
                             if (category.get(i).getType() == 2)
@@ -277,6 +280,7 @@ public class MenuRegistration extends AppCompatActivity {
         Button exit = (Button) dialog.findViewById(R.id.exit);
         Button buttonDone = (Button) dialog.findViewById(R.id.b_done);
         CheckBox showInMenu = (CheckBox) dialog.findViewById(R.id.showInMenu);
+        catPic = (ImageView) dialog.findViewById(R.id.catPicture);
 
         showInMenuVariavle = showInMenu.isChecked() ? 1 : 0;
         families = new ArrayList<>();
@@ -290,6 +294,13 @@ public class MenuRegistration extends AppCompatActivity {
         }
         familiesAdapter = new ArrayAdapter<String>(MenuRegistration.this, R.layout.spinner_style, families);
         familyNameSpinner.setAdapter(familiesAdapter);
+
+        catPic.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showAddPictureDialog2();
+            }
+        });
 
         buttonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -313,6 +324,7 @@ public class MenuRegistration extends AppCompatActivity {
                     familyCategory.setType(2);
                     // 1--> family type // 2--> category type
                     familyCategory.setName(catName.getText().toString());
+                    familyCategory.setCatPic(categoryPic);
 
                     mDbHandler.addFamilyCategory(familyCategory);
 
@@ -407,57 +419,61 @@ public class MenuRegistration extends AppCompatActivity {
 
     void showAddRecipeDialog() {
 
-        dialog = new Dialog(MenuRegistration.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(true);
-        dialog.setContentView(R.layout.add_recipe_dialog);
-        dialog.setCanceledOnTouchOutside(true);
+        if (!itemBarcodeEditText.getText().toString().equals("")) {
+            dialog = new Dialog(MenuRegistration.this);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setCancelable(true);
+            dialog.setContentView(R.layout.add_recipe_dialog);
+            dialog.setCanceledOnTouchOutside(true);
 
-        final EditText unit = (EditText) dialog.findViewById(R.id.unit);
-        final EditText qty = (EditText) dialog.findViewById(R.id.qty);
-        final Spinner recipeSpinner = (Spinner) dialog.findViewById(R.id.recipe_name);
-        Button buttonDone = (Button) dialog.findViewById(R.id.b_done);
+            final EditText unit = (EditText) dialog.findViewById(R.id.unit);
+            final EditText qty = (EditText) dialog.findViewById(R.id.qty);
+            final Spinner recipeSpinner = (Spinner) dialog.findViewById(R.id.recipe_name);
+            Button buttonDone = (Button) dialog.findViewById(R.id.b_done);
 
-        items = mDbHandler.getAllItems();
-        List<String> categoryName = new ArrayList<>();
-        for (int i = 0; i < items.size(); i++) {
-            categoryName.add(items.get(i).getMenuName());
-        }
-
-        menuNameAdapter = new ArrayAdapter<>(MenuRegistration.this, R.layout.spinner_style, categoryName);
-        recipeSpinner.setAdapter(menuNameAdapter);
-
-        recipeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                unit.setText(items.get(i).getInventoryUnit());
+            items = mDbHandler.getAllItems();
+            List<String> categoryName = new ArrayList<>();
+            for (int i = 0; i < items.size(); i++) {
+                categoryName.add(items.get(i).getMenuName());
             }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
+            menuNameAdapter = new ArrayAdapter<>(MenuRegistration.this, R.layout.spinner_style, categoryName);
+            recipeSpinner.setAdapter(menuNameAdapter);
 
-            }
-        });
-
-        buttonDone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!qty.getText().toString().equals("") && recipeSpinner.getCount() != 0) {
-
-                    int position = recipeSpinner.getSelectedItemPosition();
-                    insertRow(Integer.parseInt(itemBarcodeEditText.getText().toString()), items.get(position).getMenuName(),
-                            items.get(position).getInventoryUnit(), Integer.parseInt(qty.getText().toString()),
-                            items.get(position).getPrice());
-
-                    dialog.dismiss();
-
-                } else {
-                    Toast.makeText(MenuRegistration.this, "Please input requested fields", Toast.LENGTH_SHORT).show();
+            recipeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    unit.setText(items.get(i).getInventoryUnit());
                 }
-            }
-        });
 
-        dialog.show();
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+
+                }
+            });
+
+            buttonDone.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (!qty.getText().toString().equals("") && recipeSpinner.getCount() != 0) {
+
+                        int position = recipeSpinner.getSelectedItemPosition();
+                        insertRow(Integer.parseInt(itemBarcodeEditText.getText().toString()), items.get(position).getMenuName(),
+                                items.get(position).getInventoryUnit(), Integer.parseInt(qty.getText().toString()),
+                                items.get(position).getPrice());
+
+                        dialog.dismiss();
+
+                    } else {
+                        Toast.makeText(MenuRegistration.this, "Please input requested fields", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+            dialog.show();
+        } else {
+            Toast.makeText(MenuRegistration.this, "Please add ready item first", Toast.LENGTH_SHORT).show();
+        }
     }
 
     void showAddPictureDialog() {
@@ -511,6 +527,67 @@ public class MenuRegistration extends AppCompatActivity {
                 intent.putExtra("aspectY", 1);
                 intent.putExtra("return-data", true);
                 startActivityForResult(intent, SELECTED_PICTURE);
+                picFlag = 0;
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+    void showAddPictureDialog2() {
+
+        dialog = new Dialog(MenuRegistration.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.add_picture_dialog);
+        dialog.setCanceledOnTouchOutside(true);
+
+        ArrayList<FamilyCategory> familyCategories = mDbHandler.getAllFamilyCategory();
+        items = mDbHandler.getAllItems();
+
+        LinearLayout pics = (LinearLayout) dialog.findViewById(R.id.usedPictures);
+
+        for (int i = familyCategories.size() - 1; i >= 0; i--) {
+
+            final Bitmap pic = familyCategories.get(i).getCatPic();
+            if (pic != null) {
+                RelativeLayout.LayoutParams imageParams = new RelativeLayout.LayoutParams(150, 150);
+                imageParams.setMargins(5, 0, 5, 0);
+
+                ImageView newPic = new ImageView(MenuRegistration.this);
+                newPic.setLayoutParams(imageParams);
+                newPic.setImageDrawable(new BitmapDrawable(getResources(), pic));
+
+                newPic.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        catPic.setImageDrawable(new BitmapDrawable(getResources(), pic));
+                        categoryPic = pic;
+                        dialog.dismiss();
+                    }
+                });
+
+                pics.addView(newPic);
+            }
+        }
+        Button buttonAddFromGallery = (Button) dialog.findViewById(R.id.buttonAddFromGallery);
+
+        buttonAddFromGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                intent.setType("image/*");
+                intent.putExtra("crop", "true");
+                intent.putExtra("scale", true);
+                intent.putExtra("outputX", 256);
+                intent.putExtra("outputY", 256);
+                intent.putExtra("aspectX", 1);
+                intent.putExtra("aspectY", 1);
+                intent.putExtra("return-data", true);
+                startActivityForResult(intent, SELECTED_PICTURE);
+                picFlag = 1;
                 dialog.dismiss();
             }
         });
@@ -530,10 +607,16 @@ public class MenuRegistration extends AppCompatActivity {
             final Bundle extras = data.getExtras();
             if (extras != null) {
                 //Get image
-                itemBitmapPic = extras.getParcelable("data");
-                itemPic.setImageDrawable(new BitmapDrawable(getResources(), itemBitmapPic));
-                Log.e("******************1", itemPic.getDrawable().toString());
 
+                if (picFlag == 0) {
+                    itemPic.setBackgroundDrawable(null);
+                    itemBitmapPic = extras.getParcelable("data");
+                    itemPic.setImageDrawable(new BitmapDrawable(getResources(), itemBitmapPic));
+                } else {
+                    catPic.setBackgroundDrawable(null);
+                    categoryPic = extras.getParcelable("data");
+                    catPic.setImageDrawable(new BitmapDrawable(getResources(), categoryPic));
+                }
             }
         }
     }
@@ -556,7 +639,7 @@ public class MenuRegistration extends AppCompatActivity {
             TextView textView4 = (TextView) tableRow.getChildAt(3);
             TextView textView5 = (TextView) tableRow.getChildAt(4);
 
-            mDbHandler.addRecipe(new Recipes(Integer.parseInt(textView1.getText().toString()), textView2.getText().toString(),
+            mDbHandler.addRecipe(new Recipes(itemBarcode, textView2.getText().toString(),
                     textView3.getText().toString(), Integer.parseInt(textView4.getText().toString()),
                     Double.parseDouble(textView5.getText().toString())));
         }

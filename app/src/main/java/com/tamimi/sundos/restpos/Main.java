@@ -102,6 +102,7 @@ public class Main extends AppCompatActivity {
 
                 case R.id.exit:
                     finish();
+                    moveTaskToBack(true);
                     System.exit(0);
                     break;
 

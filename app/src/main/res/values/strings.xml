@@ -452,6 +452,7 @@
     <string name="enter_void_qty">Enter Void Qty </string>
     <string name="kitchen_screen_no">Kitchen Screen NO</string>
     <string name="kitchen_screen_name">Kitchen Screen Name</string>
+    <string name="new_reason">New Reason</string>
     <string name="export_to_pdf">Export to pdf Successful</string>
     <string name="waiter_report">Waiter Report</string>
     <string name="waiter_name">Waiter Name</string>
