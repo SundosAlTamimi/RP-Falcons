@@ -9,9 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.tamimi.sundos.restpos.Models.Items;
 import com.tamimi.sundos.restpos.Models.UsedItems;
-import com.tamimi.sundos.restpos.R;
 
 import java.util.ArrayList;
 
@@ -45,7 +43,7 @@ public class LayoutFoodAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view1 = inflater.inflate(R.layout.raw_activity, null);
+        View view1 = inflater.inflate(R.layout.raw_activity2, null);
 
         LinearLayout background = (LinearLayout) view1.findViewById(R.id.itemLinear);
         TextView name = (TextView) view1.findViewById(R.id.name);

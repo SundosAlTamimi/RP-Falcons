@@ -153,6 +153,7 @@
     <string name="order_layout">بناء شاشة الطلب</string>
     <string name="add_category"> اضافة فئة</string>
     <string name="setting">الاعدادات</string>
+    <string name="categories_setting">اعدادات الفئات</string>
     <string name="background">الخلفية</string>
     <string name="text_color">لون الخط</string>
     <string name="default_">الافتراضي</string>
@@ -452,5 +453,7 @@
     <string name="enter_void_qty">ادخل كمية الالغاء</string>
     <string name="kitchen_screen_no">رقم شاشة المطبخ</string>
     <string name="kitchen_screen_name">اسم شاشة المطبخ</string>
-    <string name="new_reason">New Reason</string>
+    <string name="new_reason">سبب جديد</string>
+
+    <string name="select_cat">اختر فئة اولا !</string>
 </resources>

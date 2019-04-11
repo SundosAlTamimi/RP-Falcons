@@ -153,6 +153,7 @@
     <string name="order_layout">Order Layout</string>
     <string name="add_category">+ Add Category</string>
     <string name="setting">Setting</string>
+    <string name="categories_setting">Categories Setting</string>
     <string name="background">Background</string>
     <string name="text_color">Text Color</string>
     <string name="default_">Default</string>
@@ -456,4 +457,6 @@
     <string name="export_to_pdf">Export to pdf Successful</string>
     <string name="waiter_report">Waiter Report</string>
     <string name="waiter_name">Waiter Name</string>
+
+    <string name="select_cat">Please, select category !</string>
 </resources>
