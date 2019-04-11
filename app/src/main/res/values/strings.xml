@@ -459,4 +459,5 @@
     <string name="waiter_name">Waiter Name</string>
 
     <string name="select_cat">Please, select category !</string>
+    <string name="card_type">Card Type :</string>
 </resources>
