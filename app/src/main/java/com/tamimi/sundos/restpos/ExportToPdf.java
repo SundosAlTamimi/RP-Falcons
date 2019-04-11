@@ -90,7 +90,7 @@ public class ExportToPdf   {
         insertCell(pdfPTable, context.getString(R.string.difference), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable, context.getString(R.string.update_by), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable, context.getString(R.string.till_ok), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-
+        pdfPTable.setHeaderRows(1);
         for (int i = 0; i < blindClosePdf.size(); i++) {
             insertCell(pdfPTable, String.valueOf(blindClosePdf.get(i).getDate()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
             insertCell(pdfPTable, String.valueOf(blindClosePdf.get(i).getPOSNo()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
@@ -154,7 +154,7 @@ public class ExportToPdf   {
         insertCell(pdfPTable,  context.getString(R.string.total), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable,  context.getString(R.string.tax), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable,  context.getString(R.string.net_total_), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-
+        pdfPTable.setHeaderRows(1);
 
         for (int i = 0; i < orderTransactionDataPdf.size(); i++) {
             insertCell(pdfPTable, String.valueOf(orderTransactionDataPdf.get(i).getItemName()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
@@ -185,6 +185,7 @@ public class ExportToPdf   {
         insertCell(pdfPTableTax, context.getString(R.string.tax_percent) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTableTax, context.getString(R.string.total) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTableTax, context.getString(R.string.tax) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+        pdfPTableTax.setHeaderRows(1);
 
         for (int i = 0; i < orderTransactionDataPdf2.size(); i++) {
             insertCell(pdfPTableTax, String.valueOf(orderTransactionDataPdf2.get(i).getTaxPerc()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
@@ -227,7 +228,7 @@ public class ExportToPdf   {
                 insertCell(pdfPTable,context. getString(R.string.point_of_sale), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
                 insertCell(pdfPTable,context. getString(R.string.trans_type), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
                 insertCell(pdfPTable,context. getString(R.string.amount), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-
+        pdfPTable.setHeaderRows(1);
 //
         for (int i = 0; i < PayCashier.size(); i++) {
                     insertCell(pdfPTable, String.valueOf(i + 1), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
@@ -292,7 +293,7 @@ public class ExportToPdf   {
         insertCell(pdfPTable, context.getString(R.string.qty), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable, context.getString(R.string.total_price), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable, context.getString(R.string.void_reason), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-
+pdfPTable.setHeaderRows(1);
         for (int i = 0; i < canceledOrdersPdf.size(); i++) {
             insertCell(pdfPTable, String.valueOf(i + 1), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
             insertCell(pdfPTable, canceledOrdersPdf.get(i).getTransDate(), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
@@ -361,7 +362,7 @@ public class ExportToPdf   {
         insertCell(pdfPTable,  context.getString(R.string.total), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable,  context.getString(R.string.tax), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable,  context.getString(R.string.net_total_), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-
+        pdfPTable.setHeaderRows(1);
 
         for (int i = 0; i < orderTransactionDataPdf.size(); i++) {
             insertCell(pdfPTable, String.valueOf(orderTransactionDataPdf.get(i).getItemName()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
@@ -391,7 +392,7 @@ public class ExportToPdf   {
         insertCell(pdfPTableTax, context.getString(R.string.tax_percent) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTableTax, context.getString(R.string.total) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTableTax, context.getString(R.string.tax) , ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-
+        pdfPTableTax.setHeaderRows(1);
         for (int i = 0; i < orderTransactionDataPdf2.size(); i++) {
             insertCell(pdfPTableTax, String.valueOf(orderTransactionDataPdf2.get(i).getTaxPerc()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
             insertCell(pdfPTableTax, String.valueOf(orderTransactionDataPdf2.get(i).getTotal()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
@@ -431,7 +432,7 @@ public class ExportToPdf   {
         insertCell(pdfPTable, "Order Count", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable, "Average", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
 
-
+        pdfPTable.setHeaderRows(1);
         for (int i = 0; i < headerData.size(); i++) {
             insertCell(pdfPTable, String.valueOf(headerData.get(i).getPointOfSaleNumber()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
             insertCell(pdfPTable, String.valueOf(headerData.get(i).getTotal()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
@@ -479,7 +480,7 @@ public class ExportToPdf   {
         insertCell(pdfPTable, "Date", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable, "Message", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable, "Is Show", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-
+        pdfPTable.setHeaderRows(1);
 
         for (int i = 0; i < AnnounPdf.size(); i++) {
             insertCell(pdfPTable, AnnounPdf.get(i).getShiftName(), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
@@ -531,7 +532,7 @@ public class ExportToPdf   {
         insertCell(pdfPTable, "No of Sales", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable, "Avg Per Trans", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable, "Avg Per Gusts", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-
+        pdfPTable.setHeaderRows(1);
         for (int i = 0; i < headerList.size(); i++) {
 
             insertCell(pdfPTable, headerList.get(i).getTime(), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
@@ -588,7 +589,7 @@ public class ExportToPdf   {
         insertCell(pdfPTable, "Qty", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable, "Price", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable, "Total", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-
+        pdfPTable.setHeaderRows(1);
 
         for (int i = 0; i < orderTransactionData.size(); i++) {
             if(!orderTransactionData.get(i).getTime().equals("*")) {
@@ -645,7 +646,7 @@ public class ExportToPdf   {
         insertCell(pdfPTable, "Item Name ", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable, "Qty", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable, "Total", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-
+        pdfPTable.setHeaderRows(1);
 
         for (int i = 0; i < transactionsPdf.size(); i++) {
 
@@ -709,7 +710,7 @@ public class ExportToPdf   {
         insertCell(pdfPTable, context.getString(R.string.voucher_no), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable, context.getString(R.string.net_total_), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable, context.getString(R.string.customer_name), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-
+        pdfPTable.setHeaderRows(1);
 
         for (int i = 0; i < OrderPayMDataPdf.size(); i++) {
             insertCell(pdfPTable, String.valueOf(i + 1), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
@@ -762,6 +763,7 @@ public class ExportToPdf   {
         insertCell(pdfPTable, context.getString(R.string.net), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable, context.getString(R.string.service), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable, context.getString(R.string.service_tax), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+        pdfPTable.setHeaderRows(1);
 
         for (int i = 0; i < headerDataMarket.size(); i++) {
             insertCell(pdfPTable, String.valueOf(headerDataMarket.get(i).getWaiter()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
@@ -815,6 +817,7 @@ public class ExportToPdf   {
         insertCell(pdfPTable, "To Table", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable, "To Section", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable, "Cashier", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+        pdfPTable.setHeaderRows(1);
 
         for (int i = 0; i < actionsPdf.size(); i++) {
 
@@ -904,7 +907,7 @@ public class ExportToPdf   {
         insertCell(pdfPTable, context.getString(R.string.tax), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable, context.getString(R.string.net), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable, context.getString(R.string.pay_method), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-
+        pdfPTable.setHeaderRows(1);
         for (int i = 0; i < headerData.size(); i++) {
             insertCell(pdfPTable, String.valueOf(headerData.get(i).getVoucherDate()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
             insertCell(pdfPTable, String.valueOf(headerData.get(i).getPointOfSaleNumber()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
@@ -942,7 +945,7 @@ public class ExportToPdf   {
         }else if(simpleHeader.get(5).equals("1")) {
             type="Dine In";
         }
-        insertCell(pdfPTableHeader, context.getString(R.string.trans_type) +type, Element.ALIGN_LEFT, 1, arabicFont, BaseColor.WHITE);
+        insertCell(pdfPTableHeader, context.getString(R.string.trans_type)+" : " +type, Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
 
         try {
 
@@ -975,7 +978,7 @@ public class ExportToPdf   {
         insertCell(pdfPTable, context.getString(R.string.discount), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable, context.getString(R.string.tax), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable, context.getString(R.string.net), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-
+        pdfPTable.setHeaderRows(1);
         for (int i = 0; i < transactionsPdf.size(); i++) {
             insertCell(pdfPTable, String.valueOf(transactionsPdf.get(i).getItemFamily()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
             insertCell(pdfPTable, String.valueOf(transactionsPdf.get(i).getItemCategory()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
@@ -1032,7 +1035,7 @@ public class ExportToPdf   {
         insertCell(pdfPTable, context.getString(R.string.user_name_), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable, context.getString(R.string.order_count), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable, context.getString(R.string.net_total_), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-
+        pdfPTable.setHeaderRows(1);
         for (int i = 0; i < headerDataMarket.size(); i++) {
             insertCell(pdfPTable, String.valueOf(headerDataMarket.get(i).getUserName()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
             insertCell(pdfPTable, String.valueOf(headerDataMarket.get(i).getTime()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
@@ -1118,7 +1121,6 @@ public class ExportToPdf   {
             docWriter.close();
         }
     }
-
 
     public void insertCell(PdfPTable table, String text, int align, int colspan, Font font, BaseColor border) {
 
