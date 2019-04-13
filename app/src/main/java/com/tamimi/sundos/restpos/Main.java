@@ -383,7 +383,7 @@ public class Main extends AppCompatActivity {
                                 cash.setOrderKind(0);
                                 cashier.add(cash);
                             } else {
-                                Toast.makeText(Main.this, "some Qty not have value ...", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(Main.this, getResources().getString(R.string.some_qty_not), Toast.LENGTH_SHORT).show();
                             }
                         }
                         mDHandler.addCashierInOut(cashier);
@@ -393,9 +393,9 @@ public class Main extends AppCompatActivity {
                         dialogCashierIn.dismiss();
                     } else {
                         AlertDialog.Builder builderInner = new AlertDialog.Builder(Main.this);
-                        builderInner.setTitle("Do you want to enter with Zero Cashier In ?");
+                        builderInner.setTitle(R.string.cashier_in_zero);
                         builderInner.setCancelable(false);
-                        builderInner.setPositiveButton("Yes", (dialog1, which1) -> {
+                        builderInner.setPositiveButton(getResources().getString(R.string.yes), (dialog1, which1) -> {
                             for (int i = 0; i < money.size(); i++) {
                                 Cashier cash = new Cashier();
                                 TableRow tableRow = (TableRow) categories.getChildAt(i);
@@ -412,17 +412,17 @@ public class Main extends AppCompatActivity {
                                     cash.setOrderKind(0);
                                     cashier.add(cash);
                                 } else {
-                                    Toast.makeText(Main.this, "some Qty not have value ...", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(Main.this, getResources().getString(R.string.some_qty_not), Toast.LENGTH_SHORT).show();
                                 }
                             }
                             mDHandler.addCashierInOut(cashier);
                             dialogCashierIn.dismiss();
 
                             mDHandler.addClockInClockOut(clockInClockOut);
-                            Toast.makeText(Main.this, "Save Successful...", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Main.this, getResources().getString(R.string.save_successful), Toast.LENGTH_SHORT).show();
                             clockInSuccessful(times, dates); //this for Successful clockIn
                         });
-                        builderInner.setNegativeButton("No", (dialog1, i) -> {
+                        builderInner.setNegativeButton(getResources().getString(R.string.no), (dialog1, i) -> {
                             dialog1.dismiss();
                         });
                         builderInner.show();
@@ -430,7 +430,7 @@ public class Main extends AppCompatActivity {
 
 
                 } else {
-                    Toast.makeText(Main.this, "Please Add Money Category ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Main.this, getResources().getString(R.string.add_money_category), Toast.LENGTH_SHORT).show();
                     dialogCashierIn.dismiss();
 
                 }
@@ -727,14 +727,14 @@ public class Main extends AppCompatActivity {
                     saveCashierOutBase(categories, tranType, finalClose, changeOver, toUser, cashTotals, creditCard, cheque, giftCard,
                             credit, point, otherPaymentTotal, mainTotal, money, dialogCashierOut);
 
-                    Toast.makeText(Main.this, "Save Successful...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Main.this, getResources().getString(R.string.save_successful), Toast.LENGTH_SHORT).show();
 
                 } else {
 
                     AlertDialog.Builder builderInner = new AlertDialog.Builder(Main.this);
-                    builderInner.setTitle("Do you want to exit with Zero Cashier Out ?");
+                    builderInner.setTitle(getResources().getString(R.string.zero_cashier_q));
                     builderInner.setCancelable(false);
-                    builderInner.setPositiveButton("Yes", (dialog1, which1) -> {
+                    builderInner.setPositiveButton(getResources().getString(R.string.yes), (dialog1, which1) -> {
 
                         int tranType = 0;
                         if (finalClose.isChecked()) {
@@ -747,10 +747,10 @@ public class Main extends AppCompatActivity {
                         saveCashierOutBase(categories, tranType, finalClose, changeOver, toUser, cashTotals, creditCard, cheque, giftCard,
                                 credit, point, otherPaymentTotal, mainTotal, money, dialogCashierOut);
 
-                        Toast.makeText(Main.this, "Save Successful...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Main.this, getResources().getString(R.string.save_successful), Toast.LENGTH_SHORT).show();
 
                     });
-                    builderInner.setNegativeButton("No", (dialog1, i) -> {
+                    builderInner.setNegativeButton(getResources().getString(R.string.no), (dialog1, i) -> {
                         dialog1.dismiss();
                     });
                     builderInner.show();
@@ -933,14 +933,14 @@ public class Main extends AppCompatActivity {
         final Button exit = (Button) dialog.findViewById(R.id.exit);
 
         String signal = "";
-        tranType.setText(transType == 0 ? "Pay In" : "Pay Out");
+        tranType.setText(transType == 0 ? getResources().getString(R.string.pay_in) : getResources().getString(R.string.pay_out));
         if (transType == 0) {
             signal = "";
         } else signal = "-";
         date.setText(today);
 
         ArrayList<Pay> pays = mDHandler.getAllPayInOut();
-        serial.setText(pays.size() == 0 ? "Trans.NO:  1" : "Trans.NO:  " + pays.size() + 1);
+        serial.setText(pays.size() == 0 ? getResources().getString(R.string.trans_no)+" : "+"1" : getResources().getString(R.string.trans_no)+" : " +(pays.size() + 1));
 
         exit.setOnClickListener(new OnClickListener() {
             @Override
@@ -1082,7 +1082,7 @@ public class Main extends AppCompatActivity {
                             mDHandler.addPayInOut(new Pay(transType, Settings.POS_number, Settings.password, Settings.user_name, today,
                                     Double.parseDouble(value.getText().toString()), remark.getText().toString(), Settings.shift_number,
                                     Settings.shift_name, time));
-                            Toast.makeText(Main.this, "Saved successfully", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Main.this, getResources().getString(R.string.save_successful), Toast.LENGTH_SHORT).show();
                             dialog.dismiss();
                         }
 
@@ -1105,15 +1105,15 @@ public class Main extends AppCompatActivity {
                                 cash.setOrderKind(2);/// 2 --> pay in / out   1 --> trans (order - refund ) / 0 --> cashier iN
                                 cashier.add(cash);
                             } else {
-                                Toast.makeText(Main.this, "some Qty not have value ...", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(Main.this, getResources().getString(R.string.some_qty_not), Toast.LENGTH_SHORT).show();
                             }
                         }
                         mDHandler.addCashierInOut(cashier);
                         dialog.dismiss();
                     } else
-                        Toast.makeText(Main.this, "Total from cash not equal Value ... ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Main.this,getResources().getString(R.string.total_from_cash_not_equal_value) , Toast.LENGTH_SHORT).show();
                 } else
-                    Toast.makeText(Main.this, "Please ensure your inputs", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Main.this, getResources().getString(R.string.ensure_your_input), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -1387,7 +1387,7 @@ public class Main extends AppCompatActivity {
 
             dialogCashierOut.dismiss();
         } else
-            Toast.makeText(Main.this, "Please enter 'to user' field", Toast.LENGTH_LONG).show();
+            Toast.makeText(Main.this, getResources().getString(R.string.to_user_field), Toast.LENGTH_LONG).show();
 
 
         mDHandler.updateStatusInBlindShiftIn(Settings.user_name, today);
@@ -1537,11 +1537,11 @@ public class Main extends AppCompatActivity {
                                 break;
                         }
                     } else {
-                        Toast.makeText(Main.this, " Please Insert Correct Password ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Main.this, getResources().getString(R.string.insert_correct_password), Toast.LENGTH_SHORT).show();
                         focusedTextView.setText("");
                     }
                 } else {
-                    Toast.makeText(Main.this, " Please Enter Your Password ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Main.this,getResources().getString( R.string.enter_your_password), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -1626,7 +1626,7 @@ public class Main extends AppCompatActivity {
         masege = (TextView) dialog.findViewById(R.id.clockinsuccessfull);
         time = (TextView) dialog.findViewById(R.id.time2);
         date = (TextView) dialog.findViewById(R.id.date2);
-        masege.setText("Clock IN Successful   (" + Settings.user_name + ")");
+        masege.setText( getResources().getString(R.string.clockinsuccessful) +"(" + Settings.user_name + ")");
         Button ok = (Button) dialog.findViewById(R.id.ok1);
 
         time.setText(times);

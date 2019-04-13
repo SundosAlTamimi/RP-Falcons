@@ -281,7 +281,7 @@
                     android:background="@color/blue_ice"
                     android:gravity="center"
                     android:padding="2dp"
-                    android:text="Is Show "
+                    android:text="@string/is_show"
                     android:textColor="@color/layer1"
                     android:textSize="18sp" />
 

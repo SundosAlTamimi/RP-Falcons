@@ -125,11 +125,11 @@ public class CustomerRegistration extends AppCompatActivity {
                         customerRegistrationModel.setShiftName(Settings.shift_name);
 
                         mDHandler.addCustomerRegistration(customerRegistrationModel);
-                        Toast.makeText(CustomerRegistration.this, "Saved Successful", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CustomerRegistration.this, getResources().getString(R.string.save_successful), Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 } else {
-                    Toast.makeText(CustomerRegistration.this, " Not Have Any Data In Table ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CustomerRegistration.this, getResources().getString(R.string.not_have_any_data), Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -234,10 +234,10 @@ public class CustomerRegistration extends AppCompatActivity {
                         remaining.setText("");
                         remark.setText("");
                     } else {
-                        Toast.makeText(CustomerRegistration.this, "Please Insert data ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CustomerRegistration.this, getResources().getString(R.string.please_insert_all_data), Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(CustomerRegistration.this, "please Add Member Ship Group ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CustomerRegistration.this, getResources().getString(R.string.add_member_ship_group), Toast.LENGTH_SHORT).show();
                 }
 
 

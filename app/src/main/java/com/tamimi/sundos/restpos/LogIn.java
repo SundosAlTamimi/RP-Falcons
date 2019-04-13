@@ -119,7 +119,7 @@ public class LogIn extends AppCompatActivity {
 
                             logIn();
                         } else
-                            Toast.makeText(LogIn.this, "Incorrect Password", Toast.LENGTH_LONG).show();
+                            Toast.makeText(LogIn.this, getResources().getString(R.string.incorect_password), Toast.LENGTH_LONG).show();
                     }
                     break;
             }
@@ -165,11 +165,11 @@ public class LogIn extends AppCompatActivity {
                                 if (isExist) {
                                     dialog.dismiss();
                                 } else
-                                    Toast.makeText(LogIn.this, "user not found", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(LogIn.this, getResources().getString(R.string.user_not_found), Toast.LENGTH_SHORT).show();
                             }
                             break;
                         case "another user is logged":
-                            Toast.makeText(LogIn.this, "another user is logged", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LogIn.this,getResources().getString( R.string.other_user_log), Toast.LENGTH_SHORT).show();
                             break;
                         default:
                             Settings.user_name = userText;
@@ -179,7 +179,7 @@ public class LogIn extends AppCompatActivity {
                     }
 
                 } else {
-                    Toast.makeText(LogIn.this, "Please Enter your user name", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LogIn.this,getResources().getString( R.string.enter_your_user_name), Toast.LENGTH_SHORT).show();
                 }
             }
         });

@@ -392,16 +392,16 @@ public class BackOfficeActivity extends AppCompatActivity {
         for (int i = 0; i < mDHandler.getAllShifts().size(); i++) {
             shiftNameArray.add(mDHandler.getAllShifts().get(i).getShiftName());
         }
-        shiftNameArray.add(0, "All");
+        shiftNameArray.add(0, getResources().getString(R.string.all));
 
         for (int i = 0; i < mDHandler.getAllEmployeeRegistration().size(); i++) {
             if (mDHandler.getAllEmployeeRegistration().get(i).getEmployeeType() == 0) {
                 userArray.add(String.valueOf(mDHandler.getAllEmployeeRegistration().get(i).getEmployeeNO()));
             }
         }
-        userArray.add(0, "All");
+        userArray.add(0, getResources().getString(R.string.all));
 
-        posNoArray.add("All");
+        posNoArray.add(getResources().getString(R.string.all));
         posNoArray.add("4");
         posNoArray.add("7");
 
@@ -429,7 +429,7 @@ public class BackOfficeActivity extends AppCompatActivity {
             int adminOk = adminOkCheck.isChecked() ? 1 : 0;
 
             int CashierNo = -1;
-            if (cashierNo.getSelectedItem().toString().equals("All"))
+            if (cashierNo.getSelectedItem().toString().equals(getResources().getString(R.string.all)))
                 CashierNo = -1;
             else
                 CashierNo = Integer.parseInt(cashierNo.getSelectedItem().toString());
@@ -437,7 +437,7 @@ public class BackOfficeActivity extends AppCompatActivity {
             String ShiftName = shiftName.getSelectedItem().toString();
 
             int posNoString = -1;
-            if (PosNo.getSelectedItem().toString().equals("All"))
+            if (PosNo.getSelectedItem().toString().equals(getResources().getString(R.string.all)))
                 posNoString = -1;
             else
                 posNoString = Integer.parseInt(PosNo.getSelectedItem().toString());
@@ -445,20 +445,20 @@ public class BackOfficeActivity extends AppCompatActivity {
             for (int i = 0; i < blindCloseList.size(); i++) {
                 try {
                     if (formatDate(date.getText().toString()).equals(formatDate(blindCloseList.get(i).getDate()))) {
-                        if (blindCloseList.get(i).getShiftName().equals(ShiftName) || ShiftName.equals("All")) {
+                        if (blindCloseList.get(i).getShiftName().equals(ShiftName) || ShiftName.equals(getResources().getString(R.string.all))) {
                             if (blindCloseList.get(i).getUserNo() == CashierNo || CashierNo == -1) {
                                 if (blindCloseList.get(i).getPOSNo() == posNoString || posNoString == -1) {
                                     if (adminOk == blindCloseList.get(i).getTillOk() || adminOk == 0) {
 //
                                         String remark = "-";
                                         if (blindCloseList.get(i).getSalesDiff() < 0)
-                                            remark = "short";
+                                            remark =getResources().getString(R.string.short_);
                                         if (blindCloseList.get(i).getSalesDiff() > 0)
-                                            remark = "over";
+                                            remark =getResources().getString(R.string.over);
 
-                                        String type = "close";
+                                        String type = getResources().getString(R.string.close);
                                         if (blindCloseList.get(i).getTransType() == 1)
-                                            type = "change over";
+                                            type = getResources().getString(R.string.change_over);
 
                                         double changeOverValue = 0;
                                         for (int k = 0; k < blindCloseList.size(); k++) {
@@ -468,10 +468,10 @@ public class BackOfficeActivity extends AppCompatActivity {
                                             }
                                         }
 
-                                        String updateName = "no-user";
+                                        String updateName = getResources().getString(R.string.no_user);
                                         for (int k = 0; k < blindCloseDetailsList.size(); k++) {
                                             if (blindCloseList.get(i).getTransNo() == blindCloseDetailsList.get(k).getTransNo()
-                                                    && !blindCloseDetailsList.get(k).getUpdateUserName().equals("no-user")) {
+                                                    && !blindCloseDetailsList.get(k).getUpdateUserName().equals( getResources().getString(R.string.no_user))) {
 
                                                 updateName = blindCloseDetailsList.get(k).getUpdateUserName();
                                                 break;
@@ -521,7 +521,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                                                     textView.setText(updateName); //updated by
                                                     break;
                                                 case 11:
-                                                    textView.setText("" + (blindCloseList.get(i).getTillOk() == 0 ? "no" : "yes"));
+                                                    textView.setText("" + (blindCloseList.get(i).getTillOk() == 0 ? getResources().getString(R.string.no) : getResources().getString(R.string.yes)));
                                                     break;
                                                 case 12:
                                                     textView.setText(type);
@@ -679,7 +679,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     textView10.setText(Settings.user_name);
 
                 } else // it will never be -_-
-                    Toast.makeText(BackOfficeActivity.this, "Please select user", Toast.LENGTH_LONG).show();
+                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.please_select_user), Toast.LENGTH_LONG).show();
 
             }
         });
@@ -757,16 +757,16 @@ public class BackOfficeActivity extends AppCompatActivity {
         for (int i = 0; i < mDHandler.getAllShifts().size(); i++) {
             shiftNameArray.add(mDHandler.getAllShifts().get(i).getShiftName());
         }
-        shiftNameArray.add(0, "All");
+        shiftNameArray.add(0, getResources().getString(R.string.all));
 
         for (int i = 0; i < mDHandler.getAllEmployeeRegistration().size(); i++) {
             if (mDHandler.getAllEmployeeRegistration().get(i).getEmployeeType() == 0) {
                 userArray.add(String.valueOf(mDHandler.getAllEmployeeRegistration().get(i).getEmployeeNO()));
             }
         }
-        userArray.add(0, "All");
+        userArray.add(0, getResources().getString(R.string.all));
 
-        posNoArray.add("All");
+        posNoArray.add(getResources().getString(R.string.all));
         posNoArray.add("4");
         posNoArray.add("7");
 
@@ -801,7 +801,7 @@ public class BackOfficeActivity extends AppCompatActivity {
             blindClosePdf.clear();headerData1.clear();
             table.removeAllViews();
             int CashierNo = -1;
-            if (cashierNo.getSelectedItem().toString().equals("All"))
+            if (cashierNo.getSelectedItem().toString().equals(getResources().getString(R.string.all)))
                 CashierNo = -1;
             else
                 CashierNo = Integer.parseInt(cashierNo.getSelectedItem().toString());
@@ -809,7 +809,7 @@ public class BackOfficeActivity extends AppCompatActivity {
             String ShiftName = shiftName.getSelectedItem().toString();
 
             int posNoString = -1;
-            if (PosNo.getSelectedItem().toString().equals("All"))
+            if (PosNo.getSelectedItem().toString().equals(getResources().getString(R.string.all)))
                 posNoString = -1;
             else
                 posNoString = Integer.parseInt(PosNo.getSelectedItem().toString());
@@ -826,7 +826,7 @@ public class BackOfficeActivity extends AppCompatActivity {
             for (int i = 0; i < blindClose.size(); i++) {
                 if (filters(fromDate.getText().toString(), toDate.getText().toString(), blindClose.get(i).getDate())) {
 
-                    if (blindClose.get(i).getShiftName().equals(ShiftName) || ShiftName.equals("All")) {
+                    if (blindClose.get(i).getShiftName().equals(ShiftName) || ShiftName.equals(getResources().getString(R.string.all))) {
                         if (blindClose.get(i).getUserNo() == CashierNo || CashierNo == -1) {
                             if (blindClose.get(i).getPOSNo() == posNoString || posNoString == -1) {
 
@@ -838,7 +838,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                                     }
                                 }
 
-                                String updateName = "no-user";
+                                String updateName = getResources().getString(R.string.no_user);
                                 for (int k = 0; k < blindCloseDetails.size(); k++) {
                                     if (blindClose.get(i).getTransNo() == blindCloseDetails.get(k).getTransNo()) {
                                         updateName = blindCloseDetails.get(k).getUpdateUserName();
@@ -882,7 +882,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                                             textView.setText(updateName);
                                             break;
                                         case 9:
-                                            textView.setText("" + (blindClose.get(i).getTillOk() == 0 ? "no" : "yes"));
+                                            textView.setText("" + (blindClose.get(i).getTillOk() == 0 ? getResources().getString(R.string.no) : getResources().getString(R.string.yes)));
                                             break;
 
                                     }
@@ -1086,11 +1086,11 @@ public class BackOfficeActivity extends AppCompatActivity {
                     customerPayment.setShiftName(Settings.shift_name);
 
                     mDHandler.addCustomerPayment(customerPayment);
-                    Toast.makeText(BackOfficeActivity.this, "Saved Successful", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.save_successful), Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
 
                 } else {
-                    Toast.makeText(BackOfficeActivity.this, " Please fill out all required information ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.fill_all_information), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -1151,16 +1151,16 @@ public class BackOfficeActivity extends AppCompatActivity {
         for (int i = 0; i < mDHandler.getAllShifts().size(); i++) {
             shiftNameArray.add(mDHandler.getAllShifts().get(i).getShiftName());
         }
-        shiftNameArray.add(0, "All");
+        shiftNameArray.add(0, getResources().getString(R.string.all));
 
         for (int i = 0; i < mDHandler.getAllEmployeeRegistration().size(); i++) {
             if (mDHandler.getAllEmployeeRegistration().get(i).getEmployeeType() == 0) {
                 userArray.add(String.valueOf(mDHandler.getAllEmployeeRegistration().get(i).getEmployeeNO()));
             }
         }
-        userArray.add(0, "All");
+        userArray.add(0, getResources().getString(R.string.all));
 
-        posNoArray.add("All");
+        posNoArray.add(getResources().getString(R.string.all));
         posNoArray.add("4");
         posNoArray.add("7");
 
@@ -1203,14 +1203,14 @@ public class BackOfficeActivity extends AppCompatActivity {
 
                 String posNoString = "POS_NO";
 
-                if (ShiftName.getSelectedItem().toString().equals("All")) {
+                if (ShiftName.getSelectedItem().toString().equals(getResources().getString(R.string.all))) {
                     ShiftNa = "SHIFT_NAME";
 
                 } else {
                     ShiftNa = "'" + ShiftName.getSelectedItem().toString() + "'";
                 }
 
-                if (PosNo.getSelectedItem().toString().equals("All")) {
+                if (PosNo.getSelectedItem().toString().equals(getResources().getString(R.string.all))) {
                     posNoString = "POS_NO";
 
                 } else {
@@ -1492,9 +1492,9 @@ public class BackOfficeActivity extends AppCompatActivity {
 
                     mDHandler.addZReportTable(zReport);
 
-                    Toast.makeText(BackOfficeActivity.this, "Successful", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.save_successful), Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(BackOfficeActivity.this, "this report printed before this time", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.printing_before), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -1561,9 +1561,9 @@ public class BackOfficeActivity extends AppCompatActivity {
                 userArray.add(String.valueOf(mDHandler.getAllEmployeeRegistration().get(i).getEmployeeName()));
             }
         }
-        userArray.add(0, "All");
+        userArray.add(0, getResources().getString(R.string.all));
 
-        posNoArray.add("All");
+        posNoArray.add(getResources().getString(R.string.all));
         posNoArray.add("4");
         posNoArray.add("7");
 
@@ -1601,14 +1601,14 @@ List<String>userHeader=new ArrayList<>();
 
                 String posNoString = "POINT_OF_SALE_NUMBER";
 
-                if (userName.getSelectedItem().toString().equals("All")) {
+                if (userName.getSelectedItem().toString().equals(getResources().getString(R.string.all))) {
                     ShiftNa = "USER_NAME";
 
                 } else {
                     ShiftNa = "'" + userName.getSelectedItem().toString() + "'";
                 }
 
-                if (PosNo.getSelectedItem().toString().equals("All")) {
+                if (PosNo.getSelectedItem().toString().equals(getResources().getString(R.string.all))) {
                     posNoString = "POINT_OF_SALE_NUMBER";
 
                 } else {
@@ -1694,7 +1694,7 @@ List<String>userHeader=new ArrayList<>();
         final String[] fromDat = {""};
         final String[] toDat = {""};
         final String[] userNameText = {""};
-        final String[] posNoAll = {"All"};
+        final String[] posNoAll = {getResources().getString(R.string.all)};
 
         ArrayList<String> userArray = new ArrayList<>();
         ArrayList<String> posNoArray = new ArrayList<>();
@@ -1705,9 +1705,9 @@ List<String>userHeader=new ArrayList<>();
                 userArray.add(String.valueOf(mDHandler.getAllEmployeeRegistration().get(i).getEmployeeName()));
             }
         }
-        userArray.add(0, "All");
+        userArray.add(0, getResources().getString(R.string.all));
 
-        posNoArray.add("All");
+        posNoArray.add(getResources().getString(R.string.all));
         posNoArray.add("4");
         posNoArray.add("7");
 
@@ -1744,7 +1744,7 @@ List<String>userHeader=new ArrayList<>();
 
 
                 int posNoString = -1;
-                if (PosNo.getSelectedItem().toString().equals("All")) {
+                if (PosNo.getSelectedItem().toString().equals(getResources().getString(R.string.all))) {
                     posNoString = -1;
 
                 } else {
@@ -1762,10 +1762,10 @@ List<String>userHeader=new ArrayList<>();
                     userNameText[0] = userName.getSelectedItem().toString();
 
                     if (filters(fromDat[0], toDat[0], Announcement.get(i).getAnnouncementDate()) &&
-                            (Announcement.get(i).getUserName().equals(userName.getSelectedItem().toString()) || userName.getSelectedItem().toString().equals("All")) &&
+                            (Announcement.get(i).getUserName().equals(userName.getSelectedItem().toString()) || userName.getSelectedItem().toString().equals(getResources().getString(R.string.all))) &&
                             (Announcement.get(i).getPosNo() == posNoString || posNoString == -1)) {
                         if (Announcement.get(i).getPosNo() == -1) {
-                            posNoAll[0] = "All";
+                            posNoAll[0] = getResources().getString(R.string.all);
                         } else {
                             posNoAll[0] = String.valueOf(Announcement.get(i).getPosNo());
                         }
@@ -1916,12 +1916,12 @@ List<String>userHeader=new ArrayList<>();
                         nextSerial++;
 
                         insertRowInMoneyCategory(moneyTable, m);
-                        Toast.makeText(BackOfficeActivity.this, "Added to list", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.add_to_list), Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(BackOfficeActivity.this, "This Value saved Before", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.saved_before), Toast.LENGTH_SHORT).show();
                     }
                 } else
-                    Toast.makeText(BackOfficeActivity.this, "Please insure your inputs", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.ensure_your_input), Toast.LENGTH_SHORT).show();
 //                insertRowInMoneyCategory(moneyTable,m);
             }
 
@@ -1954,7 +1954,7 @@ List<String>userHeader=new ArrayList<>();
                     mDHandler.addMoneyCategory(finalMoneyArray);
                 }
 
-                Toast.makeText(BackOfficeActivity.this, " Save Successful ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.save_successful), Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             }
         });
@@ -1963,17 +1963,17 @@ List<String>userHeader=new ArrayList<>();
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(BackOfficeActivity.this);
-                builder1.setMessage("Your inputs will be lost, are you sure you want to dismiss ?");
+                builder1.setMessage(getResources().getString(R.string.input_will_be_lost));
                 builder1.setCancelable(false);
 
-                builder1.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                builder1.setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog1, int id) {
                         dialog1.cancel();
                         dialog.dismiss();
                     }
                 });
 
-                builder1.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                builder1.setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog1, int id) {
                         dialog1.cancel();
                     }
@@ -2226,7 +2226,7 @@ List<String>userHeader=new ArrayList<>();
                 reasons.addView(row1);
                 reason.setText("");
             } else
-                Toast.makeText(BackOfficeActivity.this, "No text to be added ! ", Toast.LENGTH_LONG).show();
+                Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.no_text_to_add), Toast.LENGTH_LONG).show();
         });
 
         save.setOnClickListener(view -> {
@@ -2278,7 +2278,7 @@ List<String>userHeader=new ArrayList<>();
                     mDHandler.addModifierItem(modifier1);
                     dialog.dismiss();
                 } else
-                    Toast.makeText(BackOfficeActivity.this, "Please add modifier", Toast.LENGTH_LONG).show();
+                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.please_add_modifier), Toast.LENGTH_LONG).show();
             }
         });
         dialog.show();
@@ -2338,7 +2338,7 @@ List<String>userHeader=new ArrayList<>();
                         }
                     }
                 } else
-                    Toast.makeText(BackOfficeActivity.this, "No answers to be added !", Toast.LENGTH_LONG).show();
+                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.no_answers_to_add), Toast.LENGTH_LONG).show();
             }
         });
         delete.setOnClickListener(new View.OnClickListener() {
@@ -2355,7 +2355,7 @@ List<String>userHeader=new ArrayList<>();
                         }
                     }
                 } else
-                    Toast.makeText(BackOfficeActivity.this, "No selected answers to be removed !", Toast.LENGTH_LONG).show();
+                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.no_select_answer), Toast.LENGTH_LONG).show();
             }
         });
         save.setOnClickListener(new View.OnClickListener() {
@@ -2371,7 +2371,7 @@ List<String>userHeader=new ArrayList<>();
                         dialog.dismiss();
                     }
                 } else
-                    Toast.makeText(BackOfficeActivity.this, "Please insure your inputs", Toast.LENGTH_LONG).show();
+                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.ensure_your_input), Toast.LENGTH_LONG).show();
             }
         });
         exit.setOnClickListener(new View.OnClickListener() {
@@ -2523,7 +2523,7 @@ List<String>userHeader=new ArrayList<>();
                             }
                         }
                     } else
-                        Toast.makeText(BackOfficeActivity.this, "No screen to be added !", Toast.LENGTH_LONG).show();
+                        Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.no_screen_to_add), Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -2622,7 +2622,7 @@ List<String>userHeader=new ArrayList<>();
                             }
                         }
                     } else
-                        Toast.makeText(BackOfficeActivity.this, "No category to be added !", Toast.LENGTH_LONG).show();
+                        Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.no_cate_to_add), Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -2728,7 +2728,7 @@ List<String>userHeader=new ArrayList<>();
                             }
                         }
                     } else
-                        Toast.makeText(BackOfficeActivity.this, "No answers to be added !", Toast.LENGTH_LONG).show();
+                        Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.no_answers_to_add), Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -2836,7 +2836,7 @@ List<String>userHeader=new ArrayList<>();
                             }
                         }
                     } else
-                        Toast.makeText(BackOfficeActivity.this, "No answers to be added !", Toast.LENGTH_LONG).show();
+                        Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.no_answers_to_add), Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -2871,8 +2871,8 @@ List<String>userHeader=new ArrayList<>();
         dialog.setCanceledOnTouchOutside(true);
 
         final int[] posNoString = {-1};
-        final String[] shiftNameString = {"All"};
-        final String[] userString = {"All"};
+        final String[] shiftNameString = {getResources().getString(R.string.all)};
+        final String[] userString = {getResources().getString(R.string.all)};
 
         final TextView salesText, returnsText, netSalesText, salesDiscountText, returnsDiscountText, netDiscountText, salesServiceText, returnsServiceText, netServiceText, cashText,
                 visaText, masterText, chequeText, netPayMethodText, pointText, giftText, creditText;
@@ -2923,16 +2923,16 @@ List<String>userHeader=new ArrayList<>();
         for (int i = 0; i < mDHandler.getAllShifts().size(); i++) {
             shiftNameArray.add(mDHandler.getAllShifts().get(i).getShiftName());
         }
-        shiftNameArray.add(0, "All");
+        shiftNameArray.add(0, getResources().getString(R.string.all));
 
         for (int i = 0; i < mDHandler.getAllEmployeeRegistration().size(); i++) {
             if (mDHandler.getAllEmployeeRegistration().get(i).getEmployeeType() == 0) {
                 userArray.add(mDHandler.getAllEmployeeRegistration().get(i).getEmployeeName());
             }
         }
-        userArray.add(0, "All");
+        userArray.add(0, getResources().getString(R.string.all));
 
-        posNoArray.add("All");
+        posNoArray.add(getResources().getString(R.string.all));
         posNoArray.add("4");
         posNoArray.add("7");
 
@@ -2967,7 +2967,7 @@ List<String>userHeader=new ArrayList<>();
                 userString[0] = users.getSelectedItem().toString();
                 shiftNameString[0] = shiftName.getSelectedItem().toString();
 
-                if (posNo.getSelectedItem().toString().equals("All")) {
+                if (posNo.getSelectedItem().toString().equals(getResources().getString(R.string.all))) {
                     posNoString[0] = -1;
                 } else {
                     posNoString[0] = Integer.parseInt(posNo.getSelectedItem().toString());
@@ -2975,8 +2975,8 @@ List<String>userHeader=new ArrayList<>();
 
                 for (int i = 0; i < headerData.size(); i++) {
                     if (filters(fromDate.getText().toString(), toDate.getText().toString(), headerData.get(i).getVoucherDate())) {
-                        if (headerData.get(i).getShiftName().equals(shiftNameString[0]) || shiftNameString[0].equals("All")) {
-                            if (headerData.get(i).getUserName().equals(userString[0]) || userString[0].equals("All")) {
+                        if (headerData.get(i).getShiftName().equals(shiftNameString[0]) || shiftNameString[0].equals(getResources().getString(R.string.all))) {
+                            if (headerData.get(i).getUserName().equals(userString[0]) || userString[0].equals(getResources().getString(R.string.all))) {
                                 if (headerData.get(i).getPointOfSaleNumber() == posNoString[0] || posNoString[0] == -1) {
                                     if (headerData.get(i).getOrderKind() == 0) {
                                         sales += headerData.get(i).getAmountDue();
@@ -3002,8 +3002,8 @@ List<String>userHeader=new ArrayList<>();
 
                 for (int i = 0; i < payData.size(); i++) {
                     if (filters(fromDate.getText().toString(), toDate.getText().toString(), payData.get(i).getVoucherDate())) {
-                        if (payData.get(i).getShiftName().equals(shiftNameString[0]) || shiftNameString[0].equals("All")) {
-                            if (payData.get(i).getUserName().equals(userString[0]) || userString[0].equals("All")) {
+                        if (payData.get(i).getShiftName().equals(shiftNameString[0]) || shiftNameString[0].equals(getResources().getString(R.string.all))) {
+                            if (payData.get(i).getUserName().equals(userString[0]) || userString[0].equals(getResources().getString(R.string.all))) {
                                 if (payData.get(i).getPointOfSaleNumber() == posNoString[0] || posNoString[0] == -1) {
                                     if (payData.get(i).getOrderKind() == 0) {
                                         if (payData.get(i).getPayName().equals("visa"))
@@ -3114,16 +3114,16 @@ List<String>userHeader=new ArrayList<>();
         for (int i = 0; i < mDHandler.getAllShifts().size(); i++) {
             shiftNameArray.add(mDHandler.getAllShifts().get(i).getShiftName());
         }
-        shiftNameArray.add(0, "All");
+        shiftNameArray.add(0, getResources().getString(R.string.all));
 
         for (int i = 0; i < mDHandler.getAllEmployeeRegistration().size(); i++) {
             if (mDHandler.getAllEmployeeRegistration().get(i).getEmployeeType() == 0) {
                 userArray.add(String.valueOf(mDHandler.getAllEmployeeRegistration().get(i).getEmployeeNO()));
             }
         }
-        userArray.add(0, "All");
+        userArray.add(0, getResources().getString(R.string.all));
 
-        posNoArray.add("All");
+        posNoArray.add(getResources().getString(R.string.all));
         posNoArray.add("4");
         posNoArray.add("7");
 
@@ -3170,7 +3170,7 @@ List<String>userHeader=new ArrayList<>();
                 }
                 int CashierNo = -1;
 
-                if (cashierNo.getSelectedItem().toString().equals("All")) {
+                if (cashierNo.getSelectedItem().toString().equals(getResources().getString(R.string.all))) {
                     CashierNo = -1;
                 } else {
                     CashierNo = Integer.parseInt(cashierNo.getSelectedItem().toString());
@@ -3180,7 +3180,7 @@ List<String>userHeader=new ArrayList<>();
                 String ShiftName = shiftName.getSelectedItem().toString();
                 int posNoString = -1;
 
-                if (PosNo.getSelectedItem().toString().equals("All")) {
+                if (PosNo.getSelectedItem().toString().equals(getResources().getString(R.string.all))) {
                     posNoString = -1;
                 } else {
                     posNoString = Integer.parseInt(PosNo.getSelectedItem().toString());
@@ -3197,7 +3197,7 @@ List<String>userHeader=new ArrayList<>();
 
                 for (int i = 0; i < payInData.size(); i++) {
                     if (filters(fromDate.getText().toString(), toDate.getText().toString(), payInData.get(i).getTransDate())) {
-                        if (payInData.get(i).getShiftName().equals(ShiftName) || ShiftName.equals("All")) {
+                        if (payInData.get(i).getShiftName().equals(ShiftName) || ShiftName.equals(getResources().getString(R.string.all))) {
                             if (payInData.get(i).getUserNo() == CashierNo || CashierNo == -1) {
                                 if (payInData.get(i).getPosNo() == posNoString || posNoString == -1) {
                                     if (cashierType == payInData.get(i).getTransType() || cashierType == -1) {
@@ -3286,16 +3286,16 @@ List<String>userHeader=new ArrayList<>();
         for (int i = 0; i < mDHandler.getAllShifts().size(); i++) {
             shiftNameArray.add(mDHandler.getAllShifts().get(i).getShiftName());
         }
-        shiftNameArray.add(0, "All");
+        shiftNameArray.add(0, getResources().getString(R.string.all));
 
         for (int i = 0; i < mDHandler.getAllEmployeeRegistration().size(); i++) {
             if (mDHandler.getAllEmployeeRegistration().get(i).getEmployeeType() == 0) {
                 userArray.add(String.valueOf(mDHandler.getAllEmployeeRegistration().get(i).getEmployeeNO()));
             }
         }
-        userArray.add(0, "All");
+        userArray.add(0, getResources().getString(R.string.all));
 
-        posNoArray.add("All");
+        posNoArray.add(getResources().getString(R.string.all));
         posNoArray.add("4");
         posNoArray.add("7");
 
@@ -3343,7 +3343,7 @@ List<String>userHeader=new ArrayList<>();
             }
 
             int CashierNo = -1;
-            if (cashierNo.getSelectedItem().toString().equals("All"))
+            if (cashierNo.getSelectedItem().toString().equals(getResources().getString(R.string.all)))
                 CashierNo = -1;
             else
                 CashierNo = Integer.parseInt(cashierNo.getSelectedItem().toString());
@@ -3351,7 +3351,7 @@ List<String>userHeader=new ArrayList<>();
             String ShiftName = shiftName.getSelectedItem().toString();
 
             int posNoString = -1;
-            if (PosNo.getSelectedItem().toString().equals("All"))
+            if (PosNo.getSelectedItem().toString().equals(getResources().getString(R.string.all)))
                 posNoString = -1;
             else
                 posNoString = Integer.parseInt(PosNo.getSelectedItem().toString());
@@ -3370,7 +3370,7 @@ List<String>userHeader=new ArrayList<>();
             for (int i = 0; i < canceledOrders.size(); i++) {
                 if (filters(fromDate.getText().toString(), toDate.getText().toString(), canceledOrders.get(i).getTransDate())) {
 
-                    if (canceledOrders.get(i).getShiftName().equals(ShiftName) || ShiftName.equals("All")) {
+                    if (canceledOrders.get(i).getShiftName().equals(ShiftName) || ShiftName.equals(getResources().getString(R.string.all))) {
                         if (canceledOrders.get(i).getUserNo() == CashierNo || CashierNo == -1) {
                             if (canceledOrders.get(i).getPosNO() == posNoString || posNoString == -1) {
                                 if (voidingType == canceledOrders.get(i).getIsAllCancel() || voidingType == -1) {
@@ -3500,16 +3500,16 @@ List<String>userHeader=new ArrayList<>();
         for (int i = 0; i < mDHandler.getAllShifts().size(); i++) {
             shiftNameArray.add(mDHandler.getAllShifts().get(i).getShiftName());
         }
-        shiftNameArray.add(0, "All");
+        shiftNameArray.add(0, getResources().getString(R.string.all));
 
         for (int i = 0; i < mDHandler.getAllEmployeeRegistration().size(); i++) {
             if (mDHandler.getAllEmployeeRegistration().get(i).getEmployeeType() == 0) {
                 userArray.add(String.valueOf(mDHandler.getAllEmployeeRegistration().get(i).getEmployeeNO()));
             }
         }
-        userArray.add(0, "All");
+        userArray.add(0, getResources().getString(R.string.all));
 
-        posNoArray.add("All");
+        posNoArray.add(getResources().getString(R.string.all));
         posNoArray.add("4");
         posNoArray.add("7");
 
@@ -3557,7 +3557,7 @@ List<String>userHeader=new ArrayList<>();
             }
 
             int CashierNo = -1;
-            if (cashierNo.getSelectedItem().toString().equals("All"))
+            if (cashierNo.getSelectedItem().toString().equals(getResources().getString(R.string.all)))
                 CashierNo = -1;
             else
                 CashierNo = Integer.parseInt(cashierNo.getSelectedItem().toString());
@@ -3565,7 +3565,7 @@ List<String>userHeader=new ArrayList<>();
             String ShiftName = shiftName.getSelectedItem().toString();
 
             int posNoString = -1;
-            if (PosNo.getSelectedItem().toString().equals("All"))
+            if (PosNo.getSelectedItem().toString().equals(getResources().getString(R.string.all)))
                 posNoString = -1;
             else
                 posNoString = Integer.parseInt(PosNo.getSelectedItem().toString());
@@ -3584,7 +3584,7 @@ List<String>userHeader=new ArrayList<>();
             for (int i = 0; i < actions.size(); i++) {
                 if (filters(fromDate.getText().toString(), toDate.getText().toString(), actions.get(i).getActionDate())) {
 
-                    if (actions.get(i).getShiftName().equals(ShiftName) || ShiftName.equals("All")) {
+                    if (actions.get(i).getShiftName().equals(ShiftName) || ShiftName.equals(getResources().getString(R.string.all))) {
                         if (actions.get(i).getUserNo() == CashierNo || CashierNo == -1) {
                             if (actions.get(i).getPOSNumber() == posNoString || posNoString == -1) {
                                 if (actionTyp == actions.get(i).getActionType() || actionTyp == -1) {
@@ -3592,13 +3592,13 @@ List<String>userHeader=new ArrayList<>();
                                     String type = "";
                                     switch (actions.get(i).getActionType()) {
                                         case 0:
-                                            type = "Move";
+                                            type = getResources().getString(R.string.move);
                                             break;
                                         case 1:
-                                            type = "Merge";
+                                            type = getResources().getString(R.string.merge);
                                             break;
                                         case 2:
-                                            type = "Split";
+                                            type = getResources().getString(R.string.split);
                                             break;
                                     }
 
@@ -3718,16 +3718,16 @@ List<String>userHeader=new ArrayList<>();
         for (int i = 0; i < mDHandler.getAllShifts().size(); i++) {
             shiftNameArray.add(mDHandler.getAllShifts().get(i).getShiftName());
         }
-        shiftNameArray.add(0, "All");
+        shiftNameArray.add(0, getResources().getString(R.string.all));
 
         for (int i = 0; i < mDHandler.getAllEmployeeRegistration().size(); i++) {
             if (mDHandler.getAllEmployeeRegistration().get(i).getEmployeeType() == 0) {
                 userArray.add(String.valueOf(mDHandler.getAllEmployeeRegistration().get(i).getEmployeeNO()));
             }
         }
-        userArray.add(0, "All");
+        userArray.add(0, getResources().getString(R.string.all));
 
-        posNoArray.add("All");
+        posNoArray.add(getResources().getString(R.string.all));
         posNoArray.add("4");
         posNoArray.add("7");
 
@@ -3780,7 +3780,7 @@ List<String>userHeader=new ArrayList<>();
             }
 
             int CashierNo = -1;
-            if (cashierNo.getSelectedItem().toString().equals("All"))
+            if (cashierNo.getSelectedItem().toString().equals(getResources().getString(R.string.all)))
                 CashierNo = -1;
             else
                 CashierNo = Integer.parseInt(cashierNo.getSelectedItem().toString());
@@ -3788,7 +3788,7 @@ List<String>userHeader=new ArrayList<>();
             String ShiftName = shiftName.getSelectedItem().toString();
 
             int posNoString = -1;
-            if (PosNo.getSelectedItem().toString().equals("All"))
+            if (PosNo.getSelectedItem().toString().equals(getResources().getString(R.string.all)))
                 posNoString = -1;
             else
                 posNoString = Integer.parseInt(PosNo.getSelectedItem().toString());
@@ -3812,7 +3812,7 @@ List<String>userHeader=new ArrayList<>();
             for (int i = 0; i < orderHeaders.size(); i++) {
                 if (filters(fromDate.getText().toString(), toDate.getText().toString(), orderHeaders.get(i).getVoucherDate())) {
 
-                    if (orderHeaders.get(i).getShiftName().equals(ShiftName) || ShiftName.equals("All")) {
+                    if (orderHeaders.get(i).getShiftName().equals(ShiftName) || ShiftName.equals(getResources().getString(R.string.all))) {
                         if (orderHeaders.get(i).getUserNo() == CashierNo || CashierNo == -1) {
                             if (orderHeaders.get(i).getPointOfSaleNumber() == posNoString || posNoString == -1) {
                                 if (orderTyp == orderHeaders.get(i).getOrderType() || orderTyp == -1) {
@@ -4002,16 +4002,16 @@ List<String>userHeader=new ArrayList<>();
         for (int i = 0; i < mDHandler.getAllShifts().size(); i++) {
             shiftNameArray.add(mDHandler.getAllShifts().get(i).getShiftName());
         }
-        shiftNameArray.add(0, "All");
+        shiftNameArray.add(0, getResources().getString(R.string.all));
 
         for (int i = 0; i < mDHandler.getAllEmployeeRegistration().size(); i++) {
             if (mDHandler.getAllEmployeeRegistration().get(i).getEmployeeType() == 0) {
                 userArray.add(String.valueOf(mDHandler.getAllEmployeeRegistration().get(i).getEmployeeNO()));
             }
         }
-        userArray.add(0, "All");
+        userArray.add(0, getResources().getString(R.string.all));
 
-        posNoArray.add("All");
+        posNoArray.add(getResources().getString(R.string.all));
         posNoArray.add("4");
         posNoArray.add("7");
 
@@ -4059,7 +4059,7 @@ List<String>userHeader=new ArrayList<>();
             }
 
             int CashierNo = -1;
-            if (cashierNo.getSelectedItem().toString().equals("All"))
+            if (cashierNo.getSelectedItem().toString().equals(getResources().getString(R.string.all)))
                 CashierNo = -1;
             else
                 CashierNo = Integer.parseInt(cashierNo.getSelectedItem().toString());
@@ -4067,7 +4067,7 @@ List<String>userHeader=new ArrayList<>();
             String ShiftName = shiftName.getSelectedItem().toString();
 
             int posNoString = -1;
-            if (PosNo.getSelectedItem().toString().equals("All"))
+            if (PosNo.getSelectedItem().toString().equals(getResources().getString(R.string.all)))
                 posNoString = -1;
             else
                 posNoString = Integer.parseInt(PosNo.getSelectedItem().toString());
@@ -4185,7 +4185,7 @@ List<String>userHeader=new ArrayList<>();
             int orderHour = Integer.parseInt(orderHeaders.get(i).getTime().substring(0, 2));
 
             if (filters(fromDate.getText().toString(), toDate.getText().toString(), orderHeaders.get(i).getVoucherDate())) {
-                if (orderHeaders.get(i).getShiftName().equals(ShiftName) || ShiftName.equals("All")) {
+                if (orderHeaders.get(i).getShiftName().equals(ShiftName) || ShiftName.equals(getResources().getString(R.string.all))) {
                     if (orderHeaders.get(i).getUserNo() == CashierNo || CashierNo == -1) {
                         if (orderHeaders.get(i).getPointOfSaleNumber() == posNoString || posNoString == -1) {
                             if (orderHour == hour) {
@@ -4235,14 +4235,14 @@ List<String>userHeader=new ArrayList<>();
         for (int i = 0; i < mDHandler.getAllShifts().size(); i++) {
             shiftNameArray.add(mDHandler.getAllShifts().get(i).getShiftName());
         }
-        shiftNameArray.add(0, "All");
+        shiftNameArray.add(0, getResources().getString(R.string.all));
 
         for (int i = 0; i < mDHandler.getAllCreditCards().size(); i++) {
             userArray.add(String.valueOf(mDHandler.getAllCreditCards().get(i).getCardName()));
         }
-        userArray.add(0, "All");
+        userArray.add(0, getResources().getString(R.string.all));
 
-        posNoArray.add("All");
+        posNoArray.add(getResources().getString(R.string.all));
         posNoArray.add("4");
         posNoArray.add("7");
 
@@ -4282,7 +4282,7 @@ List<String>userHeader=new ArrayList<>();
 
                 int posNoString = -1;
 
-                if (PosNo.getSelectedItem().toString().equals("All")) {
+                if (PosNo.getSelectedItem().toString().equals(getResources().getString(R.string.all))) {
                     posNoString = -1;
                 } else {
                     posNoString = Integer.parseInt(PosNo.getSelectedItem().toString());
@@ -4305,8 +4305,8 @@ List<String>userHeader=new ArrayList<>();
 
                 for (int i = 0; i < OrderPayMData.size(); i++) {
                     if (filters(fromDate2.getText().toString(), toDate2.getText().toString(), OrderPayMData.get(i).getVoucherDate()) &&
-                            (OrderPayMData.get(i).getPayName().equals(cardTypes) || cardTypes.equals("All")) &&
-                            (OrderPayMData.get(i).getShiftName().equals(ShiftNames) || ShiftNames.equals("All")) &&
+                            (OrderPayMData.get(i).getPayName().equals(cardTypes) || cardTypes.equals(getResources().getString(R.string.all))) &&
+                            (OrderPayMData.get(i).getShiftName().equals(ShiftNames) || ShiftNames.equals(getResources().getString(R.string.all))) &&
                             (OrderPayMData.get(i).getPayType().equals("Credit Card")) &&
                             (posNoString == -1 || posNoString == OrderPayMData.get(i).getPointOfSaleNumber())) {
                         count++;
@@ -4497,16 +4497,16 @@ List<String>userHeader=new ArrayList<>();
         for (int i = 0; i < mDHandler.getAllShifts().size(); i++) {
             shiftNameArray.add(mDHandler.getAllShifts().get(i).getShiftName());
         }
-        shiftNameArray.add(0, "All");
+        shiftNameArray.add(0, getResources().getString(R.string.all));
 
         for (int i = 0; i < mDHandler.getAllEmployeeRegistration().size(); i++) {
             if (mDHandler.getAllEmployeeRegistration().get(i).getEmployeeType() == 1) {
                 userArray.add(mDHandler.getAllEmployeeRegistration().get(i).getEmployeeName());
             }
         }
-        userArray.add(0, "All");
+        userArray.add(0, getResources().getString(R.string.all));
 
-        posNoArray.add("All");
+        posNoArray.add(getResources().getString(R.string.all));
         posNoArray.add("4");
         posNoArray.add("7");
         posNoArray.add("1");
@@ -4548,7 +4548,7 @@ List<String>userHeader=new ArrayList<>();
                 String ShiftName = shiftName.getSelectedItem().toString();
                 int posNoString = -1;
 
-                if (PosNo.getSelectedItem().toString().equals("All")) {
+                if (PosNo.getSelectedItem().toString().equals(getResources().getString(R.string.all))) {
                     posNoString = -1;
                 } else {
                     posNoString = Integer.parseInt(PosNo.getSelectedItem().toString());
@@ -4566,8 +4566,8 @@ List<String>userHeader=new ArrayList<>();
 
                 for (int i = 0; i < headerData.size(); i++) {
                     if (filters(fromDate.getText().toString(), toDate.getText().toString(), headerData.get(i).getVoucherDate())) {
-                        if (headerData.get(i).getShiftName().equals(ShiftName) || ShiftName.equals("All")) {
-                            if (headerData.get(i).getWaiter().equals(CashierNo) || CashierNo.equals("All")) {
+                        if (headerData.get(i).getShiftName().equals(ShiftName) || ShiftName.equals(getResources().getString(R.string.all))) {
+                            if (headerData.get(i).getWaiter().equals(CashierNo) || CashierNo.equals(getResources().getString(R.string.all))) {
                                 if (headerData.get(i).getPointOfSaleNumber() == posNoString || posNoString == -1) {
                                     if (headerData.get(i).getOrderType() == 1) {
 
@@ -4650,16 +4650,16 @@ List<String>userHeader=new ArrayList<>();
         for (int i = 0; i < mDHandler.getAllShifts().size(); i++) {
             shiftNameArray.add(mDHandler.getAllShifts().get(i).getShiftName());
         }
-        shiftNameArray.add(0, "All");
+        shiftNameArray.add(0, getResources().getString(R.string.all));
 
         for (int i = 0; i < mDHandler.getAllEmployeeRegistration().size(); i++) {
             if (mDHandler.getAllEmployeeRegistration().get(i).getEmployeeType() == 0) {
                 userArray.add(String.valueOf(mDHandler.getAllEmployeeRegistration().get(i).getEmployeeNO()));
             }
         }
-        userArray.add(0, "All");
+        userArray.add(0, getResources().getString(R.string.all));
 
-        posNoArray.add("All");
+        posNoArray.add(getResources().getString(R.string.all));
         posNoArray.add("4");
         posNoArray.add("7");
 
@@ -4763,14 +4763,14 @@ List<String>userHeader=new ArrayList<>();
         for (int i = 0; i < mDHandler.getAllShifts().size(); i++) {
             shiftNameArray.add(mDHandler.getAllShifts().get(i).getShiftName());
         }
-        shiftNameArray.add(0, "All");
+        shiftNameArray.add(0, getResources().getString(R.string.all));
 
         for (int i = 0; i < mDHandler.getAllEmployeeRegistration().size(); i++) {
             if (mDHandler.getAllEmployeeRegistration().get(i).getEmployeeType() == 0) {
                 userArray.add(String.valueOf(mDHandler.getAllEmployeeRegistration().get(i).getEmployeeNO()));
             }
         }
-        userArray.add(0, "All");
+        userArray.add(0, getResources().getString(R.string.all));
 
         for (int i = 0; i < mDHandler.getAllFamilyCategory().size(); i++) {
             if (mDHandler.getAllFamilyCategory().get(i).getType() == 2) { // 1 for family , 2 for category
@@ -4778,10 +4778,10 @@ List<String>userHeader=new ArrayList<>();
             } else
                 familyArray.add(String.valueOf(mDHandler.getAllFamilyCategory().get(i).getName()));
         }
-        categoryArray.add(0, "All");
-        familyArray.add(0, "All");
+        categoryArray.add(0, getResources().getString(R.string.all));
+        familyArray.add(0, getResources().getString(R.string.all));
 
-        posNoArray.add("All");
+        posNoArray.add(getResources().getString(R.string.all));
         posNoArray.add("4");
         posNoArray.add("7");
 
@@ -4820,7 +4820,7 @@ List<String>userHeader=new ArrayList<>();
             soldHeader.clear();
             table.removeAllViews();
             int CashierNo = -1;
-            if (cashierNo.getSelectedItem().toString().equals("All"))
+            if (cashierNo.getSelectedItem().toString().equals(getResources().getString(R.string.all)))
                 CashierNo = -1;
             else
                 CashierNo = Integer.parseInt(cashierNo.getSelectedItem().toString());
@@ -4830,7 +4830,7 @@ List<String>userHeader=new ArrayList<>();
             String familyName = family.getSelectedItem().toString();
 
             int posNoString = -1;
-            if (PosNo.getSelectedItem().toString().equals("All"))
+            if (PosNo.getSelectedItem().toString().equals(getResources().getString(R.string.all)))
                 posNoString = -1;
             else
                 posNoString = Integer.parseInt(PosNo.getSelectedItem().toString());
@@ -4849,11 +4849,11 @@ List<String>userHeader=new ArrayList<>();
             for (int i = 0; i < transactions.size(); i++) {
                 if (filters(fromDate.getText().toString(), toDate[0].getText().toString(), transactions.get(i).getVoucherDate())) {
 
-                    if (transactions.get(i).getShiftName().equals(ShiftName) || ShiftName.equals("All")) {
+                    if (transactions.get(i).getShiftName().equals(ShiftName) || ShiftName.equals(getResources().getString(R.string.all))) {
                         if (transactions.get(i).getUserNo() == CashierNo || CashierNo == -1) {
                             if (transactions.get(i).getPosNo() == posNoString || posNoString == -1) {
-                                if (transactions.get(i).getItemCategory().equals(categoryName) || categoryName.equals("All")) {
-                                    if (transactions.get(i).getItemFamily().equals(familyName) || familyName.equals("All")) {
+                                if (transactions.get(i).getItemCategory().equals(categoryName) || categoryName.equals(getResources().getString(R.string.all))) {
+                                    if (transactions.get(i).getItemFamily().equals(familyName) || familyName.equals(getResources().getString(R.string.all))) {
 
                                         TableRow row = new TableRow(BackOfficeActivity.this);
 
@@ -4982,16 +4982,16 @@ List<String>userHeader=new ArrayList<>();
         for (int i = 0; i < mDHandler.getAllShifts().size(); i++) {
             shiftNameArray.add(mDHandler.getAllShifts().get(i).getShiftName());
         }
-        shiftNameArray.add(0, "All");
+        shiftNameArray.add(0, getResources().getString(R.string.all));
 
         for (int i = 0; i < mDHandler.getAllEmployeeRegistration().size(); i++) {
             if (mDHandler.getAllEmployeeRegistration().get(i).getEmployeeType() == 0) {
                 userArray.add(String.valueOf(mDHandler.getAllEmployeeRegistration().get(i).getEmployeeNO()));
             }
         }
-        userArray.add(0, "All");
+        userArray.add(0, getResources().getString(R.string.all));
 
-        posNoArray.add("All");
+        posNoArray.add(getResources().getString(R.string.all));
         posNoArray.add("4");
         posNoArray.add("7");
 
@@ -5036,7 +5036,7 @@ List<String>userHeader=new ArrayList<>();
             Log.e("transactions", "-->" + transactions.size());
 
             int CashierNo = -1;
-            if (cashierNo.getSelectedItem().toString().equals("All"))
+            if (cashierNo.getSelectedItem().toString().equals(getResources().getString(R.string.all)))
                 CashierNo = -1;
             else
                 CashierNo = Integer.parseInt(cashierNo.getSelectedItem().toString());
@@ -5044,7 +5044,7 @@ List<String>userHeader=new ArrayList<>();
             String ShiftName = shiftName.getSelectedItem().toString();
 
             int posNoString = -1;
-            if (PosNo.getSelectedItem().toString().equals("All"))
+            if (PosNo.getSelectedItem().toString().equals(getResources().getString(R.string.all)))
                 posNoString = -1;
             else
                 posNoString = Integer.parseInt(PosNo.getSelectedItem().toString());
@@ -5062,7 +5062,7 @@ List<String>userHeader=new ArrayList<>();
             for (int i = 0; i < transactions.size(); i++) {
                 if (filters(fromDate.getText().toString(), toDate.getText().toString(), transactions.get(i).getVoucherDate())) {
 
-                    if (transactions.get(i).getShiftName().equals(ShiftName) || ShiftName.equals("All")) {
+                    if (transactions.get(i).getShiftName().equals(ShiftName) || ShiftName.equals(getResources().getString(R.string.all))) {
                         if (transactions.get(i).getUserNo() == CashierNo || CashierNo == -1) {
                             if (transactions.get(i).getPosNo() == posNoString || posNoString == -1) {
 
@@ -5214,10 +5214,10 @@ List<String>userHeader=new ArrayList<>();
 
                         mDHandler.addJobGroup(jobGroups);
                     }
-                    Toast.makeText(BackOfficeActivity.this, "Save Successful", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.save_successful), Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
                 } else {
-                    Toast.makeText(BackOfficeActivity.this, "  Please Add Job Group Filled   ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.please_add_job_group), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -5236,7 +5236,7 @@ List<String>userHeader=new ArrayList<>();
                     count++;
                     jobGroupText.setText("");
                 } else {
-                    Toast.makeText(BackOfficeActivity.this, "  Please Enter Job Group Filled   ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.please_enter_job_group), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -5366,7 +5366,7 @@ List<String>userHeader=new ArrayList<>();
                     toTime.setText("");
 
                 } else
-                    Toast.makeText(BackOfficeActivity.this, "please fill requested fields", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.fill_request_filed), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -5384,11 +5384,11 @@ List<String>userHeader=new ArrayList<>();
                         mDHandler.addShift(new Shift(Integer.parseInt(shNo.getText().toString()), shName.getText().toString(),
                                 from.getText().toString(), to.getText().toString()));
 
-                        Toast.makeText(BackOfficeActivity.this, "saved !", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.save_), Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                     }
                 } else
-                    Toast.makeText(BackOfficeActivity.this, "No shifts to be saved !", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.no_shifts_to_be_save), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -5445,16 +5445,16 @@ List<String>userHeader=new ArrayList<>();
         for (int i = 0; i < mDHandler.getAllShifts().size(); i++) {
             shiftNameArray.add(mDHandler.getAllShifts().get(i).getShiftName());
         }
-        shiftNameArray.add(0, "All");
+        shiftNameArray.add(0, getResources().getString(R.string.all));
 
         for (int i = 0; i < mDHandler.getAllEmployeeRegistration().size(); i++) {
             if (mDHandler.getAllEmployeeRegistration().get(i).getEmployeeType() == 0) {
                 userArray.add(String.valueOf(mDHandler.getAllEmployeeRegistration().get(i).getEmployeeName()));
             }
         }
-        userArray.add(0, "All");
+        userArray.add(0, getResources().getString(R.string.all));
 
-        posNoArray.add("All");
+        posNoArray.add(getResources().getString(R.string.all));
         posNoArray.add("4");
         posNoArray.add("7");
 
@@ -5477,7 +5477,7 @@ List<String>userHeader=new ArrayList<>();
                 String messageString = message.getText().toString();
                 String DateString = date.getText().toString();
                 int posNoString = -1;
-                if (posNo.getSelectedItem().toString().equals("All")) {
+                if (posNo.getSelectedItem().toString().equals(getResources().getString(R.string.all))) {
                     posNoString = -1;
                 } else {
                     posNoString = Integer.parseInt(posNo.getSelectedItem().toString());
@@ -5490,10 +5490,10 @@ List<String>userHeader=new ArrayList<>();
 
                     mDHandler.addAnnouncement(announcemet);
 
-                    Toast.makeText(BackOfficeActivity.this, "Successful", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.save_successful), Toast.LENGTH_SHORT).show();
                     message.setText("");
                 } else {
-                    Toast.makeText(BackOfficeActivity.this, "Please add Message ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.add_message), Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -5540,10 +5540,10 @@ List<String>userHeader=new ArrayList<>();
                     kitchenName.setText("");
                     kitchenNo.setText("");
 
-                    Toast.makeText(BackOfficeActivity.this, "Save Successful", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.save_successful), Toast.LENGTH_SHORT).show();
 
                 } else {
-                    Toast.makeText(BackOfficeActivity.this, "Please Insert All data  ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.please_insert_all_data), Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -5604,10 +5604,10 @@ List<String>userHeader=new ArrayList<>();
 
                         mDHandler.addMemberShipGroup(memberShipGroup);
                     }
-                    Toast.makeText(BackOfficeActivity.this, "Save Successful", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.save_successful), Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
                 } else {
-                    Toast.makeText(BackOfficeActivity.this, "  Please Add Member Ship Group   ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BackOfficeActivity.this,getResources().getString( R.string.add_member_ship_group), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -5627,7 +5627,7 @@ List<String>userHeader=new ArrayList<>();
                     count2++;
                     memberGroupText.setText("");
                 } else {
-                    Toast.makeText(BackOfficeActivity.this, "  Please Enter Member Ship Group Filled   ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BackOfficeActivity.this, getResources().getString( R.string.add_member_ship_group), Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -5666,7 +5666,7 @@ List<String>userHeader=new ArrayList<>();
                         startActivity(intent);
                     } else {
                         Settings.table_edit_authorized = false;
-                        Toast.makeText(BackOfficeActivity.this, "Your authorization number is incorrect", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.authorization_no_incorrect), Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -5735,7 +5735,7 @@ List<String>userHeader=new ArrayList<>();
                                  Spinner PosNo, TextView fromDate, TextView toDate) {
 
         int CashierNo = -1;
-        if (cashierNo.getSelectedItem().toString().equals("All"))
+        if (cashierNo.getSelectedItem().toString().equals(getResources().getString( R.string.all)))
             CashierNo = -1;
         else
             CashierNo = Integer.parseInt(cashierNo.getSelectedItem().toString());
@@ -5743,7 +5743,7 @@ List<String>userHeader=new ArrayList<>();
         String ShiftName = shiftName.getSelectedItem().toString();
 
         int posNoString = -1;
-        if (PosNo.getSelectedItem().toString().equals("All"))
+        if (PosNo.getSelectedItem().toString().equals(getResources().getString( R.string.all)))
             posNoString = -1;
         else
             posNoString = Integer.parseInt(PosNo.getSelectedItem().toString());
@@ -5753,7 +5753,7 @@ List<String>userHeader=new ArrayList<>();
         for (int i = 0; i < transactions.size(); i++) {
             if (filters(fromDate.getText().toString(), toDate.getText().toString(), transactions.get(i).getVoucherDate())) {
 
-                if (transactions.get(i).getShiftName().equals(ShiftName) || ShiftName.equals("All")) {
+                if (transactions.get(i).getShiftName().equals(ShiftName) || ShiftName.equals(getResources().getString( R.string.all))) {
                     if (transactions.get(i).getUserNo() == CashierNo || CashierNo == -1) {
                         if (transactions.get(i).getPosNo() == posNoString || posNoString == -1) {
 
@@ -5969,10 +5969,10 @@ List<String>userHeader=new ArrayList<>();
                     focusedRaw.setBackgroundColor(getResources().getColor(R.color.layer4));
 
                     AlertDialog.Builder builder1 = new AlertDialog.Builder(BackOfficeActivity.this);
-                    builder1.setMessage("sure you delete this Money Category ?");
+                    builder1.setMessage(getResources().getString( R.string.sure_delete_money_category));
                     builder1.setCancelable(false);
 
-                    builder1.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    builder1.setPositiveButton(getResources().getString( R.string.yes), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog1, int id) {
                             dialog1.cancel();
 
@@ -5981,7 +5981,7 @@ List<String>userHeader=new ArrayList<>();
                         }
                     });
 
-                    builder1.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    builder1.setNegativeButton(getResources().getString( R.string.no), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog1, int id) {
                             dialog1.cancel();
                             focusedRaw.setBackgroundColor(getResources().getColor(R.color.layer3));

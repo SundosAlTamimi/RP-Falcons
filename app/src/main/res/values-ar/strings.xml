@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Rest Pos</string>
 
     <string name="one">1</string>
@@ -38,7 +38,7 @@
     <string name="done">تم</string>
     <string name="choose_from_gallery">اختيار من المعرض</string>
     <string name="back_office">الإعدادات</string>
-    <string name="take_away">Take Away</string>
+    <string name="take_away">الوجبات الجاهزة</string>
     <string name="dine_in">Dine In</string>
     <string name="Authorization_number">الرقم السري :</string>
     <string name="add_discount">اضافة خصم :</string>
@@ -73,7 +73,7 @@
     <string name="time">الوقت</string>
     <string name="hour">الساعة</string>
     <string name="memo">ملاحظة:</string>
-    <string name="waiter">الناذل:</string>
+    <string name="waiter">النادل:</string>
     <string name="number_of_guests">الزوار:</string>
     <string name="modifier">تعديل</string>
     <string name="void_">مسح</string>
@@ -452,5 +452,119 @@
     <string name="enter_void_qty">ادخل كمية الالغاء</string>
     <string name="kitchen_screen_no">رقم شاشة المطبخ</string>
     <string name="kitchen_screen_name">اسم شاشة المطبخ</string>
-    <string name="new_reason">New Reason</string>
+    <string name="new_reason">اسباب جديدة</string>
+    <string name="export_to_pdf">تم تصدير الملف بنجاح</string>
+    <string name="waiter_report">تقرير النادل</string>
+    <string name="waiter_name">اسم النادل</string>
+    <string name="card_type">نوع البطاقة :</string>
+    <string name="zero_cashier_q">هل تريد تسجيل الخروج وقيمة الكاش صفر ؟</string>
+    <string name="yes">نعم</string>
+    <string name="save_successful">تم الحفظ بنجاح ...</string>
+    <string name="branch_">الفرع :</string>
+    <string name="some_qty_not">بعض الكميات ليس لها قيمة ...</string>
+    <string name="cashier_in_zero">هل تريد تسجيل الدخول وقيمة الكاش صفر ؟</string>
+    <string name="add_money_category">الرجاء اضافة العملات النقدية </string>
+    <string name="total_from_cash_not_equal_value">مجموع العملات النقدية من الكاش لا تساوي القيمة المدخلة </string>
+    <string name="ensure_your_input">يرجى التأكد من المدخلات الخاصة بك</string>
+    <string name="to_user_field">الرجاء إدخال حقل المستخدم</string>
+    <string name="insert_correct_password">الرجاء إدخال كلمة المرور الصحيحة</string>
+    <string name="enter_your_password">من فضلك أدخل رقمك السري</string>
+
+
+    <string name="over">زيادة</string>
+    <string name="short_">نقص</string>
+    <string name="no_user">لا يوجد مستخدم</string>
+    <string name="please_select_user">الرجاء اختيار مستخدم</string>
+    <string name="fill_all_information">يرجى ملء جميع المعلومات المطلوبة</string>
+    <string name="printing_before">تم طباعة هذا التقرير سابقا لا يمكن طباعته مرة اخرى </string>
+    <string name="add_to_list">تم اضافته للفائمة</string>
+    <string name="saved_before">تم حفظ هذه القيمة سابقا </string>
+    <string name="input_will_be_lost">سيتم فقد مدخلاتك ، هل أنت متأكد من أنك تريد الاغلاق ؟</string>
+    <string name="no_text_to_add">لا يوجد نص لإضافته!</string>
+    <string name="please_add_modifier">يرجى إضافة التعديل</string>
+    <string name="no_answers_to_add">لا توجد إجابات لتضاف!</string>
+    <string name="no_select_answer">لا توجد إجابات محددة لإزالتها!</string>
+    <string name="no_screen_to_add">لا توجد شاشة لإضافتها!</string>
+    <string name="no_cate_to_add">لا توجد فئة لإضافتها!</string>
+    <string name="please_add_job_group">يرجى إضافة  مجموعة العمل </string>
+    <string name="please_enter_job_group">يرجى ادخال حقل مجموعة العمل </string>
+    <string name="fill_request_filed">يرجى ملء الحقول المطلوبة</string>
+    <string name="no_shifts_to_be_save">لا يوجد شفتات ليتم حفظها!</string>
+    <string name="add_message">الرجاء اضافة الاعلان </string>
+    <string name="please_insert_all_data">الرجاء إدخال جميع البيانات</string>
+    <string name="add_member_ship_group">يرجى إضافة مجموعة ادارة الأعضاء</string>
+    <string name="authorization_no_incorrect">رقم التفويض الخاص بك غير صحيح</string>
+    <string name="sure_delete_money_category">هل تريد حذف هذه الفئة المالية ؟</string>
+
+    <string name="not_have_any_data">لا يوجد اي معلومات في الجدول</string>
+    <string name="password_length">طول كلمة المرور يجب ان يكون 4 ارقام فقط الرجاء اعادة تعين كلمة المرور</string>
+    <string name="add_job_group_before_new_emplo">الرجاء اضافة مجموعة عمل قبل اضافة موظف جديد</string>
+
+    <string name="clearAlert">هل أنت متأكد أنك تريد مسح النموذج؟</string>
+    <string name="chang_ITEM_BARCOGE">الرجاء تغير الباركود -يوجد مادة اخرى لها نفس الباركود-</string>
+    <string name="input_cat_name">الرجاء ادخال اسم الفئة</string>
+    <string name="please_input_unit_name">يرجى إدخال اسم الوحدة</string>
+    <string name="input_family_name">يرجى إدخال اسم العائلة</string>
+    <string name="add_ready_item_first">الرجاء إضافة العنصر الجاهز أولاً</string>
+    <string name="do_you_want_to_delete_recipe">هل تريد حذف هذه الوصفة؟</string>
+    <string name="delete_category">هل تريد حذف هذه الفئة؟</string>
+
+    <string name="add_waiter_befor">الرجاء اضافة نادل ...</string>
+    <string name="invoice_no_not_found">رقم الفاتورة غير موجود</string>
+    <string name="invoice_no_insert_bottom">رقم الفاتورة مدرج في الجدول السفلي </string>
+    <string name="total_not_allow">المبلغ الكلي لم يصل الى 0.0</string>
+    <string name="no_of_seats_doesn_match_no_pepole">عدد المقاعد لا يتناسب مع عدد الاشخاص</string>
+    <string name="ops_same_table">للاسف انها نفس الطاولة !</string>
+    <string name="chooes_table_from_to_list">الرجاء اختيار الطاولة من القائمتين </string>
+    <string name="this_table_no_order">هذه الطاولة ليست محجوزة </string>
+    <string name="no_table_select">لم يتم اختيار الطاولة </string>
+
+    <string name="announ_report"> تقرير الاعلانات</string>
+    <string name="incorect_password">كلمة المرور غير صحيحة</string>
+    <string name="user_not_found">المستخدم غير موجود</string>
+    <string name="other_user_log">تم تسجيل مستخدم آخر</string>
+    <string name="enter_your_user_name">الرجاء ادخل اسم المستخدم</string>
+    <string name="amountdue_oo">المبلغ المستحق هو 0.00!</string>
+    <string name="check">رقم الطابق :</string>
+    <string name="no_item">لا يوجد مواد</string>
+    <string name="what_kind">اختر نوع الحذف : </string>
+    <string name="select_item">اختيار مادة</string>
+    <string name="curent_order">الطلب الحالي</string>
+    <string name="cancel">إلغاء</string>
+    <string name="delete_this_item">هل تريد حذف هذه المادة ؟</string>
+    <string name="delete_curent_order">هل تريد حذف الطلب الحالي؟</string>
+    <string name="chooes_item_delete">الرجاء أختيار المادة التي تريد حذفها</string>
+    <string name="select_reson_cancele">الرجاء تحديد سبب الحذف</string>
+    <string name="curent_qty_less_than">الكمية الحالية أقل من</string>
+    <string name="enter_qty">الرجاء اختيار الكمية!</string>
+    <string name="select_qty">الرجاء تحديد الكمية</string>
+    <string name="select_modifer">الرجاء اختيار التعديل</string>
+    <string name="chooes_item_to_modifier">الرجاء اختيار المادة لإضافةالتعديل!</string>
+    <string name="enter_dekivery">يرجى إدخال قيمة التوصيل  </string>
+    <string name="delivary_is_not_avilable">لا يمكن اضافة قيمة التوصيل عند عدم وجود مواد الرجاء اختيار مواد</string>
+    <string name="enter_line_discount">الرجاء ادخال قيمة الخصم السطري </string>
+    <string name="discount_not_avilable">الخصم السطري غير مسموح لهذه المادة</string>
+    <string name="chooes_item_to_add_linediscount">الرجاء اخنيار مواد حتى يتم اضافة الخصم السطري</string>
+    <string name="enter_discount">الرجاء ادخال الخصم</string>
+    <string name="discount_not_avilable_for_curent_item">الخصم غير مسموح لهذه المواد</string>
+    <string name="remaining_">الباقي :</string>
+    <string name="enter_recived_value">الرجاء ادخال القيمة المتبقية</string>
+    <string name="invaled_input">المدخلات غير صحيحة</string>
+    <string name="enter_recived_value_and_carfno">الرجاء ادخال القيمة المتبقية و رقم البطاقة</string>
+    <string name="enter_coupon_no">الرجاء ادخال رقم الكوبون</string>
+    <string name="invalid_coupon_no">رقم الكوبون غير صحيح</string>
+    <string name="invalid_card_no">رقم البطاقة غير صحيح</string>
+    <string name="remaining_not_o">القيمة المتبقية لا تساوي 0.00</string>
+
+    <string name="cash_value">قيمة الكاش :</string>
+    <string name="visa_value">قيمة الفيزا :</string>
+    <string name="master_value">قيمة الماستر :</string>
+    <string name="credit_value">قيمة الكوبون :</string>
+    <string name="gift_card_value">قيمة بطاقات الهدايا :</string>
+    <string name="point_value">قيمة النقاط :</string>
+    <string name="cheque_value">قيمة الشيكات :</string>
+    <string name="invoice_no">رقم الفاتورة</string>
+    <string name="is_show">المشاهدة</string>
+
+
 </resources>

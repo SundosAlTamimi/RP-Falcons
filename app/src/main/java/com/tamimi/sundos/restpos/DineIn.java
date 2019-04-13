@@ -334,7 +334,7 @@ public class DineIn extends AppCompatActivity {
                             openSeatsNumberDialog();
                             waiterClick = false;
                         } else {
-                            Toast.makeText(DineIn.this, "Please add Waiter before Continue ...", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(DineIn.this, getResources().getString(R.string.add_waiter_befor), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -454,10 +454,10 @@ public class DineIn extends AppCompatActivity {
                         }
                         flag[0] = false;
                     } else {
-                        Toast.makeText(DineIn.this, "This InVoice Number not found ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(DineIn.this, getResources().getString(R.string.invoice_no_not_found), Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(DineIn.this, "This InVoice Number insert in bottom table  ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DineIn.this, getResources().getString(R.string.invoice_no_insert_bottom), Toast.LENGTH_SHORT).show();
 
                 }
                 vhfNo.setText("");
@@ -939,7 +939,7 @@ public class DineIn extends AppCompatActivity {
                     rowRefund.clear();
 
                 } else {
-                    Toast.makeText(DineIn.this, "The Net Total not allow to 0.0", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DineIn.this, getResources().getString(R.string.total_not_allow), Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -1187,10 +1187,10 @@ public class DineIn extends AppCompatActivity {
                         startActivity(intent);
 
                     } else {
-                        Toast.makeText(DineIn.this, "Number of seats doesn't machs number of people", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(DineIn.this, getResources().getString(R.string.no_of_seats_doesn_match_no_pepole), Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(DineIn.this, "Please fill all requested fields", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DineIn.this, getResources().getString(R.string.fill_request_filed), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -1383,7 +1383,7 @@ public class DineIn extends AppCompatActivity {
                 Log.e("here", "*****" + focusedLeft + "" + focusedRight + "" + fromSection + "" + toSection);
                 if (focusedLeft != -1 && focusedRight != -1) {
                     if (focusedLeft == focusedRight && fromSection == toSection) {
-                        Toast.makeText(DineIn.this, "Ops, it's the same table !", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(DineIn.this, getResources().getString(R.string.ops_same_table), Toast.LENGTH_SHORT).show();
                     } else {
                         // update on tables temp
                         mHandler.moveTablesTemp(fromSection, focusedLeft, toSection, focusedRight);
@@ -1416,7 +1416,7 @@ public class DineIn extends AppCompatActivity {
                         dialog2.show();
                     }
                 } else
-                    Toast.makeText(DineIn.this, "Please choose tables from both two lists", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DineIn.this, getResources().getString(R.string.chooes_table_from_to_list), Toast.LENGTH_SHORT).show();
             }
         });
         dialog.show();
@@ -1584,7 +1584,7 @@ public class DineIn extends AppCompatActivity {
                 Log.e("here", "*****" + focusedLeft + "" + focusedRight + "" + fromSection + "" + toSection);
                 if (focusedLeft != -1 && focusedRight != -1) {
                     if (focusedLeft == focusedRight && fromSection == toSection) {
-                        Toast.makeText(DineIn.this, "Ops, it's the same table !", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(DineIn.this, getResources().getString(R.string.ops_same_table), Toast.LENGTH_SHORT).show();
                     } else {
                         // update on tables temp
                         mHandler.mergeTablesTemp(fromSection, focusedLeft, toSection, focusedRight);
@@ -1618,7 +1618,7 @@ public class DineIn extends AppCompatActivity {
                         dialog2.show();
                     }
                 } else
-                    Toast.makeText(DineIn.this, "Please choose tables from both two lists", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DineIn.this, getResources().getString(R.string.chooes_table_from_to_list), Toast.LENGTH_SHORT).show();
             }
         });
         dialog.show();
@@ -1672,10 +1672,10 @@ public class DineIn extends AppCompatActivity {
                         intent.putExtra("tableNo", tableNo.getSelectedItem().toString());
                         startActivity(intent);
                     } else {
-                        Toast.makeText(DineIn.this, "This table has no order !", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(DineIn.this, getResources().getString(R.string.this_table_no_order), Toast.LENGTH_SHORT).show();
                     }
                 } else
-                    Toast.makeText(DineIn.this, "No table selected !", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DineIn.this,  getResources().getString(R.string.no_table_select), Toast.LENGTH_SHORT).show();
             }
         });
 

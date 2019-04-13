@@ -43,7 +43,8 @@
                     android:layout_marginBottom="5dp"
                     android:layout_weight="3"
                     android:gravity="center"
-                    android:text="Sales Report By Card Type "
+                    android:text="@string/sales_report_by_card_type"
+
                     android:textColor="@color/text_color"
                     android:textSize="25sp" />
 
@@ -182,7 +183,7 @@
                     android:id="@+id/textView67"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
-                    android:text="Card Type"
+                    android:text="@string/card_type"
                     android:textColor="@color/text_color"
                     android:textSize="18sp" />
 
@@ -241,7 +242,7 @@
                     android:background="@color/blue_ice"
                     android:gravity="center"
                     android:padding="2dp"
-                    android:text="@string/date"
+                    android:text="@string/date_"
                     android:textColor="@color/layer1"
                     android:textSize="18sp" />
 
@@ -277,7 +278,7 @@
                     android:background="@color/blue_ice"
                     android:gravity="center"
                     android:padding="2dp"
-                    android:text="Invoice No"
+                    android:text="@string/invoice_no"
                     android:textColor="@color/layer1"
                     android:textSize="18sp" />
 
@@ -289,7 +290,7 @@
                     android:background="@color/blue_ice"
                     android:gravity="center"
                     android:padding="2dp"
-                    android:text="Net Total"
+                    android:text="@string/net_total_"
                     android:textColor="@color/layer1"
                     android:textSize="18sp" />
 

@@ -122,16 +122,16 @@ public class MenuRegistration extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(MenuRegistration.this);
-                builder.setTitle("Are you sure, you want to clear the form ?");
+                builder.setTitle(getResources().getString(R.string.clearAlert));
                 builder.setCancelable(false);
-                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         clearForm();
                     }
                 });
 
-                builder.setNegativeButton("No", null);
+                builder.setNegativeButton(getResources().getString(R.string.no), null);
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
 
@@ -202,14 +202,14 @@ public class MenuRegistration extends AppCompatActivity {
                                 showInMenuVariavle,
                                 itemBitmapPic);
 
-                        Toast.makeText(MenuRegistration.this, "Saved", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MenuRegistration.this, getResources().getString(R.string.save_), Toast.LENGTH_SHORT).show();
                         clearForm();
                         itemBarcodeFound = false;
                     } else
-                        Toast.makeText(MenuRegistration.this, "Please input the requested fields", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MenuRegistration.this, getResources().getString(R.string.fill_request_filed), Toast.LENGTH_SHORT).show();
 
                 } else
-                    Toast.makeText(MenuRegistration.this, "Please change itemBarcode - another item have this itemBarcode -", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MenuRegistration.this, getResources().getString(R.string.chang_ITEM_BARCOGE), Toast.LENGTH_SHORT).show();
                 itemBarcodeFound = false;
             }
         });
@@ -246,7 +246,7 @@ public class MenuRegistration extends AppCompatActivity {
                     break;
                 case R.id.deletC:
                     if (!noOpen) {
-                        deleteCatDialog("categories Name", "Serial");
+                        deleteCatDialog(getResources().getString(R.string.category_name), getResources().getString(R.string.serial));
                         List<FamilyCategory> category = mDbHandler.getAllFamilyCategory();
                         for (int i = 0; i < category.size(); i++) {
                             if (category.get(i).getType() == 2)
@@ -330,7 +330,7 @@ public class MenuRegistration extends AppCompatActivity {
 
 
                 } else {
-                    Toast.makeText(MenuRegistration.this, "Please input category name", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MenuRegistration.this,getResources().getString(R.string.input_cat_name), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -368,7 +368,7 @@ public class MenuRegistration extends AppCompatActivity {
                     dialog.dismiss();
 
                 } else {
-                    Toast.makeText(MenuRegistration.this, "Please input unit name", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MenuRegistration.this, getResources().getString(R.string.please_input_unit_name), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -409,7 +409,7 @@ public class MenuRegistration extends AppCompatActivity {
                     dialog2.dismiss();
 
                 } else {
-                    Toast.makeText(MenuRegistration.this, "Please input family name", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MenuRegistration.this, getResources().getString(R.string.input_family_name), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -465,14 +465,14 @@ public class MenuRegistration extends AppCompatActivity {
                         dialog.dismiss();
 
                     } else {
-                        Toast.makeText(MenuRegistration.this, "Please input requested fields", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MenuRegistration.this, getResources().getString(R.string.fill_request_filed), Toast.LENGTH_SHORT).show();
                     }
                 }
             });
 
             dialog.show();
         } else {
-            Toast.makeText(MenuRegistration.this, "Please add ready item first", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MenuRegistration.this,getResources().getString( R.string.add_ready_item_first), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -687,16 +687,16 @@ public class MenuRegistration extends AppCompatActivity {
                     public boolean onLongClick(View v) {
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(MenuRegistration.this);
-                        builder.setTitle("Do you want to delete this recipe ?");
+                        builder.setTitle(getResources().getString(R.string.do_you_want_to_delete_recipe));
                         builder.setCancelable(false);
-                        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        builder.setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 recipeTable.removeView(row);
                             }
                         });
 
-                        builder.setNegativeButton("No", null);
+                        builder.setNegativeButton(getResources().getString(R.string.no), null);
                         AlertDialog alertDialog = builder.create();
                         alertDialog.show();
 
@@ -750,9 +750,9 @@ public class MenuRegistration extends AppCompatActivity {
             public boolean onLongClick(View v) {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(MenuRegistration.this);
-                builder.setTitle("Do you want to delete this Category ?");
+                builder.setTitle(getResources().getString(R.string.delete_category));
                 builder.setCancelable(false);
-                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         catTable.removeView(row);
@@ -771,7 +771,7 @@ public class MenuRegistration extends AppCompatActivity {
 
                     }
                 });
-                builder.setNegativeButton("No", null);
+                builder.setNegativeButton(getResources().getString(R.string.no), null);
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
 

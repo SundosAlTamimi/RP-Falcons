@@ -153,7 +153,7 @@ public class Order extends AppCompatActivity {
                             Intent intentPay = new Intent(Order.this, PayMethods.class);
                             startActivity(intentPay);
                         } else
-                            Toast.makeText(Order.this, "your Amount Due is 0.00 !", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Order.this, getResources().getString(R.string.amountdue_oo), Toast.LENGTH_SHORT).show();
                     }
                     break;
 
@@ -166,7 +166,7 @@ public class Order extends AppCompatActivity {
                             Intent intent = new Intent(Order.this, DineIn.class);
                             startActivity(intent);
                         } else
-                            Toast.makeText(Order.this, "your Amount Due is 0.00 !", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Order.this, getResources().getString(R.string.amountdue_oo), Toast.LENGTH_SHORT).show();
                     }
                     break;
 
@@ -243,18 +243,18 @@ public class Order extends AppCompatActivity {
     @SuppressLint("SetTextI18n")
     void setOrder(int flag) {
         if (flag == 0) {
-            orderType.setText("Take Away");
-            tableNo.setText("Table:  " + "-");
-            check.setText("Check:  " + "-");
+            orderType.setText(getResources().getString(R.string.take_away));
+            tableNo.setText(getResources().getString(R.string.table_no) + " : -");
+            check.setText(getResources().getString(R.string.check) + "-");
             user.setText("no waiter");
             seats.setText("0");
             tableNumber = -1;
             sectionNumber = -1;
             vhSerial.setText(voucherNo);
         } else {
-            orderType.setText("Dine In");
-            tableNo.setText("Table:  " + tableNumber);
-            check.setText("Check:  " + sectionNumber);
+            orderType.setText(getResources().getString(R.string.dine_in));
+            tableNo.setText(getResources().getString(R.string.table_no)+" :  " + tableNumber);
+            check.setText(getResources().getString(R.string.check) + sectionNumber);
             user.setText(waiter);
             seats.setText("" + seatNo);
             vhSerial.setText(voucherNo);
@@ -401,7 +401,7 @@ public class Order extends AppCompatActivity {
                                 calculateTotal();
                             }
                         } else
-                            Toast.makeText(Order.this, "No Item", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Order.this, getResources().getString(R.string.no_item), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -621,13 +621,13 @@ public class Order extends AppCompatActivity {
 
                 AlertDialog.Builder builderSingle = new AlertDialog.Builder(Order.this);
                 builderSingle.setCancelable(false);
-                builderSingle.setTitle("What Kind Of Delete :");
+                builderSingle.setTitle(getResources().getString(R.string.what_kind));
 
                 final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(Order.this, android.R.layout.select_dialog_singlechoice);
-                arrayAdapter.add("Selected Item");
-                arrayAdapter.add("Current Order");
+                arrayAdapter.add(getResources().getString(R.string.select_item));
+                arrayAdapter.add(getResources().getString(R.string.curent_order));
 
-                builderSingle.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                builderSingle.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -638,28 +638,28 @@ public class Order extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String strName = arrayAdapter.getItem(which);
-                        if (strName.equals("Selected Item")) {
+                        if (strName.equals(getResources().getString(R.string.select_item))) {
                             AlertDialog.Builder builderInner = new AlertDialog.Builder(Order.this);
-                            builderInner.setTitle("Do you want to delete this item ?");
+                            builderInner.setTitle(getResources().getString(R.string.delete_this_item));
                             builderInner.setCancelable(false);
-                            builderInner.setPositiveButton("Yes", (dialog1, which1) -> {
+                            builderInner.setPositiveButton(getResources().getString(R.string.yes), (dialog1, which1) -> {
 
                                 showVoidReasonDialog(row);
                             });
-                            builderInner.setNegativeButton("No", (dialogInterface, i) -> {
+                            builderInner.setNegativeButton(getResources().getString(R.string.no), (dialogInterface, i) -> {
                                 row.setBackgroundDrawable(null);
                             });
                             builderInner.show();
 
                         } else {
                             AlertDialog.Builder builderInner = new AlertDialog.Builder(Order.this);
-                            builderInner.setTitle("Do you want to delete the current order ?");
+                            builderInner.setTitle(getResources().getString(R.string.delete_curent_order));
                             builderInner.setCancelable(false);
-                            builderInner.setPositiveButton("Yes", (dialog1, which1) -> {
+                            builderInner.setPositiveButton(getResources().getString(R.string.yes), (dialog1, which1) -> {
 
                                 showVoidReasonDialog2();
                             });
-                            builderInner.setNegativeButton("No", (dialog1, i) -> {
+                            builderInner.setNegativeButton(getResources().getString(R.string.no), (dialog1, i) -> {
 //                            row.setBackgroundDrawable(null);
                                 dialog1.dismiss();
                             });
@@ -695,9 +695,9 @@ public class Order extends AppCompatActivity {
 //            AlertDialog alertDialog = builder.create();
 //            alertDialog.show();
             } else
-                Toast.makeText(Order.this, " Please choose item to be deleted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Order.this, getResources().getString(R.string.chooes_item_delete), Toast.LENGTH_SHORT).show();
         }else {
-            Toast.makeText(Order.this, " No Item  ", Toast.LENGTH_SHORT).show();
+            Toast.makeText(Order.this, getResources().getString(R.string.no_item), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -836,16 +836,16 @@ public class Order extends AppCompatActivity {
                                 dialog1.dismiss();
                                 dialog.dismiss();
                             } else
-                                Toast.makeText(Order.this, "Please select reason of cancel", Toast.LENGTH_LONG).show();
+                                Toast.makeText(Order.this, getResources().getString(R.string.select_reson_cancele), Toast.LENGTH_LONG).show();
                         });
 
 
                         dialog1.show();
                     } else
-                        Toast.makeText(Order.this, "Current qty is less than " + voidQty.getText().toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(Order.this, getResources().getString(R.string.curent_qty_less_than) + voidQty.getText().toString(), Toast.LENGTH_LONG).show();
 
                 } else
-                    Toast.makeText(Order.this, "Please enter qty !", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Order.this,getResources().getString( R.string.enter_qty), Toast.LENGTH_SHORT).show();
             }
         });
         dialog.show();
@@ -943,7 +943,7 @@ public class Order extends AppCompatActivity {
                 }
                 dialog.dismiss();
             } else {
-                Toast.makeText(Order.this, "Please select reason of cancel", Toast.LENGTH_LONG).show();
+                Toast.makeText(Order.this, getResources().getString(R.string.select_reson_cancele), Toast.LENGTH_LONG).show();
 
             }
         });
@@ -1060,7 +1060,7 @@ public class Order extends AppCompatActivity {
                         }
                     }
                 } else
-                    Toast.makeText(Order.this, "Please select answers ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Order.this, getResources().getString(R.string.selected_answer), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -1088,7 +1088,7 @@ public class Order extends AppCompatActivity {
                         }
                     }
                 } else
-                    Toast.makeText(Order.this, "Please select answers ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Order.this,  getResources().getString(R.string.selected_answer), Toast.LENGTH_SHORT).show();
             }
         });
         half.setOnClickListener(new View.OnClickListener() {
@@ -1115,7 +1115,7 @@ public class Order extends AppCompatActivity {
                         }
                     }
                 } else
-                    Toast.makeText(Order.this, "Please select answers ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Order.this,  getResources().getString(R.string.selected_answer), Toast.LENGTH_SHORT).show();
             }
         });
         save.setOnClickListener(new View.OnClickListener() {
@@ -1141,7 +1141,7 @@ public class Order extends AppCompatActivity {
                             }
 
                         } else {
-                            Toast.makeText(Order.this, "Please select quantity ", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Order.this,  getResources().getString(R.string.select_qty), Toast.LENGTH_SHORT).show();
                         }
                         Log.e("here", "******" + answersLinear.getChildCount());
                     } else {
@@ -1164,7 +1164,7 @@ public class Order extends AppCompatActivity {
                                         showForceQuestionDialog(itemBarcode, nextQu);
                                     }
                                 } else {
-                                    Toast.makeText(Order.this, "Please select quantity ", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(Order.this,  getResources().getString(R.string.select_qty), Toast.LENGTH_SHORT).show();
                                 }
                                 Log.e("here", "******" + answersLinear.getChildCount());
                             }
@@ -1241,7 +1241,7 @@ public class Order extends AppCompatActivity {
                             }
                         }
                     } else
-                        Toast.makeText(Order.this, "Please select a modifier ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Order.this,  getResources().getString(R.string.select_modifer), Toast.LENGTH_SHORT).show();
                 }
             });
             no.setOnClickListener(new View.OnClickListener() {
@@ -1258,7 +1258,7 @@ public class Order extends AppCompatActivity {
                             }
                         }
                     } else
-                        Toast.makeText(Order.this, "Please select a modifier ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Order.this,  getResources().getString(R.string.select_modifer), Toast.LENGTH_SHORT).show();
                 }
             });
             little.setOnClickListener(new View.OnClickListener() {
@@ -1275,7 +1275,7 @@ public class Order extends AppCompatActivity {
                             }
                         }
                     } else
-                        Toast.makeText(Order.this, "Please select a modifier ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Order.this,  getResources().getString(R.string.select_modifer), Toast.LENGTH_SHORT).show();
                 }
             });
             half.setOnClickListener(new View.OnClickListener() {
@@ -1292,7 +1292,7 @@ public class Order extends AppCompatActivity {
                             }
                         }
                     } else
-                        Toast.makeText(Order.this, "Please select a modifier ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Order.this,  getResources().getString(R.string.select_modifer), Toast.LENGTH_SHORT).show();
                 }
             });
             save.setOnClickListener(new View.OnClickListener() {
@@ -1325,8 +1325,8 @@ public class Order extends AppCompatActivity {
 
             dialog.show();
         } else {
-            Toast.makeText(Order.this, "Please choose item to add modifier !", Toast.LENGTH_SHORT).show();
-        }}else Toast.makeText(this, "No Item ", Toast.LENGTH_SHORT).show();
+            Toast.makeText(Order.this, getResources().getString(R.string.chooes_item_to_modifier), Toast.LENGTH_SHORT).show();
+        }}else Toast.makeText(this,  getResources().getString(R.string.no_item), Toast.LENGTH_SHORT).show();
 
     }
 
@@ -1352,13 +1352,13 @@ public class Order extends AppCompatActivity {
                         calculateTotal();
                         dialog.dismiss();
                     } else {
-                        Toast.makeText(Order.this, "Please Enter Delivery", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Order.this,  getResources().getString(R.string.enter_dekivery), Toast.LENGTH_SHORT).show();
                     }
                 }
             });
             dialog.show();
         } else {
-            Toast.makeText(this, "Delivery is not available when no have any item ", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,  getResources().getString(R.string.delivary_is_not_avilable), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -1397,15 +1397,15 @@ public class Order extends AppCompatActivity {
                                 calculateTotal();
                                 dialog.dismiss();
                             } else {
-                                Toast.makeText(Order.this, "Please Enter Line Discount", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(Order.this,  getResources().getString(R.string.enter_line_discount), Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
                     dialog.show();
                 } else
-                    Toast.makeText(Order.this, "Discount is not available for this item", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Order.this,  getResources().getString(R.string.discount_not_avilable), Toast.LENGTH_SHORT).show();
             } else
-                Toast.makeText(Order.this, "Please choose item to add line discount", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Order.this,  getResources().getString(R.string.chooes_item_to_add_linediscount), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -1450,13 +1450,13 @@ public class Order extends AppCompatActivity {
                         calculateTotal();
                         dialog.dismiss();
                     } else {
-                        Toast.makeText(Order.this, "Please Enter Discount", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Order.this,  getResources().getString(R.string.enter_discount), Toast.LENGTH_SHORT).show();
                     }
                 }
             });
             dialog.show();
         } else
-            Toast.makeText(Order.this, "Discount is not available for current items", Toast.LENGTH_SHORT).show();
+            Toast.makeText(Order.this, getResources().getString( R.string.discount_not_avilable_for_curent_item), Toast.LENGTH_SHORT).show();
     }
 
     void calculateTotal() {
