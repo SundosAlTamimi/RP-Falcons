@@ -192,9 +192,9 @@ public class Main extends AppCompatActivity {
         int count = 0;
         for (int i = 0; i < announcemets.size(); i++) {
             if (announcemets.get(i).getAnnouncementDate().equals(today)) {
-                if (announcemets.get(i).getUserName().equals(Settings.user_name) || announcemets.get(i).getUserName().equals("All")) {
+                if (announcemets.get(i).getUserName().equals(Settings.user_name) || announcemets.get(i).getUserName().equals(getResources().getString(R.string.all))) {
                     if (announcemets.get(i).getPosNo() == (Settings.POS_number) || announcemets.get(i).getPosNo() == (-1)) {
-                        if (announcemets.get(i).getShiftName().equals(Settings.shift_name) || announcemets.get(i).getShiftName().equals("All")) {
+                        if (announcemets.get(i).getShiftName().equals(Settings.shift_name) || announcemets.get(i).getShiftName().equals(getResources().getString(R.string.all))) {
                             count++;
                             final TableRow row = new TableRow(Main.this);
 

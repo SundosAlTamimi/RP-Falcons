@@ -562,6 +562,7 @@
     <string name="cheque_value">Cheque Value :</string>
     <string name="invoice_no">Invoice No</string>
     <string name="is_show">Is Show</string>
+    <string name="enter_received">Enter Received:</string>
 
 
 </resources>

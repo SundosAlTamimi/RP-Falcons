@@ -634,7 +634,7 @@ public class PayMethods extends AppCompatActivity {
         final EditText ACC_card = (EditText) dialog1.findViewById(R.id.Acccode);
 
         final ArrayList<CreditCard> card = mDHandler.getAllCreditCards();
-        serial_txt.setText("" + card.size()+1);
+        serial_txt.setText("" + (card.size()+1));
 
         final CreditCard card_iteam = new CreditCard();
 
