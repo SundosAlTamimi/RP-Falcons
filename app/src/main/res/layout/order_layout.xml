@@ -30,76 +30,15 @@
         android:background="@color/layer1"
         android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:layout_marginTop="2dp"
-            android:background="@color/text_color">
-
-        </LinearLayout>
-
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.75"
-            android:background="@color/layer1"
-            android:orientation="horizontal">
-
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:padding="1dp">
-
-                    <LinearLayout
-                        android:id="@+id/categories"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/layer3"
-                        android:orientation="vertical"
-                        android:padding="1dp">
-
-                    </LinearLayout>
-
-                    <Button
-                        android:id="@+id/category1"
-                        android:layout_width="match_parent"
-                        android:layout_height="20dp"
-                        android:layout_marginVertical="1dp"
-                        android:background="@color/gray"
-                        android:text="@string/add_category"
-                        android:textAllCaps="false"
-                        android:textColor="@color/text_color"
-                        android:textSize="15sp" />
-
-                </LinearLayout>
-
-            </ScrollView>
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:layout_marginTop="2dp"
-            android:background="@color/text_color">
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2.1"
+            android:layout_weight="2.3"
             android:background="@color/layer1"
             android:orientation="horizontal">
 
             <GridView
-                android:id="@+id/GridView"
+                android:id="@+id/itemsGridView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
@@ -110,8 +49,22 @@
                 android:stretchMode="columnWidth"
                 android:verticalSpacing="10dp" />
 
+            <org.askerov.dynamicgrid.DynamicGridView
+                android:id="@+id/categoriesGridView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:columnWidth="90dp"
+                android:gravity="center"
+                android:horizontalSpacing="10dp"
+                android:numColumns="3"
+                android:stretchMode="columnWidth"
+                android:verticalSpacing="10dp" />
 
-        </LinearLayout>
+
+
+
+        </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="0dp"
@@ -131,7 +84,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
                     android:gravity="center"
-                    android:text="@string/setting"
+                    android:text="@string/categories_setting"
                     android:textColor="@color/text_color"
                     android:textSize="12sp"
                     android:textStyle="bold" />

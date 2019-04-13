@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +23,6 @@ import com.tamimi.sundos.restpos.LayoutFoodAdapter;
 import com.tamimi.sundos.restpos.Models.Items;
 import com.tamimi.sundos.restpos.Models.UsedCategories;
 import com.tamimi.sundos.restpos.Models.UsedItems;
-import com.tamimi.sundos.restpos.Order;
 import com.tamimi.sundos.restpos.R;
 
 import java.util.ArrayList;
@@ -64,7 +62,7 @@ public class OrderLayout2 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.order_layout);
+        setContentView(R.layout.order_layout2);
 
         usedCategoriesList = new ArrayList<>();
         mDbHandler = new DatabaseHandler(OrderLayout2.this);

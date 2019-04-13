@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/layer1"
+    android:orientation="vertical"
+    android:layoutDirection="ltr"
+    android:padding="5dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/layer3"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:gravity="center"
+            android:text="@string/order_layout"
+            android:textColor="@color/text_color"
+            android:textSize="17sp" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="450dp"
+        android:background="@color/layer1"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="2dp"
+            android:background="@color/text_color">
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.75"
+            android:background="@color/layer1"
+            android:orientation="horizontal">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="1dp">
+
+                    <LinearLayout
+                        android:id="@+id/categories"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/layer3"
+                        android:orientation="vertical"
+                        android:padding="1dp">
+
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/category1"
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp"
+                        android:layout_marginVertical="1dp"
+                        android:background="@color/gray"
+                        android:text="@string/add_category"
+                        android:textAllCaps="false"
+                        android:textColor="@color/text_color"
+                        android:textSize="15sp" />
+
+                </LinearLayout>
+
+            </ScrollView>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="2dp"
+            android:background="@color/text_color">
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2.1"
+            android:background="@color/layer1"
+            android:orientation="horizontal">
+
+            <GridView
+                android:id="@+id/GridView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:columnWidth="90dp"
+                android:gravity="center"
+                android:horizontalSpacing="10dp"
+                android:numColumns="2"
+                android:stretchMode="columnWidth"
+                android:verticalSpacing="10dp" />
+
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="2dp"
+            android:layout_weight="0.9"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/setting"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/focused_table"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:gravity="center"
+                    android:text="@string/setting"
+                    android:textColor="@color/text_color"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/item_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/focused_table"
+                    android:hint="@string/category_name"
+                    android:paddingHorizontal="5dp"
+                    android:textColor="@color/text_color"
+                    android:textColorHint="@color/gray"
+                    android:textSize="15sp" />
+
+                <ListView
+                    android:id="@+id/categories_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="210dp"
+                    android:layout_marginHorizontal="11dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/layer2" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginHorizontal="11dp"
+                    android:background="@color/text_color">
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="21dp"
+                    android:layout_marginHorizontal="11dp"
+                    android:layout_marginTop="18dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="120dp"
+                        android:layout_height="20dp"
+                        android:text="@string/number_of_items"
+                        android:textColor="@color/text_color"
+                        android:textSize="15sp" />
+
+                    <EditText
+                        android:id="@+id/num_of_items"
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp"
+                        android:layout_marginHorizontal="8dp"
+                        android:background="@drawable/focused_table"
+                        android:hint="0"
+                        android:inputType="number"
+                        android:paddingHorizontal="5dp"
+                        android:textColor="@color/text_color"
+                        android:textColorHint="@color/gray"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="21dp"
+                    android:layout_marginHorizontal="11dp"
+                    android:layout_marginTop="15dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="120dp"
+                        android:layout_height="20dp"
+                        android:text="@string/background"
+                        android:textColor="@color/text_color"
+                        android:textSize="15sp" />
+
+                    <EditText
+                        android:id="@+id/background"
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp"
+                        android:layout_marginHorizontal="8dp"
+                        android:background="@drawable/focused_table"
+                        android:focusable="false"
+                        android:hint="@string/default_"
+                        android:paddingHorizontal="5dp"
+                        android:textColor="@color/text_color"
+                        android:textColorHint="@color/gray"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="21dp"
+                    android:layout_marginHorizontal="11dp"
+                    android:layout_marginTop="15dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="120dp"
+                        android:layout_height="20dp"
+                        android:text="@string/text_color"
+                        android:textColor="@color/text_color"
+                        android:textSize="15sp" />
+
+                    <EditText
+                        android:id="@+id/text_color"
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp"
+                        android:layout_marginHorizontal="8dp"
+                        android:background="@drawable/focused_table"
+                        android:focusable="false"
+                        android:hint="@string/default_"
+                        android:paddingHorizontal="5dp"
+                        android:textColor="@color/text_color"
+                        android:textColorHint="@color/gray"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_marginHorizontal="11dp"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/apply"
+                        android:layout_width="0dp"
+                        android:layout_height="35dp"
+                        android:layout_weight="1"
+                        android:layout_marginHorizontal="10dp"
+                        android:background="@color/exit"
+                        android:text="@string/apply"
+                        android:textAllCaps="false"
+                        android:textColor="@color/layer1"
+                        android:textSize="15sp" />
+
+                    <Button
+                        android:id="@+id/delete"
+                        android:layout_width="0dp"
+                        android:layout_height="35dp"
+                        android:layout_weight="1"
+                        android:layout_marginHorizontal="10dp"
+                        android:background="@color/colorPrimary"
+                        android:text="@string/delete"
+                        android:textAllCaps="false"
+                        android:textColor="@color/layer1"
+                        android:textSize="15sp" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/setting2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/focused_table"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:gravity="center"
+                    android:text="@string/setting"
+                    android:textColor="@color/text_color"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/item_name2"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/focused_table"
+                    android:hint="@string/item_name"
+                    android:paddingHorizontal="5dp"
+                    android:textColor="@color/text_color"
+                    android:textColorHint="@color/gray"
+                    android:textSize="15sp" />
+
+                <ListView
+                    android:id="@+id/items_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="210dp"
+                    android:layout_marginHorizontal="11dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/layer2" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginHorizontal="11dp"
+                    android:background="@color/text_color"></LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="21dp"
+                    android:layout_marginHorizontal="11dp"
+                    android:layout_marginTop="18dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="120dp"
+                        android:layout_height="20dp"
+                        android:text="@string/item_position"
+                        android:textColor="@color/text_color"
+                        android:textSize="15sp" />
+
+                    <EditText
+                        android:id="@+id/item_position"
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp"
+                        android:layout_marginHorizontal="8dp"
+                        android:background="@drawable/focused_table"
+                        android:hint="0"
+                        android:inputType="number"
+                        android:paddingHorizontal="5dp"
+                        android:textColor="@color/text_color"
+                        android:textColorHint="@color/gray"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="21dp"
+                    android:layout_marginHorizontal="11dp"
+                    android:layout_marginTop="15dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="120dp"
+                        android:layout_height="20dp"
+                        android:text="@string/background"
+                        android:textColor="@color/text_color"
+                        android:textSize="15sp" />
+
+                    <EditText
+                        android:id="@+id/background2"
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp"
+                        android:layout_marginHorizontal="8dp"
+                        android:background="@drawable/focused_table"
+                        android:focusable="false"
+                        android:hint="@string/default_"
+                        android:paddingHorizontal="5dp"
+                        android:textColor="@color/text_color"
+                        android:textColorHint="@color/gray"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="21dp"
+                    android:layout_marginHorizontal="11dp"
+                    android:layout_marginTop="15dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="120dp"
+                        android:layout_height="20dp"
+                        android:text="@string/text_color"
+                        android:textColor="@color/text_color"
+                        android:textSize="15sp" />
+
+                    <EditText
+                        android:id="@+id/text_color2"
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp"
+                        android:layout_marginHorizontal="8dp"
+                        android:background="@drawable/focused_table"
+                        android:focusable="false"
+                        android:hint="@string/default_"
+                        android:paddingHorizontal="5dp"
+                        android:textColor="@color/text_color"
+                        android:textColorHint="@color/gray"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/add"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_marginHorizontal="45dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/exit"
+                    android:text="@string/add"
+                    android:textAllCaps="false"
+                    android:textColor="@color/layer1"
+                    android:textSize="15sp" />
+
+            </LinearLayout>
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="2dp"
+        android:background="@color/layer3"
+        android:orientation="horizontal"
+        android:paddingVertical="1dp">
+
+        <Button
+            android:id="@+id/save"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@color/layer3"
+            android:text="@string/save"
+            android:textAllCaps="false"
+            android:textColor="@color/text_color"
+            android:textSize="15sp" />
+
+    </LinearLayout>
+
+</LinearLayout>

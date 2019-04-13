@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <string name="app_name">Rest Pos</string>
 
     <string name="one">1</string>
@@ -452,7 +452,7 @@
     <string name="enter_void_qty">ادخل كمية الالغاء</string>
     <string name="kitchen_screen_no">رقم شاشة المطبخ</string>
     <string name="kitchen_screen_name">اسم شاشة المطبخ</string>
-    <string name="new_reason">اسباب جديدة</string>
+    <string name="new_reason">سبب جديد</string>
     <string name="export_to_pdf">تم تصدير الملف بنجاح</string>
     <string name="waiter_report">تقرير النادل</string>
     <string name="waiter_name">اسم النادل</string>
@@ -565,6 +565,5 @@
     <string name="cheque_value">قيمة الشيكات :</string>
     <string name="invoice_no">رقم الفاتورة</string>
     <string name="is_show">المشاهدة</string>
-
 
 </resources>

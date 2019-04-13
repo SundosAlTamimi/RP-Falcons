@@ -40,7 +40,7 @@ public class FoodAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
 
         LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view1 = inflater.inflate(R.layout.raw_activity, null);
+        View view1 = inflater.inflate(R.layout.raw_activity2, null);
 
         TextView name = (TextView) view1.findViewById(R.id.name);
         TextView description = (TextView) view1.findViewById(R.id.description);

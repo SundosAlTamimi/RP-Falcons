@@ -260,7 +260,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     startActivity(intentMenuRegistration);
                     break;
                 case R.id.menu_layout:
-                    Intent intentOrderLayout = new Intent(BackOfficeActivity.this, OrderLayout2.class);
+                    Intent intentOrderLayout = new Intent(BackOfficeActivity.this, OrderLayout.class);
                     startActivity(intentOrderLayout);
                     break;
                 case R.id.modifier:
