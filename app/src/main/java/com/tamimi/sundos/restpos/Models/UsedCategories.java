@@ -1,5 +1,7 @@
 package com.tamimi.sundos.restpos.Models;
 
+import android.graphics.Bitmap;
+
 public class UsedCategories {
 
     private String categoryName ;
@@ -7,15 +9,17 @@ public class UsedCategories {
     private int background ;
     private int textColor ;
     private int position ;
+    private Bitmap catPic;
 
     public UsedCategories(){}
 
-    public UsedCategories(String categoryName, int numberOfItems, int background, int textColor, int position) {
+    public UsedCategories(String categoryName, int numberOfItems, int background, int textColor, int position, Bitmap catPic) {
         this.categoryName = categoryName;
         this.numberOfItems = numberOfItems;
         this.background = background;
         this.textColor = textColor;
         this.position = position;
+        this.catPic = catPic;
     }
 
 
@@ -57,5 +61,13 @@ public class UsedCategories {
 
     public void setPosition(int position) {
         this.position = position;
+    }
+
+    public Bitmap getCatPic() {
+        return catPic;
+    }
+
+    public void setCatPic(Bitmap catPic) {
+        this.catPic = catPic;
     }
 }

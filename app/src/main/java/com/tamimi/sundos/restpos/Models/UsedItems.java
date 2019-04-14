@@ -1,5 +1,7 @@
 package com.tamimi.sundos.restpos.Models;
 
+import android.graphics.Bitmap;
+
 public class UsedItems {
 
     private String categoryName ;
@@ -7,6 +9,7 @@ public class UsedItems {
     private int background ;
     private int textColor ;
     private int position ;
+    private Bitmap itemPic;
 
     public UsedItems(){
 
@@ -17,6 +20,15 @@ public class UsedItems {
         this.background = background;
         this.textColor = textColor;
         this.position = position;
+    }
+
+    public UsedItems(String categoryName, String itemName, int background, int textColor, int position, Bitmap itemPic) {
+        this.categoryName = categoryName;
+        this.itemName = itemName;
+        this.background = background;
+        this.textColor = textColor;
+        this.position = position;
+        this.itemPic = itemPic;
     }
 
 
@@ -58,5 +70,13 @@ public class UsedItems {
 
     public void setPosition(int position) {
         this.position = position;
+    }
+
+    public Bitmap getItemPic() {
+        return itemPic;
+    }
+
+    public void setItemPic(Bitmap itemPic) {
+        this.itemPic = itemPic;
     }
 }
