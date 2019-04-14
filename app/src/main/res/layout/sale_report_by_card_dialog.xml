@@ -120,8 +120,9 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:layout_width="107dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="1dp"
                         android:text="@string/from_date"
                         android:textColor="@color/text_color"
                         android:textSize="18sp" />
@@ -130,15 +131,16 @@
                         android:id="@+id/frDateCard"
                         android:layout_width="150dp"
                         android:layout_height="30dp"
-                        android:layout_marginRight="20dp"
+                        android:layout_marginHorizontal="10dp"
                         android:background="@color/layer2"
                         android:gravity="center"
                         android:textColor="@color/text_color"
                         android:textSize="18sp" />
 
                     <TextView
-                        android:layout_width="96dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="1dp"
                         android:text="@string/to_date"
                         android:textColor="@color/text_color"
                         android:textSize="18sp" />
@@ -147,6 +149,7 @@
                         android:id="@+id/toDateCard"
                         android:layout_width="150dp"
                         android:layout_height="30dp"
+                        android:layout_marginHorizontal="10dp"
                         android:background="@color/layer2"
                         android:gravity="center"
                         android:textColor="@color/text_color"
@@ -168,8 +171,7 @@
                     android:id="@+id/text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginHorizontal="1dp"
                     android:text="@string/shift_name"
                     android:textColor="@color/text_color"
                     android:textSize="18sp" />
@@ -177,48 +179,52 @@
                 <Spinner
                     android:id="@+id/shiftName"
                     android:layout_width="170dp"
-                    android:layout_height="30dp" />
+                    android:layout_height="30dp"
+                    android:layout_marginHorizontal="10dp"/>
 
                 <TextView
                     android:id="@+id/textView67"
-                    android:layout_width="100dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/card_type"
                     android:textColor="@color/text_color"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:layout_marginHorizontal="1dp"/>
 
                 <Spinner
                     android:id="@+id/cardType"
                     android:layout_width="170dp"
-                    android:layout_height="30dp" />
+                    android:layout_height="30dp"
+                    android:layout_marginHorizontal="10dp"/>
 
                 <TextView
                     android:id="@+id/text2"
-                    android:layout_width="81dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="12dp"
                     android:text="@string/point_of_sale"
                     android:textColor="@color/text_color"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:layout_marginHorizontal="1dp"/>
 
                 <Spinner
                     android:id="@+id/posNo"
                     android:layout_width="170dp"
-                    android:layout_height="30dp" />
+                    android:layout_height="30dp"
+                    android:layout_marginHorizontal="10dp"/>
             </TableRow>
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="309dp"
             android:orientation="vertical"
             android:padding="5dp">
 
 
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="2dp">
 
                 <TextView

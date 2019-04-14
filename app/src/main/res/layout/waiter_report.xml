@@ -119,9 +119,10 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:layout_width="107dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/from_date"
+                        android:layout_marginHorizontal="1dp"
                         android:textColor="@color/text_color"
                         android:textSize="18sp" />
 
@@ -129,16 +130,17 @@
                         android:id="@+id/frDate"
                         android:layout_width="150dp"
                         android:layout_height="30dp"
-                        android:layout_marginRight="20dp"
+                        android:layout_marginHorizontal="10dp"
                         android:background="@color/layer2"
                         android:gravity="center"
                         android:textColor="@color/text_color"
                         android:textSize="18sp" />
 
                     <TextView
-                        android:layout_width="96dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/to_date"
+                        android:layout_marginHorizontal="1dp"
                         android:textColor="@color/text_color"
                         android:textSize="18sp" />
 
@@ -146,6 +148,7 @@
                         android:id="@+id/toDate"
                         android:layout_width="150dp"
                         android:layout_height="30dp"
+                        android:layout_marginHorizontal="10dp"
                         android:background="@color/layer2"
                         android:gravity="center"
                         android:textColor="@color/text_color"
@@ -165,23 +168,24 @@
 
                 <TextView
                     android:id="@+id/textView67"
-                    android:layout_width="100dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/shift_name"
+                    android:layout_marginHorizontal="1dp"
                     android:textColor="@color/text_color"
                     android:textSize="18sp" />
 
                 <Spinner
                     android:id="@+id/shiftName"
                     android:layout_width="170dp"
-                    android:layout_height="30dp" />
+                    android:layout_height="30dp"
+                    android:layout_marginHorizontal="10dp"/>
 
                 <TextView
                     android:id="@+id/text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginHorizontal="1dp"
                     android:text="@string/waiter"
                     android:textColor="@color/text_color"
                     android:textSize="18sp" />
@@ -189,13 +193,14 @@
                 <Spinner
                     android:id="@+id/casherNo"
                     android:layout_width="170dp"
-                    android:layout_height="30dp" />
+                    android:layout_height="30dp"
+                    android:layout_marginHorizontal="10dp"/>
 
                 <TextView
                     android:id="@+id/text2"
-                    android:layout_width="81dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="12dp"
+                    android:layout_marginHorizontal="1dp"
                     android:text="@string/point_of_sale"
                     android:textColor="@color/text_color"
                     android:textSize="18sp" />
@@ -203,7 +208,8 @@
                 <Spinner
                     android:id="@+id/posNo"
                     android:layout_width="170dp"
-                    android:layout_height="30dp" />
+                    android:layout_height="30dp"
+                    android:layout_marginHorizontal="10dp"/>
             </TableRow>
 
         </LinearLayout>

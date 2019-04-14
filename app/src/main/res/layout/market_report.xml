@@ -119,9 +119,10 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:layout_width="107dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/from_date"
+                        android:layout_marginHorizontal="1dp"
                         android:textColor="@color/text_color"
                         android:textSize="18sp" />
 
@@ -129,16 +130,17 @@
                         android:id="@+id/frDateMarket"
                         android:layout_width="150dp"
                         android:layout_height="30dp"
-                        android:layout_marginRight="20dp"
+                        android:layout_marginHorizontal="10dp"
                         android:background="@color/layer2"
                         android:gravity="center"
                         android:textColor="@color/text_color"
                         android:textSize="18sp" />
 
                     <TextView
-                        android:layout_width="96dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/to_date"
+                        android:layout_marginHorizontal="8dp"
                         android:textColor="@color/text_color"
                         android:textSize="18sp" />
 
@@ -147,6 +149,7 @@
                         android:layout_width="150dp"
                         android:layout_height="30dp"
                         android:background="@color/layer2"
+                        android:layout_marginHorizontal="2dp"
                         android:gravity="center"
                         android:textColor="@color/text_color"
                         android:textSize="18sp" />

@@ -38,9 +38,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginBottom="5dp"
                     android:layout_marginEnd="50dp"
                     android:layout_marginRight="50dp"
+                    android:layout_marginBottom="5dp"
                     android:layout_weight="3"
                     android:gravity="center"
                     android:text="@string/simple_sales_total"
@@ -119,8 +119,9 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:layout_width="107dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="1dp"
                         android:text="@string/from_date"
                         android:textColor="@color/text_color"
                         android:textSize="18sp" />
@@ -129,15 +130,16 @@
                         android:id="@+id/frDate"
                         android:layout_width="150dp"
                         android:layout_height="30dp"
-                        android:layout_marginRight="20dp"
+                        android:layout_marginHorizontal="10dp"
                         android:background="@color/layer2"
                         android:gravity="center"
                         android:textColor="@color/text_color"
                         android:textSize="18sp" />
 
                     <TextView
-                        android:layout_width="96dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="1dp"
                         android:text="@string/to_date"
                         android:textColor="@color/text_color"
                         android:textSize="18sp" />
@@ -146,6 +148,7 @@
                         android:id="@+id/toDate"
                         android:layout_width="150dp"
                         android:layout_height="30dp"
+                        android:layout_marginHorizontal="10dp"
                         android:background="@color/layer2"
                         android:gravity="center"
                         android:textColor="@color/text_color"
@@ -155,16 +158,16 @@
                         android:id="@+id/orderType"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="30dp"
+                        android:layout_marginHorizontal="5dp"
                         android:layout_marginStart="30dp"
+                        android:layout_marginLeft="30dp"
                         android:orientation="horizontal">
 
                         <RadioButton
                             android:id="@+id/takeAway"
                             android:layout_width="wrap_content"
                             android:layout_height="30dp"
-                            android:layout_marginLeft="20dp"
-                            android:layout_marginRight="20dp"
+                            android:layout_marginHorizontal="7dp"
                             android:text="@string/take_away"
                             android:textColor="@color/text_color"
                             android:textSize="14sp"
@@ -174,7 +177,7 @@
                             android:id="@+id/dineIn"
                             android:layout_width="wrap_content"
                             android:layout_height="30dp"
-                            android:layout_marginRight="20dp"
+                            android:layout_marginHorizontal="7dp"
                             android:text="@string/dine_in"
                             android:textColor="@color/text_color"
                             android:textSize="14sp"
@@ -184,9 +187,9 @@
                             android:id="@+id/All"
                             android:layout_width="wrap_content"
                             android:layout_height="30dp"
-                            android:layout_marginRight="20dp"
-                            android:text="@string/all"
+                            android:layout_marginHorizontal="7dp"
                             android:checked="true"
+                            android:text="@string/all"
                             android:textColor="@color/text_color"
                             android:textSize="14sp"
                             android:textStyle="bold" />
@@ -206,8 +209,9 @@
 
                 <TextView
                     android:id="@+id/textView67"
-                    android:layout_width="100dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="1dp"
                     android:text="@string/shift_name"
                     android:textColor="@color/text_color"
                     android:textSize="18sp" />
@@ -215,14 +219,14 @@
                 <Spinner
                     android:id="@+id/shiftName"
                     android:layout_width="170dp"
-                    android:layout_height="30dp" />
+                    android:layout_height="30dp"
+                    android:layout_marginHorizontal="10dp" />
 
                 <TextView
                     android:id="@+id/text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginHorizontal="1dp"
                     android:text="@string/cashier_no"
                     android:textColor="@color/text_color"
                     android:textSize="18sp" />
@@ -230,13 +234,14 @@
                 <Spinner
                     android:id="@+id/casherNo"
                     android:layout_width="170dp"
-                    android:layout_height="30dp" />
+                    android:layout_height="30dp"
+                    android:layout_marginHorizontal="10dp" />
 
                 <TextView
                     android:id="@+id/text2"
-                    android:layout_width="81dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="12dp"
+                    android:layout_marginHorizontal="1dp"
                     android:text="@string/point_of_sale"
                     android:textColor="@color/text_color"
                     android:textSize="18sp" />
@@ -244,7 +249,8 @@
                 <Spinner
                     android:id="@+id/posNo"
                     android:layout_width="170dp"
-                    android:layout_height="30dp" />
+                    android:layout_height="30dp"
+                    android:layout_marginHorizontal="10dp" />
             </TableRow>
 
         </LinearLayout>
@@ -323,7 +329,7 @@
                     android:textSize="18sp" />
 
                 <TextView
-                    android:layout_width="100dp"
+                    android:layout_width="122dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="1dp"
                     android:layout_weight="2"
