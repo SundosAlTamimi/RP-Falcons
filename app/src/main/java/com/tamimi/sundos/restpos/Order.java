@@ -130,7 +130,7 @@ public class Order extends AppCompatActivity {
         tableLayoutPosition = 0;
         currentColor = ContextCompat.getColor(this, R.color.layer2);
 
-        OrderType = orderType.getText().toString();
+        OrderType = convertToEnglish(orderType.getText().toString());
 
         if (mDbHandler.getOrderTransactionsTemp("" + sectionNumber, "" + tableNumber).size() != 0)
             fillPreviousOrder();
@@ -142,7 +142,7 @@ public class Order extends AppCompatActivity {
 
             Date currentTimeAndDate = Calendar.getInstance().getTime();
             SimpleDateFormat dfTime = new SimpleDateFormat("HH:mm:ss");
-            time = dfTime.format(currentTimeAndDate);
+            time = convertToEnglish(dfTime.format(currentTimeAndDate));
 
             switch (view.getId()) {
                 case R.id.pay:
@@ -153,7 +153,7 @@ public class Order extends AppCompatActivity {
                             Intent intentPay = new Intent(Order.this, PayMethods.class);
                             startActivity(intentPay);
                         } else
-                            Toast.makeText(Order.this, "your Amount Due is 0.00 !", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Order.this, getResources().getString(R.string.amountdue_oo), Toast.LENGTH_SHORT).show();
                     }
                     break;
 
@@ -166,7 +166,7 @@ public class Order extends AppCompatActivity {
                             Intent intent = new Intent(Order.this, DineIn.class);
                             startActivity(intent);
                         } else
-                            Toast.makeText(Order.this, "your Amount Due is 0.00 !", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Order.this, getResources().getString(R.string.amountdue_oo), Toast.LENGTH_SHORT).show();
                     }
                     break;
 
@@ -243,18 +243,18 @@ public class Order extends AppCompatActivity {
     @SuppressLint("SetTextI18n")
     void setOrder(int flag) {
         if (flag == 0) {
-            orderType.setText("Take Away");
-            tableNo.setText("Table:  " + "-");
-            check.setText("Check:  " + "-");
+            orderType.setText(getResources().getString(R.string.take_away));
+            tableNo.setText(getResources().getString(R.string.table_no) + " : -");
+            check.setText(getResources().getString(R.string.check) + "-");
             user.setText("no waiter");
             seats.setText("0");
             tableNumber = -1;
             sectionNumber = -1;
             vhSerial.setText(voucherNo);
         } else {
-            orderType.setText("Dine In");
-            tableNo.setText("Table:  " + tableNumber);
-            check.setText("Check:  " + sectionNumber);
+            orderType.setText(getResources().getString(R.string.dine_in));
+            tableNo.setText(getResources().getString(R.string.table_no)+" :  " + tableNumber);
+            check.setText(getResources().getString(R.string.check) + sectionNumber);
             user.setText(waiter);
             seats.setText("" + seatNo);
             vhSerial.setText(voucherNo);
@@ -264,13 +264,13 @@ public class Order extends AppCompatActivity {
     void setDateAndVoucherNumber() {
         Date currentTimeAndDate = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-        today = df.format(currentTimeAndDate);
+        today =convertToEnglish(df.format(currentTimeAndDate));
 
         SimpleDateFormat dfTime = new SimpleDateFormat("HH:mm");
-        time = dfTime.format(currentTimeAndDate);
+        time = convertToEnglish(dfTime.format(currentTimeAndDate));
 
         SimpleDateFormat df2 = new SimpleDateFormat("yyyyMM");
-        yearMonth = df2.format(currentTimeAndDate);
+        yearMonth = convertToEnglish(df2.format(currentTimeAndDate));
 
         List<OrderHeader> transactions = mDbHandler.getAllOrderHeader();
         List<OrderHeader> transactionsTemp = mDbHandler.getAllOrderHeaderTemp();
@@ -387,11 +387,11 @@ public class Order extends AppCompatActivity {
                                 TextView textViewTotal = (TextView) tableRow.getChildAt(3);
                                 TextView textViewLineDiscount = (TextView) tableRow.getChildAt(4);
 
-                                int qty = Integer.parseInt(textViewQty.getText().toString());
-                                double price = Double.parseDouble(textViewPrice.getText().toString());
+                                int qty = Integer.parseInt(convertToEnglish(textViewQty.getText().toString()));
+                                double price = Double.parseDouble(convertToEnglish(textViewPrice.getText().toString()));
                                 double newTotal = price * (qty + 1);
 
-                                double originalDisc = lineDiscount.get(index) * 100 / Double.parseDouble(textViewTotal.getText().toString());
+                                double originalDisc = lineDiscount.get(index) * 100 / Double.parseDouble(convertToEnglish(textViewTotal.getText().toString()));
                                 double newDiscountValue = originalDisc * newTotal / 100;
                                 lineDiscount.set(index, newDiscountValue);
 
@@ -401,7 +401,7 @@ public class Order extends AppCompatActivity {
                                 calculateTotal();
                             }
                         } else
-                            Toast.makeText(Order.this, "No Item", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Order.this, getResources().getString(R.string.no_item), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -621,13 +621,13 @@ public class Order extends AppCompatActivity {
 
                 AlertDialog.Builder builderSingle = new AlertDialog.Builder(Order.this);
                 builderSingle.setCancelable(false);
-                builderSingle.setTitle("What Kind Of Delete :");
+                builderSingle.setTitle(getResources().getString(R.string.what_kind));
 
                 final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(Order.this, android.R.layout.select_dialog_singlechoice);
-                arrayAdapter.add("Selected Item");
-                arrayAdapter.add("Current Order");
+                arrayAdapter.add(getResources().getString(R.string.select_item));
+                arrayAdapter.add(getResources().getString(R.string.curent_order));
 
-                builderSingle.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                builderSingle.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -638,28 +638,28 @@ public class Order extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String strName = arrayAdapter.getItem(which);
-                        if (strName.equals("Selected Item")) {
+                        if (strName.equals(getResources().getString(R.string.select_item))) {
                             AlertDialog.Builder builderInner = new AlertDialog.Builder(Order.this);
-                            builderInner.setTitle("Do you want to delete this item ?");
+                            builderInner.setTitle(getResources().getString(R.string.delete_this_item));
                             builderInner.setCancelable(false);
-                            builderInner.setPositiveButton("Yes", (dialog1, which1) -> {
+                            builderInner.setPositiveButton(getResources().getString(R.string.yes), (dialog1, which1) -> {
 
                                 showVoidReasonDialog(row);
                             });
-                            builderInner.setNegativeButton("No", (dialogInterface, i) -> {
+                            builderInner.setNegativeButton(getResources().getString(R.string.no), (dialogInterface, i) -> {
                                 row.setBackgroundDrawable(null);
                             });
                             builderInner.show();
 
                         } else {
                             AlertDialog.Builder builderInner = new AlertDialog.Builder(Order.this);
-                            builderInner.setTitle("Do you want to delete the current order ?");
+                            builderInner.setTitle(getResources().getString(R.string.delete_curent_order));
                             builderInner.setCancelable(false);
-                            builderInner.setPositiveButton("Yes", (dialog1, which1) -> {
+                            builderInner.setPositiveButton(getResources().getString(R.string.yes), (dialog1, which1) -> {
 
                                 showVoidReasonDialog2();
                             });
-                            builderInner.setNegativeButton("No", (dialog1, i) -> {
+                            builderInner.setNegativeButton(getResources().getString(R.string.no), (dialog1, i) -> {
 //                            row.setBackgroundDrawable(null);
                                 dialog1.dismiss();
                             });
@@ -695,9 +695,9 @@ public class Order extends AppCompatActivity {
 //            AlertDialog alertDialog = builder.create();
 //            alertDialog.show();
             } else
-                Toast.makeText(Order.this, " Please choose item to be deleted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Order.this, getResources().getString(R.string.chooes_item_delete), Toast.LENGTH_SHORT).show();
         }else {
-            Toast.makeText(Order.this, " No Item  ", Toast.LENGTH_SHORT).show();
+            Toast.makeText(Order.this, getResources().getString(R.string.no_item), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -716,13 +716,13 @@ public class Order extends AppCompatActivity {
         EditText voidQty = (EditText) dialog.findViewById(R.id.void_qty);
         Button done = (Button) dialog.findViewById(R.id.b_done);
 
-        voidQty.setText(textViewQty.getText().toString());
+        voidQty.setText(convertToEnglish(textViewQty.getText().toString()));
 
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!voidQty.getText().toString().equals("")) {
-                    if (Integer.parseInt(voidQty.getText().toString()) <= Integer.parseInt(textViewQty.getText().toString())) {
+                if (!convertToEnglish(voidQty.getText().toString()).equals("")) {
+                    if (Integer.parseInt(convertToEnglish(voidQty.getText().toString())) <= Integer.parseInt(convertToEnglish(textViewQty.getText().toString()))) {
 //
                         Dialog dialog1 = new Dialog(Order.this);
                         dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -778,7 +778,7 @@ public class Order extends AppCompatActivity {
                                             Settings.password, Settings.user_name, reasonText, today, 1));
                                 }
 
-                                int index = Integer.parseInt(raw.getTag().toString());
+                                int index = Integer.parseInt(convertToEnglish(raw.getTag().toString()));
 
                                 mDbHandler.addCancleOrder(new CancleOrder(voucherNo, today, Settings.user_name, Settings.password, Settings.shift_name,
                                         Settings.shift_number, waiter, Integer.parseInt(waiterNo), "" + wantedItems.get(index).getItemBarcode(),
@@ -786,7 +786,7 @@ public class Order extends AppCompatActivity {
                                         wantedItems.get(index).getPrice(), Double.parseDouble(textViewTotal.getText().toString()),
                                         reasonText, 0, time, Settings.POS_number));
 
-                                if (voidQty.getText().toString().equals(textViewQty.getText().toString())) {
+                                if (convertToEnglish(voidQty.getText().toString()).equals(convertToEnglish(textViewQty.getText().toString()))) {
 
                                     tableLayout.removeView(raw);
                                     wantedItems.remove(index);
@@ -799,7 +799,7 @@ public class Order extends AppCompatActivity {
                                         TableRow tableRow = (TableRow) tableLayout.getChildAt(i);
                                         TextView qty = (TextView) tableRow.getChildAt(0);
 
-                                        if (qty.getText().toString().equals("0")) {
+                                        if (convertToEnglish(qty.getText().toString()).equals("0")) {
                                             tableLayout.removeView(tableRow);
                                             wantedItems.remove(i);
                                             lineDiscount.remove(i);
@@ -823,9 +823,9 @@ public class Order extends AppCompatActivity {
 
                                 } else {
 
-                                    int newQty = Integer.parseInt(textViewQty.getText().toString()) - Integer.parseInt(voidQty.getText().toString());
-                                    double newTotal = newQty * Double.parseDouble(textViewPrice.getText().toString());
-                                    double originalDisc = lineDiscount.get(index) * 100 / Double.parseDouble(textViewTotal.getText().toString());
+                                    int newQty = Integer.parseInt(convertToEnglish(textViewQty.getText().toString())) - Integer.parseInt(convertToEnglish(voidQty.getText().toString()));
+                                    double newTotal = newQty * Double.parseDouble(convertToEnglish(textViewPrice.getText().toString()));
+                                    double originalDisc = lineDiscount.get(index) * 100 / Double.parseDouble(convertToEnglish(textViewTotal.getText().toString()));
                                     double newDiscountValue = originalDisc * newTotal / 100;
 
                                     textViewQty.setText("" + newQty);
@@ -836,16 +836,16 @@ public class Order extends AppCompatActivity {
                                 dialog1.dismiss();
                                 dialog.dismiss();
                             } else
-                                Toast.makeText(Order.this, "Please select reason of cancel", Toast.LENGTH_LONG).show();
+                                Toast.makeText(Order.this, getResources().getString(R.string.select_reson_cancele), Toast.LENGTH_LONG).show();
                         });
 
 
                         dialog1.show();
                     } else
-                        Toast.makeText(Order.this, "Current qty is less than " + voidQty.getText().toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(Order.this, getResources().getString(R.string.curent_qty_less_than) + voidQty.getText().toString(), Toast.LENGTH_LONG).show();
 
                 } else
-                    Toast.makeText(Order.this, "Please enter qty !", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Order.this,getResources().getString( R.string.enter_qty), Toast.LENGTH_SHORT).show();
             }
         });
         dialog.show();
@@ -898,12 +898,12 @@ public class Order extends AppCompatActivity {
         reasons.addView(row);
 
         save.setOnClickListener(view -> {
-            if (!selectedReason[0].equals("") || !newReason.getText().toString().equals("")) {
+            if (!selectedReason[0].equals("") || !convertToEnglish(newReason.getText().toString()).equals("")) {
                 String reasonText ;
-                if(newReason.getText().toString().equals("")){
+                if(convertToEnglish(newReason.getText().toString()).equals("")){
                     reasonText = selectedReason[0] ;
                 } else {
-                    reasonText = newReason.getText().toString();
+                    reasonText =convertToEnglish(newReason.getText().toString());
                     mDbHandler.addVoidReason(new VoidResons(Settings.shift_number, Settings.shift_name,
                             Settings.password, Settings.user_name, reasonText, today, 1));
                 }
@@ -915,8 +915,8 @@ public class Order extends AppCompatActivity {
 
                     mDbHandler.addCancleOrder(new CancleOrder(voucherNo, today, Settings.user_name, Settings.password, Settings.shift_name,
                             Settings.shift_number, waiter, Integer.parseInt(waiterNo), "" + wantedItems.get(k).getItemBarcode(),
-                            wantedItems.get(k).getMenuName(), Integer.parseInt(textViewQty.getText().toString()),
-                            wantedItems.get(k).getPrice(), Double.parseDouble(textViewTotal.getText().toString()),
+                            wantedItems.get(k).getMenuName(), Integer.parseInt(convertToEnglish(textViewQty.getText().toString())),
+                            wantedItems.get(k).getPrice(), Double.parseDouble(convertToEnglish(textViewTotal.getText().toString())),
                             reasonText, 1, time, Settings.POS_number));
                 }
                 if (orderTypeFlag == 0) {
@@ -943,7 +943,7 @@ public class Order extends AppCompatActivity {
                 }
                 dialog.dismiss();
             } else {
-                Toast.makeText(Order.this, "Please select reason of cancel", Toast.LENGTH_LONG).show();
+                Toast.makeText(Order.this, getResources().getString(R.string.select_reson_cancele), Toast.LENGTH_LONG).show();
 
             }
         });
@@ -1033,7 +1033,7 @@ public class Order extends AppCompatActivity {
                         }
                     }
                 } else
-                    Toast.makeText(Order.this, "Please select answers ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Order.this, getResources().getString(R.string.selected_answer), Toast.LENGTH_SHORT).show();
             }
         });
         no.setOnClickListener(new View.OnClickListener() {
@@ -1060,7 +1060,7 @@ public class Order extends AppCompatActivity {
                         }
                     }
                 } else
-                    Toast.makeText(Order.this, "Please select answers ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Order.this, getResources().getString(R.string.selected_answer), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -1088,7 +1088,7 @@ public class Order extends AppCompatActivity {
                         }
                     }
                 } else
-                    Toast.makeText(Order.this, "Please select answers ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Order.this,  getResources().getString(R.string.selected_answer), Toast.LENGTH_SHORT).show();
             }
         });
         half.setOnClickListener(new View.OnClickListener() {
@@ -1115,7 +1115,7 @@ public class Order extends AppCompatActivity {
                         }
                     }
                 } else
-                    Toast.makeText(Order.this, "Please select answers ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Order.this,  getResources().getString(R.string.selected_answer), Toast.LENGTH_SHORT).show();
             }
         });
         save.setOnClickListener(new View.OnClickListener() {
@@ -1141,7 +1141,7 @@ public class Order extends AppCompatActivity {
                             }
 
                         } else {
-                            Toast.makeText(Order.this, "Please select quantity ", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Order.this,  getResources().getString(R.string.select_qty), Toast.LENGTH_SHORT).show();
                         }
                         Log.e("here", "******" + answersLinear.getChildCount());
                     } else {
@@ -1164,7 +1164,7 @@ public class Order extends AppCompatActivity {
                                         showForceQuestionDialog(itemBarcode, nextQu);
                                     }
                                 } else {
-                                    Toast.makeText(Order.this, "Please select quantity ", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(Order.this,  getResources().getString(R.string.select_qty), Toast.LENGTH_SHORT).show();
                                 }
                                 Log.e("here", "******" + answersLinear.getChildCount());
                             }
@@ -1241,7 +1241,7 @@ public class Order extends AppCompatActivity {
                             }
                         }
                     } else
-                        Toast.makeText(Order.this, "Please select a modifier ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Order.this,  getResources().getString(R.string.select_modifer), Toast.LENGTH_SHORT).show();
                 }
             });
             no.setOnClickListener(new View.OnClickListener() {
@@ -1258,7 +1258,7 @@ public class Order extends AppCompatActivity {
                             }
                         }
                     } else
-                        Toast.makeText(Order.this, "Please select a modifier ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Order.this,  getResources().getString(R.string.select_modifer), Toast.LENGTH_SHORT).show();
                 }
             });
             little.setOnClickListener(new View.OnClickListener() {
@@ -1275,7 +1275,7 @@ public class Order extends AppCompatActivity {
                             }
                         }
                     } else
-                        Toast.makeText(Order.this, "Please select a modifier ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Order.this,  getResources().getString(R.string.select_modifer), Toast.LENGTH_SHORT).show();
                 }
             });
             half.setOnClickListener(new View.OnClickListener() {
@@ -1292,7 +1292,7 @@ public class Order extends AppCompatActivity {
                             }
                         }
                     } else
-                        Toast.makeText(Order.this, "Please select a modifier ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Order.this,  getResources().getString(R.string.select_modifer), Toast.LENGTH_SHORT).show();
                 }
             });
             save.setOnClickListener(new View.OnClickListener() {
@@ -1325,8 +1325,8 @@ public class Order extends AppCompatActivity {
 
             dialog.show();
         } else {
-            Toast.makeText(Order.this, "Please choose item to add modifier !", Toast.LENGTH_SHORT).show();
-        }}else Toast.makeText(this, "No Item ", Toast.LENGTH_SHORT).show();
+            Toast.makeText(Order.this, getResources().getString(R.string.chooes_item_to_modifier), Toast.LENGTH_SHORT).show();
+        }}else Toast.makeText(this,  getResources().getString(R.string.no_item), Toast.LENGTH_SHORT).show();
 
     }
 
@@ -1347,18 +1347,18 @@ public class Order extends AppCompatActivity {
             buttonDone.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (!addDeliveryEditText.getText().toString().equals("")) {
-                        deliveryCharge.setText(addDeliveryEditText.getText().toString());
+                    if (!convertToEnglish(addDeliveryEditText.getText().toString()).equals("")) {
+                        deliveryCharge.setText(convertToEnglish(addDeliveryEditText.getText().toString()));
                         calculateTotal();
                         dialog.dismiss();
                     } else {
-                        Toast.makeText(Order.this, "Please Enter Delivery", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Order.this,  getResources().getString(R.string.enter_dekivery), Toast.LENGTH_SHORT).show();
                     }
                 }
             });
             dialog.show();
         } else {
-            Toast.makeText(this, "Delivery is not available when no have any item ", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,  getResources().getString(R.string.delivary_is_not_avilable), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -1390,22 +1390,22 @@ public class Order extends AppCompatActivity {
                                     TableRow tableRow = (TableRow) tableLayout.getChildAt(Integer.parseInt(focused.getTag().toString()));
                                     TextView textViewTotal = (TextView) tableRow.getChildAt(3);
 
-                                    lineDiscountValue = (Double.parseDouble(addLineDiscountEditText.getText().toString())) *
-                                            (Double.parseDouble(textViewTotal.getText().toString())) / 100;
+                                    lineDiscountValue = (Double.parseDouble(convertToEnglish(addLineDiscountEditText.getText().toString()))) *
+                                            (Double.parseDouble(convertToEnglish(textViewTotal.getText().toString()))) / 100;
                                 }
-                                lineDiscount.set(Integer.parseInt(focused.getTag().toString()), lineDiscountValue);
+                                lineDiscount.set(Integer.parseInt(convertToEnglish(focused.getTag().toString())), lineDiscountValue);
                                 calculateTotal();
                                 dialog.dismiss();
                             } else {
-                                Toast.makeText(Order.this, "Please Enter Line Discount", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(Order.this,  getResources().getString(R.string.enter_line_discount), Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
                     dialog.show();
                 } else
-                    Toast.makeText(Order.this, "Discount is not available for this item", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Order.this,  getResources().getString(R.string.discount_not_avilable), Toast.LENGTH_SHORT).show();
             } else
-                Toast.makeText(Order.this, "Please choose item to add line discount", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Order.this,  getResources().getString(R.string.chooes_item_to_add_linediscount), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -1435,35 +1435,36 @@ public class Order extends AppCompatActivity {
             buttonDone.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (!addDiscountEditText.getText().toString().equals("")) {
-                        discountValue = Double.parseDouble(addDiscountEditText.getText().toString());
-                        voucherDiscount = Double.parseDouble(addDiscountEditText.getText().toString());
+                    if (!convertToEnglish(addDiscountEditText.getText().toString()).equals("")) {
+                        discountValue = Double.parseDouble(convertToEnglish(addDiscountEditText.getText().toString()));
+                        voucherDiscount = Double.parseDouble(convertToEnglish(addDiscountEditText.getText().toString()));
 
                         if (discPerc.isChecked()) {
-                            discountValue = (Double.parseDouble(addDiscountEditText.getText().toString())) *
+                            discountValue = (Double.parseDouble(convertToEnglish(addDiscountEditText.getText().toString()))) *
                                     totalItemsWithDiscount / 100;
-                            Log.e("sum ", "" + (Double.parseDouble(addDiscountEditText.getText().toString())) + "*" +
+                            Log.e("sum ", "" + (Double.parseDouble(convertToEnglish(addDiscountEditText.getText().toString()))) + "*" +
                                     totalItemsWithDiscount + "/" + "100");
                         }
                         discChanged = true;
-                        disCount.setText(discountValue + "");
+                        disCount.setText(convertToEnglish(discountValue + ""));
                         calculateTotal();
                         dialog.dismiss();
                     } else {
-                        Toast.makeText(Order.this, "Please Enter Discount", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Order.this,  getResources().getString(R.string.enter_discount), Toast.LENGTH_SHORT).show();
                     }
                 }
             });
             dialog.show();
         } else
-            Toast.makeText(Order.this, "Discount is not available for current items", Toast.LENGTH_SHORT).show();
+            Toast.makeText(Order.this, getResources().getString( R.string.discount_not_avilable_for_curent_item), Toast.LENGTH_SHORT).show();
     }
 
     void calculateTotal() {
 
         totalItemsWithDiscount = 0.0;
         double lineDisCountValue = 0.0;
-        double deliveryChargeValue = Double.parseDouble(deliveryCharge.getText().toString());
+        Log.e("111","dd --> "+convertToEnglish(deliveryCharge.getText().toString()));
+        double deliveryChargeValue = Double.parseDouble(convertToEnglish(deliveryCharge.getText().toString()));
 
         double sum = 0;
         double totalItemsTaxInclude = 0;
@@ -1474,10 +1475,10 @@ public class Order extends AppCompatActivity {
             TextView firstText = (TextView) tableRow.getChildAt(0);
 
             if (!firstText.getText().toString().contains("*")) {
-                sum += Double.parseDouble(textViewTotal.getText().toString());
+                sum += Double.parseDouble(convertToEnglish(textViewTotal.getText().toString()));
                 lineDisCountValue += lineDiscount.get(k);
 
-                double totalAfterDisc = Double.parseDouble(textViewTotal.getText().toString()) - lineDiscount.get(k);
+                double totalAfterDisc = Double.parseDouble(convertToEnglish(textViewTotal.getText().toString())) - lineDiscount.get(k);
 
                 if (wantedItems.get(k).getDiscountAvailable() == 1) // items have discount available
                     totalItemsWithDiscount += totalAfterDisc;
@@ -1495,15 +1496,15 @@ public class Order extends AppCompatActivity {
         if (mDbHandler.getOrderTransactionsTemp("" + sectionNumber, "" + tableNumber).size() == 0) { // Takeaway In Discount
             if (discPerc != null) {
                 if (discPerc.isChecked()) {
-                    discountValue = voucherDiscount * totalItemsWithDiscount / 100;
-                    disCount.setText((discNotAvailableForAll ? "0.0" : "" + String.format("%.3f", (double) discountValue)));
+                    discountValue =Double.parseDouble(convertToEnglish( (voucherDiscount * totalItemsWithDiscount / 100)+""));
+                    disCount.setText((discNotAvailableForAll ? "0.0" : "" + convertToEnglish(String.format("%.3f", (double) discountValue))));
                 } else
-                    disCount.setText((discNotAvailableForAll ? "0.0" : "" + String.format("%.3f", (double) discountValue)));
+                    disCount.setText((discNotAvailableForAll ? "0.0" : "" + convertToEnglish(String.format("%.3f", (double) discountValue))));
             }
         } else { // Dine In Discount
             if (!discChanged) {
                 ArrayList<OrderHeader> orderHeaders = mDbHandler.getOrderHeaderTemp("" + sectionNumber, "" + tableNumber);
-                disCount.setText("" + orderHeaders.get(0).getTotalDiscount());
+                disCount.setText("" +convertToEnglish(( orderHeaders.get(0).getTotalDiscount())+""));
                 discountValue = orderHeaders.get(0).getTotalDiscount();
                 // I can generate the original discount = (disc * 100 / total ) / 100 but how if it was a value ?
 
@@ -1511,10 +1512,10 @@ public class Order extends AppCompatActivity {
                 if (discPerc != null) {
                     if (discPerc.isChecked()) {
                         Log.e("disc   ", "" + voucherDiscount + "*" + totalItemsWithDiscount + "/100");
-                        discountValue = voucherDiscount * totalItemsWithDiscount / 100;
-                        disCount.setText((discNotAvailableForAll ? "0.0" : "" + String.format("%.3f", (double) discountValue)));
+                        discountValue = Double.parseDouble(convertToEnglish((voucherDiscount * totalItemsWithDiscount / 100)+""));
+                        disCount.setText((discNotAvailableForAll ? "0.0" : "" +convertToEnglish( String.format("%.3f", (double) discountValue))));
                     } else
-                        disCount.setText((discNotAvailableForAll ? "0.0" : "" + String.format("%.3f", (double) discountValue)));
+                        disCount.setText((discNotAvailableForAll ? "0.0" : "" + convertToEnglish(String.format("%.3f", (double) discountValue))));
                 }
             }
         }
@@ -1526,7 +1527,7 @@ public class Order extends AppCompatActivity {
             TextView firstText = (TextView) tableRow.getChildAt(0);
 
             if (!firstText.getText().toString().contains("*")) {
-                double totalAfterDisc = Double.parseDouble(textViewTotal.getText().toString()) - lineDiscount.get(k);
+                double totalAfterDisc = Double.parseDouble(convertToEnglish(textViewTotal.getText().toString())) - lineDiscount.get(k);
 
                 if (wantedItems.get(k).getTaxType() == 0) {
 
@@ -1547,21 +1548,21 @@ public class Order extends AppCompatActivity {
         }
 
 
-        double subTotalValue = sum - (lineDisCountValue + discountValue) + deliveryChargeValue;
-        double serviceValue = sum * (Settings.service_value / 100);
-        double serviceTax = serviceValue * (Settings.service_tax / 100);
-        double taxValue = totalItemsTaxInclude + totalItemsTaxExclude + serviceTax;
-        double amountDueValue = subTotalValue + serviceValue + serviceTax + totalItemsTaxInclude;
+        double subTotalValue = Double.parseDouble(convertToEnglish((sum - (lineDisCountValue + discountValue) + deliveryChargeValue)+""));
+        double serviceValue = Double.parseDouble(convertToEnglish((sum * (Settings.service_value / 100))+""));
+        double serviceTax = Double.parseDouble(convertToEnglish((serviceValue * (Settings.service_tax / 100))+""));
+        double taxValue = Double.parseDouble(convertToEnglish((totalItemsTaxInclude + totalItemsTaxExclude + serviceTax)+""));
+        double amountDueValue = Double.parseDouble(convertToEnglish((subTotalValue + serviceValue + serviceTax + totalItemsTaxInclude)+""));
 
 //        System.out.println(Math.round(d));
         total.setText("" + sum);
-        lineDisCount.setText("" + String.format("%.3f", (double) lineDisCountValue));
+        lineDisCount.setText(convertToEnglish("" + String.format("%.3f", (double) lineDisCountValue)));
 //        disCount.setText("" + discountValue);
-        deliveryCharge.setText("" + String.format("%.2f", (double) deliveryChargeValue));
-        subTotal.setText("" + String.format("%.2f", (double) subTotalValue));
-        service.setText("" + String.format("%.2f", (double) serviceValue));
-        tax.setText("" + String.format("%.2f", (double) taxValue));
-        amountDue.setText("" + String.format("%.2f", (double) amountDueValue));
+        deliveryCharge.setText(convertToEnglish("" + String.format("%.2f", (double) deliveryChargeValue)));
+        subTotal.setText(convertToEnglish("" + String.format("%.2f", (double) subTotalValue)));
+        service.setText(convertToEnglish("" + String.format("%.2f", (double) serviceValue)));
+        tax.setText(convertToEnglish("" + String.format("%.2f", (double) taxValue)));
+        amountDue.setText(convertToEnglish("" + String.format("%.2f", (double) amountDueValue)));
         balance = amountDueValue;
     }
 
@@ -1573,10 +1574,10 @@ public class Order extends AppCompatActivity {
             TextView textViewTotal = (TextView) tableRow.getChildAt(3);
             TextView textLineDiscount = (TextView) tableRow.getChildAt(4);
 
-            double totalLine = Double.parseDouble(textViewTotal.getText().toString());
+            double totalLine = Double.parseDouble(convertToEnglish(textViewTotal.getText().toString()));
             double lineDiscount_ = lineDiscount.get(k);
-            double disc = Double.parseDouble(disCount.getText().toString());
-            double serviceTax = Double.parseDouble(service.getText().toString()) * Settings.service_tax;
+            double disc = Double.parseDouble(convertToEnglish(disCount.getText().toString()));
+            double serviceTax = Double.parseDouble(convertToEnglish(service.getText().toString())) * Settings.service_tax;
 
             double discount = 0.0;
             if (wantedItems.get(k).getDiscountAvailable() == 1)
@@ -1587,7 +1588,7 @@ public class Order extends AppCompatActivity {
             OrderTransactionsObj.add(new OrderTransactions(orderTypeFlag, 0, today, Settings.POS_number, Settings.store_number,
                     voucherNo, voucherSerial, "" + wantedItems.get(k).getItemBarcode(), wantedItems.get(k).getMenuName(),
                     wantedItems.get(k).getSecondaryName(), wantedItems.get(k).getKitchenAlias(), wantedItems.get(k).getMenuCategory(),
-                    wantedItems.get(k).getFamilyName(), Integer.parseInt(textViewQty.getText().toString()), wantedItems.get(k).getPrice(),
+                    wantedItems.get(k).getFamilyName(), Integer.parseInt(convertToEnglish(textViewQty.getText().toString())), wantedItems.get(k).getPrice(),
                     totalLine, discount, lineDiscount_, discount + lineDiscount_, wantedItems.get(k).getTax(),
                     wantedItems.get(k).getTax(), 0, Double.parseDouble(service.getText().toString()), serviceTax,
                     tableNumber, sectionNumber, Settings.shift_number, Settings.shift_name, Settings.password, Settings.user_name, time));
@@ -1596,17 +1597,17 @@ public class Order extends AppCompatActivity {
 
     void saveInOrderHeaderObj() {
 
-        double disc = Double.parseDouble(disCount.getText().toString());
-        double ldisc = Double.parseDouble(lineDisCount.getText().toString());
-        double serviceTax = Double.parseDouble(service.getText().toString()) * Settings.service_tax;
+        double disc = Double.parseDouble(convertToEnglish(disCount.getText().toString()));
+        double ldisc = Double.parseDouble(convertToEnglish(lineDisCount.getText().toString()));
+        double serviceTax = Double.parseDouble(convertToEnglish(service.getText().toString())) * Settings.service_tax;
 
         Log.e("orderH cash vAlue ", "aa" + PayMethods.cashValue1);
 
 //        mDbHandler.addOrderHeader(
         OrderHeaderObj = new OrderHeader(orderTypeFlag, 0, today, Settings.POS_number, Settings.store_number,
-                voucherNo, voucherSerial, Double.parseDouble(total.getText().toString()), ldisc, disc, disc + ldisc,
-                Settings.service_value, Double.parseDouble((tax.getText().toString())), serviceTax, Double.parseDouble((subTotal.getText().toString())),
-                Double.parseDouble(amountDue.getText().toString()), Double.parseDouble(deliveryCharge.getText().toString()), tableNumber,
+                voucherNo, voucherSerial, Double.parseDouble(convertToEnglish(total.getText().toString())), ldisc, disc, disc + ldisc,
+                Settings.service_value, Double.parseDouble((convertToEnglish(tax.getText().toString()))), serviceTax, Double.parseDouble((convertToEnglish(subTotal.getText().toString()))),
+                Double.parseDouble(convertToEnglish(amountDue.getText().toString())), Double.parseDouble(convertToEnglish(deliveryCharge.getText().toString())), tableNumber,
                 sectionNumber, PayMethods.cashValue1, PayMethods.creditCardValue1, PayMethods.chequeValue1, PayMethods.creditValue1,
                 PayMethods.giftCardValue1, PayMethods.pointValue1, Settings.shift_name, Settings.shift_number, "No Waiter", 0, Settings.user_name, Settings.password, time);
 
@@ -1626,10 +1627,10 @@ public class Order extends AppCompatActivity {
             TextView textViewTotal = (TextView) tableRow.getChildAt(3);
             TextView textLineDiscount = (TextView) tableRow.getChildAt(4);
 
-            double totalLine = Double.parseDouble(textViewTotal.getText().toString());
+            double totalLine = Double.parseDouble(convertToEnglish(textViewTotal.getText().toString()));
             double lineDiscount_ = lineDiscount.get(k);
-            double disc = Double.parseDouble(disCount.getText().toString());
-            double serviceTax = Double.parseDouble(service.getText().toString()) * Settings.service_tax;
+            double disc = Double.parseDouble(convertToEnglish(disCount.getText().toString()));
+            double serviceTax = Double.parseDouble(convertToEnglish(service.getText().toString())) * Settings.service_tax;
 
             double discount = 0.0;
             if (wantedItems.get(k).getDiscountAvailable() == 1)
@@ -1638,9 +1639,9 @@ public class Order extends AppCompatActivity {
             mDbHandler.addOrderTransactionTemp(new OrderTransactions(orderTypeFlag, 0, today, Settings.POS_number, Settings.store_number,
                     voucherNo, voucherSerial, "" + wantedItems.get(k).getItemBarcode(), wantedItems.get(k).getMenuName(),
                     wantedItems.get(k).getSecondaryName(), wantedItems.get(k).getKitchenAlias(), wantedItems.get(k).getMenuCategory(),
-                    wantedItems.get(k).getFamilyName(), Integer.parseInt(textViewQty.getText().toString()), wantedItems.get(k).getPrice(),
+                    wantedItems.get(k).getFamilyName(), Integer.parseInt(convertToEnglish(textViewQty.getText().toString())), wantedItems.get(k).getPrice(),
                     totalLine, discount, lineDiscount_, discount + lineDiscount_, wantedItems.get(k).getTax(),
-                    wantedItems.get(k).getTax(), 0, Double.parseDouble(service.getText().toString()), serviceTax,
+                    wantedItems.get(k).getTax(), 0, Double.parseDouble(convertToEnglish(service.getText().toString())), serviceTax,
                     tableNumber, sectionNumber, Settings.shift_number, Settings.shift_name, Settings.password, Settings.user_name, time));
         }
     }
@@ -1650,14 +1651,14 @@ public class Order extends AppCompatActivity {
         if (mDbHandler.getOrderHeaderTemp("" + sectionNumber, "" + tableNumber).size() != 0)
             mDbHandler.deleteFromOrderHeaderTemp("" + sectionNumber, "" + tableNumber);
 
-        double disc = Double.parseDouble(disCount.getText().toString());
-        double ldisc = Double.parseDouble(lineDisCount.getText().toString());
-        double serviceTax = Double.parseDouble(service.getText().toString()) * Settings.service_tax;
+        double disc = Double.parseDouble(convertToEnglish(disCount.getText().toString()));
+        double ldisc = Double.parseDouble(convertToEnglish(lineDisCount.getText().toString()));
+        double serviceTax = Double.parseDouble(convertToEnglish(service.getText().toString())) * Settings.service_tax;
 
         mDbHandler.addOrderHeaderTemp(new OrderHeader(orderTypeFlag, 0, today, Settings.POS_number, Settings.store_number,
-                voucherNo, voucherSerial, Double.parseDouble(total.getText().toString()), ldisc, disc, disc + ldisc,
-                Settings.service_value, Double.parseDouble((tax.getText().toString())), serviceTax, Double.parseDouble((subTotal.getText().toString())),
-                Double.parseDouble(amountDue.getText().toString()), Double.parseDouble(deliveryCharge.getText().toString()), sectionNumber,
+                voucherNo, voucherSerial, Double.parseDouble(convertToEnglish(total.getText().toString())), ldisc, disc, disc + ldisc,
+                Settings.service_value, Double.parseDouble(convertToEnglish(tax.getText().toString())), serviceTax, Double.parseDouble(convertToEnglish(subTotal.getText().toString())),
+                Double.parseDouble(convertToEnglish(amountDue.getText().toString())), Double.parseDouble(convertToEnglish(deliveryCharge.getText().toString())), sectionNumber,
                 tableNumber, 0.00, 0.00, 0.00, 0.00,
                 0.00, 0.00, Settings.shift_name, Settings.shift_number, waiter, seatNo, Settings.user_name, Settings.password, time));
     }
@@ -1692,6 +1693,8 @@ public class Order extends AppCompatActivity {
                     orderTransactions.get(k).getKitchenAlias(), Integer.parseInt(orderTransactions.get(k).getItemBarcode()),
                     1, 0, "", 0, 1, 0, 0, "",
                     "", orderTransactions.get(k).getPrice(), 1, 1, null, 0, 0, 0));
+
+            vhSerial.setText(orderTransactions.get(k).getVoucherNo());
 
             final TableRow row = new TableRow(Order.this);
 
@@ -1764,15 +1767,15 @@ public class Order extends AppCompatActivity {
         //_________________________________________________________________________
 
         user.setText(orderHeaders.get(0).getWaiter());
-        seats.setText("" + orderHeaders.get(0).getSeatsNumber());
-        total.setText("" + orderHeaders.get(0).getTotal());
-        disCount.setText("" + orderHeaders.get(0).getTotalDiscount());
-        lineDisCount.setText("" + orderHeaders.get(0).getTotalLineDiscount()); // here
-        deliveryCharge.setText("" + orderHeaders.get(0).getDeliveryCharge());
-        subTotal.setText("" + orderHeaders.get(0).getSubTotal());
-        tax.setText("" + orderHeaders.get(0).getTotalTax());
-        service.setText("" + orderHeaders.get(0).getTotalService());
-        amountDue.setText("" + orderHeaders.get(0).getAmountDue());
+        seats.setText(convertToEnglish(("" + orderHeaders.get(0).getSeatsNumber())));
+        total.setText(convertToEnglish(("" + orderHeaders.get(0).getTotal())));
+        disCount.setText(convertToEnglish("" + orderHeaders.get(0).getTotalDiscount()));
+        lineDisCount.setText(convertToEnglish(("" + orderHeaders.get(0).getTotalLineDiscount()))); // here
+        deliveryCharge.setText(convertToEnglish(("" + orderHeaders.get(0).getDeliveryCharge())));
+        subTotal.setText(convertToEnglish(("" + orderHeaders.get(0).getSubTotal())));
+        tax.setText(convertToEnglish(("" + orderHeaders.get(0).getTotalTax())));
+        service.setText(convertToEnglish(("" + orderHeaders.get(0).getTotalService())));
+        amountDue.setText(convertToEnglish(("" + orderHeaders.get(0).getAmountDue())));
 
         voucherSerial = orderHeaders.get(0).getVoucherSerial();
         voucherNo = orderHeaders.get(0).getVoucherNumber();
@@ -1792,6 +1795,12 @@ public class Order extends AppCompatActivity {
             Intent intent = new Intent(Order.this, DineIn.class);
             startActivity(intent);
         }
+    }
+
+
+    public String convertToEnglish(String value) {
+        String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0").replaceAll("٫","."));
+        return newValue;
     }
 
     @SuppressLint("ClickableViewAccessibility")

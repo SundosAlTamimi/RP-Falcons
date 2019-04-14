@@ -104,7 +104,7 @@ public class LogIn extends AppCompatActivity {
                             SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
                             time = tf.format(currentTimeAndDate);
                             if (!isActive) {
-                                mDHandler.addBlindShiftInOut(new BlindShift(date, time, 1, shiftNo, shiftName,
+                                mDHandler.addBlindShiftInOut(new BlindShift(convertToEnglish(date), convertToEnglish(time), 1, shiftNo, shiftName,
                                         Integer.parseInt(password), Settings.user_name, 1));
 
                                 Settings.shift_name = shiftName;
@@ -119,7 +119,7 @@ public class LogIn extends AppCompatActivity {
 
                             logIn();
                         } else
-                            Toast.makeText(LogIn.this, "Incorrect Password", Toast.LENGTH_LONG).show();
+                            Toast.makeText(LogIn.this, getResources().getString(R.string.incorect_password), Toast.LENGTH_LONG).show();
                     }
                     break;
             }
@@ -165,11 +165,11 @@ public class LogIn extends AppCompatActivity {
                                 if (isExist) {
                                     dialog.dismiss();
                                 } else
-                                    Toast.makeText(LogIn.this, "user not found", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(LogIn.this, getResources().getString(R.string.user_not_found), Toast.LENGTH_SHORT).show();
                             }
                             break;
                         case "another user is logged":
-                            Toast.makeText(LogIn.this, "another user is logged", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LogIn.this,getResources().getString( R.string.other_user_log), Toast.LENGTH_SHORT).show();
                             break;
                         default:
                             Settings.user_name = userText;
@@ -179,7 +179,7 @@ public class LogIn extends AppCompatActivity {
                     }
 
                 } else {
-                    Toast.makeText(LogIn.this, "Please Enter your user name", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LogIn.this,getResources().getString( R.string.enter_your_user_name), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -226,7 +226,7 @@ public class LogIn extends AppCompatActivity {
 
         Date currentTimeAndDate = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-        date = df.format(currentTimeAndDate);
+        date = convertToEnglish(df.format(currentTimeAndDate));
 
         ArrayList<Shift> shifts = mDHandler.getAllShifts();
 
@@ -239,7 +239,7 @@ public class LogIn extends AppCompatActivity {
         for (int i = 0; i < shifts.size(); i++) {
             Date currentTime = Calendar.getInstance().getTime();
             SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
-            time = tf.format(currentTime);
+            time =convertToEnglish(tf.format(currentTime));
 
 //                Date time1 = new SimpleDateFormat("hh:mm").parse(shifts.get(i).getFromTime());
 //                Calendar calendar1 = Calendar.getInstance();
@@ -293,6 +293,13 @@ public class LogIn extends AppCompatActivity {
 //            e.printStackTrace();
 //        }
     }
+
+
+    public String convertToEnglish(String value) {
+        String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0"));
+        return newValue;
+    }
+
 
     void initialize() {
         lock = (ImageView) findViewById(R.id.lock);

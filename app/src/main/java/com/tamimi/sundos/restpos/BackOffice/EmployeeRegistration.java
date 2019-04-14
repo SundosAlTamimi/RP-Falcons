@@ -139,11 +139,11 @@ public class EmployeeRegistration extends AppCompatActivity {
                         employeeRegistrationModle.setShiftName(Settings.shift_name);
 
                         mDHandler.addEmployeeRegistration(employeeRegistrationModle);
-                        Toast.makeText(EmployeeRegistration.this, "Saved Successful", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EmployeeRegistration.this, getResources().getString(R.string.save_successful), Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 } else {
-                    Toast.makeText(EmployeeRegistration.this, " Not Have Any Data In Table ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EmployeeRegistration.this, getResources().getString(R.string.not_have_any_data), Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -152,15 +152,15 @@ public class EmployeeRegistration extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (!jopGroupSpinner.isEmpty()) {
-                    if (!empName.getText().toString().equals("") && !empNo.getText().toString().equals("") && !mobileNo.getText().toString().equals("") && !hireDate.getText().toString().equals("") &&
+                    if (!empName.getText().toString().equals("") && !convertToEnglish(empNo.getText().toString()).equals("") && !convertToEnglish(mobileNo.getText().toString()).equals("") && !hireDate.getText().toString().equals("") &&
                             !termination.getText().toString().equals("") && !payRate.getText().toString().equals("")) {
-                        if (userPassword.getText().toString().length() == 4) {
-                            String pass = userPassword.getText().toString();
+                        if (convertToEnglish(userPassword.getText().toString()).length() == 4) {
+                            String pass = convertToEnglish(userPassword.getText().toString());
                             jobList.add(jobGroup.getSelectedItem().toString());
                             empNameList.add(empName.getText().toString());
 //                        empNOList.add(Integer.parseInt(empNo.getText().toString()));
                             empNOList.add(serial[0]);
-                            mobileList.add(Integer.parseInt(mobileNo.getText().toString()));
+                            mobileList.add(Integer.parseInt(convertToEnglish(mobileNo.getText().toString())));
                             securityList.add(securityLevel.getSelectedItem().toString());
                             userPassList.add(Integer.parseInt(pass));
                             if (active.isChecked()) {
@@ -168,9 +168,9 @@ public class EmployeeRegistration extends AppCompatActivity {
                             } else {
                                 ActiveList.add(0);
                             }
-                            hireDateList.add(hireDate.getText().toString());
-                            terminationList.add(termination.getText().toString());
-                            payBasicList.add(payBasic.getSelectedItem().toString());
+                            hireDateList.add(convertToEnglish(hireDate.getText().toString()));
+                            terminationList.add(convertToEnglish(termination.getText().toString()));
+                            payBasicList.add(convertToEnglish(payBasic.getSelectedItem().toString()));
                             payRateList.add(payRate.getText().toString());
                             holidayList.add(holidayPay.getSelectedItem().toString());
                             switch (employeeType.getSelectedItem().toString()) {
@@ -187,7 +187,7 @@ public class EmployeeRegistration extends AppCompatActivity {
 
                             Toast.makeText(EmployeeRegistration.this, "OK ", Toast.LENGTH_SHORT).show();
                             insertRaw3(empName.getText().toString(), serial[0], Integer.parseInt(mobileNo.getText().toString()),
-                                    securityLevel.getSelectedItem().toString(), Integer.parseInt(pass), hireDate.getText().toString(), termination.getText().toString()
+                                    securityLevel.getSelectedItem().toString(), Integer.parseInt(pass),convertToEnglish( hireDate.getText().toString()), convertToEnglish(termination.getText().toString())
                                     , payBasic.getSelectedItem().toString(), payRate.getText().toString(), holidayPay.getSelectedItem().toString(), employeeType.getSelectedItem().toString(), tableEmployee);
 
                             empName.setText("");
@@ -201,13 +201,13 @@ public class EmployeeRegistration extends AppCompatActivity {
                             empNo.setText("" + serial[0]);
 
                         } else {
-                            Toast.makeText(EmployeeRegistration.this, "Length of user password must 4 number Please Edit password  ", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(EmployeeRegistration.this, getResources().getString(R.string.password_length), Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Toast.makeText(EmployeeRegistration.this, "Please Insert data ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EmployeeRegistration.this, getResources().getString(R.string.please_insert_all_data), Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(EmployeeRegistration.this, "Please Add Job Group Before Adding new Employee ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EmployeeRegistration.this, getResources().getString(R.string.add_job_group_before_new_emplo), Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -302,6 +302,11 @@ public class EmployeeRegistration extends AppCompatActivity {
 
             tableLayout.addView(row);
         }
+    }
+
+    public String convertToEnglish(String value) {
+        String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0"));
+        return newValue;
     }
 
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="850dp"
     android:layout_height="match_parent"
     android:background="@color/layer3"
     android:orientation="vertical"
@@ -125,7 +125,7 @@
                 android:layout_height="40dp"
                 android:layout_marginLeft="70dp"
                 android:layout_marginStart="70dp"
-                android:text="Enter Received:"
+                android:text="@string/enter_received"
                 android:textColor="@color/text_color"
                 android:textSize="25sp"/>
 

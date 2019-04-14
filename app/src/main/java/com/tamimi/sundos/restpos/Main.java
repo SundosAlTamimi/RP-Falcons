@@ -79,11 +79,11 @@ public class Main extends AppCompatActivity {
 
         Date currentTimeAndDate = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-        today = df.format(currentTimeAndDate);
+        today = convertToEnglish(df.format(currentTimeAndDate));
 
         date.setText(today);
         userName.setText(mDHandler.getOpenedShifts(today, 1).getUserName());
-        shift.setText("Shift: " + mDHandler.getOpenedShifts(today, 1).getShiftName());
+        shift.setText(getResources().getString(R.string.shift)+" : " + mDHandler.getOpenedShifts(today, 1).getShiftName());
 
         showAnnouncement();
 
@@ -192,9 +192,9 @@ public class Main extends AppCompatActivity {
         int count = 0;
         for (int i = 0; i < announcemets.size(); i++) {
             if (announcemets.get(i).getAnnouncementDate().equals(today)) {
-                if (announcemets.get(i).getUserName().equals(Settings.user_name) || announcemets.get(i).getUserName().equals("All")) {
+                if (announcemets.get(i).getUserName().equals(Settings.user_name) || announcemets.get(i).getUserName().equals(getResources().getString(R.string.all))) {
                     if (announcemets.get(i).getPosNo() == (Settings.POS_number) || announcemets.get(i).getPosNo() == (-1)) {
-                        if (announcemets.get(i).getShiftName().equals(Settings.shift_name) || announcemets.get(i).getShiftName().equals("All")) {
+                        if (announcemets.get(i).getShiftName().equals(Settings.shift_name) || announcemets.get(i).getShiftName().equals(getResources().getString(R.string.all))) {
                             count++;
                             final TableRow row = new TableRow(Main.this);
 
@@ -373,17 +373,17 @@ public class Main extends AppCompatActivity {
                             TextView text = (TextView) tableRow.getChildAt(0);
                             TextView text1 = (TextView) tableRow.getChildAt(1);
 
-                            if (!text1.getText().toString().equals("")) {
+                            if (!convertToEnglish(text1.getText().toString()).equals("")) {
 
-                                cash.setCashierName(user.getText().toString());
-                                cash.setCheckInDate(date.getText().toString());
-                                cash.setCategoryName(text.getText().toString());
-                                cash.setCategoryValue(Double.parseDouble(text.getTag().toString()));
-                                cash.setCategoryQty(Integer.parseInt(text1.getText().toString()));
+                                cash.setCashierName(convertToEnglish(user.getText().toString()));
+                                cash.setCheckInDate(convertToEnglish(date.getText().toString()));
+                                cash.setCategoryName(convertToEnglish(text.getText().toString()));
+                                cash.setCategoryValue(Double.parseDouble(convertToEnglish(text.getTag().toString())));
+                                cash.setCategoryQty(Integer.parseInt(convertToEnglish(text1.getText().toString())));
                                 cash.setOrderKind(0);
                                 cashier.add(cash);
                             } else {
-                                Toast.makeText(Main.this, "some Qty not have value ...", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(Main.this, getResources().getString(R.string.some_qty_not), Toast.LENGTH_SHORT).show();
                             }
                         }
                         mDHandler.addCashierInOut(cashier);
@@ -393,9 +393,9 @@ public class Main extends AppCompatActivity {
                         dialogCashierIn.dismiss();
                     } else {
                         AlertDialog.Builder builderInner = new AlertDialog.Builder(Main.this);
-                        builderInner.setTitle("Do you want to enter with Zero Cashier In ?");
+                        builderInner.setTitle(R.string.cashier_in_zero);
                         builderInner.setCancelable(false);
-                        builderInner.setPositiveButton("Yes", (dialog1, which1) -> {
+                        builderInner.setPositiveButton(getResources().getString(R.string.yes), (dialog1, which1) -> {
                             for (int i = 0; i < money.size(); i++) {
                                 Cashier cash = new Cashier();
                                 TableRow tableRow = (TableRow) categories.getChildAt(i);
@@ -404,25 +404,25 @@ public class Main extends AppCompatActivity {
 
                                 if (!text1.getText().toString().equals("")) {
 
-                                    cash.setCashierName(user.getText().toString());
-                                    cash.setCheckInDate(date.getText().toString());
-                                    cash.setCategoryName(text.getText().toString());
+                                    cash.setCashierName(convertToEnglish(user.getText().toString()));
+                                    cash.setCheckInDate(convertToEnglish(date.getText().toString()));
+                                    cash.setCategoryName(convertToEnglish(text.getText().toString()));
                                     cash.setCategoryValue(Double.parseDouble(text.getTag().toString()));
-                                    cash.setCategoryQty(Integer.parseInt(text1.getText().toString()));
+                                    cash.setCategoryQty(Integer.parseInt(convertToEnglish(text1.getText().toString())));
                                     cash.setOrderKind(0);
                                     cashier.add(cash);
                                 } else {
-                                    Toast.makeText(Main.this, "some Qty not have value ...", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(Main.this, getResources().getString(R.string.some_qty_not), Toast.LENGTH_SHORT).show();
                                 }
                             }
                             mDHandler.addCashierInOut(cashier);
                             dialogCashierIn.dismiss();
 
                             mDHandler.addClockInClockOut(clockInClockOut);
-                            Toast.makeText(Main.this, "Save Successful...", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Main.this, getResources().getString(R.string.save_successful), Toast.LENGTH_SHORT).show();
                             clockInSuccessful(times, dates); //this for Successful clockIn
                         });
-                        builderInner.setNegativeButton("No", (dialog1, i) -> {
+                        builderInner.setNegativeButton(getResources().getString(R.string.no), (dialog1, i) -> {
                             dialog1.dismiss();
                         });
                         builderInner.show();
@@ -430,7 +430,7 @@ public class Main extends AppCompatActivity {
 
 
                 } else {
-                    Toast.makeText(Main.this, "Please Add Money Category ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Main.this, getResources().getString(R.string.add_money_category), Toast.LENGTH_SHORT).show();
                     dialogCashierIn.dismiss();
 
                 }
@@ -499,7 +499,7 @@ public class Main extends AppCompatActivity {
                             TextView text = (TextView) tableRow.getChildAt(0);
                             TextView text2 = (TextView) tableRow.getChildAt(2);
 
-                            double total = Double.parseDouble(text.getTag().toString()) * Double.parseDouble(focusedTextView.getText().toString());
+                            double total = Double.parseDouble(convertToEnglish(text.getTag().toString())) * Double.parseDouble(convertToEnglish(focusedTextView.getText().toString()));
                             text2.setText("" + total);
                         }
 
@@ -507,7 +507,7 @@ public class Main extends AppCompatActivity {
                         for (int i = 0; i < money.size(); i++) {
                             TableRow tRow = (TableRow) categories.getChildAt(i);
                             TextView t = (TextView) tRow.getChildAt(2);
-                            mainTotal.setText("" + (Double.parseDouble(mainTotal.getText().toString()) + Double.parseDouble(t.getText().toString())));
+                            mainTotal.setText("" + (Double.parseDouble(convertToEnglish(mainTotal.getText().toString())) + Double.parseDouble(convertToEnglish(t.getText().toString()))));
                         }
 
                     }
@@ -727,14 +727,14 @@ public class Main extends AppCompatActivity {
                     saveCashierOutBase(categories, tranType, finalClose, changeOver, toUser, cashTotals, creditCard, cheque, giftCard,
                             credit, point, otherPaymentTotal, mainTotal, money, dialogCashierOut);
 
-                    Toast.makeText(Main.this, "Save Successful...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Main.this, getResources().getString(R.string.save_successful), Toast.LENGTH_SHORT).show();
 
                 } else {
 
                     AlertDialog.Builder builderInner = new AlertDialog.Builder(Main.this);
-                    builderInner.setTitle("Do you want to exit with Zero Cashier Out ?");
+                    builderInner.setTitle(getResources().getString(R.string.zero_cashier_q));
                     builderInner.setCancelable(false);
-                    builderInner.setPositiveButton("Yes", (dialog1, which1) -> {
+                    builderInner.setPositiveButton(getResources().getString(R.string.yes), (dialog1, which1) -> {
 
                         int tranType = 0;
                         if (finalClose.isChecked()) {
@@ -747,10 +747,10 @@ public class Main extends AppCompatActivity {
                         saveCashierOutBase(categories, tranType, finalClose, changeOver, toUser, cashTotals, creditCard, cheque, giftCard,
                                 credit, point, otherPaymentTotal, mainTotal, money, dialogCashierOut);
 
-                        Toast.makeText(Main.this, "Save Successful...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Main.this, getResources().getString(R.string.save_successful), Toast.LENGTH_SHORT).show();
 
                     });
-                    builderInner.setNegativeButton("No", (dialog1, i) -> {
+                    builderInner.setNegativeButton(getResources().getString(R.string.no), (dialog1, i) -> {
                         dialog1.dismiss();
                     });
                     builderInner.show();
@@ -933,14 +933,14 @@ public class Main extends AppCompatActivity {
         final Button exit = (Button) dialog.findViewById(R.id.exit);
 
         String signal = "";
-        tranType.setText(transType == 0 ? "Pay In" : "Pay Out");
+        tranType.setText(transType == 0 ? getResources().getString(R.string.pay_in) : getResources().getString(R.string.pay_out));
         if (transType == 0) {
             signal = "";
         } else signal = "-";
         date.setText(today);
 
         ArrayList<Pay> pays = mDHandler.getAllPayInOut();
-        serial.setText(pays.size() == 0 ? "Trans.NO:  1" : "Trans.NO:  " + pays.size() + 1);
+        serial.setText(pays.size() == 0 ? getResources().getString(R.string.trans_no)+" : "+"1" : getResources().getString(R.string.trans_no)+" : " +(pays.size() + 1));
 
         exit.setOnClickListener(new OnClickListener() {
             @Override
@@ -1072,7 +1072,7 @@ public class Main extends AppCompatActivity {
 
                 Date currentTimeAndDate = Calendar.getInstance().getTime();
                 SimpleDateFormat dfTime = new SimpleDateFormat("HH:mm:ss");
-                String time = dfTime.format(currentTimeAndDate);
+                String time =convertToEnglish( dfTime.format(currentTimeAndDate));
                 Log.e("time123", "" + time);
                 if (!value.getText().toString().equals("") && !mainTotal.getText().toString().equals("")&&(Double.parseDouble(value.getText().toString())!=0)) {
                     if (Double.parseDouble(value.getText().toString()) == Double.parseDouble(mainTotal.getText().toString())) {
@@ -1082,7 +1082,7 @@ public class Main extends AppCompatActivity {
                             mDHandler.addPayInOut(new Pay(transType, Settings.POS_number, Settings.password, Settings.user_name, today,
                                     Double.parseDouble(value.getText().toString()), remark.getText().toString(), Settings.shift_number,
                                     Settings.shift_name, time));
-                            Toast.makeText(Main.this, "Saved successfully", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Main.this, getResources().getString(R.string.save_successful), Toast.LENGTH_SHORT).show();
                             dialog.dismiss();
                         }
 
@@ -1105,15 +1105,15 @@ public class Main extends AppCompatActivity {
                                 cash.setOrderKind(2);/// 2 --> pay in / out   1 --> trans (order - refund ) / 0 --> cashier iN
                                 cashier.add(cash);
                             } else {
-                                Toast.makeText(Main.this, "some Qty not have value ...", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(Main.this, getResources().getString(R.string.some_qty_not), Toast.LENGTH_SHORT).show();
                             }
                         }
                         mDHandler.addCashierInOut(cashier);
                         dialog.dismiss();
                     } else
-                        Toast.makeText(Main.this, "Total from cash not equal Value ... ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Main.this,getResources().getString(R.string.total_from_cash_not_equal_value) , Toast.LENGTH_SHORT).show();
                 } else
-                    Toast.makeText(Main.this, "Please ensure your inputs", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Main.this, getResources().getString(R.string.ensure_your_input), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -1291,7 +1291,7 @@ public class Main extends AppCompatActivity {
 
             Date currentTimeAndDate = Calendar.getInstance().getTime();
             SimpleDateFormat df = new SimpleDateFormat("HH:mm");
-            String time = df.format(currentTimeAndDate);
+            String time = convertToEnglish(df.format(currentTimeAndDate));
 
             double userSales = Double.parseDouble(mainTotal.getText().toString());
             double sysSales = 0;
@@ -1387,7 +1387,7 @@ public class Main extends AppCompatActivity {
 
             dialogCashierOut.dismiss();
         } else
-            Toast.makeText(Main.this, "Please enter 'to user' field", Toast.LENGTH_LONG).show();
+            Toast.makeText(Main.this, getResources().getString(R.string.to_user_field), Toast.LENGTH_LONG).show();
 
 
         mDHandler.updateStatusInBlindShiftIn(Settings.user_name, today);
@@ -1537,11 +1537,11 @@ public class Main extends AppCompatActivity {
                                 break;
                         }
                     } else {
-                        Toast.makeText(Main.this, " Please Insert Correct Password ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Main.this, getResources().getString(R.string.insert_correct_password), Toast.LENGTH_SHORT).show();
                         focusedTextView.setText("");
                     }
                 } else {
-                    Toast.makeText(Main.this, " Please Enter Your Password ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Main.this,getResources().getString( R.string.enter_your_password), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -1574,28 +1574,28 @@ public class Main extends AppCompatActivity {
 
         SystemClock.elapsedRealtime();
 
-        final Date currentTimeAndDate = Calendar.getInstance().getTime();
-        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-        final String dates = df.format(currentTimeAndDate);
-        date.setText(dates);
+//        final Date currentTimeAndDate = Calendar.getInstance().getTime();
+//        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+//        final String today = df.format(currentTimeAndDate);
+        date.setText(today);
         username.setText(Settings.user_name);
 
         clockIn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                final String times = time.getText().toString();
+                final String times =convertToEnglish( time.getText().toString());
 
                 Settings.time_card = 1;
 
                 ClockInClockOut clockInClockOut = new ClockInClockOut();
 
                 clockInClockOut.setPointOfSaleNumber(Settings.POS_number);
-                clockInClockOut.setDate(dates);
+                clockInClockOut.setDate(today);
                 clockInClockOut.setUserNO(Settings.password);
                 clockInClockOut.setUserName(Settings.user_name);
                 clockInClockOut.setTranstype("ClockIN");
-                clockInClockOut.setDateCard(dates);
+                clockInClockOut.setDateCard(today);
                 clockInClockOut.setTimeCard(times);
                 clockInClockOut.setRemark((remark.getText().toString()));
                 clockInClockOut.setShiftNo(Settings.shift_number);
@@ -1604,7 +1604,7 @@ public class Main extends AppCompatActivity {
 
 //                mDHandler.addClockInClockOut(clockInClockOut); // this in cashierInDialog ...
 
-                showCashierInDialog(times, dates, clockInClockOut);
+                showCashierInDialog(times, today, clockInClockOut);
             }
         });
 
@@ -1626,11 +1626,11 @@ public class Main extends AppCompatActivity {
         masege = (TextView) dialog.findViewById(R.id.clockinsuccessfull);
         time = (TextView) dialog.findViewById(R.id.time2);
         date = (TextView) dialog.findViewById(R.id.date2);
-        masege.setText("Clock IN Successful   (" + Settings.user_name + ")");
+        masege.setText( getResources().getString(R.string.clockinsuccessful) +"(" + Settings.user_name + ")");
         Button ok = (Button) dialog.findViewById(R.id.ok1);
 
-        time.setText(times);
-        date.setText(dates);
+        time.setText(convertToEnglish(times));
+        date.setText(convertToEnglish(dates));
 
         ok.setOnClickListener(new OnClickListener() {
             @Override
@@ -1667,25 +1667,25 @@ public class Main extends AppCompatActivity {
         time = (TextClock) dialog.findViewById(R.id.horas1);
         date = (TextView) dialog.findViewById(R.id.date3);
 
-        final Date currentTimeAndDate = Calendar.getInstance().getTime();
-        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-        final String dates = df.format(currentTimeAndDate);
-        date.setText(dates);
+//        final Date currentTimeAndDate = Calendar.getInstance().getTime();
+//        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+//        final String today = df.format(currentTimeAndDate);
+        date.setText(today);
 
 
         clockOut.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Settings.time_card = 0;
-                final String times = time.getText().toString();
+                final String times =convertToEnglish( time.getText().toString());
                 ClockInClockOut clockInClockOut = new ClockInClockOut();
 
                 clockInClockOut.setPointOfSaleNumber(Settings.POS_number);
-                clockInClockOut.setDate(dates);
+                clockInClockOut.setDate(today);
                 clockInClockOut.setUserNO(Settings.password);
                 clockInClockOut.setUserName(Settings.user_name);
                 clockInClockOut.setTranstype("ClockOut");
-                clockInClockOut.setDateCard(dates);
+                clockInClockOut.setDateCard(today);
                 clockInClockOut.setTimeCard(times);
                 clockInClockOut.setRemark((remarkOut.getText().toString()));
                 clockInClockOut.setShiftNo(Settings.shift_number);
@@ -1703,15 +1703,15 @@ public class Main extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Settings.time_card = 2;
-                final String times = time.getText().toString();
+                final String times = convertToEnglish(time.getText().toString());
                 ClockInClockOut clockInClockOut = new ClockInClockOut();
 
                 clockInClockOut.setPointOfSaleNumber(Settings.POS_number);
-                clockInClockOut.setDate(dates);
+                clockInClockOut.setDate(today);
                 clockInClockOut.setUserNO(Settings.password);
                 clockInClockOut.setUserName(Settings.user_name);
                 clockInClockOut.setTranstype("BreakIN");
-                clockInClockOut.setDateCard(dates);
+                clockInClockOut.setDateCard(today);
                 clockInClockOut.setTimeCard(times);
                 clockInClockOut.setRemark((remarkOut.getText().toString()));
                 clockInClockOut.setShiftNo(Settings.shift_number);
@@ -1726,6 +1726,12 @@ public class Main extends AppCompatActivity {
         dialog.show();
 
     }
+
+    public String convertToEnglish(String value) {
+        String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0"));
+        return newValue;
+    }
+
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     void showBreakTimeOut() {

@@ -125,11 +125,11 @@ public class CustomerRegistration extends AppCompatActivity {
                         customerRegistrationModel.setShiftName(Settings.shift_name);
 
                         mDHandler.addCustomerRegistration(customerRegistrationModel);
-                        Toast.makeText(CustomerRegistration.this, "Saved Successful", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CustomerRegistration.this, getResources().getString(R.string.save_successful), Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 } else {
-                    Toast.makeText(CustomerRegistration.this, " Not Have Any Data In Table ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CustomerRegistration.this, getResources().getString(R.string.not_have_any_data), Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -157,37 +157,37 @@ public class CustomerRegistration extends AppCompatActivity {
                             Log.e("+++", "female");
                         }
 
-                        if (!memberShipCardNo.getText().toString().equals("")) {
+                        if (!convertToEnglish(memberShipCardNo.getText().toString()).equals("")) {
                             memberShipCardList.add(Integer.parseInt(memberShipCardNo.getText().toString()));
                         } else {
                             memberShipCardList.add(-1);
                         }
                         if (!streetNoName.getText().toString().equals("")) {
-                            streetNoNameList.add(streetNoName.getText().toString());
+                            streetNoNameList.add(convertToEnglish(streetNoName.getText().toString()));
                         } else {
                             streetNoNameList.add("");
                         }
-                        if (!city.getText().toString().equals("")) {
-                            cityList.add(city.getText().toString());
+                        if (!convertToEnglish(city.getText().toString()).equals("")) {
+                            cityList.add(convertToEnglish(city.getText().toString()));
                         } else {
                             cityList.add("");
                         }
 
-                        if (!phoneNo.getText().toString().equals("")) {
-                            phoneList.add(Integer.parseInt(phoneNo.getText().toString()));
+                        if (!convertToEnglish(phoneNo.getText().toString()).equals("")) {
+                            phoneList.add(Integer.parseInt(convertToEnglish(phoneNo.getText().toString())));
                         } else {
                             phoneList.add(-1);
                         }
 
-                        if (!MobileNo.getText().toString().equals("")) {
-                            mobileList.add(Integer.parseInt(MobileNo.getText().toString()));
+                        if (!convertToEnglish(MobileNo.getText().toString()).equals("")) {
+                            mobileList.add(Integer.parseInt(convertToEnglish(MobileNo.getText().toString())));
                         } else {
                             mobileList.add(-1);
                         }
 
 
-                        if (!anniversary.getText().toString().equals("")) {
-                            anniversaryList.add(anniversary.getText().toString());
+                        if (!convertToEnglish(anniversary.getText().toString()).equals("")) {
+                            anniversaryList.add(convertToEnglish(anniversary.getText().toString()));
                         } else {
                             anniversaryList.add("");
                         }
@@ -199,8 +199,8 @@ public class CustomerRegistration extends AppCompatActivity {
                         }
 
 
-                        if (!email.getText().toString().equals("")) {
-                            emailList.add(email.getText().toString());
+                        if (!convertToEnglish(email.getText().toString()).equals("")) {
+                            emailList.add(convertToEnglish(email.getText().toString()));
                         } else {
                             emailList.add("");
                         }
@@ -234,10 +234,10 @@ public class CustomerRegistration extends AppCompatActivity {
                         remaining.setText("");
                         remark.setText("");
                     } else {
-                        Toast.makeText(CustomerRegistration.this, "Please Insert data ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CustomerRegistration.this, getResources().getString(R.string.please_insert_all_data), Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(CustomerRegistration.this, "please Add Member Ship Group ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CustomerRegistration.this, getResources().getString(R.string.add_member_ship_group), Toast.LENGTH_SHORT).show();
                 }
 
 
@@ -250,6 +250,11 @@ public class CustomerRegistration extends AppCompatActivity {
             }
         });
 
+    }
+
+    public String convertToEnglish(String value) {
+        String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0"));
+        return newValue;
     }
 
 
