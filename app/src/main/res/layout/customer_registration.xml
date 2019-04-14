@@ -37,8 +37,9 @@
 
                 <TextView
                     android:id="@+id/textView3"
-                    android:layout_width="196dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="1dp"
                     android:text="@string/member_ship_group"
                     android:textColor="@color/text_color"
                     android:textSize="18sp" />
@@ -47,14 +48,15 @@
                     android:id="@+id/spinner_member"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/textView4"
-                    android:layout_width="96dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="70dp"
+                    android:layout_marginHorizontal="10dp"
                     android:text="@string/birthday"
                     android:textColor="@color/text_color"
                     android:textSize="18sp" />
@@ -63,11 +65,12 @@
                     android:id="@+id/birthday"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
                     android:background="@color/layer1"
-                    android:textColor="@color/text_color"
                     android:ems="10"
+                    android:inputType="date"
                     android:paddingHorizontal="5dp"
-                    android:inputType="date" />
+                    android:textColor="@color/text_color" />
             </TableRow>
 
             <TableRow
@@ -79,6 +82,7 @@
                     android:id="@+id/textView6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
                     android:text="@string/customer_name"
                     android:textColor="@color/text_color"
                     android:textSize="18sp" />
@@ -87,9 +91,9 @@
                     android:id="@+id/customer_name"
                     android:layout_width="251dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
                     android:background="@color/layer1"
                     android:ems="10"
-                    android:paddingHorizontal="5dp"
                     android:inputType="textPersonName"
                     android:textColor="@color/text_color"
                     android:textSize="18sp" />
@@ -98,6 +102,7 @@
                     android:id="@+id/textView15"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
                     android:layout_marginLeft="70dp"
                     android:text="@string/Anniversary"
                     android:textColor="@color/text_color"
@@ -107,11 +112,11 @@
                     android:id="@+id/anniversary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
                     android:background="@color/layer1"
                     android:ems="10"
-                    android:paddingHorizontal="5dp"
-                    android:textColor="@color/text_color"
-                    android:inputType="date" />
+                    android:inputType="date"
+                    android:textColor="@color/text_color" />
             </TableRow>
 
             <TableRow
@@ -123,6 +128,7 @@
                     android:id="@+id/textView16"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
                     android:text="@string/customer_code"
                     android:textColor="@color/text_color"
                     android:textSize="18sp" />
@@ -131,17 +137,17 @@
                     android:id="@+id/customer_code"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
                     android:background="@color/layer1"
                     android:ems="10"
-                    android:paddingHorizontal="5dp"
-                    android:textColor="@color/text_color"
-                    android:inputType="textPersonName" />
+                    android:inputType="textPersonName"
+                    android:textColor="@color/text_color" />
 
                 <TextView
                     android:id="@+id/textView17"
                     android:layout_width="117dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="70dp"
+                    android:layout_marginHorizontal="10dp"
                     android:text="@string/occupation"
                     android:textColor="@color/text_color"
                     android:textSize="18sp" />
@@ -150,11 +156,11 @@
                     android:id="@+id/occupation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
                     android:background="@color/layer1"
                     android:ems="10"
-                    android:paddingHorizontal="5dp"
-                    android:textColor="@color/text_color"
-                    android:inputType="textPersonName" />
+                    android:inputType="textPersonName"
+                    android:textColor="@color/text_color" />
             </TableRow>
 
             <TableRow
@@ -166,6 +172,7 @@
                     android:id="@+id/textView18"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
                     android:text="@string/member_ship_card"
                     android:textColor="@color/text_color"
                     android:textSize="18sp" />
@@ -174,18 +181,17 @@
                     android:id="@+id/member_ship_card"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
                     android:background="@color/layer1"
-                    android:ems="10"
-                    android:paddingHorizontal="5dp"
-                    android:textColor="@color/text_color"
-                    android:inputType="numberDecimal" />
+                    android:inputType="numberDecimal"
+                    android:textColor="@color/text_color" />
 
                 <TextView
                     android:id="@+id/textView19"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="70dp"
-                    android:text="Email"
+                    android:layout_marginHorizontal="10dp"
+                    android:text="@string/Email"
                     android:textColor="@color/text_color"
                     android:textSize="18sp" />
 
@@ -193,24 +199,33 @@
                     android:id="@+id/email"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
                     android:background="@color/layer1"
                     android:ems="10"
-                    android:paddingHorizontal="5dp"
-                    android:textColor="@color/text_color"
-                    android:inputType="textPersonName" />
+                    android:inputType="textPersonName"
+                    android:textColor="@color/text_color" />
             </TableRow>
         </TableLayout>
+
+        <TextView
+            android:id="@+id/textView108"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_margin="3dp"
+            android:background="@color/text_color" />
 
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="left|center"
             android:orientation="vertical"
             android:padding="10dp">
 
             <TextView
                 android:id="@+id/textView20"
-                android:layout_width="198dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
                 android:text="@string/Gender"
                 android:textColor="@color/text_color"
                 android:textSize="18sp" />
@@ -219,22 +234,25 @@
                 android:id="@+id/radio_mal_female"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
                 android:orientation="horizontal">
 
                 <RadioButton
                     android:id="@+id/radio_mal"
-                    android:layout_width="107dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_marginHorizontal="10dp"
                     android:layout_weight="1"
+                    android:checked="true"
                     android:text="@string/Male"
                     android:textColor="@color/text_color"
-                    android:textSize="18sp"
-                    android:checked="true"/>
+                    android:textSize="18sp" />
 
                 <RadioButton
                     android:id="@+id/radio_female"
-                    android:layout_width="110dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
                     android:layout_weight="1"
                     android:text="@string/Female"
                     android:textColor="@color/text_color"
@@ -243,9 +261,9 @@
 
             <TextView
                 android:id="@+id/textView21"
-                android:layout_width="113dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="70dp"
+                android:layout_marginHorizontal="10dp"
                 android:text="@string/Remark"
                 android:textColor="@color/text_color"
                 android:textSize="18sp" />
@@ -254,15 +272,22 @@
                 android:id="@+id/remark3"
                 android:layout_width="336dp"
                 android:layout_height="37dp"
+                android:layout_marginHorizontal="1dp"
                 android:background="@color/layer1"
                 android:ems="10"
-                android:paddingHorizontal="8dp"
-                android:paddingLeft="2dp"
                 android:gravity="top"
                 android:inputType="textPersonName"
+                android:paddingLeft="2dp"
                 android:textColor="@color/text_color"
                 android:textSize="18sp" />
         </TableRow>
+
+        <TextView
+            android:id="@+id/textView109"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_margin="3dp"
+            android:background="@color/text_color" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -281,8 +306,9 @@
 
                     <TextView
                         android:id="@+id/streetNo"
-                        android:layout_width="194dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
                         android:text="@string/street_no_name"
                         android:textColor="@color/text_color"
                         android:textSize="18sp" />
@@ -291,10 +317,11 @@
                         android:id="@+id/streetNOEdit"
                         android:layout_width="270dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
                         android:background="@color/layer1"
                         android:ems="10"
-                        android:paddingHorizontal="5dp"
                         android:inputType="textPersonName"
+                        android:paddingHorizontal="5dp"
                         android:textColor="@color/text_color"
                         android:textSize="18sp" />
                 </TableRow>
@@ -308,6 +335,7 @@
                         android:id="@+id/textView22"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
                         android:text="@string/city"
                         android:textColor="@color/text_color"
                         android:textSize="18sp" />
@@ -316,10 +344,12 @@
                         android:id="@+id/city"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
+                        android:layout_marginHorizontal="10dp"
                         android:background="@color/layer1"
                         android:ems="10"
-                        android:paddingHorizontal="5dp"
                         android:inputType="textPersonName"
+
+                        android:paddingHorizontal="5dp"
                         android:textColor="@color/text_color"
                         android:textSize="18sp" />
                 </TableRow>
@@ -333,6 +363,7 @@
                         android:id="@+id/textView23"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
                         android:text="@string/phone"
                         android:textColor="@color/text_color"
                         android:textSize="18sp" />
@@ -341,10 +372,11 @@
                         android:id="@+id/phone_no"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
                         android:background="@color/layer1"
                         android:ems="10"
-                        android:paddingHorizontal="5dp"
                         android:inputType="numberDecimal"
+                        android:paddingHorizontal="5dp"
                         android:textColor="@color/text_color"
                         android:textSize="18sp" />
                 </TableRow>
@@ -358,6 +390,7 @@
                         android:id="@+id/textView25"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
                         android:text="@string/mobile"
                         android:textColor="@color/text_color"
                         android:textSize="18sp" />
@@ -366,10 +399,11 @@
                         android:id="@+id/mobile_number3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
                         android:background="@color/layer1"
                         android:ems="10"
-                        android:paddingHorizontal="5dp"
                         android:inputType="numberDecimal"
+                        android:paddingHorizontal="5dp"
                         android:textColor="@color/text_color"
                         android:textSize="18sp" />
                 </TableRow>
@@ -383,6 +417,7 @@
                         android:id="@+id/textView27"
                         android:layout_width="128dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
                         android:text="@string/Name_show"
                         android:textColor="@color/text_color"
                         android:textSize="18sp" />
@@ -391,10 +426,11 @@
                         android:id="@+id/name_show"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
                         android:background="@color/layer1"
                         android:ems="10"
-                        android:paddingHorizontal="5dp"
                         android:inputType="textPersonName"
+                        android:paddingHorizontal="5dp"
                         android:textColor="@color/text_color"
                         android:textSize="18sp" />
                 </TableRow>
@@ -403,7 +439,7 @@
             <TableLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
+                android:layout_marginHorizontal="10dp"
                 android:layout_marginBottom="3dp"
                 android:padding="10dp">
 
@@ -416,6 +452,7 @@
                         android:id="@+id/textView28"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
                         android:text="@string/total_point"
                         android:textColor="@color/text_color"
                         android:textSize="18sp" />
@@ -430,10 +467,11 @@
                         android:id="@+id/total_point"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
                         android:background="@color/layer1"
                         android:ems="10"
-                        android:paddingHorizontal="5dp"
                         android:inputType="numberDecimal"
+                        android:paddingHorizontal="5dp"
                         android:textColor="@color/text_color"
                         android:textSize="18sp" />
                 </TableRow>
@@ -447,6 +485,7 @@
                         android:id="@+id/textView29"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
                         android:text="@string/Redeemed_point"
                         android:textColor="@color/text_color"
                         android:textSize="18sp" />
@@ -461,10 +500,11 @@
                         android:id="@+id/total_red"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
                         android:background="@color/layer1"
                         android:ems="10"
-                        android:paddingHorizontal="5dp"
                         android:inputType="numberDecimal"
+                        android:paddingHorizontal="5dp"
                         android:textColor="@color/text_color"
                         android:textSize="18sp" />
                 </TableRow>
@@ -478,6 +518,7 @@
                         android:id="@+id/textView30"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
                         android:paddingBottom="2dp"
                         android:text="@string/remaining_points"
                         android:textColor="@color/text_color"
@@ -493,11 +534,12 @@
                         android:id="@+id/total_rem"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
                         android:background="@color/layer1"
                         android:ems="10"
-                        android:paddingHorizontal="5dp"
                         android:inputType="numberDecimal"
-                        android:paddingBottom="10dp"
+                        android:paddingHorizontal="5dp"
+
                         android:textColor="@color/text_color"
                         android:textSize="18sp" />
                 </TableRow>
