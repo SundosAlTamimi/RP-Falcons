@@ -160,7 +160,7 @@ public class BackOfficeActivity extends AppCompatActivity {
 
         Date currentTimeAndDate = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-        today = df.format(currentTimeAndDate);
+        today = convertToEnglish(df.format(currentTimeAndDate));
 
         itemWithFqsList = new ArrayList<>();
         itemWithModifiersList = new ArrayList<>();
@@ -429,22 +429,22 @@ public class BackOfficeActivity extends AppCompatActivity {
             int adminOk = adminOkCheck.isChecked() ? 1 : 0;
 
             int CashierNo = -1;
-            if (cashierNo.getSelectedItem().toString().equals(getResources().getString(R.string.all)))
+            if (convertToEnglish(cashierNo.getSelectedItem().toString()).equals(getResources().getString(R.string.all)))
                 CashierNo = -1;
             else
-                CashierNo = Integer.parseInt(cashierNo.getSelectedItem().toString());
+                CashierNo = Integer.parseInt(convertToEnglish(cashierNo.getSelectedItem().toString()));
 
-            String ShiftName = shiftName.getSelectedItem().toString();
+            String ShiftName = convertToEnglish(shiftName.getSelectedItem().toString());
 
             int posNoString = -1;
             if (PosNo.getSelectedItem().toString().equals(getResources().getString(R.string.all)))
                 posNoString = -1;
             else
-                posNoString = Integer.parseInt(PosNo.getSelectedItem().toString());
+                posNoString = Integer.parseInt(convertToEnglish(PosNo.getSelectedItem().toString()));
 
             for (int i = 0; i < blindCloseList.size(); i++) {
                 try {
-                    if (formatDate(date.getText().toString()).equals(formatDate(blindCloseList.get(i).getDate()))) {
+                    if (formatDate(convertToEnglish(date.getText().toString())).equals(formatDate(blindCloseList.get(i).getDate()))) {
                         if (blindCloseList.get(i).getShiftName().equals(ShiftName) || ShiftName.equals(getResources().getString(R.string.all))) {
                             if (blindCloseList.get(i).getUserNo() == CashierNo || CashierNo == -1) {
                                 if (blindCloseList.get(i).getPOSNo() == posNoString || posNoString == -1) {
@@ -984,8 +984,8 @@ public class BackOfficeActivity extends AppCompatActivity {
                         public void onTextChanged(CharSequence c, int start, int before, int count) {
                             TextView tot = (TextView) row1.getChildAt(2);
                             if (!editT.getText().toString().equals("")) {
-                                double total = Integer.parseInt(editT.getText().toString()) * focusedRowData.get(index).getCatValue();
-                                tot.setText("" + total);
+                                double total = Integer.parseInt(convertToEnglish(editT.getText().toString())) * focusedRowData.get(index).getCatValue();
+                                tot.setText(convertToEnglish("" + total));
                             } else
                                 tot.setText("0.0");
                         }
@@ -1070,18 +1070,18 @@ public class BackOfficeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 CustomerPayment customerPayment = new CustomerPayment();
 
-                if (!value.getText().toString().equals("") && !customerBalance.getText().toString().equals("") && !customerName.getText().toString().equals("") && !customerNo.getText().toString().equals("")) {
+                if (!value.getText().toString().equals("") && !customerBalance.getText().toString().equals("") && !customerName.getText().toString().equals("") && !convertToEnglish(customerNo.getText().toString()).equals("")) {
 
                     customerPayment.setPointOfSaleNumber(Settings.POS_number);
                     customerPayment.setUserNO(Settings.password);
                     customerPayment.setUserName(Settings.user_name);
                     customerPayment.setCustomerNo(1);
-                    customerPayment.setCustomerName("name1");
-                    customerPayment.setCustomerBalance(Double.parseDouble(customerBalance.getText().toString()));
-                    customerPayment.setTransNo(transNumber);
+                    customerPayment.setCustomerName(convertToEnglish(customerName.getText().toString()));
+                    customerPayment.setCustomerBalance(Double.parseDouble(convertToEnglish(customerBalance.getText().toString())));
+                    customerPayment.setTransNo(Integer.parseInt(convertToEnglish(transNumber+"")));
                     customerPayment.setTransDate(today);
-                    customerPayment.setPayMentType(paymentType.getSelectedItem().toString());
-                    customerPayment.setValue(Double.parseDouble(value.getText().toString()));
+                    customerPayment.setPayMentType(convertToEnglish(paymentType.getSelectedItem().toString()));
+                    customerPayment.setValue(Double.parseDouble(convertToEnglish(value.getText().toString())));
                     customerPayment.setShiftNo(Settings.shift_number);
                     customerPayment.setShiftName(Settings.shift_name);
 
@@ -1859,7 +1859,7 @@ List<String>userHeader=new ArrayList<>();
             @Override
             public void onClick(View view) {
                 if (checkMoneyInputs(serial.getText().toString(), catName.getText().toString(),
-                        catValue.getText().toString(), imageBitmap)) {
+                        convertToEnglish( catValue.getText().toString()), imageBitmap)) {
                     boolean isFound = false;
 
                     finalMoneyArray.clear();
@@ -1875,7 +1875,7 @@ List<String>userHeader=new ArrayList<>();
                         Money m = new Money();
                         m.setSerial(Integer.parseInt(serial.getText().toString()));
                         m.setCatName(categotyN.getText().toString());
-                        m.setCatValue(Double.parseDouble(categotyV.getText().toString()));
+                        m.setCatValue(Double.parseDouble(convertToEnglish(categotyV.getText().toString())));
                         m.setShow(Integer.parseInt(isShow.getText().toString()));
                         m.setPicture((Bitmap) pictiure.getTag());
 
@@ -1885,7 +1885,7 @@ List<String>userHeader=new ArrayList<>();
 
                     for (int t = 0; t < finalMoneyArray.size(); t++) {
 
-                        if (finalMoneyArray.get(t).getCatValue() == Double.parseDouble(catValue.getText().toString())) {
+                        if (finalMoneyArray.get(t).getCatValue() == Double.parseDouble(convertToEnglish(catValue.getText().toString()))) {
 
                             isFound = true;
                             break;
@@ -1899,7 +1899,7 @@ List<String>userHeader=new ArrayList<>();
                         Money m = new Money();
                         m.setSerial(Integer.parseInt(serial.getText().toString()));
                         m.setCatName(catName.getText().toString());
-                        m.setCatValue(Double.parseDouble(catValue.getText().toString()));
+                        m.setCatValue(Double.parseDouble(convertToEnglish(catValue.getText().toString())));
                         m.setPicture(imageBitmap);
                         if (show.isChecked())
                             m.setShow(1);
@@ -1944,7 +1944,7 @@ List<String>userHeader=new ArrayList<>();
                     Money m = new Money();
                     m.setSerial(i + 1);
                     m.setCatName(categotyN.getText().toString());
-                    m.setCatValue(Double.parseDouble(categotyV.getText().toString()));
+                    m.setCatValue(Double.parseDouble(convertToEnglish(categotyV.getText().toString())));
                     m.setShow(Integer.parseInt(isShow.getText().toString()));
 
                     m.setPicture((Bitmap) pictiure.getTag());
@@ -2910,9 +2910,9 @@ List<String>userHeader=new ArrayList<>();
 
         printingReport = (ImageView) dialog.findViewById(R.id.printing);
 
-        Date currentTimeAndDate = Calendar.getInstance().getTime();
-        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-        today = df.format(currentTimeAndDate);
+//        Date currentTimeAndDate = Calendar.getInstance().getTime();
+//        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+//        today = convertToEnglish(df.format(currentTimeAndDate));
 
         fromDate.setText(today);
         toDate.setText(today);
@@ -5193,9 +5193,9 @@ List<String>userHeader=new ArrayList<>();
         saveButton = (Button) dialog.findViewById(R.id.saveButton1);
         deleteButton = (Button) dialog.findViewById(R.id.deleteButton1);
         jobCheck = (CheckBox) dialog.findViewById(R.id.jobCheck);
-        Date currentTimeAndDate = Calendar.getInstance().getTime();
-        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-        final String today1 = df.format(currentTimeAndDate);
+//        Date currentTimeAndDate = Calendar.getInstance().getTime();
+//        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+//        final String today1 = df.format(currentTimeAndDate);
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -5205,7 +5205,7 @@ List<String>userHeader=new ArrayList<>();
                         JobGroup jobGroups = new JobGroup();
                         String text = jobGroup.get(i).toString();
                         jobGroups.setJobGroup(text);
-                        jobGroups.setInDate(today1);
+                        jobGroups.setInDate(today);
                         jobGroups.setUserName(Settings.user_name);
                         jobGroups.setUserNo(Settings.password);
                         jobGroups.setShiftName(Settings.shift_name);
@@ -5288,7 +5288,7 @@ List<String>userHeader=new ArrayList<>();
 //                                    AM_PM = "PM";
 //                                    hourOfDay -= 12;
 //                                }
-                                fromTime.setText(hourOfDay + ":" + minute);
+                                fromTime.setText(convertToEnglish(hourOfDay + ":" + minute));
                             }
                         }, mHour, mMinute, true);
                 timePickerDialog.show();
@@ -5314,7 +5314,7 @@ List<String>userHeader=new ArrayList<>();
 //                                    AM_PM = "PM";
 //                                    hourOfDay -= 12;
 //                                }
-                                toTime.setText(hourOfDay + ":" + minute);
+                                toTime.setText(convertToEnglish(hourOfDay + ":" + minute));
                             }
                         }, Calendar.HOUR_OF_DAY, Calendar.HOUR_OF_DAY, true);
                 timePickerDialog.show();
@@ -5323,8 +5323,8 @@ List<String>userHeader=new ArrayList<>();
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!shiftNo.getText().toString().equals("") && !shiftName.getText().toString().equals("") &&
-                        !fromTime.getText().toString().equals("") && !toTime.getText().toString().equals("")) {
+                if (!convertToEnglish(shiftNo.getText().toString()).equals("") && !shiftName.getText().toString().equals("") &&
+                        !convertToEnglish(fromTime.getText().toString()).equals("") && !convertToEnglish(toTime.getText().toString()).equals("")) {
 
                     final TableRow row = new TableRow(BackOfficeActivity.this);
 
@@ -5337,16 +5337,16 @@ List<String>userHeader=new ArrayList<>();
 
                         switch (i) {
                             case 0:
-                                textView.setText(shiftNo.getText().toString());
+                                textView.setText(convertToEnglish(shiftNo.getText().toString()));
                                 break;
                             case 1:
-                                textView.setText(shiftName.getText().toString());
+                                textView.setText(convertToEnglish(shiftName.getText().toString()));
                                 break;
                             case 2:
-                                textView.setText(fromTime.getText().toString());
+                                textView.setText(convertToEnglish(fromTime.getText().toString()));
                                 break;
                             case 3:
-                                textView.setText(toTime.getText().toString());
+                                textView.setText(convertToEnglish(toTime.getText().toString()));
                                 break;
                         }
 
@@ -5381,8 +5381,8 @@ List<String>userHeader=new ArrayList<>();
                         TextView from = (TextView) tableRow.getChildAt(2);
                         TextView to = (TextView) tableRow.getChildAt(3);
 
-                        mDHandler.addShift(new Shift(Integer.parseInt(shNo.getText().toString()), shName.getText().toString(),
-                                from.getText().toString(), to.getText().toString()));
+                        mDHandler.addShift(new Shift(Integer.parseInt(convertToEnglish(shNo.getText().toString())), shName.getText().toString(),
+                                convertToEnglish(from.getText().toString()), convertToEnglish(to.getText().toString())));
 
                         Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.save_), Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
@@ -5472,10 +5472,10 @@ List<String>userHeader=new ArrayList<>();
             @Override
             public void onClick(View v) {
 
-                String ShiftNameString = shiftName.getSelectedItem().toString();
-                String userNameString = userName.getSelectedItem().toString();
+                String ShiftNameString = convertToEnglish(shiftName.getSelectedItem().toString());
+                String userNameString = convertToEnglish(userName.getSelectedItem().toString());
                 String messageString = message.getText().toString();
-                String DateString = date.getText().toString();
+                String DateString = convertToEnglish(date.getText().toString());
                 int posNoString = -1;
                 if (posNo.getSelectedItem().toString().equals(getResources().getString(R.string.all))) {
                     posNoString = -1;
@@ -5531,9 +5531,9 @@ List<String>userHeader=new ArrayList<>();
             @Override
             public void onClick(View v) {
 
-                if (!kitchenName.getText().toString().equals("") && !kitchenNo.getText().toString().equals("")) {
+                if (!kitchenName.getText().toString().equals("") && !convertToEnglish(kitchenNo.getText().toString()).equals("")) {
 
-                    KitchenScreen kitchenScreen = new KitchenScreen(Integer.parseInt(kitchenNo.getText().toString()), kitchenName.getText().toString());
+                    KitchenScreen kitchenScreen = new KitchenScreen(Integer.parseInt(convertToEnglish(kitchenNo.getText().toString())), kitchenName.getText().toString());
 
                     mDHandler.addKitchenScreen(kitchenScreen);
 
@@ -5582,10 +5582,10 @@ List<String>userHeader=new ArrayList<>();
         active = (CheckBox) dialog.findViewById(R.id.memberCheck);
         tableLayoutMember = (TableLayout) dialog.findViewById(R.id.member_table);
 
-
-        Date currentTimeAndDate = Calendar.getInstance().getTime();
-        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-        final String today1 = df.format(currentTimeAndDate);
+//
+//        Date currentTimeAndDate = Calendar.getInstance().getTime();
+//        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+//        final String today1 = df.format(currentTimeAndDate);
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -5595,7 +5595,7 @@ List<String>userHeader=new ArrayList<>();
                         MemberShipGroup memberShipGroup = new MemberShipGroup();
                         String text = memberGroup.get(i).toString();
                         memberShipGroup.setMemberShipGroup(text);
-                        memberShipGroup.setInDate(today1);
+                        memberShipGroup.setInDate(today);
                         memberShipGroup.setUserName(Settings.user_name);
                         memberShipGroup.setUserNo(Settings.password);
                         memberShipGroup.setShiftName(Settings.shift_name);
@@ -6146,7 +6146,10 @@ List<String>userHeader=new ArrayList<>();
         startActivity(intent);
     }
 
-
+    public String convertToEnglish(String value) {
+        String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0"));
+        return newValue;
+    }
 
     void initialize() {
         butManagement = (Button) findViewById(R.id.b_management);

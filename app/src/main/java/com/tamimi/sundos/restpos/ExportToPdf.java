@@ -3,7 +3,9 @@ package com.tamimi.sundos.restpos;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 import android.view.Window;
@@ -43,7 +45,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import static com.itextpdf.text.Element.ALIGN_CENTER;
 
-public class ExportToPdf {
+public class ExportToPdf  {
 
     int pageNumber = 0;
     Document doc;
@@ -132,7 +134,8 @@ public class ExportToPdf {
         endDocPdf();
 //
 
-        showPdfDialog("Re_CancellationReport__.pdf");
+//        showPdfDialog("Re_CancellationReport__.pdf");
+        showpdf(pdfFileName);
 
     }
 
@@ -1123,7 +1126,7 @@ public class ExportToPdf {
             doc.add(paragraph);
 
             Log.e("path44", "" + targetPdf);
-
+            pdfFileName=targetPdf;
 
         } catch (DocumentException e) {
             e.printStackTrace();
@@ -1166,6 +1169,13 @@ public class ExportToPdf {
         table.addCell(cell);
 
     }
+
+   void showpdf(String path){
+
+       Intent intent = new Intent(Intent.ACTION_VIEW);
+       intent.setDataAndType(Uri.parse(path), "application/pdf");
+       context.startActivity(intent);
+   }
 
 
 //    private void displayFromAsset(String assetFileName) {

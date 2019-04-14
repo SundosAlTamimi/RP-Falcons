@@ -93,9 +93,9 @@ public class PayMethods extends AppCompatActivity {
 
         Date currentTimeAndDate = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-        String today = df.format(currentTimeAndDate);
+        String today =convertToEnglish(df.format(currentTimeAndDate));
 
-        date.setText(date.getText().toString() + " " + today);
+        date.setText(convertToEnglish(date.getText().toString() + " " + today));
         mDHandler = new DatabaseHandler(PayMethods.this);
 
         focusedTextView = null;
@@ -137,7 +137,7 @@ public class PayMethods extends AppCompatActivity {
             amountDue.setText(obj.getOrderHeaderObj().getAmountDue()+"");
 
 
-            mainBalance = balance.getText().toString();
+            mainBalance =convertToEnglish(balance.getText().toString());
             remainingBalance.setText(getResources().getString(R.string.remaining_) + balance.getText().toString());
             check.setText(check.getText().toString() + " -");
             tableNumber.setText(tableNumber.getText().toString() + " -");
@@ -382,7 +382,7 @@ public class PayMethods extends AppCompatActivity {
                 Date currentTimeAndDate = Calendar.getInstance().getTime();
                 SimpleDateFormat df1 = new SimpleDateFormat("dd-MM-yyyy");
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM");
-                String today = df1.format(currentTimeAndDate);
+                String today = convertToEnglish(df1.format(currentTimeAndDate));
 
                 if (t1.equals(""))
                     Toast.makeText(PayMethods.this, getResources().getString(R.string.enter_recived_value), Toast.LENGTH_SHORT).show();
@@ -838,7 +838,7 @@ public class PayMethods extends AppCompatActivity {
                         obj.setSerialCheque(serial);
                         obj.setBankName(spinner2.getSelectedItem().toString());
                         obj.setChequeNumber(Integer.parseInt(chequeNumber.getText().toString()));
-                        obj.setReceived(Integer.parseInt(received.getText().toString()));
+                        obj.setReceived(Double.parseDouble(received.getText().toString())); ///very important must change to double
                         mDHandler.addCheque(obj);
                     }
                 } else
@@ -1032,7 +1032,7 @@ public class PayMethods extends AppCompatActivity {
 
                     giftCardValue += Double.parseDouble(t1);
                     dialog.dismiss();
-                    Toast.makeText(PayMethods.this, "Saved", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PayMethods.this, getResources().getString(R.string.save), Toast.LENGTH_SHORT).show();
                     if (giftCardValue != 0) {
                         giftCard.setText(getResources().getString( R.string.gift_card)+" : " + giftCardValue);
                         giftCard.setBackgroundDrawable(getResources().getDrawable(R.drawable.clear_buttons));
@@ -1421,11 +1421,11 @@ public class PayMethods extends AppCompatActivity {
             SimpleDateFormat df1 = new SimpleDateFormat("dd-MM-yyyy");
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM");
             SimpleDateFormat Tf = new SimpleDateFormat("HH:mm:ss");
-            String today = df1.format(currentTimeAndDate);
-            String times = Tf.format(currentTimeAndDate);
+            String today =convertToEnglish(df1.format(currentTimeAndDate));
+            String times = convertToEnglish(Tf.format(currentTimeAndDate));
             int serial = mDHandler.getMaxSerial("VOUCHER_SERIAL", "PAY_METHOD");
-            String vhfSerial = df.format(currentTimeAndDate);// + "-" + (serial);
-            String newString = vhfSerial.replace("-", "") + "-" + (serial + 1);
+            String vhfSerial =convertToEnglish( df.format(currentTimeAndDate));// + "-" + (serial);
+            String newString = convertToEnglish(vhfSerial.replace("-", "") + "-" + (serial + 1));
 
             double cashValues = 0, cardValues = 0, chequeValues = 0, giftValues = 0, couponValues = 0, pointValues = 0;
 
@@ -1580,6 +1580,13 @@ public class PayMethods extends AppCompatActivity {
             Toast.makeText(this, getResources().getString( R.string.remaining_not_o), Toast.LENGTH_SHORT).show();
         }
     }
+
+
+    public String convertToEnglish(String value) {
+        String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0"));
+        return newValue;
+    }
+
 
     void initialize() {
 

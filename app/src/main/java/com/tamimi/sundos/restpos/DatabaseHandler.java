@@ -2284,7 +2284,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 cheque.setSerialCheque(cursor.getInt(0));
                 cheque.setBankName(cursor.getString(1));
                 cheque.setChequeNumber(cursor.getInt(2));
-                cheque.setReceived(cursor.getInt(3));
+                cheque.setReceived(Double.parseDouble(cursor.getString(3)));
 
                 cheeks_iteam.add(cheque);
             } while (cursor.moveToNext());

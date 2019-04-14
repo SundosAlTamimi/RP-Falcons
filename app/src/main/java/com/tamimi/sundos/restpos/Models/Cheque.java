@@ -4,14 +4,14 @@ public class Cheque {
 
     public int serialCheque;
     public String bankName;
-    public int received;
+    public double received;
     public int chequeNumber;
 
     public Cheque() {
 
     }
 
-    public Cheque(int serialCheque, String bankName, int received, int chequeNumber) {
+    public Cheque(int serialCheque, String bankName, double received, int chequeNumber) {
         this.serialCheque = serialCheque;
         this.bankName = bankName;
         this.received = received;
@@ -34,11 +34,11 @@ public class Cheque {
         this.bankName = bankName;
     }
 
-    public int getReceived() {
+    public double getReceived() {
         return received;
     }
 
-    public void setReceived(int received) {
+    public void setReceived(double received) {
         this.received = received;
     }
 

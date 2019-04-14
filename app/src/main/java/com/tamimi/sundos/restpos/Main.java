@@ -79,11 +79,11 @@ public class Main extends AppCompatActivity {
 
         Date currentTimeAndDate = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-        today = df.format(currentTimeAndDate);
+        today = convertToEnglish(df.format(currentTimeAndDate));
 
         date.setText(today);
         userName.setText(mDHandler.getOpenedShifts(today, 1).getUserName());
-        shift.setText("Shift: " + mDHandler.getOpenedShifts(today, 1).getShiftName());
+        shift.setText(getResources().getString(R.string.shift)+" : " + mDHandler.getOpenedShifts(today, 1).getShiftName());
 
         showAnnouncement();
 
@@ -373,13 +373,13 @@ public class Main extends AppCompatActivity {
                             TextView text = (TextView) tableRow.getChildAt(0);
                             TextView text1 = (TextView) tableRow.getChildAt(1);
 
-                            if (!text1.getText().toString().equals("")) {
+                            if (!convertToEnglish(text1.getText().toString()).equals("")) {
 
-                                cash.setCashierName(user.getText().toString());
-                                cash.setCheckInDate(date.getText().toString());
-                                cash.setCategoryName(text.getText().toString());
-                                cash.setCategoryValue(Double.parseDouble(text.getTag().toString()));
-                                cash.setCategoryQty(Integer.parseInt(text1.getText().toString()));
+                                cash.setCashierName(convertToEnglish(user.getText().toString()));
+                                cash.setCheckInDate(convertToEnglish(date.getText().toString()));
+                                cash.setCategoryName(convertToEnglish(text.getText().toString()));
+                                cash.setCategoryValue(Double.parseDouble(convertToEnglish(text.getTag().toString())));
+                                cash.setCategoryQty(Integer.parseInt(convertToEnglish(text1.getText().toString())));
                                 cash.setOrderKind(0);
                                 cashier.add(cash);
                             } else {
@@ -404,11 +404,11 @@ public class Main extends AppCompatActivity {
 
                                 if (!text1.getText().toString().equals("")) {
 
-                                    cash.setCashierName(user.getText().toString());
-                                    cash.setCheckInDate(date.getText().toString());
-                                    cash.setCategoryName(text.getText().toString());
+                                    cash.setCashierName(convertToEnglish(user.getText().toString()));
+                                    cash.setCheckInDate(convertToEnglish(date.getText().toString()));
+                                    cash.setCategoryName(convertToEnglish(text.getText().toString()));
                                     cash.setCategoryValue(Double.parseDouble(text.getTag().toString()));
-                                    cash.setCategoryQty(Integer.parseInt(text1.getText().toString()));
+                                    cash.setCategoryQty(Integer.parseInt(convertToEnglish(text1.getText().toString())));
                                     cash.setOrderKind(0);
                                     cashier.add(cash);
                                 } else {
@@ -499,7 +499,7 @@ public class Main extends AppCompatActivity {
                             TextView text = (TextView) tableRow.getChildAt(0);
                             TextView text2 = (TextView) tableRow.getChildAt(2);
 
-                            double total = Double.parseDouble(text.getTag().toString()) * Double.parseDouble(focusedTextView.getText().toString());
+                            double total = Double.parseDouble(convertToEnglish(text.getTag().toString())) * Double.parseDouble(convertToEnglish(focusedTextView.getText().toString()));
                             text2.setText("" + total);
                         }
 
@@ -507,7 +507,7 @@ public class Main extends AppCompatActivity {
                         for (int i = 0; i < money.size(); i++) {
                             TableRow tRow = (TableRow) categories.getChildAt(i);
                             TextView t = (TextView) tRow.getChildAt(2);
-                            mainTotal.setText("" + (Double.parseDouble(mainTotal.getText().toString()) + Double.parseDouble(t.getText().toString())));
+                            mainTotal.setText("" + (Double.parseDouble(convertToEnglish(mainTotal.getText().toString())) + Double.parseDouble(convertToEnglish(t.getText().toString()))));
                         }
 
                     }
@@ -1072,7 +1072,7 @@ public class Main extends AppCompatActivity {
 
                 Date currentTimeAndDate = Calendar.getInstance().getTime();
                 SimpleDateFormat dfTime = new SimpleDateFormat("HH:mm:ss");
-                String time = dfTime.format(currentTimeAndDate);
+                String time =convertToEnglish( dfTime.format(currentTimeAndDate));
                 Log.e("time123", "" + time);
                 if (!value.getText().toString().equals("") && !mainTotal.getText().toString().equals("")&&(Double.parseDouble(value.getText().toString())!=0)) {
                     if (Double.parseDouble(value.getText().toString()) == Double.parseDouble(mainTotal.getText().toString())) {
@@ -1291,7 +1291,7 @@ public class Main extends AppCompatActivity {
 
             Date currentTimeAndDate = Calendar.getInstance().getTime();
             SimpleDateFormat df = new SimpleDateFormat("HH:mm");
-            String time = df.format(currentTimeAndDate);
+            String time = convertToEnglish(df.format(currentTimeAndDate));
 
             double userSales = Double.parseDouble(mainTotal.getText().toString());
             double sysSales = 0;
@@ -1574,28 +1574,28 @@ public class Main extends AppCompatActivity {
 
         SystemClock.elapsedRealtime();
 
-        final Date currentTimeAndDate = Calendar.getInstance().getTime();
-        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-        final String dates = df.format(currentTimeAndDate);
-        date.setText(dates);
+//        final Date currentTimeAndDate = Calendar.getInstance().getTime();
+//        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+//        final String today = df.format(currentTimeAndDate);
+        date.setText(today);
         username.setText(Settings.user_name);
 
         clockIn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                final String times = time.getText().toString();
+                final String times =convertToEnglish( time.getText().toString());
 
                 Settings.time_card = 1;
 
                 ClockInClockOut clockInClockOut = new ClockInClockOut();
 
                 clockInClockOut.setPointOfSaleNumber(Settings.POS_number);
-                clockInClockOut.setDate(dates);
+                clockInClockOut.setDate(today);
                 clockInClockOut.setUserNO(Settings.password);
                 clockInClockOut.setUserName(Settings.user_name);
                 clockInClockOut.setTranstype("ClockIN");
-                clockInClockOut.setDateCard(dates);
+                clockInClockOut.setDateCard(today);
                 clockInClockOut.setTimeCard(times);
                 clockInClockOut.setRemark((remark.getText().toString()));
                 clockInClockOut.setShiftNo(Settings.shift_number);
@@ -1604,7 +1604,7 @@ public class Main extends AppCompatActivity {
 
 //                mDHandler.addClockInClockOut(clockInClockOut); // this in cashierInDialog ...
 
-                showCashierInDialog(times, dates, clockInClockOut);
+                showCashierInDialog(times, today, clockInClockOut);
             }
         });
 
@@ -1629,8 +1629,8 @@ public class Main extends AppCompatActivity {
         masege.setText( getResources().getString(R.string.clockinsuccessful) +"(" + Settings.user_name + ")");
         Button ok = (Button) dialog.findViewById(R.id.ok1);
 
-        time.setText(times);
-        date.setText(dates);
+        time.setText(convertToEnglish(times));
+        date.setText(convertToEnglish(dates));
 
         ok.setOnClickListener(new OnClickListener() {
             @Override
@@ -1667,25 +1667,25 @@ public class Main extends AppCompatActivity {
         time = (TextClock) dialog.findViewById(R.id.horas1);
         date = (TextView) dialog.findViewById(R.id.date3);
 
-        final Date currentTimeAndDate = Calendar.getInstance().getTime();
-        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-        final String dates = df.format(currentTimeAndDate);
-        date.setText(dates);
+//        final Date currentTimeAndDate = Calendar.getInstance().getTime();
+//        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+//        final String today = df.format(currentTimeAndDate);
+        date.setText(today);
 
 
         clockOut.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Settings.time_card = 0;
-                final String times = time.getText().toString();
+                final String times =convertToEnglish( time.getText().toString());
                 ClockInClockOut clockInClockOut = new ClockInClockOut();
 
                 clockInClockOut.setPointOfSaleNumber(Settings.POS_number);
-                clockInClockOut.setDate(dates);
+                clockInClockOut.setDate(today);
                 clockInClockOut.setUserNO(Settings.password);
                 clockInClockOut.setUserName(Settings.user_name);
                 clockInClockOut.setTranstype("ClockOut");
-                clockInClockOut.setDateCard(dates);
+                clockInClockOut.setDateCard(today);
                 clockInClockOut.setTimeCard(times);
                 clockInClockOut.setRemark((remarkOut.getText().toString()));
                 clockInClockOut.setShiftNo(Settings.shift_number);
@@ -1703,15 +1703,15 @@ public class Main extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Settings.time_card = 2;
-                final String times = time.getText().toString();
+                final String times = convertToEnglish(time.getText().toString());
                 ClockInClockOut clockInClockOut = new ClockInClockOut();
 
                 clockInClockOut.setPointOfSaleNumber(Settings.POS_number);
-                clockInClockOut.setDate(dates);
+                clockInClockOut.setDate(today);
                 clockInClockOut.setUserNO(Settings.password);
                 clockInClockOut.setUserName(Settings.user_name);
                 clockInClockOut.setTranstype("BreakIN");
-                clockInClockOut.setDateCard(dates);
+                clockInClockOut.setDateCard(today);
                 clockInClockOut.setTimeCard(times);
                 clockInClockOut.setRemark((remarkOut.getText().toString()));
                 clockInClockOut.setShiftNo(Settings.shift_number);
@@ -1726,6 +1726,12 @@ public class Main extends AppCompatActivity {
         dialog.show();
 
     }
+
+    public String convertToEnglish(String value) {
+        String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0"));
+        return newValue;
+    }
+
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     void showBreakTimeOut() {
