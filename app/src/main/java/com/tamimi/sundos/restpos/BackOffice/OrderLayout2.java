@@ -366,7 +366,7 @@ public class OrderLayout2 extends AppCompatActivity {
             int backColor = ((ColorDrawable) button.getBackground()).getColor();
 
             usedCategoriesList.add(new UsedCategories(button.getText().toString(), Integer.parseInt(button.getTag().toString()),
-                    backColor, button.getCurrentTextColor(), i));
+                    backColor, button.getCurrentTextColor(), i, null));
         }
         storeCategories();
     }
@@ -378,7 +378,7 @@ public class OrderLayout2 extends AppCompatActivity {
 
             UsedCategories usedCategory = new UsedCategories(usedCategoriesList.get(i).getCategoryName(),
                     usedCategoriesList.get(i).getNumberOfItems(), usedCategoriesList.get(i).getBackground(),
-                    usedCategoriesList.get(i).getTextColor(), usedCategoriesList.get(i).getPosition());
+                    usedCategoriesList.get(i).getTextColor(), usedCategoriesList.get(i).getPosition() , null);
 
             mDbHandler.addUsedCategory(usedCategory);
 

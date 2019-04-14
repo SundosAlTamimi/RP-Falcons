@@ -37,7 +37,7 @@
             android:background="@color/layer1"
             android:orientation="horizontal">
 
-            <GridView
+            <org.askerov.dynamicgrid.DynamicGridView
                 android:id="@+id/itemsGridView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -89,23 +89,10 @@
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
-                <EditText
-                    android:id="@+id/item_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:layout_marginHorizontal="10dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/focused_table"
-                    android:hint="@string/category_name"
-                    android:paddingHorizontal="5dp"
-                    android:textColor="@color/text_color"
-                    android:textColorHint="@color/gray"
-                    android:textSize="15sp" />
-
                 <ListView
                     android:id="@+id/categories_list"
                     android:layout_width="match_parent"
-                    android:layout_height="210dp"
+                    android:layout_height="240dp"
                     android:layout_marginHorizontal="11dp"
                     android:layout_marginTop="5dp"
                     android:background="@color/layer2" />
@@ -115,35 +102,6 @@
                     android:layout_height="1dp"
                     android:layout_marginHorizontal="11dp"
                     android:background="@color/text_color">
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="21dp"
-                    android:layout_marginHorizontal="11dp"
-                    android:layout_marginTop="18dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="120dp"
-                        android:layout_height="20dp"
-                        android:text="@string/number_of_items"
-                        android:textColor="@color/text_color"
-                        android:textSize="15sp" />
-
-                    <EditText
-                        android:id="@+id/num_of_items"
-                        android:layout_width="match_parent"
-                        android:layout_height="20dp"
-                        android:layout_marginHorizontal="8dp"
-                        android:background="@drawable/focused_table"
-                        android:hint="0"
-                        android:inputType="number"
-                        android:paddingHorizontal="5dp"
-                        android:textColor="@color/text_color"
-                        android:textColorHint="@color/gray"
-                        android:textSize="14sp" />
 
                 </LinearLayout>
 
@@ -217,7 +175,7 @@
                         android:layout_width="0dp"
                         android:layout_height="35dp"
                         android:layout_weight="1"
-                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginHorizontal="5dp"
                         android:background="@color/exit"
                         android:text="@string/apply"
                         android:textAllCaps="false"
@@ -229,7 +187,7 @@
                         android:layout_width="0dp"
                         android:layout_height="35dp"
                         android:layout_weight="1"
-                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginHorizontal="5dp"
                         android:background="@color/colorPrimary"
                         android:text="@string/delete"
                         android:textAllCaps="false"
@@ -237,6 +195,39 @@
                         android:textSize="15sp" />
 
                 </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_marginHorizontal="11dp"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/emptyCat"
+                        android:layout_width="0dp"
+                        android:layout_height="35dp"
+                        android:layout_weight="1"
+                        android:layout_marginHorizontal="5dp"
+                        android:background="@color/gray"
+                        android:text="@string/empty_square"
+                        android:textAllCaps="false"
+                        android:textColor="@color/layer1"
+                        android:textSize="15sp" />
+
+                    <Button
+                        android:id="@+id/setItems"
+                        android:layout_width="0dp"
+                        android:layout_height="35dp"
+                        android:layout_weight="1"
+                        android:layout_marginHorizontal="5dp"
+                        android:background="@color/blue_ice"
+                        android:text="@string/items_settings"
+                        android:textAllCaps="false"
+                        android:textColor="@color/layer1"
+                        android:textSize="15sp" />
+
+                </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout
@@ -247,31 +238,19 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/cat_name"
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
                     android:gravity="center"
-                    android:text="@string/setting"
+                    android:text="@string/items_settings"
                     android:textColor="@color/text_color"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
-                <EditText
-                    android:id="@+id/item_name2"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:layout_marginHorizontal="10dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/focused_table"
-                    android:hint="@string/item_name"
-                    android:paddingHorizontal="5dp"
-                    android:textColor="@color/text_color"
-                    android:textColorHint="@color/gray"
-                    android:textSize="15sp" />
-
                 <ListView
                     android:id="@+id/items_list"
                     android:layout_width="match_parent"
-                    android:layout_height="210dp"
+                    android:layout_height="240dp"
                     android:layout_marginHorizontal="11dp"
                     android:layout_marginTop="5dp"
                     android:background="@color/layer2" />
@@ -281,35 +260,6 @@
                     android:layout_height="1dp"
                     android:layout_marginHorizontal="11dp"
                     android:background="@color/text_color"></LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="21dp"
-                    android:layout_marginHorizontal="11dp"
-                    android:layout_marginTop="18dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="120dp"
-                        android:layout_height="20dp"
-                        android:text="@string/item_position"
-                        android:textColor="@color/text_color"
-                        android:textSize="15sp" />
-
-                    <EditText
-                        android:id="@+id/item_position"
-                        android:layout_width="match_parent"
-                        android:layout_height="20dp"
-                        android:layout_marginHorizontal="8dp"
-                        android:background="@drawable/focused_table"
-                        android:hint="0"
-                        android:inputType="number"
-                        android:paddingHorizontal="5dp"
-                        android:textColor="@color/text_color"
-                        android:textColorHint="@color/gray"
-                        android:textSize="14sp" />
-
-                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -369,17 +319,70 @@
 
                 </LinearLayout>
 
-                <Button
-                    android:id="@+id/add"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="35dp"
-                    android:layout_marginHorizontal="45dp"
+                    android:layout_marginHorizontal="11dp"
                     android:layout_marginTop="20dp"
-                    android:background="@color/exit"
-                    android:text="@string/add"
-                    android:textAllCaps="false"
-                    android:textColor="@color/layer1"
-                    android:textSize="15sp" />
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/apply2"
+                        android:layout_width="0dp"
+                        android:layout_height="35dp"
+                        android:layout_weight="1"
+                        android:layout_marginHorizontal="5dp"
+                        android:background="@color/exit"
+                        android:text="@string/apply"
+                        android:textAllCaps="false"
+                        android:textColor="@color/layer1"
+                        android:textSize="15sp" />
+
+                    <Button
+                        android:id="@+id/delete2"
+                        android:layout_width="0dp"
+                        android:layout_height="35dp"
+                        android:layout_weight="1"
+                        android:layout_marginHorizontal="5dp"
+                        android:background="@color/colorPrimary"
+                        android:text="@string/delete"
+                        android:textAllCaps="false"
+                        android:textColor="@color/layer1"
+                        android:textSize="15sp" />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_marginHorizontal="11dp"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/emptyItem"
+                        android:layout_width="0dp"
+                        android:layout_height="35dp"
+                        android:layout_weight="1"
+                        android:layout_marginHorizontal="5dp"
+                        android:background="@color/gray"
+                        android:text="@string/empty_square"
+                        android:textAllCaps="false"
+                        android:textColor="@color/layer1"
+                        android:textSize="15sp" />
+
+                    <Button
+                        android:id="@+id/set_cat"
+                        android:layout_width="0dp"
+                        android:layout_height="35dp"
+                        android:layout_weight="1"
+                        android:layout_marginHorizontal="5dp"
+                        android:background="@color/blue_ice"
+                        android:text="@string/categories"
+                        android:textAllCaps="false"
+                        android:textColor="@color/layer1"
+                        android:textSize="15sp" />
+
+                </LinearLayout>
 
             </LinearLayout>
         </RelativeLayout>

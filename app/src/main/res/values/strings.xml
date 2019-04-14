@@ -161,7 +161,9 @@
     <string name="item_name">Item Name</string>
     <string name="apply">Apply</string>
     <string name="delete">Delete</string>
+    <string name="empty_square">Empty Square</string>
     <string name="add">Add</string>
+    <string name="items_settings">Items Settings</string>
     <string name="item_position">Item Position</string>
 
     <string name="management">Management</string>

@@ -160,7 +160,9 @@
     <string name="item_name">اسم المادة</string>
     <string name="apply">تطبيق</string>
     <string name="delete">حذف</string>
+    <string name="empty_square">مربع فارغ</string>
     <string name="add">اضافة</string>
+    <string name="items_settings">اعدادات المواد</string>
     <string name="item_position">موقع المادة</string>
 
     <string name="management">الادارة</string>

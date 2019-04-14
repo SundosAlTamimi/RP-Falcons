@@ -55,7 +55,7 @@ public class LayoutCategoryAdapter extends BaseDynamicGridAdapter {
         void build(UsedCategories item) {
             String itemName = String.valueOf(item.getCategoryName());
             name.setText(itemName);
-//            holder.img.setBackgroundDrawable(items.get(position).get);
+            img.setImageBitmap(item.getCatPic());
             background.setBackgroundColor(context.getResources().getColor(R.color.layer2));
         }
 
