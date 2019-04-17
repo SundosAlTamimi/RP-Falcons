@@ -1723,6 +1723,10 @@ public class Order extends AppCompatActivity {
 
             SendCloud sendCloud = new SendCloud(Order.this, obj);
             sendCloud.startSending();
+            SendSocket sendSocket =new SendSocket(Order.this, obj);
+
+                sendSocket.sendMessage();
+
 //            new JSONTask2().execute();
 
         } catch (JSONException e) {

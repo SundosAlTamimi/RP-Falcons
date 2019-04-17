@@ -1,10 +1,8 @@
 package com.tamimi.sundos.restpos;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
@@ -24,7 +22,6 @@ import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.tamimi.sundos.restpos.BackOffice.BackOfficeActivity;
 import com.tamimi.sundos.restpos.Models.Announcemet;
 import com.tamimi.sundos.restpos.Models.BlindClose;
 import com.tamimi.sundos.restpos.Models.CancleOrder;
@@ -38,10 +35,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import static com.itextpdf.text.Element.ALIGN_CENTER;
 
@@ -52,7 +46,7 @@ public class ExportToPdf  {
     File file;
     PdfWriter docWriter = null;
     //    PDFView pdfView;
-    String pdfFileName;
+    File pdfFileName;
 //    PDFView pdfView;
     BaseFont base;
 
@@ -107,7 +101,7 @@ public class ExportToPdf  {
             insertCell(pdfPTable, String.valueOf(blindClosePdf.get(i).getUserSales()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
             insertCell(pdfPTable, String.valueOf(blindClosePdf.get(i).getSalesDiff()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
             insertCell(pdfPTable, String.valueOf(blindClosePdf.get(i).getReason()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-            insertCell(pdfPTable, String.valueOf((blindClosePdf.get(i).getTillOk() == 0 ? "no" : "yes")), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+            insertCell(pdfPTable, String.valueOf((blindClosePdf.get(i).getTillOk() == 0 ? context.getString(R.string.no) : context.getString(R.string.yes))), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
 
         }
 
@@ -135,7 +129,7 @@ public class ExportToPdf  {
 //
 
 //        showPdfDialog("Re_CancellationReport__.pdf");
-        showpdf(pdfFileName);
+        showPdf(pdfFileName);
 
     }
 
@@ -214,7 +208,7 @@ public class ExportToPdf  {
             e.printStackTrace();
         }
         endDocPdf();
-
+        showPdf(pdfFileName);
 
     }
 
@@ -278,7 +272,7 @@ public class ExportToPdf  {
             e.printStackTrace();
         }
         endDocPdf();
-
+        showPdf(pdfFileName);
 
     }
 
@@ -326,7 +320,7 @@ public class ExportToPdf  {
         insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 2, arabicFont, BaseColor.WHITE);
         String type = "";
         if (cancelHeader.get(5).equals("-1")) {
-            type = "All";
+            type = context.getString(R.string.all);
         } else if (cancelHeader.get(5).equals("0")) {
             type = context.getString(R.string.canceled);
         } else {
@@ -345,6 +339,9 @@ public class ExportToPdf  {
             e.printStackTrace();
         }
         endDocPdf();
+
+        showPdf(pdfFileName);
+
 
     }
 
@@ -384,9 +381,10 @@ public class ExportToPdf  {
         insertCell(pdfPTableHeader, context.getString(R.string.z_report), Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
         insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 4, arabicFont, BaseColor.WHITE);
         insertCell(pdfPTableHeader, context.getString(R.string.date) + orderHeder.get(0), Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+        insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 2, arabicFont, BaseColor.WHITE);
         insertCell(pdfPTableHeader, context.getString(R.string.serial) + " : " + orderHeder.get(1), Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
-        insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 3, arabicFont, BaseColor.WHITE);
-        insertCell(pdfPTableHeader, context.getString(R.string.point_of_sale) + " : " + orderHeder.get(2), Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+//        insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 3, arabicFont, BaseColor.WHITE);
+        insertCell(pdfPTableHeader, context.getString(R.string.point_of_sale) + " : " + orderHeder.get(2), Element.ALIGN_RIGHT, 4, arabicFont, BaseColor.WHITE);
 
 
         insertCell(pdfPTableDetal, context.getString(R.string.total_before_tax) + " : " + otherInfo.get(0), Element.ALIGN_RIGHT, 1, arabicFontHeader, BaseColor.WHITE);
@@ -420,7 +418,7 @@ public class ExportToPdf  {
             e.printStackTrace();
         }
         endDocPdf();
-
+        showPdf(pdfFileName);
 
     }
 
@@ -469,7 +467,7 @@ public class ExportToPdf  {
             e.printStackTrace();
         }
         endDocPdf();
-
+        showPdf(pdfFileName);
 
     }
 
@@ -520,7 +518,7 @@ public class ExportToPdf  {
             e.printStackTrace();
         }
         endDocPdf();
-
+        showPdf(pdfFileName);
     }
 
     public void salesByHour(List<OrderHeader> headerList, List<String> hourHeader) {
@@ -579,7 +577,7 @@ public class ExportToPdf  {
             e.printStackTrace();
         }
         endDocPdf();
-
+        showPdf(pdfFileName);
 
     }
 
@@ -638,7 +636,7 @@ public class ExportToPdf  {
         }
         endDocPdf();
 
-
+        showPdf(pdfFileName);
     }
 
     public void TopSalesItemReport(List<OrderTransactions> transactionsPdf, List<String> salesHeader) {
@@ -687,7 +685,7 @@ public class ExportToPdf  {
             e.printStackTrace();
         }
         endDocPdf();
-
+        showPdf(pdfFileName);
     }
 
     public void TopGroupSalesReport() {
@@ -756,7 +754,7 @@ public class ExportToPdf  {
             e.printStackTrace();
         }
         endDocPdf();
-
+        showPdf(pdfFileName);
     }
 
     public void waiterReport(List<OrderHeader> headerDataMarket, List<String> waiterHeader) {
@@ -810,7 +808,7 @@ public class ExportToPdf  {
             e.printStackTrace();
         }
         endDocPdf();
-
+        showPdf(pdfFileName);
     }
 
     public void TableActionReport(List<TableActions> actionsPdf, List<String> tableHeader) {
@@ -892,7 +890,7 @@ public class ExportToPdf  {
             e.printStackTrace();
         }
         endDocPdf();
-
+        showPdf(pdfFileName);
     }
 
     public void ProfitLossReport() {
@@ -973,7 +971,7 @@ public class ExportToPdf  {
             e.printStackTrace();
         }
         endDocPdf();
-
+        showPdf(pdfFileName);
     }
 
     public void soldQtyReport(List<OrderTransactions> transactionsPdf, List<String> soldHeader) {
@@ -1034,7 +1032,7 @@ public class ExportToPdf  {
             e.printStackTrace();
         }
         endDocPdf();
-
+        showPdf(pdfFileName);
 
     }
 
@@ -1080,26 +1078,26 @@ public class ExportToPdf  {
             e.printStackTrace();
         }
         endDocPdf();
-
-
-    }
-
-
-    void showPdfDialog(String fileNamePdf) {
-
-        Dialog dialogPdf = new Dialog(context);
-        dialogPdf.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialogPdf.setCancelable(false);
-        dialogPdf.setContentView(R.layout.show_pdf_file);
-        dialogPdf.setCanceledOnTouchOutside(true);
-
-        pageNumber = doc.getPageNumber();
-//        pdfView = (PDFView) dialogPdf.findViewById(R.id.pdfView);
-//        displayFromAsset("/ReportRos/" + fileNamePdf);
-
-        dialogPdf.show();
+        showPdf(pdfFileName);
 
     }
+
+
+//    void showPdfDialog(String fileNamePdf) {
+//
+//        Dialog dialogPdf = new Dialog(context);
+//        dialogPdf.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        dialogPdf.setCancelable(false);
+//        dialogPdf.setContentView(R.layout.show_pdf_file);
+//        dialogPdf.setCanceledOnTouchOutside(true);
+//
+//        pageNumber = doc.getPageNumber();
+////        pdfView = (PDFView) dialogPdf.findViewById(R.id.pdfView);
+////        displayFromAsset("/ReportRos/" + fileNamePdf);
+//
+//        dialogPdf.show();
+//
+//    }
 
 
     void createPDF(String fileName) {
@@ -1126,7 +1124,7 @@ public class ExportToPdf  {
             doc.add(paragraph);
 
             Log.e("path44", "" + targetPdf);
-            pdfFileName=targetPdf;
+            pdfFileName=path;
 
         } catch (DocumentException e) {
             e.printStackTrace();
@@ -1170,10 +1168,10 @@ public class ExportToPdf  {
 
     }
 
-   void showpdf(String path){
+   void showPdf(File path){
 
        Intent intent = new Intent(Intent.ACTION_VIEW);
-       intent.setDataAndType(Uri.parse(path), "application/pdf");
+       intent.setDataAndType(Uri.fromFile(path), "application/pdf");
        context.startActivity(intent);
    }
 
