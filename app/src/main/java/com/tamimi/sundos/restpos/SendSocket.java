@@ -3,7 +3,9 @@ package com.tamimi.sundos.restpos;
 import android.content.Context;
 import android.os.Handler;
 import android.widget.Toast;
+
 import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,13 +13,13 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class SendSocket  {
+public class SendSocket {
 
     Context context;
     JSONObject obj;
 
-    public SendSocket(Context context,JSONObject obj) {
-        this.obj = obj ;
+    public SendSocket(Context context, JSONObject obj) {
+        this.obj = obj;
         this.context = context;
 
     }
@@ -39,11 +41,10 @@ public class SendSocket  {
 //                        s = new Socket("10.10.100.22", 9002);
 
                     OutputStream out = s.getOutputStream();
-
                     PrintWriter output = new PrintWriter(out);
 
-                        output.println(obj);
-                        output.flush();
+                    output.println(obj);
+                    output.flush();
 
                     BufferedReader input = new BufferedReader(new InputStreamReader(s.getInputStream()));
                     final String st = input.readLine();
