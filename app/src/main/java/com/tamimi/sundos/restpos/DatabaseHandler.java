@@ -54,7 +54,7 @@ import java.util.List;
 public class DatabaseHandler extends SQLiteOpenHelper {
     //hellohjt
     // Database Version
-    private static final int DATABASE_VERSION = 17;
+    private static final int DATABASE_VERSION = 20;
 
     // Database Name
     private static final String DATABASE_NAME = "RestPos";
@@ -1196,7 +1196,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 //        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS_TEMP ADD TIME TEXT NOT NULL DEFAULT '01:30'");
 //        db.execSQL("ALTER TABLE PAY_METHOD ADD TIME TEXT NOT NULL DEFAULT '01:30'");
 
-        db.execSQL("ALTER TABLE FAMILY_CATEGORY_TABLE ADD CATEGORY_PIC BLOB DEFAULT null");
+//        db.execSQL("ALTER TABLE FAMILY_CATEGORY_TABLE ADD CATEGORY_PIC BLOB DEFAULT null");
 
 //        String CREATE_TABLE_KITCHEN_SCREEN_TABLE = "CREATE TABLE " + KITCHEN_SCREEN_TABLE + "("
 //                + KITCHEN_NAME + " TEXT,"
