@@ -1,5 +1,10 @@
 package com.tamimi.sundos.restpos.Models;
 
+import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class OrderTransactions {
 
     private int orderType;
@@ -322,5 +327,21 @@ public class OrderTransactions {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public JSONObject getJSONObject() {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("ITEMCODE", itemBarcode);
+            obj.put("ITEMNAME", itemName);
+            obj.put("QTY", qty);
+            obj.put("PRICE", price);
+            obj.put("NOTE", "");
+            obj.put("ISUPDATE", 0);
+
+        } catch (JSONException e) {
+            Log.e("Tag" , "JSONException");
+        }
+        return obj;
     }
 }

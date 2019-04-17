@@ -3,8 +3,10 @@ package com.tamimi.sundos.restpos;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
@@ -45,7 +47,18 @@ import com.tamimi.sundos.restpos.Models.UsedItems;
 import com.tamimi.sundos.restpos.Models.VoidResons;
 
 import org.askerov.dynamicgrid.DynamicGridView;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -66,6 +79,8 @@ public class Order extends AppCompatActivity {
     CheckBox discPerc;
     Button back;
 
+    private ProgressDialog progressDialog;
+    String json_getString;
     List<UsedCategories> categories;
 
     int orderTypeFlag;
@@ -156,6 +171,8 @@ public class Order extends AppCompatActivity {
                         if (!(Double.parseDouble(amountDue.getText().toString()) == 0)) {
                             saveInOrderTransactionObj();
                             saveInOrderHeaderObj();
+                            sendToKitchen();
+
                             Intent intentPay = new Intent(Order.this, PayMethods.class);
                             startActivity(intentPay);
                         } else
@@ -1260,7 +1277,7 @@ public class Order extends AppCompatActivity {
                         if (selectedModifier != -1) {
                             if (!modifiersName.get(selectedModifier).contains("*  Extra")) { // if contain the same string
                                 if (!modifiersName.get(selectedModifier).contains("*")) { // if contain another string
-                                    modifiersName.set(selectedModifier, modifiersName.get(selectedModifier) + " \n " + "  *  Extra");
+                                    modifiersName.set(selectedModifier, modifiersName.get(selectedModifier) + "  *  Extra" + " \n ");
                                     adapter.notifyDataSetChanged();
                                 } else { // if it has another string it will extract it and add the new one
                                     modifiersName.set(selectedModifier, modifiersName.get(selectedModifier).substring(0, modifiersName.get(selectedModifier).indexOf('*') - 1) + " *  Extra");
@@ -1277,7 +1294,7 @@ public class Order extends AppCompatActivity {
                         if (selectedModifier != -1) {
                             if (!modifiersName.get(selectedModifier).contains("*  No")) { // if contain the same string
                                 if (!modifiersName.get(selectedModifier).contains("*")) { // if contain another string
-                                    modifiersName.set(selectedModifier, modifiersName.get(selectedModifier) + " \n " + "  *  No");
+                                    modifiersName.set(selectedModifier, modifiersName.get(selectedModifier) + "  *  No" + " \n ");
                                     adapter.notifyDataSetChanged();
                                 } else { // if it has another string it will extract it and add the new one
                                     modifiersName.set(selectedModifier, modifiersName.get(selectedModifier).substring(0, modifiersName.get(selectedModifier).indexOf('*') - 1) + " *  No");
@@ -1294,7 +1311,7 @@ public class Order extends AppCompatActivity {
                         if (selectedModifier != -1) {
                             if (!modifiersName.get(selectedModifier).contains("*  Little")) { // if contain the same string
                                 if (!modifiersName.get(selectedModifier).contains("*")) { // if contain another string
-                                    modifiersName.set(selectedModifier, modifiersName.get(selectedModifier) + " \n " + "  *  Little");
+                                    modifiersName.set(selectedModifier, modifiersName.get(selectedModifier) + "  *  Little" + " \n ");
                                     adapter.notifyDataSetChanged();
                                 } else { // if it has another string it will extract it and add the new one
                                     modifiersName.set(selectedModifier, modifiersName.get(selectedModifier).substring(0, modifiersName.get(selectedModifier).indexOf('*') - 1) + " *  Little");
@@ -1311,7 +1328,7 @@ public class Order extends AppCompatActivity {
                         if (selectedModifier != -1) {
                             if (!modifiersName.get(selectedModifier).contains("*  Half")) { // if contain the same string
                                 if (!modifiersName.get(selectedModifier).contains("*")) { // if contain another string
-                                    modifiersName.set(selectedModifier, modifiersName.get(selectedModifier) + " \n " + "  *  Half");
+                                    modifiersName.set(selectedModifier, modifiersName.get(selectedModifier) + "  *  Half" + " \n ");
                                     adapter.notifyDataSetChanged();
                                 } else { // if it has another string it will extract it and add the new one
                                     modifiersName.set(selectedModifier, modifiersName.get(selectedModifier).substring(0, modifiersName.get(selectedModifier).indexOf('*') - 1) + " *  Half");
@@ -1327,11 +1344,13 @@ public class Order extends AppCompatActivity {
                     public void onClick(View view) {
                         for (int i = 0; i < modifiersName.size(); i++) {
                             if (modifiersName.get(i).contains("*")) {
-                                insertModifierRaw(modifiersName.get(i).substring(modifiersName.get(selectedModifier).indexOf('-') + 1,
-                                        modifiersName.get(selectedModifier).indexOf('-') + 10) + "..");
+                                insertModifierRaw(modifiersName.get(i).substring(modifiersName.get(i).indexOf('-') + 1,
+                                        modifiersName.get(i).indexOf('-') + 10) + "..");
+
+                                String modName = modifiersName.get(i).substring(modifiersName.get(i).indexOf('-') + 1, modifiersName.get(i).length()- modifiersName.get(i).indexOf('-')+1) ;
                                 wantedItems.add(Integer.parseInt(focused.getTag().toString()) + 1,
-                                        new Items("modifier", modifiers.get(i).getModifierText(), "", 0,
-                                                0, "", "", 0, 0, 0, "", 0,
+                                        new Items("modifier", modName , "", 0, 0, "",
+                                                "", 0, 0, 0, "", 0,
                                                 0, 0, 0, "", "", 0, 0, 0, null));
                                 lineDiscount.add(0.0);
                                 focused.setBackgroundDrawable(null);
@@ -1612,7 +1631,7 @@ public class Order extends AppCompatActivity {
             if (wantedItems.get(k).getDiscountAvailable() == 1)
                 discount = (disc / totalItemsWithDiscount) * (totalLine - lineDiscount_);
 
-            Log.e("here", "******" + disc + "/" + totalItemsWithDiscount + "*" + totalLine + "-" + lineDiscount_);
+//            Log.e("here", "******" + disc + "/" + totalItemsWithDiscount + "*" + totalLine + "-" + lineDiscount_);
 
             OrderTransactionsObj.add(new OrderTransactions(orderTypeFlag, 0, today, Settings.POS_number, Settings.store_number,
                     voucherNo, voucherSerial, "" + wantedItems.get(k).getItemBarcode(), wantedItems.get(k).getMenuName(),
@@ -1630,9 +1649,6 @@ public class Order extends AppCompatActivity {
         double ldisc = Double.parseDouble(convertToEnglish(lineDisCount.getText().toString()));
         double serviceTax = Double.parseDouble(convertToEnglish(service.getText().toString())) * Settings.service_tax;
 
-        Log.e("orderH cash vAlue ", "aa" + PayMethods.cashValue1);
-
-//        mDbHandler.addOrderHeader(
         OrderHeaderObj = new OrderHeader(orderTypeFlag, 0, today, Settings.POS_number, Settings.store_number,
                 voucherNo, voucherSerial, Double.parseDouble(convertToEnglish(total.getText().toString())), ldisc, disc, disc + ldisc,
                 Settings.service_value, Double.parseDouble((convertToEnglish(tax.getText().toString()))), serviceTax, Double.parseDouble((convertToEnglish(subTotal.getText().toString()))),
@@ -1690,6 +1706,150 @@ public class Order extends AppCompatActivity {
                 Double.parseDouble(convertToEnglish(amountDue.getText().toString())), Double.parseDouble(convertToEnglish(deliveryCharge.getText().toString())), sectionNumber,
                 tableNumber, 0.00, 0.00, 0.00, 0.00,
                 0.00, 0.00, Settings.shift_name, Settings.shift_number, waiter, seatNo, Settings.user_name, Settings.password, time));
+    }
+
+    void sendToKitchen() {
+
+        try {
+            JSONObject obj1 = OrderHeaderObj.getJSONObject();
+
+            JSONArray obj2 = new JSONArray();
+            for (int i = 0; i < OrderTransactionsObj.size(); i++)
+                obj2.put(OrderTransactionsObj.get(i).getJSONObject());
+
+            JSONObject obj = new JSONObject();
+            obj.put("Header", obj1);
+            obj.put("Items", obj2);
+
+            SendCloud sendCloud = new SendCloud(Order.this, obj);
+            sendCloud.startSending();
+//            new JSONTask2().execute();
+
+        } catch (JSONException e) {
+            Log.e("Tag", "JSONException");
+        }
+
+    }
+
+    private class JSONTask2 extends AsyncTask<String, String, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(Order.this);
+            progressDialog.setCancelable(false);
+            progressDialog.setMessage("Loading...");
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setProgress(0);
+            progressDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String JsonResponse = null;
+            HttpURLConnection urlConnection = null;
+            BufferedReader reader = null;
+
+            try {
+                JSONObject obj = new JSONObject();
+
+                try {
+                    JSONObject obj1 = new JSONObject();
+                    obj1.put("POSNO", 1);
+                    obj1.put("ORDERNO", 13);
+                    obj1.put("ORDERTYPE", 2);
+                    obj1.put("TABLENO", 1);
+                    obj1.put("SECTIONNO", "main");
+
+                    JSONObject obj2 = new JSONObject();
+                    obj2.put("ITEMCODE", 1);
+                    obj2.put("ITEMNAME", "مادة 1");
+                    obj2.put("QTY", 3);
+                    obj2.put("PRICE", 5.25);
+                    obj2.put("NOTE", "any");
+                    obj2.put("ISUPDATE", 0);
+
+                    JSONObject obj3 = new JSONObject();
+                    obj3.put("ITEMCODE", 1);
+                    obj3.put("ITEMNAME", "مادة 2");
+                    obj3.put("QTY", 3);
+                    obj3.put("PRICE", 5.25);
+                    obj3.put("NOTE", "any");
+                    obj3.put("ISUPDATE", 1);
+
+                    JSONArray arr = new JSONArray();
+                    arr.put(obj2);
+                    arr.put(obj3);
+
+                    obj.put("Header", obj1);
+                    obj.put("Items", arr);
+
+                } catch (JSONException e) {
+                    Log.e("Tag" , "JSONException");
+                }
+
+                String link = "http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/RestSaveKitchenScreen?";
+
+                String data =
+                        "compno=" + URLEncoder.encode("302", "UTF-8") + "&" +
+                                "compyear=" + URLEncoder.encode("2018", "UTF-8") + "&" +
+                                "voucher=" + URLEncoder.encode(obj.toString().trim(), "UTF-8");
+
+                URL url = new URL(link + data );
+
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setDoOutput(true);
+                httpURLConnection.setDoInput(true);
+
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+                StringBuffer stringBuffer = new StringBuffer();
+
+
+                while ((json_getString = bufferedReader.readLine()) != null) {
+                    stringBuffer.append(json_getString + "\n");
+                }
+
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+
+//                JsonResponse = sb.toString();
+                Log.e("tag", "" + stringBuffer.toString());
+                return stringBuffer.toString();
+//
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e("tag", "Error closing stream", e);
+                    }
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            if (s != null && s.contains("Voucher Saved Successfully")) {
+//                Toast.makeText(ExportJason.this , "Success" , Toast.LENGTH_SHORT).show();
+                Log.e("tag", "****Success");
+            } else {
+//                Toast.makeText(ExportJason.this, "Failed to export data", Toast.LENGTH_SHORT).show();
+                Log.e("tag", "****Failed to export data");
+            }
+            progressDialog.dismiss();
+        }
     }
 
     public ArrayList<OrderTransactions> getOrderTransactionObj() {
