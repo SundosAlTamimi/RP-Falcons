@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
@@ -41,6 +42,7 @@ import com.tamimi.sundos.restpos.Models.Cashier;
 import com.tamimi.sundos.restpos.Models.ClockInClockOut;
 import com.tamimi.sundos.restpos.Models.Money;
 import com.tamimi.sundos.restpos.Models.OrderHeader;
+import com.tamimi.sundos.restpos.Models.OrderTransactions;
 import com.tamimi.sundos.restpos.Models.Pay;
 import com.tamimi.sundos.restpos.Models.PayMethod;
 
@@ -56,7 +58,7 @@ public class Main extends AppCompatActivity {
 
     Button back, exit;
     Button takeAway, dineIn;
-    TextView userName, shift, date, payIn, payOut, timeCard, safeMode, cashDrawer, annText;
+    TextView userName, shift, date, payIn, payOut, timeCard, safeMode, refund,cashDrawer, annText;
 
     DatabaseHandler mDHandler;
     Dialog dialog;
@@ -64,6 +66,22 @@ public class Main extends AppCompatActivity {
     TextView focusedTextView;
     TableLayout categories;
     TableLayout AnnouncementTable;
+    ArrayList<Double> lineDiscount;
+    ArrayList<Double> DiscountArray;
+    TableLayout refundTables, table;
+    ArrayList<OrderTransactions> orderTransactions;
+    ArrayList<OrderTransactions> rowRefund;
+    TextView text;
+    int idGeneral = 0;
+    String data;
+    boolean CheckTrue = true;
+    double netTotals = 0.0;
+    double balance = 0.0;
+    int textId = 0;
+    double totalAdd = 0.0;
+    double cashValues, creditValues, chequeVales, pointValues, giftCardValues, cardValues;
+    double discountAdd = 0.0;
+    TableRow rows;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -140,6 +158,10 @@ public class Main extends AppCompatActivity {
 
                 case R.id.cash_drawer:
                     showCashDrawerDialog();
+                    break;
+
+                case R.id.refund:
+                    openRefundDialog();
                     break;
             }
         }
@@ -1733,6 +1755,753 @@ public class Main extends AppCompatActivity {
     }
 
 
+    public void openRefundDialog() {
+        dialog = new Dialog(Main.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.refund_invoice);
+        dialog.setCanceledOnTouchOutside(false);
+
+        final EditText vhfNo;
+        final TextView posNo, originalDate, originalTime, tableNo, customer;
+        Button show, done, exit;
+        lineDiscount = new ArrayList<>();
+        DiscountArray = new ArrayList<>();
+
+        final boolean[] flag = {true};
+        final ArrayList<String> inVoucher = new ArrayList<>();
+        orderTransactions = new ArrayList<>();
+        rowRefund = new ArrayList<>();
+
+        final boolean[] check = {false};
+
+        refundTables = (TableLayout) dialog.findViewById(R.id.Table);
+        table = (TableLayout) dialog.findViewById(R.id.table);
+        vhfNo = (EditText) dialog.findViewById(R.id.VHF_NO);
+        final String[] VHF_NO = new String[1];
+        posNo = (TextView) dialog.findViewById(R.id.pos_NO);
+        originalDate = (TextView) dialog.findViewById(R.id.VhfDate);
+        originalTime = (TextView) dialog.findViewById(R.id.vhfTime);
+        tableNo = (TextView) dialog.findViewById(R.id.tableNO);
+        customer = (TextView) dialog.findViewById(R.id.customer);
+
+        show = (Button) dialog.findViewById(R.id.bu_show);
+        done = (Button) dialog.findViewById(R.id.bu_ok);
+        exit = (Button) dialog.findViewById(R.id.bu_exit);
+
+
+        posNo.setText(String.valueOf(Settings.POS_number));
+
+
+        show.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                VHF_NO[0] =  convertToEnglish(vhfNo.getText().toString());
+
+                for (int i = 0; i < inVoucher.size(); i++) {
+                    if (!inVoucher.get(i).equals(VHF_NO[0])) {
+                        check[0] = false;
+                    } else {
+                        check[0] = true;
+                        break;
+                    }
+                }
+                if (!check[0] && flag[0]) {
+                    inVoucher.add(VHF_NO[0]);
+                    orderTransactions = mDHandler.getAllRequestVoucher(VHF_NO[0]);
+                    if (!orderTransactions.isEmpty()) {
+                        originalDate.setText(orderTransactions.get(0).getVoucherDate());
+                        originalTime.setText(orderTransactions.get(0).getTime());
+                        if (orderTransactions.get(0).getTableNo() != -1) {
+                            tableNo.setText(String.valueOf(orderTransactions.get(0).getTableNo()));
+                        } else {
+                            tableNo.setText("-");
+                        }
+                        customer.setText("customer");
+
+
+                        for (int i = 0; i < orderTransactions.size(); i++) {
+//                            if(!(orderTransactions.get(i).getOrderKind()==998)) {
+                            insertRow(orderTransactions.get(i).getVoucherSerial(), orderTransactions.get(i).getItemName(), orderTransactions.get(i).getQty(), orderTransactions, refundTables);
+//                            }
+                        }
+                        flag[0] = false;
+                    } else {
+                        Toast.makeText(Main.this, getResources().getString(R.string.invoice_no_not_found), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(Main.this, getResources().getString(R.string.invoice_no_insert_bottom), Toast.LENGTH_SHORT).show();
+
+                }
+                vhfNo.setText("");
+            }
+        });
+
+        done.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                double textData;
+
+                for (int i = 0; i < orderTransactions.size(); i++) {
+                    text = dialog.findViewById(Integer.parseInt(i + "" + 5));
+                    String textCheak = text.getText().toString();
+                    if (textCheak.equals("-1")) {
+                        CheckTrue = false;
+                        break;
+                    }
+                }
+                if (netTotals != 0.0 && CheckTrue) {
+                    for (int i = 0; i < orderTransactions.size(); i++) {
+                        text = dialog.findViewById(Integer.parseInt(i + "3"));
+                        if (!text.getText().toString().equals("")) {
+                            textData = Double.parseDouble(text.getText().toString());
+                            rowRefund.add(orderTransactions.get(i));
+
+                        } else {
+                            textData = 0.0;
+                        }
+
+                        double lDiscon = orderTransactions.get(i).getlDiscount();
+                        int q = orderTransactions.get(i).getQty();
+                        lineDiscount.add(textData * (lDiscon / q));
+                        DiscountArray.add(textData * (orderTransactions.get(i).getDiscount() / q));
+                    }
+                    textId = 0;
+                    CheckTrue = true;
+                    dialog.dismiss();
+                    payMethodRefund(orderTransactions, VHF_NO[0]);
+
+                }
+
+            }
+        });
+
+        exit.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                textId = 0;
+                netTotals = 0.0;
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+
+    }
+
+
+    void insertRow(int serial, String itemName, final int qty, final ArrayList<OrderTransactions> list, final TableLayout recipeTable) {
+
+        final TableRow row = new TableRow(Main.this);
+        final double[] rTotal = {0.0};
+        TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
+        row.setLayoutParams(lp);
+        data = "0";
+
+        for (int i = 0; i < 6; i++) {
+            final EditText editText = new EditText(Main.this);
+            final TextView textView = new TextView(Main.this);
+            if (i == 3) {
+                editText.setTextColor(ContextCompat.getColor(Main.this, R.color.text_color));
+                editText.setGravity(Gravity.CENTER);
+                editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+                TableRow.LayoutParams lp2 = new TableRow.LayoutParams(100, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+                editText.setLayoutParams(lp2);
+                editText.setId(Integer.parseInt(textId + "3"));
+//                row.setId(textId);
+                row.addView(editText);
+
+                editText.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        idGeneral = Integer.parseInt(row.getId() + "4");
+                        data =  convertToEnglish(editText.getText().toString());
+                        int id = row.getId();
+
+                        if (!data.equals("")) {
+                            if (Integer.parseInt(data) <= (list.get(id).getQty()) && Integer.parseInt(data) > 0) {
+                                rows = row;
+                                rows.setBackgroundColor(getResources().getColor(R.color.layer3));
+                                rTotal[0] = ((Integer.parseInt(data)) * list.get(id).getPrice());
+                                text = (TextView) dialog.findViewById(idGeneral);
+                                text.setText(String.valueOf(rTotal[0]));
+                                text = (TextView) dialog.findViewById(Integer.parseInt(row.getId() + "" + 5));
+                                text.setText("0");
+                                CheckTrue = true;
+                            } else {
+                                text = (TextView) dialog.findViewById(idGeneral);
+
+                                notCorrectValueDialog();
+                                rows = row;
+                                rows.setBackgroundColor(getResources().getColor(R.color.exit_hover));
+                                text.setText("0.0");
+                                text = (TextView) dialog.findViewById(Integer.parseInt(row.getId() + "" + 5));
+                                text.setText("-1");
+
+                            }
+                        } else {
+                            text = (TextView) dialog.findViewById(idGeneral);
+                            text.setText("0.0");
+                        }
+
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        totalAdd = 0.0;
+                        discountAdd = 0.0;
+                        netTotals = 0.0;
+
+                        for (int i = 0; i < list.size(); i++) {
+                            text = dialog.findViewById(Integer.parseInt(i + "4"));
+                            String da = convertToEnglish( text.getText().toString());
+                            totalAdd += Double.parseDouble(da);
+                            text = dialog.findViewById(Integer.parseInt(i + "3"));
+                            String dataTest =  convertToEnglish(text.getText().toString());
+                            if (da == "0.0" || dataTest.equals("")) {
+                                discountAdd += 0.0;
+                            } else {
+                                discountAdd += ((list.get(i).getDiscount() / list.get(i).getQty()) + (list.get(i).getlDiscount() / list.get(i).getQty())) * Integer.parseInt(dataTest);
+                            }
+                            netTotals = totalAdd - discountAdd;
+                            balance = netTotals;
+                            text = dialog.findViewById(R.id.total_);
+                            text.setText(String.valueOf(totalAdd));
+
+                            text = dialog.findViewById(R.id.discount);
+                            text.setText(String.valueOf(discountAdd));
+
+                            text = dialog.findViewById(R.id.net_total);
+                            text.setText(String.valueOf(netTotals));
+
+
+                        }
+
+
+                    }
+                });
+
+            } else if (i == 5) {
+                textView.setId(Integer.parseInt(textId + "" + i));
+                textView.setText("0");
+                TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT);
+                textView.setLayoutParams(lp2);
+                row.addView(textView);
+            } else {
+                switch (i) {
+                    case 0:
+                        textView.setText("" + serial);
+                        break;
+                    case 1:
+                        textView.setText(itemName);
+                        break;
+                    case 2:
+                        textView.setText("" + qty);
+                        break;
+                    case 4:
+                        textView.setText("0.0");
+                        break;
+
+                }
+
+                textView.setTextColor(ContextCompat.getColor(Main.this, R.color.text_color));
+                textView.setGravity(Gravity.CENTER);
+
+                textView.setId(Integer.parseInt(textId + "" + i));
+
+                TableRow.LayoutParams lp2 = new TableRow.LayoutParams(100, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+                textView.setLayoutParams(lp2);
+
+
+                row.addView(textView);
+
+            }
+
+        }
+        row.setId(textId);
+        recipeTable.addView(row);
+        textId++;
+
+    }
+
+    public void payMethodRefund(final ArrayList<OrderTransactions> list, final String VHF_NO) {
+        dialog = new Dialog(Main.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.pay_method_refund);
+        dialog.setCanceledOnTouchOutside(false);
+
+        ///
+        final TextView cashValue, chequeValue, CreditValue, netTotalText, point, card, gift;
+        cashValue = (TextView) dialog.findViewById(R.id.cashValue);
+        chequeValue = (TextView) dialog.findViewById(R.id.chequeValue);
+        CreditValue = (TextView) dialog.findViewById(R.id.creditValue);
+        point = (TextView) dialog.findViewById(R.id.point);
+        card = (TextView) dialog.findViewById(R.id.credit);
+        gift = (TextView) dialog.findViewById(R.id.gift);
+
+        categories = (TableLayout) dialog.findViewById(R.id.money_categorie);
+        final ArrayList<Money> money = mDHandler.getAllMoneyCategory();
+
+        String categoryName;
+        double categoryValue = 0.0;
+        int categoryQty = 0;
+
+
+        netTotalText = (TextView) dialog.findViewById(R.id.nettotal);
+        netTotalText.setText("" + netTotals);
+
+
+        point.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                point.setText("");
+                focusedTextView = point;
+
+            }
+        });
+        card.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                card.setText("");
+                focusedTextView = card;
+
+            }
+        });
+        gift.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gift.setText("");
+                focusedTextView = gift;
+
+            }
+        });
+
+        cashValue.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cashValue.setText("");
+                focusedTextView = cashValue;
+
+            }
+        });
+        chequeValue.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chequeValue.setText("");
+                focusedTextView = chequeValue;
+
+            }
+        });
+        CreditValue.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CreditValue.setText("");
+                focusedTextView = CreditValue;
+
+            }
+        });
+
+
+        Button b1, b2, b3, b4, b5, b6, b7, b8, b9, b0, dot, save, exit;
+        b1 = (Button) dialog.findViewById(R.id.b1);
+        b2 = (Button) dialog.findViewById(R.id.b2);
+        b3 = (Button) dialog.findViewById(R.id.b3);
+        b4 = (Button) dialog.findViewById(R.id.b4);
+        b5 = (Button) dialog.findViewById(R.id.b5);
+        b6 = (Button) dialog.findViewById(R.id.b6);
+        b7 = (Button) dialog.findViewById(R.id.b7);
+        b8 = (Button) dialog.findViewById(R.id.b8);
+        b9 = (Button) dialog.findViewById(R.id.b9);
+        b0 = (Button) dialog.findViewById(R.id.b0);
+        dot = (Button) dialog.findViewById(R.id.dot);
+        save = (Button) dialog.findViewById(R.id.save);
+        exit = (Button) dialog.findViewById(R.id.exits);
+
+        focusedTextView = cashValue;
+        b1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                focusedTextView.setText(focusedTextView.getText().toString() + "1");
+            }
+        });
+        b2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                focusedTextView.setText(focusedTextView.getText().toString() + "2");
+            }
+        });
+        b3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                focusedTextView.setText(focusedTextView.getText().toString() + "3");
+            }
+        });
+        b4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                focusedTextView.setText(focusedTextView.getText().toString() + "4");
+            }
+        });
+        b5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                focusedTextView.setText(focusedTextView.getText().toString() + "5");
+            }
+        });
+        b6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                focusedTextView.setText(focusedTextView.getText().toString() + "6");
+            }
+        });
+        b7.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                focusedTextView.setText(focusedTextView.getText().toString() + "7");
+            }
+        });
+        b8.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                focusedTextView.setText(focusedTextView.getText().toString() + "8");
+            }
+        });
+        b9.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                focusedTextView.setText(focusedTextView.getText().toString() + "9");
+            }
+        });
+        b0.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                focusedTextView.setText(focusedTextView.getText().toString() + "0");
+            }
+        });
+        dot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                focusedTextView.setText(focusedTextView.getText().toString() + ".");
+
+
+            }
+        });
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Date currentTimeAndDate = Calendar.getInstance().getTime();
+                SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+                SimpleDateFormat Tf = new SimpleDateFormat("HH:mm:ss");
+                String today = df.format(currentTimeAndDate);
+                String times = Tf.format(currentTimeAndDate);
+                ArrayList<String> listForPay = new ArrayList<>();
+                ArrayList<Double> listValuePay = new ArrayList<>();
+
+                if (!cashValue.getText().toString().equals("0") && !cashValue.getText().toString().equals("")) {
+                    listForPay.add("cash");
+                    listValuePay.add(Double.parseDouble(cashValue.getText().toString()));
+                    cashValues = Double.parseDouble(cashValue.getText().toString());
+                }
+                if (!CreditValue.getText().toString().equals("0") && !CreditValue.getText().toString().equals("")) {
+                    listForPay.add("Credit Card");
+                    listValuePay.add(Double.parseDouble(CreditValue.getText().toString()));
+                    creditValues = Double.parseDouble(CreditValue.getText().toString());
+                }
+                if (!chequeValue.getText().toString().equals("0") && !chequeValue.getText().toString().equals("")) {
+                    listForPay.add("Cheque");
+                    listValuePay.add(Double.parseDouble(chequeValue.getText().toString()));
+                    chequeVales = Double.parseDouble(chequeValue.getText().toString());
+                }
+                if (!point.getText().toString().equals("0") && !point.getText().toString().equals("")) {
+                    listForPay.add("Point");
+                    listValuePay.add(Double.parseDouble(point.getText().toString()));
+                    pointValues = Double.parseDouble(point.getText().toString());
+                }
+                if (!gift.getText().toString().equals("0") && !gift.getText().toString().equals("")) {
+                    listForPay.add("Gift Card");
+                    listValuePay.add(Double.parseDouble(gift.getText().toString()));
+                    giftCardValues = Double.parseDouble(gift.getText().toString());
+                }
+                if (!card.getText().toString().equals("0") && !card.getText().toString().equals("")) {
+                    listForPay.add("Coupon");
+                    listValuePay.add(Double.parseDouble(card.getText().toString()));
+                    cardValues = Double.parseDouble(card.getText().toString());
+                }
+
+                if (netTotalText.getText().toString().equals("0.0")) {
+
+                    OrderHeader orderHeader = new OrderHeader(rowRefund.get(0).getOrderType(), 998, today, Settings.POS_number, Settings.store_number,
+                            rowRefund.get(0).getVoucherNo(), rowRefund.get(0).getVoucherSerial(), totalAdd, lineDiscount.get(0), DiscountArray.get(0), lineDiscount.get(0) + DiscountArray.get(0),
+                            Settings.service_value, rowRefund.get(0).getTaxValue(), rowRefund.get(0).getServiceTax(), netTotals,
+                            netTotals, 1, rowRefund.get(0).getTableNo(),
+                            rowRefund.get(0).getSectionNo(), cashValues, creditValues, chequeVales, cardValues,
+                            giftCardValues, pointValues, Settings.shift_name, Settings.shift_number, "No Waiter", 0, Settings.user_name, Settings.password, times);
+
+                    mDHandler.addOrderHeader(orderHeader);
+
+                    for (int i = 0; i < rowRefund.size(); i++) {
+
+                        OrderTransactions orderTransactions = new OrderTransactions(rowRefund.get(i).getOrderType(), 998, today, Settings.POS_number, Settings.store_number,
+                                rowRefund.get(i).getVoucherNo(), rowRefund.get(i).getVoucherSerial(), "" + rowRefund.get(i).getItemBarcode(), rowRefund.get(i).getItemName(),
+                                rowRefund.get(i).getSecondaryName(), rowRefund.get(i).getKitchenAlias(), rowRefund.get(i).getItemCategory(),
+                                rowRefund.get(i).getItemFamily(), rowRefund.get(i).getQty(), rowRefund.get(i).getPrice(),
+                                totalAdd, DiscountArray.get(i), lineDiscount.get(i), lineDiscount.get(i) + DiscountArray.get(i), rowRefund.get(i).getTaxValue(),
+                                rowRefund.get(i).getTaxPerc(), 0, rowRefund.get(i).getService(), rowRefund.get(i).getServiceTax(),
+                                rowRefund.get(i).getTableNo(), rowRefund.get(i).getSectionNo(), Settings.shift_number, Settings.shift_name, Settings.password, Settings.user_name, times);
+
+
+                        mDHandler.addOrderTransaction(orderTransactions);
+
+                    }
+
+                    for (int i = 0; i < money.size(); i++) {
+                        TableRow tRow = (TableRow) categories.getChildAt(i);
+                        TextView t = (TextView) tRow.getChildAt(2);
+                        TextView t0 = (TextView) tRow.getChildAt(0);
+                        TextView t1 = (TextView) tRow.getChildAt(1);
+                        if (!t1.getText().toString().equals("0") && !t1.getText().toString().equals("")) {
+                            Cashier cashier = new Cashier();
+                            ArrayList<Cashier> cashiersList = new ArrayList<Cashier>();
+                            cashier.setCashierName(Settings.user_name);
+                            cashier.setCategoryName(t0.getText().toString());
+                            cashier.setCategoryQty(Integer.parseInt(t1.getText().toString()));
+                            cashier.setCategoryValue(Double.parseDouble("-" + t.getText().toString()));
+                            cashier.setCheckInDate(today);
+                            cashier.setOrderKind(1);
+
+                            cashiersList.add(cashier);
+
+                            mDHandler.addCashierInOut(cashiersList);
+                        }
+                    }
+
+                    ArrayList<PayMethod> listOrder = new ArrayList();
+                    listOrder = mDHandler.getAllRequestPayMethod(VHF_NO);
+                    String payNumber = "0", payName = "0";
+                    for (int x = 0; x < listForPay.size(); x++) {
+
+                        for (int i = 0; i < listOrder.size(); i++) {
+                            if (listForPay.get(x).equals(listOrder.get(i).getPayType())) {
+                                payNumber = listOrder.get(i).getPayNumber();
+
+                                payName = listOrder.get(i).getPayName();
+                                Log.e("paynum : ", payNumber + "     --> " + payName);
+                                break;
+                            }
+                            Log.e("paynum1 : ", payNumber + "     --> " + payName);
+                        }
+
+                        PayMethod payMethod = new PayMethod(list.get(0).getOrderType(),
+                                998,
+                                today,
+                                Settings.POS_number,
+                                Settings.store_number, list.get(0).getVoucherNo(), list.get(0).getVoucherSerial(), listForPay.get(x),
+                                listValuePay.get(x), payNumber, payName, Settings.shift_name, Settings.shift_number, Settings.user_name, Settings.password, times);
+
+                        mDHandler.addAllPayMethodItem(payMethod);
+                    }
+                    netTotals = 0.0;
+                    dialog.dismiss();
+                    rowRefund.clear();
+
+                } else {
+                    Toast.makeText(Main.this, getResources().getString(R.string.total_not_allow), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+        });
+        exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                netTotals = 0.0;
+                dialog.dismiss();
+                rowRefund.clear();
+
+            }
+        });
+
+        final TextWatcher textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                balance = netTotals;
+                String pointV, cashV, CreditV, chequeV, giftV, cardV;
+
+                if (!point.getText().toString().equals("")) {
+                    pointV = point.getText().toString();
+                } else {
+                    pointV = "0";
+                }
+                if (!cashValue.getText().toString().equals("")) {
+                    cashV = cashValue.getText().toString();
+                } else {
+                    cashV = "0";
+                }
+                if (!CreditValue.getText().toString().equals("")) {
+                    CreditV = CreditValue.getText().toString();
+                } else {
+                    CreditV = "0";
+                }
+                if (!chequeValue.getText().toString().equals("")) {
+                    chequeV = chequeValue.getText().toString();
+                } else {
+                    chequeV = "0";
+                }
+                if (!gift.getText().toString().equals("")) {
+                    giftV = gift.getText().toString();
+                } else {
+                    giftV = "0";
+                }
+                if (!card.getText().toString().equals("")) {
+                    cardV = card.getText().toString();
+                } else {
+                    cardV = "0";
+                }
+
+                balance = netTotals - (Double.parseDouble(cashV) + Double.parseDouble(chequeV) +
+                        Double.parseDouble(CreditV) + Double.parseDouble(pointV) +
+                        Double.parseDouble(giftV) + Double.parseDouble(cardV));
+
+                netTotalText.setText("" + balance);
+
+            }
+        };
+        cashValue.addTextChangedListener(textWatcher);
+        chequeValue.addTextChangedListener(textWatcher);
+        CreditValue.addTextChangedListener(textWatcher);
+        point.addTextChangedListener(textWatcher);
+        gift.addTextChangedListener(textWatcher);
+        card.addTextChangedListener(textWatcher);
+
+
+        ///"""""""""""""""""""""""""""""""""""""""
+
+        for (int i = 0; i < money.size(); i++) {
+            final int position = i;
+            TableRow row = new TableRow(Main.this);
+            TableLayout.LayoutParams lp = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT);
+            lp.setMargins(0, 10, 0, 5);
+            row.setLayoutParams(lp);
+
+            TextView textView = new TextView(Main.this);
+            textView.setText(money.get(i).getCatName() + "   ");
+            textView.setTag(money.get(i).getCatValue());
+            textView.setGravity(Gravity.CENTER);
+            textView.setTextColor(getResources().getColor(R.color.text_color));
+
+            final TextView textView1 = new TextView(Main.this);
+            textView1.setBackgroundColor(getResources().getColor(R.color.layer1));
+            textView1.setHeight(26);
+            textView1.setPadding(10, 0, 0, 0);
+            textView1.setTextColor(getResources().getColor(R.color.text_color));
+            textView1.setText("0");
+            textView1.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (focusedTextView != null &&  convertToEnglish(focusedTextView.getText().toString()).equals("")) {
+                        focusedTextView.setText("0");
+                    }
+
+                    focusedTextView = textView1;
+                    focusedTextView.setTag("" + position);
+                    focusedTextView.setText("");
+                }
+            });
+
+            textView1.addTextChangedListener(new TextWatcher() {
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (focusedTextView != null) {
+                        if (! convertToEnglish(focusedTextView.getText().toString()).equals("")) {
+
+                            TableRow tableRow = (TableRow) categories.getChildAt(Integer.parseInt( convertToEnglish(focusedTextView.getTag().toString())));
+                            TextView text = (TextView) tableRow.getChildAt(0);
+                            TextView text2 = (TextView) tableRow.getChildAt(2);
+
+                            double total = Double.parseDouble( convertToEnglish(text.getTag().toString())) * Double.parseDouble( convertToEnglish(focusedTextView.getText().toString()));
+                            text2.setText("" + total);
+                        }
+
+                        cashValue.setText("0.000");
+                        for (int i = 0; i < money.size(); i++) {
+                            TableRow tRow = (TableRow) categories.getChildAt(i);
+                            TextView t = (TextView) tRow.getChildAt(2);
+                            cashValue.setText("" + (Double.parseDouble(cashValue.getText().toString()) + Double.parseDouble(t.getText().toString())));
+                        }
+
+                    }
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count,
+                                              int after) {
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                }
+            });
+
+
+            TextView textView2 = new TextView(  Main.this);
+            textView2.setText("0");
+
+            TableRow.LayoutParams lp2 = new TableRow.LayoutParams(130, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+            lp2.setMargins(15, 0, 15, 0);
+            textView.setLayoutParams(lp2);
+            textView1.setLayoutParams(lp2);
+            textView2.setLayoutParams(lp2);
+            textView2.setGravity(Gravity.CENTER);
+            textView2.setTextColor(getResources().getColor(R.color.text_color));
+
+            row.addView(textView);
+            row.addView(textView1);
+            row.addView(textView2);
+
+            categories.addView(row);
+        }
+
+        ///"""""""""""""""""""""""""""""""""""""""
+
+
+        dialog.show();
+    }
+
+
+    public void notCorrectValueDialog() {
+        Dialog dialog1 = new Dialog(Main.this);
+        dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog1.setCancelable(false);
+        dialog1.setContentView(R.layout.not_correct_dialog);
+        dialog1.setCanceledOnTouchOutside(true);
+
+        dialog1.show();
+
+    }
+
+
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     void showBreakTimeOut() {
         dialog = new Dialog(Main.this);
@@ -1811,7 +2580,7 @@ public class Main extends AppCompatActivity {
         exit = (Button) findViewById(R.id.exit);
         takeAway = (Button) findViewById(R.id.tack_away);
         dineIn = (Button) findViewById(R.id.dine_in);
-
+        refund = (TextView) findViewById(R.id.refund);
         userName = (TextView) findViewById(R.id.user_name);
         shift = (TextView) findViewById(R.id.shift);
         date = (TextView) findViewById(R.id.date);
@@ -1835,6 +2604,7 @@ public class Main extends AppCompatActivity {
         timeCard.setOnClickListener(onClickListener);
         safeMode.setOnClickListener(onClickListener);
         cashDrawer.setOnClickListener(onClickListener);
+        refund.setOnClickListener(onClickListener);
 
         back.setOnTouchListener(onTouchListener);
         exit.setOnTouchListener(onTouchListener);
