@@ -1,5 +1,10 @@
 package com.tamimi.sundos.restpos.Models;
 
+import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class OrderHeader {
 
     private int orderType;
@@ -334,5 +339,20 @@ public class OrderHeader {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public JSONObject getJSONObject() {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("POSNO", pointOfSaleNumber);
+            obj.put("ORDERNO", voucherNumber);
+            obj.put("ORDERTYPE", orderType);
+            obj.put("TABLENO", tableNO);
+            obj.put("SECTIONNO", sectionNO);
+
+        } catch (JSONException e) {
+            Log.e("Tag" , "JSONException");
+        }
+        return obj;
     }
 }

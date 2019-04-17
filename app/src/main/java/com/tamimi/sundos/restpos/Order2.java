@@ -3,10 +3,8 @@ package com.tamimi.sundos.restpos;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
@@ -29,36 +27,17 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.tamimi.sundos.restpos.BackOffice.BackOfficeActivity;
-import com.tamimi.sundos.restpos.BackOffice.MenuRegistration;
-import com.tamimi.sundos.restpos.BackOffice.OrderLayout;
 import com.tamimi.sundos.restpos.Models.CancleOrder;
-import com.tamimi.sundos.restpos.Models.FamilyCategory;
 import com.tamimi.sundos.restpos.Models.ForceQuestions;
 import com.tamimi.sundos.restpos.Models.ItemWithFq;
 import com.tamimi.sundos.restpos.Models.ItemWithModifier;
 import com.tamimi.sundos.restpos.Models.Items;
-import com.tamimi.sundos.restpos.Models.Modifier;
 import com.tamimi.sundos.restpos.Models.OrderHeader;
 import com.tamimi.sundos.restpos.Models.OrderTransactions;
-import com.tamimi.sundos.restpos.Models.PayMethod;
 import com.tamimi.sundos.restpos.Models.UsedCategories;
 import com.tamimi.sundos.restpos.Models.UsedItems;
 import com.tamimi.sundos.restpos.Models.VoidResons;
 
-import org.askerov.dynamicgrid.DynamicGridView;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -68,20 +47,16 @@ import java.util.List;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
-public class Order extends AppCompatActivity {
+public class Order2 extends AppCompatActivity {
 
     Button modifier, void_, delivery, discount, lDiscount, split, priceChange;
     TextView total, lineDisCount, disCount, deliveryCharge, subTotal, service, tax, amountDue, vhSerial;
     Button pay, order;
     TextView orderType, tableNo, check, date, user, seats;
+    LinearLayout categoriesLinearLayout;
     TableLayout tableLayout;
-    GridView catGridView, itemGridView;
+    GridView gv;
     CheckBox discPerc;
-    Button back;
-
-    private ProgressDialog progressDialog;
-    String json_getString;
-    List<UsedCategories> categories;
 
     int orderTypeFlag;
     int currentColor;
@@ -105,6 +80,7 @@ public class Order extends AppCompatActivity {
     String waiterNo = "-1";
     int tableNumber, sectionNumber, seatNo;
     ArrayList<Items> wantedItems;
+    List<UsedCategories> usedCategoriesList;
     List<Items> items = new ArrayList<>();
     ArrayList<Double> lineDiscount;
     ArrayList<Items> requestedItems;
@@ -119,19 +95,18 @@ public class Order extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.order);
+        setContentView(R.layout.order2);
 
         initialize();
 
-        mDbHandler = new DatabaseHandler(Order.this);
+        mDbHandler = new DatabaseHandler(Order2.this);
         OrderTransactionsObj = new ArrayList<>();
         items = mDbHandler.getAllItems();
         wantedItems = new ArrayList<>();
+        usedCategoriesList = new ArrayList<>();
         lineDiscount = new ArrayList<Double>();
-        categories = mDbHandler.getUsedCategories();
 
         fillCategories();
-        showCats();
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -171,12 +146,10 @@ public class Order extends AppCompatActivity {
                         if (!(Double.parseDouble(amountDue.getText().toString()) == 0)) {
                             saveInOrderTransactionObj();
                             saveInOrderHeaderObj();
-                            sendToKitchen();
-
-                            Intent intentPay = new Intent(Order.this, PayMethods.class);
+                            Intent intentPay = new Intent(Order2.this, PayMethods.class);
                             startActivity(intentPay);
                         } else
-                            Toast.makeText(Order.this, getResources().getString(R.string.amountdue_oo), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Order2.this, getResources().getString(R.string.amountdue_oo), Toast.LENGTH_SHORT).show();
                     }
                     break;
 
@@ -186,10 +159,10 @@ public class Order extends AppCompatActivity {
                             saveInOrderTransactionTemp();
                             saveInOrderHeaderTemp();
 
-                            Intent intent = new Intent(Order.this, DineIn.class);
+                            Intent intent = new Intent(Order2.this, DineIn.class);
                             startActivity(intent);
                         } else
-                            Toast.makeText(Order.this, getResources().getString(R.string.amountdue_oo), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Order2.this, getResources().getString(R.string.amountdue_oo), Toast.LENGTH_SHORT).show();
                     }
                     break;
 
@@ -211,10 +184,6 @@ public class Order extends AppCompatActivity {
 
                 case R.id.line_discount_b:
                     showLineDiscountDialog();
-                    break;
-
-                case R.id.back:
-                    showCats();
                     break;
             }
         }
@@ -267,18 +236,6 @@ public class Order extends AppCompatActivity {
         }
     };
 
-    void showCats() {
-        catGridView.setVisibility(View.VISIBLE);
-        itemGridView.setVisibility(View.INVISIBLE);
-        back.setVisibility(View.INVISIBLE);
-    }
-
-    void showItems() {
-        catGridView.setVisibility(View.INVISIBLE);
-        itemGridView.setVisibility(View.VISIBLE);
-        back.setVisibility(View.VISIBLE);
-    }
-
     @SuppressLint("SetTextI18n")
     void setOrder(int flag) {
         if (flag == 0) {
@@ -292,7 +249,7 @@ public class Order extends AppCompatActivity {
             vhSerial.setText(voucherNo);
         } else {
             orderType.setText(getResources().getString(R.string.dine_in));
-            tableNo.setText(getResources().getString(R.string.table_no) + " :  " + tableNumber);
+            tableNo.setText(getResources().getString(R.string.table_no)+" :  " + tableNumber);
             check.setText(getResources().getString(R.string.check) + sectionNumber);
             user.setText(waiter);
             seats.setText("" + seatNo);
@@ -303,7 +260,7 @@ public class Order extends AppCompatActivity {
     void setDateAndVoucherNumber() {
         Date currentTimeAndDate = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-        today = convertToEnglish(df.format(currentTimeAndDate));
+        today =convertToEnglish(df.format(currentTimeAndDate));
 
         SimpleDateFormat dfTime = new SimpleDateFormat("HH:mm");
         time = convertToEnglish(dfTime.format(currentTimeAndDate));
@@ -332,40 +289,35 @@ public class Order extends AppCompatActivity {
     }
 
     void fillCategories() {
+        usedCategoriesList = mDbHandler.getUsedCategories();
+        categoriesLinearLayout.removeAllViews();
 
-        List<FamilyCategory> allCats = mDbHandler.getAllFamilyCategory();
-        for (int i = 0; i < allCats.size(); i++)
-            if (allCats.get(i).getType() != 2) {
-                allCats.remove(i);
-                i--;
-            }
-        for (int i = 0; i < categories.size(); i++) {
-            for (int k = 0; k < allCats.size(); k++) {
-                if (categories.get(i).getCategoryName().equals(allCats.get(k).getName())) {
-                    categories.get(i).setCatPic(allCats.get(k).getCatPic());
+        for (int i = 0; i < usedCategoriesList.size(); i++) {
+
+            final Button button = new Button(Order2.this);
+
+            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 50);
+            param.setMargins(0, 1, 0, 1);
+
+            button.setLayoutParams(param);
+            button.setText(usedCategoriesList.get(i).getCategoryName());
+            button.setBackgroundColor(usedCategoriesList.get(i).getBackground());
+            button.setTextColor(usedCategoriesList.get(i).getTextColor());
+            button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f);
+            button.setTag(usedCategoriesList.get(i).getNumberOfItems());
+
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    changeClickedButtonBackground(button);
+                    fillGridView(button.getText().toString());
                 }
-            }
+            });
+            categoriesLinearLayout.addView(button);
         }
-
-        LayoutCategoryAdapter adapter = new LayoutCategoryAdapter(Order.this, categories, 3);
-        catGridView.setAdapter(adapter);
-
-        catGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                LinearLayout linearLayout = (LinearLayout) view;
-                LinearLayout innerLinearLayout = (LinearLayout) linearLayout.getChildAt(0);
-                TextView textView = (TextView) innerLinearLayout.getChildAt(1);
-                if (!textView.getText().toString().equals("")) {
-                    fillItems(textView.getText().toString());
-                    showItems();
-                }
-            }
-        });
     }
 
-    void fillItems(String categoryName) {
+    void fillGridView(String categoryName) {
 
         if (!categoryName.equals("")) {
             ArrayList<UsedItems> subList = mDbHandler.getRequestedItems(categoryName);
@@ -375,7 +327,7 @@ public class Order extends AppCompatActivity {
                 requestedItems = new ArrayList<>();
 
                 for (int i = 0; i < subList.size(); i++) {
-                    if (Character.isDigit(subList.get(i).getitemName().charAt(0)) || subList.get(i).getitemName().equals("")) { // no data in this position
+                    if (Character.isDigit(subList.get(i).getitemName().charAt(0))) { // no data in this position
                         requestedItems.add(new Items("", "", "", 0, 0, "", "",
                                 0, 0, 0, "", 0, 0, 0, 0,
                                 "", "", 0, 0, 0, null, subList.get(i).getBackground(),
@@ -393,10 +345,10 @@ public class Order extends AppCompatActivity {
                         }
                     }
                 }
-                foodAdapter = new FoodAdapter1(Order.this, requestedItems);
-                itemGridView.setAdapter(foodAdapter);
+                foodAdapter = new FoodAdapter1(Order2.this, requestedItems);
+                gv.setAdapter(foodAdapter);
 
-                itemGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         if (!requestedItems.get(i).getMenuName().equals("")) {
@@ -445,23 +397,23 @@ public class Order extends AppCompatActivity {
                                 calculateTotal();
                             }
                         } else
-                            Toast.makeText(Order.this, getResources().getString(R.string.no_item), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Order2.this, getResources().getString(R.string.no_item), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
         } else
-            itemGridView.setAdapter(null);
+            gv.setAdapter(null);
     }
 
     void insertItemRaw(Items item) {
-        final TableRow row = new TableRow(Order.this);
+        final TableRow row = new TableRow(Order2.this);
 
         TableLayout.LayoutParams lp = new TableLayout.LayoutParams();
         lp.setMargins(2, 0, 2, 0);
         row.setLayoutParams(lp);
 
         for (int i = 0; i < 5; i++) {
-            TextView textView = new TextView(Order.this);
+            TextView textView = new TextView(Order2.this);
 
             switch (i) {
                 case 0:
@@ -481,7 +433,7 @@ public class Order extends AppCompatActivity {
                     break;
             }
 
-            textView.setTextColor(ContextCompat.getColor(Order.this, R.color.text_color));
+            textView.setTextColor(ContextCompat.getColor(Order2.this, R.color.text_color));
             textView.setGravity(Gravity.CENTER);
 
             if (i != 4) {
@@ -519,14 +471,14 @@ public class Order extends AppCompatActivity {
     }
 
     void insertModifierRaw(String modifierText) {
-        final TableRow row = new TableRow(Order.this);
+        final TableRow row = new TableRow(Order2.this);
 
         TableLayout.LayoutParams lp = new TableLayout.LayoutParams();
         lp.setMargins(2, 0, 2, 0);
         row.setLayoutParams(lp);
 
         for (int i = 0; i < 5; i++) {
-            TextView textView = new TextView(Order.this);
+            TextView textView = new TextView(Order2.this);
 
             switch (i) {
                 case 0:
@@ -546,7 +498,7 @@ public class Order extends AppCompatActivity {
                     break;
             }
 
-            textView.setTextColor(ContextCompat.getColor(Order.this, R.color.exit));
+            textView.setTextColor(ContextCompat.getColor(Order2.this, R.color.exit));
             textView.setGravity(Gravity.CENTER);
             textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
 
@@ -585,14 +537,14 @@ public class Order extends AppCompatActivity {
     }
 
     void insertForceQuestionRaw(String forceQuestionText) {
-        final TableRow row = new TableRow(Order.this);
+        final TableRow row = new TableRow(Order2.this);
 
         TableLayout.LayoutParams lp = new TableLayout.LayoutParams();
         lp.setMargins(2, 0, 2, 0);
         row.setLayoutParams(lp);
 
         for (int i = 0; i < 5; i++) {
-            TextView textView = new TextView(Order.this);
+            TextView textView = new TextView(Order2.this);
 
             switch (i) {
                 case 0:
@@ -612,7 +564,7 @@ public class Order extends AppCompatActivity {
                     break;
             }
 
-            textView.setTextColor(ContextCompat.getColor(Order.this, R.color.exit));
+            textView.setTextColor(ContextCompat.getColor(Order2.this, R.color.exit));
             textView.setGravity(Gravity.CENTER);
             textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
 
@@ -659,15 +611,15 @@ public class Order extends AppCompatActivity {
     }
 
     void deleteRaw(final TableRow row) {
-        if (wantedItems.size() != 0) {
+        if(wantedItems.size()!=0) {
             if (focused != null) {
                 row.setBackgroundColor(getResources().getColor(R.color.layer4));
 
-                AlertDialog.Builder builderSingle = new AlertDialog.Builder(Order.this);
+                AlertDialog.Builder builderSingle = new AlertDialog.Builder(Order2.this);
                 builderSingle.setCancelable(false);
                 builderSingle.setTitle(getResources().getString(R.string.what_kind));
 
-                final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(Order.this, android.R.layout.select_dialog_singlechoice);
+                final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(Order2.this, android.R.layout.select_dialog_singlechoice);
                 arrayAdapter.add(getResources().getString(R.string.select_item));
                 arrayAdapter.add(getResources().getString(R.string.curent_order));
 
@@ -683,7 +635,7 @@ public class Order extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         String strName = arrayAdapter.getItem(which);
                         if (strName.equals(getResources().getString(R.string.select_item))) {
-                            AlertDialog.Builder builderInner = new AlertDialog.Builder(Order.this);
+                            AlertDialog.Builder builderInner = new AlertDialog.Builder(Order2.this);
                             builderInner.setTitle(getResources().getString(R.string.delete_this_item));
                             builderInner.setCancelable(false);
                             builderInner.setPositiveButton(getResources().getString(R.string.yes), (dialog1, which1) -> {
@@ -696,7 +648,7 @@ public class Order extends AppCompatActivity {
                             builderInner.show();
 
                         } else {
-                            AlertDialog.Builder builderInner = new AlertDialog.Builder(Order.this);
+                            AlertDialog.Builder builderInner = new AlertDialog.Builder(Order2.this);
                             builderInner.setTitle(getResources().getString(R.string.delete_curent_order));
                             builderInner.setCancelable(false);
                             builderInner.setPositiveButton(getResources().getString(R.string.yes), (dialog1, which1) -> {
@@ -739,9 +691,9 @@ public class Order extends AppCompatActivity {
 //            AlertDialog alertDialog = builder.create();
 //            alertDialog.show();
             } else
-                Toast.makeText(Order.this, getResources().getString(R.string.chooes_item_delete), Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(Order.this, getResources().getString(R.string.no_item), Toast.LENGTH_SHORT).show();
+                Toast.makeText(Order2.this, getResources().getString(R.string.chooes_item_delete), Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(Order2.this, getResources().getString(R.string.no_item), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -751,7 +703,7 @@ public class Order extends AppCompatActivity {
         TextView textViewPrice = (TextView) raw.getChildAt(2);
         TextView textViewTotal = (TextView) raw.getChildAt(3);
 
-        dialog = new Dialog(Order.this);
+        dialog = new Dialog(Order2.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.void_qty_dialog);
@@ -768,7 +720,7 @@ public class Order extends AppCompatActivity {
                 if (!convertToEnglish(voidQty.getText().toString()).equals("")) {
                     if (Integer.parseInt(convertToEnglish(voidQty.getText().toString())) <= Integer.parseInt(convertToEnglish(textViewQty.getText().toString()))) {
 //
-                        Dialog dialog1 = new Dialog(Order.this);
+                        Dialog dialog1 = new Dialog(Order2.this);
                         dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
                         dialog1.setCancelable(false);
                         dialog1.setContentView(R.layout.void_reason_dialog);
@@ -781,12 +733,12 @@ public class Order extends AppCompatActivity {
                         ArrayList<VoidResons> resons = mDbHandler.getAllVoidReasons();
 
                         reasons.removeAllViews();
-                        RadioGroup radioGroup = new RadioGroup(Order.this);
+                        RadioGroup radioGroup = new RadioGroup(Order2.this);
                         TableRow.LayoutParams lp1 = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
                         lp1.setMargins(0, 2, 2, 6);
                         radioGroup.setLayoutParams(lp1);
 
-                        final TableRow row = new TableRow(Order.this);
+                        final TableRow row = new TableRow(Order2.this);
                         TableLayout.LayoutParams lp = new TableLayout.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
                         lp.setMargins(0, 2, 2, 6);
                         row.setLayoutParams(lp);
@@ -794,10 +746,10 @@ public class Order extends AppCompatActivity {
                         final String[] selectedReason = {""};
                         for (int k = 0; k < resons.size(); k++) {
                             if (resons.get(k).getActiveated() == 1) {
-                                RadioButton radioButton = new RadioButton(Order.this);
+                                RadioButton radioButton = new RadioButton(Order2.this);
                                 radioButton.setText(resons.get(k).getVoidReason());
                                 radioButton.setTextSize(20);
-                                radioButton.setTextColor(ContextCompat.getColor(Order.this, R.color.text_color));
+                                radioButton.setTextColor(ContextCompat.getColor(Order2.this, R.color.text_color));
                                 radioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                                     @Override
                                     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -813,9 +765,9 @@ public class Order extends AppCompatActivity {
                         save.setOnClickListener(view1 -> {
 
                             if (!selectedReason[0].equals("") || !newReason.getText().toString().equals("")) {
-                                String reasonText;
-                                if (newReason.getText().toString().equals("")) {
-                                    reasonText = selectedReason[0];
+                                String reasonText ;
+                                if(newReason.getText().toString().equals("")){
+                                    reasonText = selectedReason[0] ;
                                 } else {
                                     reasonText = newReason.getText().toString();
                                     mDbHandler.addVoidReason(new VoidResons(Settings.shift_number, Settings.shift_name,
@@ -861,7 +813,7 @@ public class Order extends AppCompatActivity {
                                         mDbHandler.deleteFromOrderHeaderTemp("" + sectionNumber, "" + tableNumber);
                                         mDbHandler.deleteFromOrderTransactionTemp("" + sectionNumber, "" + tableNumber);
 
-                                        Intent intent = new Intent(Order.this, DineIn.class);
+                                        Intent intent = new Intent(Order2.this, DineIn.class);
                                         startActivity(intent);
                                     }
 
@@ -880,16 +832,16 @@ public class Order extends AppCompatActivity {
                                 dialog1.dismiss();
                                 dialog.dismiss();
                             } else
-                                Toast.makeText(Order.this, getResources().getString(R.string.select_reson_cancele), Toast.LENGTH_LONG).show();
+                                Toast.makeText(Order2.this, getResources().getString(R.string.select_reson_cancele), Toast.LENGTH_LONG).show();
                         });
 
 
                         dialog1.show();
                     } else
-                        Toast.makeText(Order.this, getResources().getString(R.string.curent_qty_less_than) + voidQty.getText().toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(Order2.this, getResources().getString(R.string.curent_qty_less_than) + voidQty.getText().toString(), Toast.LENGTH_LONG).show();
 
                 } else
-                    Toast.makeText(Order.this, getResources().getString(R.string.enter_qty), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Order2.this,getResources().getString( R.string.enter_qty), Toast.LENGTH_SHORT).show();
             }
         });
         dialog.show();
@@ -897,7 +849,7 @@ public class Order extends AppCompatActivity {
 
     void showVoidReasonDialog2() {
 
-        dialog = new Dialog(Order.this);
+        dialog = new Dialog(Order2.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.void_reason_dialog);
@@ -910,12 +862,12 @@ public class Order extends AppCompatActivity {
         ArrayList<VoidResons> resons = mDbHandler.getAllVoidReasons();
 
         reasons.removeAllViews();
-        RadioGroup radioGroup = new RadioGroup(Order.this);
+        RadioGroup radioGroup = new RadioGroup(Order2.this);
         TableRow.LayoutParams lp1 = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
         lp1.setMargins(0, 2, 2, 6);
         radioGroup.setLayoutParams(lp1);
 
-        final TableRow row = new TableRow(Order.this);
+        final TableRow row = new TableRow(Order2.this);
         TableLayout.LayoutParams lp = new TableLayout.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
         lp.setMargins(0, 2, 2, 6);
         row.setLayoutParams(lp);
@@ -924,10 +876,10 @@ public class Order extends AppCompatActivity {
         for (int k = 0; k < resons.size(); k++) {
 
             if (resons.get(k).getActiveated() == 1) {
-                RadioButton radioButton = new RadioButton(Order.this);
+                RadioButton radioButton = new RadioButton(Order2.this);
                 radioButton.setText(resons.get(k).getVoidReason());
                 radioButton.setTextSize(20);
-                radioButton.setTextColor(ContextCompat.getColor(Order.this, R.color.text_color));
+                radioButton.setTextColor(ContextCompat.getColor(Order2.this, R.color.text_color));
                 radioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -943,11 +895,11 @@ public class Order extends AppCompatActivity {
 
         save.setOnClickListener(view -> {
             if (!selectedReason[0].equals("") || !convertToEnglish(newReason.getText().toString()).equals("")) {
-                String reasonText;
-                if (convertToEnglish(newReason.getText().toString()).equals("")) {
-                    reasonText = selectedReason[0];
+                String reasonText ;
+                if(convertToEnglish(newReason.getText().toString()).equals("")){
+                    reasonText = selectedReason[0] ;
                 } else {
-                    reasonText = convertToEnglish(newReason.getText().toString());
+                    reasonText =convertToEnglish(newReason.getText().toString());
                     mDbHandler.addVoidReason(new VoidResons(Settings.shift_number, Settings.shift_name,
                             Settings.password, Settings.user_name, reasonText, today, 1));
                 }
@@ -982,12 +934,12 @@ public class Order extends AppCompatActivity {
                     mDbHandler.deleteFromOrderHeaderTemp("" + sectionNumber, "" + tableNumber);
                     mDbHandler.deleteFromOrderTransactionTemp("" + sectionNumber, "" + tableNumber);
 
-                    Intent intent = new Intent(Order.this, DineIn.class);
+                    Intent intent = new Intent(Order2.this, DineIn.class);
                     startActivity(intent);
                 }
                 dialog.dismiss();
             } else {
-                Toast.makeText(Order.this, getResources().getString(R.string.select_reson_cancele), Toast.LENGTH_LONG).show();
+                Toast.makeText(Order2.this, getResources().getString(R.string.select_reson_cancele), Toast.LENGTH_LONG).show();
 
             }
         });
@@ -1002,7 +954,7 @@ public class Order extends AppCompatActivity {
     }
 
     void showForceQuestionDialog(final int itemBarcode, final int questionNo) {
-        dialog = new Dialog(Order.this);
+        dialog = new Dialog(Order2.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.answer_force_question_dialog);
@@ -1024,9 +976,9 @@ public class Order extends AppCompatActivity {
         ArrayList<ForceQuestions> questions = mDbHandler.getRequestedForceQuestions(ItemWithFqs.get(questionNo).getQuestionNo());
 
         if (questions.get(0).getMultipleAnswer() == 0) {
-            RadioGroup radioGroup = new RadioGroup(Order.this);
+            RadioGroup radioGroup = new RadioGroup(Order2.this);
             for (int i = 0; i < questions.size(); i++) {
-                final RadioButton radioButton = new RadioButton(Order.this);
+                final RadioButton radioButton = new RadioButton(Order2.this);
                 radioButton.setText(questions.get(i).getAnswer());
                 radioButton.setTextColor(getResources().getColor(R.color.text_color));
                 radioButton.setOnClickListener(new View.OnClickListener() {
@@ -1040,7 +992,7 @@ public class Order extends AppCompatActivity {
             answersLinear.addView(radioGroup);
         } else
             for (int i = 0; i < questions.size(); i++) {
-                final CheckBox checkBox = new CheckBox(Order.this);
+                final CheckBox checkBox = new CheckBox(Order2.this);
                 checkBox.setText(questions.get(i).getAnswer());
                 checkBox.setTextColor(getResources().getColor(R.color.text_color));
                 checkBox.setOnClickListener(new View.OnClickListener() {
@@ -1077,7 +1029,7 @@ public class Order extends AppCompatActivity {
                         }
                     }
                 } else
-                    Toast.makeText(Order.this, getResources().getString(R.string.selected_answer), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Order2.this, getResources().getString(R.string.selected_answer), Toast.LENGTH_SHORT).show();
             }
         });
         no.setOnClickListener(new View.OnClickListener() {
@@ -1104,7 +1056,7 @@ public class Order extends AppCompatActivity {
                         }
                     }
                 } else
-                    Toast.makeText(Order.this, getResources().getString(R.string.selected_answer), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Order2.this, getResources().getString(R.string.selected_answer), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -1132,7 +1084,7 @@ public class Order extends AppCompatActivity {
                         }
                     }
                 } else
-                    Toast.makeText(Order.this, getResources().getString(R.string.selected_answer), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Order2.this,  getResources().getString(R.string.selected_answer), Toast.LENGTH_SHORT).show();
             }
         });
         half.setOnClickListener(new View.OnClickListener() {
@@ -1159,7 +1111,7 @@ public class Order extends AppCompatActivity {
                         }
                     }
                 } else
-                    Toast.makeText(Order.this, getResources().getString(R.string.selected_answer), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Order2.this,  getResources().getString(R.string.selected_answer), Toast.LENGTH_SHORT).show();
             }
         });
         save.setOnClickListener(new View.OnClickListener() {
@@ -1185,7 +1137,7 @@ public class Order extends AppCompatActivity {
                             }
 
                         } else {
-                            Toast.makeText(Order.this, getResources().getString(R.string.select_qty), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Order2.this,  getResources().getString(R.string.select_qty), Toast.LENGTH_SHORT).show();
                         }
                         Log.e("here", "******" + answersLinear.getChildCount());
                     } else {
@@ -1208,7 +1160,7 @@ public class Order extends AppCompatActivity {
                                         showForceQuestionDialog(itemBarcode, nextQu);
                                     }
                                 } else {
-                                    Toast.makeText(Order.this, getResources().getString(R.string.select_qty), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(Order2.this,  getResources().getString(R.string.select_qty), Toast.LENGTH_SHORT).show();
                                 }
                                 Log.e("here", "******" + answersLinear.getChildCount());
                             }
@@ -1231,156 +1183,152 @@ public class Order extends AppCompatActivity {
     }
 
     void showModifierDialog() {
-        if (wantedItems.size() != 0) {
-            if (focused != null) {
-                dialog = new Dialog(Order.this);
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setCancelable(false);
-                dialog.setContentView(R.layout.pick_modifier_dialog);
-                dialog.setCanceledOnTouchOutside(true);
+        if(wantedItems.size()!=0) {
+        if (focused != null) {
+            dialog = new Dialog(Order2.this);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setCancelable(false);
+            dialog.setContentView(R.layout.pick_modifier_dialog);
+            dialog.setCanceledOnTouchOutside(true);
 
-                final Button extra = dialog.findViewById(R.id.extra);
-                final Button no = dialog.findViewById(R.id.no);
-                final Button little = dialog.findViewById(R.id.little);
-                final Button half = dialog.findViewById(R.id.half);
-                final Button save = dialog.findViewById(R.id.save);
-                final Button exit = dialog.findViewById(R.id.exit);
-                final GridView gridView = dialog.findViewById(R.id.modifiers);
+            final Button extra = dialog.findViewById(R.id.extra);
+            final Button no = dialog.findViewById(R.id.no);
+            final Button little = dialog.findViewById(R.id.little);
+            final Button half = dialog.findViewById(R.id.half);
+            final Button save = dialog.findViewById(R.id.save);
+            final Button exit = dialog.findViewById(R.id.exit);
+            final GridView gridView = dialog.findViewById(R.id.modifiers);
 
-                int itemBarcode = wantedItems.get(Integer.parseInt(focused.getTag().toString())).getItemBarcode();
-                Log.e("hi", "********" + itemBarcode);
-                final ArrayList<ItemWithModifier> modifiers = mDbHandler.getItemWithModifiers(itemBarcode);
-                final ArrayList<String> modifiersName = new ArrayList<>();
+            int itemBarcode = wantedItems.get(Integer.parseInt(focused.getTag().toString())).getItemBarcode();
+            Log.e("hi", "********" + itemBarcode);
+            final ArrayList<ItemWithModifier> modifiers = mDbHandler.getItemWithModifiers(itemBarcode);
+            final ArrayList<String> modifiersName = new ArrayList<>();
 
-                for (int i = 0; i < modifiers.size(); i++) {
-                    modifiersName.add("(" + modifiers.get(i).getModifierNo() + ") " + modifiers.get(i).getModifierText());
-                }
-
-                final ArrayAdapter<String> adapter = new ArrayAdapter<>(Order.this, R.layout.grid_style, modifiersName);
-                gridView.setAdapter(adapter);
-
-                gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                        for (int j = 0; j < gridView.getChildCount(); j++) {
-                            gridView.getChildAt(j).setBackgroundDrawable(null);
-                        }
-                        gridView.getChildAt(i).setBackgroundDrawable(getResources().getDrawable(R.drawable.focused_table));
-                        selectedModifier = i;
-                    }
-                });
-
-                extra.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (selectedModifier != -1) {
-                            if (!modifiersName.get(selectedModifier).contains("*  Extra")) { // if contain the same string
-                                if (!modifiersName.get(selectedModifier).contains("*")) { // if contain another string
-                                    modifiersName.set(selectedModifier, modifiersName.get(selectedModifier) + "  *  Extra" + " \n ");
-                                    adapter.notifyDataSetChanged();
-                                } else { // if it has another string it will extract it and add the new one
-                                    modifiersName.set(selectedModifier, modifiersName.get(selectedModifier).substring(0, modifiersName.get(selectedModifier).indexOf('*') - 1) + " *  Extra");
-                                    adapter.notifyDataSetChanged();
-                                }
-                            }
-                        } else
-                            Toast.makeText(Order.this, getResources().getString(R.string.select_modifer), Toast.LENGTH_SHORT).show();
-                    }
-                });
-                no.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (selectedModifier != -1) {
-                            if (!modifiersName.get(selectedModifier).contains("*  No")) { // if contain the same string
-                                if (!modifiersName.get(selectedModifier).contains("*")) { // if contain another string
-                                    modifiersName.set(selectedModifier, modifiersName.get(selectedModifier) + "  *  No" + " \n ");
-                                    adapter.notifyDataSetChanged();
-                                } else { // if it has another string it will extract it and add the new one
-                                    modifiersName.set(selectedModifier, modifiersName.get(selectedModifier).substring(0, modifiersName.get(selectedModifier).indexOf('*') - 1) + " *  No");
-                                    adapter.notifyDataSetChanged();
-                                }
-                            }
-                        } else
-                            Toast.makeText(Order.this, getResources().getString(R.string.select_modifer), Toast.LENGTH_SHORT).show();
-                    }
-                });
-                little.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (selectedModifier != -1) {
-                            if (!modifiersName.get(selectedModifier).contains("*  Little")) { // if contain the same string
-                                if (!modifiersName.get(selectedModifier).contains("*")) { // if contain another string
-                                    modifiersName.set(selectedModifier, modifiersName.get(selectedModifier) + "  *  Little" + " \n ");
-                                    adapter.notifyDataSetChanged();
-                                } else { // if it has another string it will extract it and add the new one
-                                    modifiersName.set(selectedModifier, modifiersName.get(selectedModifier).substring(0, modifiersName.get(selectedModifier).indexOf('*') - 1) + " *  Little");
-                                    adapter.notifyDataSetChanged();
-                                }
-                            }
-                        } else
-                            Toast.makeText(Order.this, getResources().getString(R.string.select_modifer), Toast.LENGTH_SHORT).show();
-                    }
-                });
-                half.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (selectedModifier != -1) {
-                            if (!modifiersName.get(selectedModifier).contains("*  Half")) { // if contain the same string
-                                if (!modifiersName.get(selectedModifier).contains("*")) { // if contain another string
-                                    modifiersName.set(selectedModifier, modifiersName.get(selectedModifier) + "  *  Half" + " \n ");
-                                    adapter.notifyDataSetChanged();
-                                } else { // if it has another string it will extract it and add the new one
-                                    modifiersName.set(selectedModifier, modifiersName.get(selectedModifier).substring(0, modifiersName.get(selectedModifier).indexOf('*') - 1) + " *  Half");
-                                    adapter.notifyDataSetChanged();
-                                }
-                            }
-                        } else
-                            Toast.makeText(Order.this, getResources().getString(R.string.select_modifer), Toast.LENGTH_SHORT).show();
-                    }
-                });
-                save.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        for (int i = 0; i < modifiersName.size(); i++) {
-                            if (modifiersName.get(i).contains("*")) {
-                                insertModifierRaw(modifiersName.get(i).substring(modifiersName.get(i).indexOf('-') + 1,
-                                        modifiersName.get(i).indexOf('-') + 10) + "..");
-
-                                String modName = modifiersName.get(i).substring(modifiersName.get(i).indexOf('-') + 1, modifiersName.get(i).length()- modifiersName.get(i).indexOf('-')+1) ;
-                                wantedItems.add(Integer.parseInt(focused.getTag().toString()) + 1,
-                                        new Items("modifier", modName , "", 0, 0, "",
-                                                "", 0, 0, 0, "", 0,
-                                                0, 0, 0, "", "", 0, 0, 0, null));
-                                lineDiscount.add(0.0);
-                                focused.setBackgroundDrawable(null);
-                            }
-                        }
-                        selectedModifier = -1;
-                        dialog.dismiss();
-                    }
-                });
-                exit.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        selectedModifier = -1;
-                        focused.setBackgroundDrawable(null);
-                        dialog.dismiss();
-                    }
-                });
-
-                dialog.show();
-            } else {
-                Toast.makeText(Order.this, getResources().getString(R.string.chooes_item_to_modifier), Toast.LENGTH_SHORT).show();
+            for (int i = 0; i < modifiers.size(); i++) {
+                modifiersName.add("(" + modifiers.get(i).getModifierNo() + ") " + modifiers.get(i).getModifierText());
             }
-        } else
-            Toast.makeText(this, getResources().getString(R.string.no_item), Toast.LENGTH_SHORT).show();
+
+            final ArrayAdapter<String> adapter = new ArrayAdapter<>(Order2.this, R.layout.grid_style, modifiersName);
+            gridView.setAdapter(adapter);
+
+            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                    for (int j = 0; j < gridView.getChildCount(); j++) {
+                        gridView.getChildAt(j).setBackgroundDrawable(null);
+                    }
+                    gridView.getChildAt(i).setBackgroundDrawable(getResources().getDrawable(R.drawable.focused_table));
+                    selectedModifier = i;
+                }
+            });
+
+            extra.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (selectedModifier != -1) {
+                        if (!modifiersName.get(selectedModifier).contains("*  Extra")) { // if contain the same string
+                            if (!modifiersName.get(selectedModifier).contains("*")) { // if contain another string
+                                modifiersName.set(selectedModifier, modifiersName.get(selectedModifier) + " \n " + "  *  Extra");
+                                adapter.notifyDataSetChanged();
+                            } else { // if it has another string it will extract it and add the new one
+                                modifiersName.set(selectedModifier, modifiersName.get(selectedModifier).substring(0, modifiersName.get(selectedModifier).indexOf('*') - 1) + " *  Extra");
+                                adapter.notifyDataSetChanged();
+                            }
+                        }
+                    } else
+                        Toast.makeText(Order2.this,  getResources().getString(R.string.select_modifer), Toast.LENGTH_SHORT).show();
+                }
+            });
+            no.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (selectedModifier != -1) {
+                        if (!modifiersName.get(selectedModifier).contains("*  No")) { // if contain the same string
+                            if (!modifiersName.get(selectedModifier).contains("*")) { // if contain another string
+                                modifiersName.set(selectedModifier, modifiersName.get(selectedModifier) + " \n " + "  *  No");
+                                adapter.notifyDataSetChanged();
+                            } else { // if it has another string it will extract it and add the new one
+                                modifiersName.set(selectedModifier, modifiersName.get(selectedModifier).substring(0, modifiersName.get(selectedModifier).indexOf('*') - 1) + " *  No");
+                                adapter.notifyDataSetChanged();
+                            }
+                        }
+                    } else
+                        Toast.makeText(Order2.this,  getResources().getString(R.string.select_modifer), Toast.LENGTH_SHORT).show();
+                }
+            });
+            little.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (selectedModifier != -1) {
+                        if (!modifiersName.get(selectedModifier).contains("*  Little")) { // if contain the same string
+                            if (!modifiersName.get(selectedModifier).contains("*")) { // if contain another string
+                                modifiersName.set(selectedModifier, modifiersName.get(selectedModifier) + " \n " + "  *  Little");
+                                adapter.notifyDataSetChanged();
+                            } else { // if it has another string it will extract it and add the new one
+                                modifiersName.set(selectedModifier, modifiersName.get(selectedModifier).substring(0, modifiersName.get(selectedModifier).indexOf('*') - 1) + " *  Little");
+                                adapter.notifyDataSetChanged();
+                            }
+                        }
+                    } else
+                        Toast.makeText(Order2.this,  getResources().getString(R.string.select_modifer), Toast.LENGTH_SHORT).show();
+                }
+            });
+            half.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (selectedModifier != -1) {
+                        if (!modifiersName.get(selectedModifier).contains("*  Half")) { // if contain the same string
+                            if (!modifiersName.get(selectedModifier).contains("*")) { // if contain another string
+                                modifiersName.set(selectedModifier, modifiersName.get(selectedModifier) + " \n " + "  *  Half");
+                                adapter.notifyDataSetChanged();
+                            } else { // if it has another string it will extract it and add the new one
+                                modifiersName.set(selectedModifier, modifiersName.get(selectedModifier).substring(0, modifiersName.get(selectedModifier).indexOf('*') - 1) + " *  Half");
+                                adapter.notifyDataSetChanged();
+                            }
+                        }
+                    } else
+                        Toast.makeText(Order2.this,  getResources().getString(R.string.select_modifer), Toast.LENGTH_SHORT).show();
+                }
+            });
+            save.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    for (int i = 0; i < modifiersName.size(); i++) {
+                        if (modifiersName.get(i).contains("*")) {
+                            insertModifierRaw(modifiersName.get(i).substring(modifiersName.get(selectedModifier).indexOf('-') + 1,
+                                    modifiersName.get(selectedModifier).indexOf('-') + 10) + "..");
+                            wantedItems.add(Integer.parseInt(focused.getTag().toString()) + 1,
+                                    new Items("modifier", modifiers.get(i).getModifierText(), "", 0,
+                                            0, "", "", 0, 0, 0, "", 0,
+                                            0, 0, 0, "", "", 0, 0, 0, null));
+                            lineDiscount.add(0.0);
+                            focused.setBackgroundDrawable(null);
+                        }
+                    }
+                    selectedModifier = -1;
+                    dialog.dismiss();
+                }
+            });
+            exit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    selectedModifier = -1;
+                    focused.setBackgroundDrawable(null);
+                    dialog.dismiss();
+                }
+            });
+
+            dialog.show();
+        } else {
+            Toast.makeText(Order2.this, getResources().getString(R.string.chooes_item_to_modifier), Toast.LENGTH_SHORT).show();
+        }}else Toast.makeText(this,  getResources().getString(R.string.no_item), Toast.LENGTH_SHORT).show();
 
     }
 
     void showDeliveryChangeDialog() {
         if (wantedItems.size() != 0) {
-            dialog = new Dialog(Order.this);
+            dialog = new Dialog(Order2.this);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.setCancelable(false);
             dialog.setContentView(R.layout.delivery_change_dialog);
@@ -1400,13 +1348,13 @@ public class Order extends AppCompatActivity {
                         calculateTotal();
                         dialog.dismiss();
                     } else {
-                        Toast.makeText(Order.this, getResources().getString(R.string.enter_dekivery), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Order2.this,  getResources().getString(R.string.enter_dekivery), Toast.LENGTH_SHORT).show();
                     }
                 }
             });
             dialog.show();
         } else {
-            Toast.makeText(this, getResources().getString(R.string.delivary_is_not_avilable), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,  getResources().getString(R.string.delivary_is_not_avilable), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -1415,7 +1363,7 @@ public class Order extends AppCompatActivity {
         if (wantedItems.size() != 0) {
             if (focused != null) {
                 if (wantedItems.get(Integer.parseInt(focused.getTag().toString())).discountAvailable == 1) {
-                    dialog = new Dialog(Order.this);
+                    dialog = new Dialog(Order2.this);
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     dialog.setCancelable(false);
                     dialog.setContentView(R.layout.line_discount_dialog);
@@ -1445,15 +1393,15 @@ public class Order extends AppCompatActivity {
                                 calculateTotal();
                                 dialog.dismiss();
                             } else {
-                                Toast.makeText(Order.this, getResources().getString(R.string.enter_line_discount), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(Order2.this,  getResources().getString(R.string.enter_line_discount), Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
                     dialog.show();
                 } else
-                    Toast.makeText(Order.this, getResources().getString(R.string.discount_not_avilable), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Order2.this,  getResources().getString(R.string.discount_not_avilable), Toast.LENGTH_SHORT).show();
             } else
-                Toast.makeText(Order.this, getResources().getString(R.string.chooes_item_to_add_linediscount), Toast.LENGTH_SHORT).show();
+                Toast.makeText(Order2.this,  getResources().getString(R.string.chooes_item_to_add_linediscount), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -1467,7 +1415,7 @@ public class Order extends AppCompatActivity {
             }
         }
         if (discAvailable) {
-            dialog = new Dialog(Order.this);
+            dialog = new Dialog(Order2.this);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.setCancelable(false);
             dialog.setContentView(R.layout.discount_dialog);
@@ -1498,20 +1446,20 @@ public class Order extends AppCompatActivity {
                         calculateTotal();
                         dialog.dismiss();
                     } else {
-                        Toast.makeText(Order.this, getResources().getString(R.string.enter_discount), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Order2.this,  getResources().getString(R.string.enter_discount), Toast.LENGTH_SHORT).show();
                     }
                 }
             });
             dialog.show();
         } else
-            Toast.makeText(Order.this, getResources().getString(R.string.discount_not_avilable_for_curent_item), Toast.LENGTH_SHORT).show();
+            Toast.makeText(Order2.this, getResources().getString( R.string.discount_not_avilable_for_curent_item), Toast.LENGTH_SHORT).show();
     }
 
     void calculateTotal() {
 
         totalItemsWithDiscount = 0.0;
         double lineDisCountValue = 0.0;
-        Log.e("111", "dd --> " + convertToEnglish(deliveryCharge.getText().toString()));
+        Log.e("111","dd --> "+convertToEnglish(deliveryCharge.getText().toString()));
         double deliveryChargeValue = Double.parseDouble(convertToEnglish(deliveryCharge.getText().toString()));
 
         double sum = 0;
@@ -1544,7 +1492,7 @@ public class Order extends AppCompatActivity {
         if (mDbHandler.getOrderTransactionsTemp("" + sectionNumber, "" + tableNumber).size() == 0) { // Takeaway In Discount
             if (discPerc != null) {
                 if (discPerc.isChecked()) {
-                    discountValue = Double.parseDouble(convertToEnglish((voucherDiscount * totalItemsWithDiscount / 100) + ""));
+                    discountValue =Double.parseDouble(convertToEnglish( (voucherDiscount * totalItemsWithDiscount / 100)+""));
                     disCount.setText((discNotAvailableForAll ? "0.0" : "" + convertToEnglish(String.format("%.3f", (double) discountValue))));
                 } else
                     disCount.setText((discNotAvailableForAll ? "0.0" : "" + convertToEnglish(String.format("%.3f", (double) discountValue))));
@@ -1552,7 +1500,7 @@ public class Order extends AppCompatActivity {
         } else { // Dine In Discount
             if (!discChanged) {
                 ArrayList<OrderHeader> orderHeaders = mDbHandler.getOrderHeaderTemp("" + sectionNumber, "" + tableNumber);
-                disCount.setText("" + convertToEnglish((orderHeaders.get(0).getTotalDiscount()) + ""));
+                disCount.setText("" +convertToEnglish(( orderHeaders.get(0).getTotalDiscount())+""));
                 discountValue = orderHeaders.get(0).getTotalDiscount();
                 // I can generate the original discount = (disc * 100 / total ) / 100 but how if it was a value ?
 
@@ -1560,8 +1508,8 @@ public class Order extends AppCompatActivity {
                 if (discPerc != null) {
                     if (discPerc.isChecked()) {
                         Log.e("disc   ", "" + voucherDiscount + "*" + totalItemsWithDiscount + "/100");
-                        discountValue = Double.parseDouble(convertToEnglish((voucherDiscount * totalItemsWithDiscount / 100) + ""));
-                        disCount.setText((discNotAvailableForAll ? "0.0" : "" + convertToEnglish(String.format("%.3f", (double) discountValue))));
+                        discountValue = Double.parseDouble(convertToEnglish((voucherDiscount * totalItemsWithDiscount / 100)+""));
+                        disCount.setText((discNotAvailableForAll ? "0.0" : "" +convertToEnglish( String.format("%.3f", (double) discountValue))));
                     } else
                         disCount.setText((discNotAvailableForAll ? "0.0" : "" + convertToEnglish(String.format("%.3f", (double) discountValue))));
                 }
@@ -1596,11 +1544,11 @@ public class Order extends AppCompatActivity {
         }
 
 
-        double subTotalValue = Double.parseDouble(convertToEnglish((sum - (lineDisCountValue + discountValue) + deliveryChargeValue) + ""));
-        double serviceValue = Double.parseDouble(convertToEnglish((sum * (Settings.service_value / 100)) + ""));
-        double serviceTax = Double.parseDouble(convertToEnglish((serviceValue * (Settings.service_tax / 100)) + ""));
-        double taxValue = Double.parseDouble(convertToEnglish((totalItemsTaxInclude + totalItemsTaxExclude + serviceTax) + ""));
-        double amountDueValue = Double.parseDouble(convertToEnglish((subTotalValue + serviceValue + serviceTax + totalItemsTaxInclude) + ""));
+        double subTotalValue = Double.parseDouble(convertToEnglish((sum - (lineDisCountValue + discountValue) + deliveryChargeValue)+""));
+        double serviceValue = Double.parseDouble(convertToEnglish((sum * (Settings.service_value / 100))+""));
+        double serviceTax = Double.parseDouble(convertToEnglish((serviceValue * (Settings.service_tax / 100))+""));
+        double taxValue = Double.parseDouble(convertToEnglish((totalItemsTaxInclude + totalItemsTaxExclude + serviceTax)+""));
+        double amountDueValue = Double.parseDouble(convertToEnglish((subTotalValue + serviceValue + serviceTax + totalItemsTaxInclude)+""));
 
 //        System.out.println(Math.round(d));
         total.setText("" + sum);
@@ -1631,7 +1579,7 @@ public class Order extends AppCompatActivity {
             if (wantedItems.get(k).getDiscountAvailable() == 1)
                 discount = (disc / totalItemsWithDiscount) * (totalLine - lineDiscount_);
 
-//            Log.e("here", "******" + disc + "/" + totalItemsWithDiscount + "*" + totalLine + "-" + lineDiscount_);
+            Log.e("here", "******" + disc + "/" + totalItemsWithDiscount + "*" + totalLine + "-" + lineDiscount_);
 
             OrderTransactionsObj.add(new OrderTransactions(orderTypeFlag, 0, today, Settings.POS_number, Settings.store_number,
                     voucherNo, voucherSerial, "" + wantedItems.get(k).getItemBarcode(), wantedItems.get(k).getMenuName(),
@@ -1649,6 +1597,9 @@ public class Order extends AppCompatActivity {
         double ldisc = Double.parseDouble(convertToEnglish(lineDisCount.getText().toString()));
         double serviceTax = Double.parseDouble(convertToEnglish(service.getText().toString())) * Settings.service_tax;
 
+        Log.e("orderH cash vAlue ", "aa" + PayMethods.cashValue1);
+
+//        mDbHandler.addOrderHeader(
         OrderHeaderObj = new OrderHeader(orderTypeFlag, 0, today, Settings.POS_number, Settings.store_number,
                 voucherNo, voucherSerial, Double.parseDouble(convertToEnglish(total.getText().toString())), ldisc, disc, disc + ldisc,
                 Settings.service_value, Double.parseDouble((convertToEnglish(tax.getText().toString()))), serviceTax, Double.parseDouble((convertToEnglish(subTotal.getText().toString()))),
@@ -1708,156 +1659,20 @@ public class Order extends AppCompatActivity {
                 0.00, 0.00, Settings.shift_name, Settings.shift_number, waiter, seatNo, Settings.user_name, Settings.password, time));
     }
 
-    void sendToKitchen() {
-
-        try {
-            JSONObject obj1 = OrderHeaderObj.getJSONObject();
-
-            JSONArray obj2 = new JSONArray();
-            for (int i = 0; i < OrderTransactionsObj.size(); i++)
-                obj2.put(OrderTransactionsObj.get(i).getJSONObject());
-
-            JSONObject obj = new JSONObject();
-            obj.put("Header", obj1);
-            obj.put("Items", obj2);
-
-            SendCloud sendCloud = new SendCloud(Order.this, obj);
-            sendCloud.startSending();
-//            new JSONTask2().execute();
-
-        } catch (JSONException e) {
-            Log.e("Tag", "JSONException");
-        }
-
-    }
-
-    private class JSONTask2 extends AsyncTask<String, String, String> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog = new ProgressDialog(Order.this);
-            progressDialog.setCancelable(false);
-            progressDialog.setMessage("Loading...");
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            progressDialog.setProgress(0);
-            progressDialog.show();
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-
-            String JsonResponse = null;
-            HttpURLConnection urlConnection = null;
-            BufferedReader reader = null;
-
-            try {
-                JSONObject obj = new JSONObject();
-
-                try {
-                    JSONObject obj1 = new JSONObject();
-                    obj1.put("POSNO", 1);
-                    obj1.put("ORDERNO", 13);
-                    obj1.put("ORDERTYPE", 2);
-                    obj1.put("TABLENO", 1);
-                    obj1.put("SECTIONNO", "main");
-
-                    JSONObject obj2 = new JSONObject();
-                    obj2.put("ITEMCODE", 1);
-                    obj2.put("ITEMNAME", "مادة 1");
-                    obj2.put("QTY", 3);
-                    obj2.put("PRICE", 5.25);
-                    obj2.put("NOTE", "any");
-                    obj2.put("ISUPDATE", 0);
-
-                    JSONObject obj3 = new JSONObject();
-                    obj3.put("ITEMCODE", 1);
-                    obj3.put("ITEMNAME", "مادة 2");
-                    obj3.put("QTY", 3);
-                    obj3.put("PRICE", 5.25);
-                    obj3.put("NOTE", "any");
-                    obj3.put("ISUPDATE", 1);
-
-                    JSONArray arr = new JSONArray();
-                    arr.put(obj2);
-                    arr.put(obj3);
-
-                    obj.put("Header", obj1);
-                    obj.put("Items", arr);
-
-                } catch (JSONException e) {
-                    Log.e("Tag" , "JSONException");
-                }
-
-                String link = "http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/RestSaveKitchenScreen?";
-
-                String data =
-                        "compno=" + URLEncoder.encode("302", "UTF-8") + "&" +
-                                "compyear=" + URLEncoder.encode("2018", "UTF-8") + "&" +
-                                "voucher=" + URLEncoder.encode(obj.toString().trim(), "UTF-8");
-
-                URL url = new URL(link + data );
-
-                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-                httpURLConnection.setDoOutput(true);
-                httpURLConnection.setDoInput(true);
-
-                InputStream inputStream = httpURLConnection.getInputStream();
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-
-                StringBuffer stringBuffer = new StringBuffer();
-
-
-                while ((json_getString = bufferedReader.readLine()) != null) {
-                    stringBuffer.append(json_getString + "\n");
-                }
-
-                bufferedReader.close();
-                inputStream.close();
-                httpURLConnection.disconnect();
-
-//                JsonResponse = sb.toString();
-                Log.e("tag", "" + stringBuffer.toString());
-                return stringBuffer.toString();
-//
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (urlConnection != null) {
-                    urlConnection.disconnect();
-                }
-                if (reader != null) {
-                    try {
-                        reader.close();
-                    } catch (final IOException e) {
-                        Log.e("tag", "Error closing stream", e);
-                    }
-                }
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-
-            if (s != null && s.contains("Voucher Saved Successfully")) {
-//                Toast.makeText(ExportJason.this , "Success" , Toast.LENGTH_SHORT).show();
-                Log.e("tag", "****Success");
-            } else {
-//                Toast.makeText(ExportJason.this, "Failed to export data", Toast.LENGTH_SHORT).show();
-                Log.e("tag", "****Failed to export data");
-            }
-            progressDialog.dismiss();
-        }
-    }
-
     public ArrayList<OrderTransactions> getOrderTransactionObj() {
         return OrderTransactionsObj;
     }
 
     public OrderHeader getOrderHeaderObj() {
         return OrderHeaderObj;
+    }
+
+    void changeClickedButtonBackground(View view) {
+
+        for (int i = 0; i < categoriesLinearLayout.getChildCount(); i++) {
+            categoriesLinearLayout.getChildAt(i).setBackgroundColor(getResources().getColor(R.color.dark_blue));
+        }
+        view.setBackgroundColor(getResources().getColor(R.color.floor));
     }
 
     @SuppressLint("SetTextI18n")
@@ -1877,14 +1692,14 @@ public class Order extends AppCompatActivity {
 
             vhSerial.setText(orderTransactions.get(k).getVoucherNo());
 
-            final TableRow row = new TableRow(Order.this);
+            final TableRow row = new TableRow(Order2.this);
 
             TableLayout.LayoutParams lp = new TableLayout.LayoutParams();
             lp.setMargins(2, 0, 2, 0);
             row.setLayoutParams(lp);
 
             for (int i = 0; i < 5; i++) {
-                TextView textView = new TextView(Order.this);
+                TextView textView = new TextView(Order2.this);
 
                 switch (i) {
                     case 0:
@@ -1905,11 +1720,11 @@ public class Order extends AppCompatActivity {
                 }
 
                 if (orderTransactions.get(k).getQty() == 0) {
-                    textView.setTextColor(ContextCompat.getColor(Order.this, R.color.exit));
+                    textView.setTextColor(ContextCompat.getColor(Order2.this, R.color.exit));
                     textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
                     textView.setGravity(Gravity.CENTER);
                 } else {
-                    textView.setTextColor(ContextCompat.getColor(Order.this, R.color.text_color));
+                    textView.setTextColor(ContextCompat.getColor(Order2.this, R.color.text_color));
                     textView.setGravity(Gravity.CENTER);
                 }
 
@@ -1970,26 +1785,26 @@ public class Order extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         if (orderTypeFlag == 0) {
-            Intent intent = new Intent(Order.this, Main.class);
+            Intent intent = new Intent(Order2.this, Main.class);
             startActivity(intent);
         } else {
-            Intent intent = new Intent(Order.this, DineIn.class);
+            Intent intent = new Intent(Order2.this, DineIn.class);
             startActivity(intent);
         }
     }
 
 
     public String convertToEnglish(String value) {
-        String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0").replaceAll("٫", "."));
+        String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0").replaceAll("٫","."));
         return newValue;
     }
 
     @SuppressLint("ClickableViewAccessibility")
     void initialize() {
 
+        categoriesLinearLayout = (LinearLayout) findViewById(R.id.categories);
         tableLayout = (TableLayout) findViewById(R.id.tableLayout);
-        itemGridView = (GridView) findViewById(R.id.GridViewItems);
-        catGridView = (GridView) findViewById(R.id.GridViewCats);
+        gv = (GridView) findViewById(R.id.GridViewItems);
         orderType = (TextView) findViewById(R.id.orderType);
         tableNo = (TextView) findViewById(R.id.tableNumber);
         check = (TextView) findViewById(R.id.checkNumber);
@@ -2006,7 +1821,6 @@ public class Order extends AppCompatActivity {
         discount = (Button) findViewById(R.id.discount_b);
         lDiscount = (Button) findViewById(R.id.line_discount_b);
         priceChange = (Button) findViewById(R.id.price_change);
-        back = (Button) findViewById(R.id.back);
 
         total = (TextView) findViewById(R.id.total);
         disCount = (TextView) findViewById(R.id.discount);
@@ -2034,7 +1848,6 @@ public class Order extends AppCompatActivity {
         delivery.setOnClickListener(onClickListener);
         discount.setOnClickListener(onClickListener);
         lDiscount.setOnClickListener(onClickListener);
-        back.setOnClickListener(onClickListener);
 
     }
 }

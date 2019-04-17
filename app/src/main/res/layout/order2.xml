@@ -170,24 +170,156 @@
 
         </LinearLayout>
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2.3"
+            android:layout_weight="0.7"
             android:background="@color/layer1"
             android:orientation="horizontal">
 
-            <GridView
-                android:id="@+id/GridViewCats"
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:columnWidth="90dp"
-                android:gravity="center"
-                android:horizontalSpacing="10dp"
-                android:numColumns="3"
-                android:stretchMode="columnWidth"
-                android:verticalSpacing="10dp" />
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:id="@+id/categories"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/layer3"
+                    android:orientation="vertical"
+                    android:padding="1dp">
+
+                    <Button
+                        android:id="@+id/category1"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginVertical="1dp"
+                        android:background="@color/dark_blue"
+                        android:text="Berger"
+                        android:textAllCaps="false"
+                        android:textColor="@color/text_color"
+                        android:textSize="18sp" />
+
+                    <Button
+                        android:id="@+id/category2"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginVertical="1dp"
+                        android:background="@color/dark_blue"
+                        android:text="Fruit"
+                        android:textAllCaps="false"
+                        android:textColor="@color/text_color"
+                        android:textSize="18sp" />
+
+                    <Button
+                        android:id="@+id/category3"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginVertical="1dp"
+                        android:background="@color/dark_blue"
+                        android:text="Sandwich"
+                        android:textAllCaps="false"
+                        android:textColor="@color/text_color"
+                        android:textSize="18sp" />
+
+
+                    <Button
+                        android:id="@+id/category4"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginVertical="1dp"
+                        android:background="@color/dark_blue"
+                        android:text="Fruits"
+                        android:textAllCaps="false"
+                        android:textColor="@color/text_color"
+                        android:textSize="18sp" />
+
+                    <Button
+                        android:id="@+id/category5"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginVertical="1dp"
+                        android:background="@color/dark_blue"
+                        android:text="Pizza"
+                        android:textAllCaps="false"
+                        android:textColor="@color/text_color"
+                        android:textSize="18sp" />
+
+                    <Button
+                        android:id="@+id/category6"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginVertical="1dp"
+                        android:background="@color/dark_blue"
+                        android:text="Suop"
+                        android:textAllCaps="false"
+                        android:textColor="@color/text_color"
+                        android:textSize="18sp" />
+
+                    <Button
+                        android:id="@+id/category7"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginVertical="1dp"
+                        android:background="@color/dark_blue"
+                        android:text="Ice Cream"
+                        android:textAllCaps="false"
+                        android:textColor="@color/text_color"
+                        android:textSize="18sp" />
+
+                    <Button
+                        android:id="@+id/category8"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginVertical="1dp"
+                        android:background="@color/dark_blue"
+                        android:text="Juice"
+                        android:textAllCaps="false"
+                        android:textColor="@color/text_color"
+                        android:textSize="18sp" />
+
+                    <Button
+                        android:id="@+id/category9"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginVertical="1dp"
+                        android:background="@color/dark_blue"
+                        android:text="Salads"
+                        android:textAllCaps="false"
+                        android:textColor="@color/text_color"
+                        android:textSize="18sp" />
+
+                    <Button
+                        android:id="@+id/category10"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginVertical="1dp"
+                        android:background="@color/dark_blue"
+                        android:text="Desserts"
+                        android:textAllCaps="false"
+                        android:textColor="@color/text_color"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+
+            </ScrollView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="2dp"
+            android:background="@color/text_color">
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2.1"
+            android:background="@color/layer1"
+            android:orientation="horizontal">
 
             <GridView
                 android:id="@+id/GridViewItems"
@@ -201,19 +333,8 @@
                 android:stretchMode="columnWidth"
                 android:verticalSpacing="10dp" />
 
-            <Button
-                android:id="@+id/back"
-                android:layout_width="35dp"
-                android:layout_height="40dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/back_icon" />
 
-
-        </RelativeLayout>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="0dp"
@@ -438,7 +559,7 @@
                     android:layout_height="1dp"
                     android:layout_marginHorizontal="10dp"
                     android:layout_marginVertical="2dp"
-                    android:background="@color/text_color" />
+                    android:background="@color/text_color"/>
 
                 <TableRow
                     android:layout_width="match_parent"
