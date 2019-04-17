@@ -2,6 +2,7 @@ package com.tamimi.sundos.restpos;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.text.Layout;
 import android.util.Log;
