@@ -570,6 +570,8 @@
     <string name="invoice_no">رقم الفاتورة</string>
     <string name="is_show">المشاهدة</string>
     <string name="enter_received">ادخل الباقي :</string>
+    <string name="tables_merged">تم دمج الطاولة !</string>
+    <string name="table_moved">تم نقل الطاولة !</string>
 
 
 </resources>

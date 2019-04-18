@@ -565,6 +565,8 @@
     <string name="invoice_no">Invoice No</string>
     <string name="is_show">Is Show</string>
     <string name="enter_received">Enter Received:</string>
+    <string name="tables_merged">Tables merged !</string>
+    <string name="table_moved">Table Moved !</string>
 
 
 </resources>
