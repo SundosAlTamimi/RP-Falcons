@@ -54,7 +54,7 @@ import java.util.List;
 public class DatabaseHandler extends SQLiteOpenHelper {
     //hellohjt
     // Database Version
-    private static final int DATABASE_VERSION = 22;
+    private static final int DATABASE_VERSION = 24;
 
     // Database Name
     private static final String DATABASE_NAME = "RestPos";
@@ -1203,6 +1203,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 //                + KITCHEN_NAME + " TEXT,"
 //                + KITCHEN_NO + " INTEGER " + ")";
 //        db.execSQL(CREATE_TABLE_KITCHEN_SCREEN_TABLE);
+
+        String CREATE_TABLE_ITEM_WITH_SCREEN = "CREATE TABLE " + ITEM_WITH_SCREEN + "("
+                + ITEM_CODE3 + " INTEGER ,"
+                + ITEM_NAME3 + " TEXT,"
+                + SCREEN_NO3 + " INTEGER,"
+                + SCREEN_NAME3 + " TEXT " + ")";
+        db.execSQL(CREATE_TABLE_ITEM_WITH_SCREEN);
     }
 
     //Insert values to the table Items
@@ -3710,6 +3717,28 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         return reasons;
+    }
+
+    public List<ItemWithScreen> getAllItemsWithScreen() {
+        ArrayList<ItemWithScreen> items = new ArrayList<>();
+
+        String selectQuery = "SELECT * FROM " + ITEM_WITH_SCREEN;
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                ItemWithScreen item = new ItemWithScreen();
+                item.setItemCode(Integer.parseInt(cursor.getString(0)));
+                item.setItemName(cursor.getString(1));
+                item.setScreenNo(Integer.parseInt(cursor.getString(2)));
+                item.setScreenName(cursor.getString(3));
+
+                items.add(item);
+
+            } while (cursor.moveToNext());
+        }
+        return items;
     }
 
     //Updating single record

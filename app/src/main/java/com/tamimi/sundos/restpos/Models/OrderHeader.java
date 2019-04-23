@@ -341,7 +341,7 @@ public class OrderHeader {
         this.time = time;
     }
 
-    public JSONObject getJSONObject() {
+    public JSONObject getJSONObject() { // for kitchen
         JSONObject obj = new JSONObject();
         try {
             obj.put("POSNO", pointOfSaleNumber);
@@ -349,6 +349,48 @@ public class OrderHeader {
             obj.put("ORDERTYPE", orderType);
             obj.put("TABLENO", tableNO);
             obj.put("SECTIONNO", sectionNO);
+
+        } catch (JSONException e) {
+            Log.e("Tag" , "JSONException");
+        }
+        return obj;
+    }
+
+    public JSONObject getJSONObject2() { // for server
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("ORDERTYPE", orderType);
+            obj.put("ORDERKIND", orderKind);
+            obj.put("POSNO", pointOfSaleNumber);
+            obj.put("STRNO", storeNumber);
+            obj.put("VHFNO", voucherNumber);
+            obj.put("VHFSERIAL", voucherSerial);
+            obj.put("TOTAL", total);
+            obj.put("TOTDISC", totalDiscount);
+            obj.put("TOTLDISC", totalLineDiscount);
+            obj.put("ALLDISC", allDiscount);
+            obj.put("TOTSERVICE", totalService);
+            obj.put("TOTTAX", totalTax);
+            obj.put("TOTSERVICETAX", totalServiceTax);
+            obj.put("SUBTOT", subTotal);
+            obj.put("AMTDUE", amountDue);
+            obj.put("DELVCHARGE", deliveryCharge);
+            obj.put("TBLNO", tableNO);
+            obj.put("SECNO", sectionNO);
+            obj.put("CASHVAL", cashValue);
+            obj.put("CARDVAL", cardsValue);
+            obj.put("CHEQVAL", chequeValue);
+            obj.put("CPNVAL", couponValue);
+            obj.put("GIFTVAL", giftValue);
+            obj.put("PNTVAL", pointValue);
+            obj.put("USERNM", userName);
+            obj.put("USERNO", userNo);
+            obj.put("SHIFTNM", shiftName);
+            obj.put("SHIFTNO", shiftNumber);
+            obj.put("WAITER", waiter);
+            obj.put("SEATNO", seatsNumber);
+            obj.put("VHFTIME", time);
+            obj.put("VHFDATE", voucherDate);
 
         } catch (JSONException e) {
             Log.e("Tag" , "JSONException");

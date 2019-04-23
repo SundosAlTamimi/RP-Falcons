@@ -29,6 +29,10 @@ import com.tamimi.sundos.restpos.Models.OrderHeader;
 import com.tamimi.sundos.restpos.Models.OrderTransactions;
 import com.tamimi.sundos.restpos.Models.PayMethod;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -93,7 +97,7 @@ public class PayMethods extends AppCompatActivity {
 
         Date currentTimeAndDate = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-        String today =convertToEnglish(df.format(currentTimeAndDate));
+        String today = convertToEnglish(df.format(currentTimeAndDate));
 
         date.setText(convertToEnglish(date.getText().toString() + " " + today));
         mDHandler = new DatabaseHandler(PayMethods.this);
@@ -112,11 +116,11 @@ public class PayMethods extends AppCompatActivity {
 
             balance.setText(orderHeaderTemp.get(0).getAmountDue() + "");
             server.setText(orderHeaderTemp.get(0).getWaiter());
-            discount.setText(orderHeaderTemp.get(0).getAllDiscount()+"");
-            subTotal.setText(orderHeaderTemp.get(0).getSubTotal()+"");
-            tax.setText(orderHeaderTemp.get(0).getTotalTax()+"");
+            discount.setText(orderHeaderTemp.get(0).getAllDiscount() + "");
+            subTotal.setText(orderHeaderTemp.get(0).getSubTotal() + "");
+            tax.setText(orderHeaderTemp.get(0).getTotalTax() + "");
             amountDue.setText(orderHeaderTemp.get(0).getAmountDue() + "");
-            deliveryCharge.setText(orderHeaderTemp.get(0).getDeliveryCharge()+"");
+            deliveryCharge.setText(orderHeaderTemp.get(0).getDeliveryCharge() + "");
 
             mainBalance = balance.getText().toString();
             remainingBalance.setText(getResources().getString(R.string.remaining_) + balance.getText().toString());
@@ -127,17 +131,17 @@ public class PayMethods extends AppCompatActivity {
         } else {  // pay from takeaway
 
 
-            balance.setText( obj.getOrderHeaderObj().getAmountDue()+"");
-            orderAmount.setText(obj.getOrderHeaderObj().getTotal()+"");
-            discount.setText(obj.getOrderHeaderObj().getAllDiscount()+"");
-            deliveryCharge.setText(obj.getOrderHeaderObj().getDeliveryCharge()+"");
+            balance.setText(obj.getOrderHeaderObj().getAmountDue() + "");
+            orderAmount.setText(obj.getOrderHeaderObj().getTotal() + "");
+            discount.setText(obj.getOrderHeaderObj().getAllDiscount() + "");
+            deliveryCharge.setText(obj.getOrderHeaderObj().getDeliveryCharge() + "");
             server.setText(obj.getOrderHeaderObj().getWaiter());
-            subTotal.setText(obj.getOrderHeaderObj().getSubTotal()+"");
-            tax.setText(obj.getOrderHeaderObj().getTotalTax()+"");
-            amountDue.setText(obj.getOrderHeaderObj().getAmountDue()+"");
+            subTotal.setText(obj.getOrderHeaderObj().getSubTotal() + "");
+            tax.setText(obj.getOrderHeaderObj().getTotalTax() + "");
+            amountDue.setText(obj.getOrderHeaderObj().getAmountDue() + "");
 
 
-            mainBalance =convertToEnglish(balance.getText().toString());
+            mainBalance = convertToEnglish(balance.getText().toString());
             remainingBalance.setText(getResources().getString(R.string.remaining_) + balance.getText().toString());
             check.setText(check.getText().toString() + " -");
             tableNumber.setText(tableNumber.getText().toString() + " -");
@@ -171,7 +175,7 @@ public class PayMethods extends AppCompatActivity {
                     break;
 
                 case R.id.credit_card:
-                showCreditCardDialog();
+                    showCreditCardDialog();
 
                     break;
 
@@ -216,7 +220,6 @@ public class PayMethods extends AppCompatActivity {
         final TableLayout tableLayout = (TableLayout) dialog.findViewById(R.id.money_categories);
 
 
-
         balance.setText(mainBalance);
         final ArrayList<Money> moneyList;
         moneyList = mDHandler.getAllMoneyCategory();
@@ -226,10 +229,10 @@ public class PayMethods extends AppCompatActivity {
             public void onClick(View view) {
                 received.setText("");
                 cashMoney.setText("0.00");
-                flag=0;
-                for(int i=0;i<moneyList.size();i++){
-                    TableRow tRaw =(TableRow) tableLayout.getChildAt(i);
-                    TextView text=(TextView)tRaw.getChildAt(2);
+                flag = 0;
+                for (int i = 0; i < moneyList.size(); i++) {
+                    TableRow tRaw = (TableRow) tableLayout.getChildAt(i);
+                    TextView text = (TextView) tRaw.getChildAt(2);
                     text.setText("0");
                 }
 
@@ -279,9 +282,9 @@ public class PayMethods extends AppCompatActivity {
                 public void onClick(View view) {
                     cashMoney.setText("" + (Double.parseDouble(cashMoney.getText().toString()) + catValue));
                     TextView t1 = (TextView) row.getChildAt(2);
-                    textView1.setText("" + (Integer.parseInt(t1.getText().toString())+1));
+                    textView1.setText("" + (Integer.parseInt(t1.getText().toString()) + 1));
 
-                    Log.e("111","11"+t1.getText().toString()+"*********");
+                    Log.e("111", "11" + t1.getText().toString() + "*********");
                 }
             });
 
@@ -386,42 +389,44 @@ public class PayMethods extends AppCompatActivity {
 
                 if (t1.equals(""))
                     Toast.makeText(PayMethods.this, getResources().getString(R.string.enter_recived_value), Toast.LENGTH_SHORT).show();
-                else if (Double.parseDouble(t1) == Double.parseDouble(t2) &&
+                else if ( // Double.parseDouble(t1) == Double.parseDouble(t2) &&
                         Double.parseDouble(t1) <= Double.parseDouble(t0)) {
 
                     cashValue += Double.parseDouble(t1);
 
-                    for (int i = 0; i < moneyList.size(); i++) {
-                        TableRow tRow = (TableRow) tableLayout.getChildAt(i);
-                        TextView x1 = (TextView) tRow.getChildAt(2);
-                        TextView x2 = (TextView) tRow.getChildAt(1);
-                        if(!x1.getText().toString().equals("0")&&!x1.getText().toString().equals("")){
-                            Cashier cashier =new Cashier();
-                            ArrayList<Cashier> cashiersList=new ArrayList<Cashier>();
-                            cashier.setCashierName(Settings.user_name);
-                            cashier.setCategoryName(x2.getText().toString());
-                            cashier.setCategoryQty(Integer.parseInt(x1.getText().toString()));
-                            cashier.setCategoryValue(Double.parseDouble(x2.getTag().toString())*Integer.parseInt(x1.getText().toString()));
-                            cashier.setCheckInDate(today);
-                            cashier.setOrderKind(1);
+                    if (!t2.equals("")) {
+                        for (int i = 0; i < moneyList.size(); i++) {
+                            TableRow tRow = (TableRow) tableLayout.getChildAt(i);
+                            TextView x1 = (TextView) tRow.getChildAt(2);
+                            TextView x2 = (TextView) tRow.getChildAt(1);
+                            if (!x1.getText().toString().equals("0") && !x1.getText().toString().equals("")) {
+                                Cashier cashier = new Cashier();
+                                ArrayList<Cashier> cashiersList = new ArrayList<Cashier>();
+                                cashier.setCashierName(Settings.user_name);
+                                cashier.setCategoryName(x2.getText().toString());
+                                cashier.setCategoryQty(Integer.parseInt(x1.getText().toString()));
+                                cashier.setCategoryValue(Double.parseDouble(x2.getTag().toString()) * Integer.parseInt(x1.getText().toString()));
+                                cashier.setCheckInDate(today);
+                                cashier.setOrderKind(1);
 
 
-                            cashiersList.add(cashier);
+                                cashiersList.add(cashier);
 
-                            mDHandler.addCashierInOut(cashiersList);
+                                mDHandler.addCashierInOut(cashiersList);
+                            }
                         }
                     }
 
                     dialog.dismiss();
                     Toast.makeText(PayMethods.this, getResources().getString(R.string.save), Toast.LENGTH_SHORT).show();
                     if (cashValue != 0) {
-                        cash.setText(getResources().getString(R.string.cash)+" : " + cashValue);
+                        cash.setText(getResources().getString(R.string.cash) + " : " + cashValue);
                         cash.setBackgroundDrawable(getResources().getDrawable(R.drawable.clear_buttons));
                         mainBalance = "" + (Double.parseDouble(mainBalance) - Double.parseDouble(t1));
-                        remainingBalance.setText(getResources().getString(R.string.remaining_)+ mainBalance);
+                        remainingBalance.setText(getResources().getString(R.string.remaining_) + mainBalance);
                     }
                 } else
-                    Toast.makeText(PayMethods.this,getResources().getString( R.string.invaled_input), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PayMethods.this, getResources().getString(R.string.invaled_input), Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -581,25 +586,25 @@ public class PayMethods extends AppCompatActivity {
                 String t1 = received.getText().toString();
                 String t2 = cardNo.getText().toString();
                 //&& spinner.getSelectedItem().toString().equals("")
-                if (!t1.equals("") && !t2.equals("")&& creditCardsName.size()!=0 ){
+                if (!t1.equals("") && !t2.equals("") && creditCardsName.size() != 0) {
 
                     if (Double.parseDouble(t1) <= Double.parseDouble(t0)) {
 
                         creditCardValue += Double.parseDouble(t1);
                         dialog.dismiss();
-                        Toast.makeText(PayMethods.this, getResources().getString( R.string.save), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PayMethods.this, getResources().getString(R.string.save), Toast.LENGTH_SHORT).show();
                         if (creditCardValue != 0) {
-                            creditCard.setText(getResources().getString( R.string.credit_card)+" : " + creditCardValue);
+                            creditCard.setText(getResources().getString(R.string.credit_card) + " : " + creditCardValue);
                             creditCard.setBackgroundDrawable(getResources().getDrawable(R.drawable.clear_buttons));
                             mainBalance = "" + (Double.parseDouble(mainBalance) - Double.parseDouble(t1));
-                            remainingBalance.setText(getResources().getString( R.string.remaining_)+ mainBalance);
+                            remainingBalance.setText(getResources().getString(R.string.remaining_) + mainBalance);
 
                             resiveCredit.add(countCridit, received.getText().toString());
                             cardNumbers.add(countCridit, cardNo.getText().toString());
                             cardName.add(countCridit, spinner.getSelectedItem().toString());
                         }
                     } else
-                        Toast.makeText(PayMethods.this, getResources().getString( R.string.invaled_input), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PayMethods.this, getResources().getString(R.string.invaled_input), Toast.LENGTH_SHORT).show();
 
                 } else
                     Toast.makeText(PayMethods.this, getResources().getString(R.string.enter_recived_value_and_carfno), Toast.LENGTH_LONG).show();
@@ -634,7 +639,7 @@ public class PayMethods extends AppCompatActivity {
         final EditText ACC_card = (EditText) dialog1.findViewById(R.id.Acccode);
 
         final ArrayList<CreditCard> card = mDHandler.getAllCreditCards();
-        serial_txt.setText("" + (card.size()+1));
+        serial_txt.setText("" + (card.size() + 1));
 
         final CreditCard card_iteam = new CreditCard();
 
@@ -642,7 +647,7 @@ public class PayMethods extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (!Card_NA.getText().toString().equals("") && !ACC_card.getText().toString().equals("")) {
-                    card_iteam.setSerial(card.size()+1);
+                    card_iteam.setSerial(card.size() + 1);
                     card_iteam.setCardName(Card_NA.getText().toString());
                     card_iteam.setAccCode(ACC_card.getText().toString());
 
@@ -652,7 +657,7 @@ public class PayMethods extends AppCompatActivity {
                     adapter.notifyDataSetChanged();
                     dialog1.dismiss();
                 } else
-                    Toast.makeText(PayMethods.this, getResources().getString( R.string.fill_request_filed), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PayMethods.this, getResources().getString(R.string.fill_request_filed), Toast.LENGTH_SHORT).show();
             }
         });
         dialog1.show();
@@ -796,8 +801,8 @@ public class PayMethods extends AppCompatActivity {
         chequeListName = new ArrayList();
 
         final ArrayList<Cheque> chequeList = mDHandler.getAllCheques();
-        final int serial = chequeList.size()+1;
-        Log.e("*serial*","***"+ chequeList.size()+"***  "+serial);
+        final int serial = chequeList.size() + 1;
+        Log.e("*serial*", "***" + chequeList.size() + "***  " + serial);
 
         chequeListName.add("");
         if (chequeList.size() > 0)
@@ -818,17 +823,17 @@ public class PayMethods extends AppCompatActivity {
                 String t2 = chequeNumber.getText().toString();
 
                 if (t1.equals("") && t2.equals("") && spinner2.getSelectedItem().toString().equals(""))
-                    Toast.makeText(PayMethods.this, getResources().getString( R.string.enter_recived_value_and_carfno), Toast.LENGTH_LONG).show();
+                    Toast.makeText(PayMethods.this, getResources().getString(R.string.enter_recived_value_and_carfno), Toast.LENGTH_LONG).show();
                 else if (Double.parseDouble(t1) <= Double.parseDouble(t0)) {
 
                     chequeValue += Double.parseDouble(t1);
                     dialog.dismiss();
-                    Toast.makeText(PayMethods.this, getResources().getString( R.string.save), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PayMethods.this, getResources().getString(R.string.save), Toast.LENGTH_SHORT).show();
                     if (chequeValue != 0) {
-                        cheque.setText(getResources().getString( R.string.cheque)+" : " + chequeValue);
+                        cheque.setText(getResources().getString(R.string.cheque) + " : " + chequeValue);
                         cheque.setBackgroundDrawable(getResources().getDrawable(R.drawable.clear_buttons));
                         mainBalance = "" + (Double.parseDouble(mainBalance) - Double.parseDouble(t1));
-                        remainingBalance.setText(getResources().getString( R.string.remaining_) + mainBalance);
+                        remainingBalance.setText(getResources().getString(R.string.remaining_) + mainBalance);
 
                         resiveCheque.add(received.getText().toString());
                         chequeNambers.add(chequeNumber.getText().toString());
@@ -842,7 +847,7 @@ public class PayMethods extends AppCompatActivity {
                         mDHandler.addCheque(obj);
                     }
                 } else
-                    Toast.makeText(PayMethods.this, getResources().getString( R.string.invaled_input), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PayMethods.this, getResources().getString(R.string.invaled_input), Toast.LENGTH_SHORT).show();
             }
         });
         addBank.setOnClickListener(new View.OnClickListener() {
@@ -880,7 +885,7 @@ public class PayMethods extends AppCompatActivity {
                     adapter2.notifyDataSetChanged();
                     dialog1.dismiss();
                 } else
-                    Toast.makeText(PayMethods.this, getResources().getString( R.string.fill_request_filed), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PayMethods.this, getResources().getString(R.string.fill_request_filed), Toast.LENGTH_SHORT).show();
             }
         });
         dialog1.show();
@@ -1027,23 +1032,23 @@ public class PayMethods extends AppCompatActivity {
                 String t2 = cardNo.getText().toString();
 
                 if (t1.equals("") && t2.equals(""))
-                    Toast.makeText(PayMethods.this, getResources().getString( R.string.enter_recived_value_and_carfno), Toast.LENGTH_LONG).show();
+                    Toast.makeText(PayMethods.this, getResources().getString(R.string.enter_recived_value_and_carfno), Toast.LENGTH_LONG).show();
                 else if (Double.parseDouble(t1) <= Double.parseDouble(t0)) {
 
                     giftCardValue += Double.parseDouble(t1);
                     dialog.dismiss();
                     Toast.makeText(PayMethods.this, getResources().getString(R.string.save), Toast.LENGTH_SHORT).show();
                     if (giftCardValue != 0) {
-                        giftCard.setText(getResources().getString( R.string.gift_card)+" : " + giftCardValue);
+                        giftCard.setText(getResources().getString(R.string.gift_card) + " : " + giftCardValue);
                         giftCard.setBackgroundDrawable(getResources().getDrawable(R.drawable.clear_buttons));
                         mainBalance = "" + (Double.parseDouble(mainBalance) - Double.parseDouble(t1));
-                        remainingBalance.setText(getResources().getString( R.string.remaining_) + mainBalance);
+                        remainingBalance.setText(getResources().getString(R.string.remaining_) + mainBalance);
 
                         resiveGift.add(received.getText().toString());
                         giftCardNumber.add(cardNo.getText().toString());
                     }
                 } else
-                    Toast.makeText(PayMethods.this, getResources().getString( R.string.invaled_input), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PayMethods.this, getResources().getString(R.string.invaled_input), Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -1055,7 +1060,7 @@ public class PayMethods extends AppCompatActivity {
                     if (true) {
                         cardInfo.setVisibility(View.VISIBLE);
                     } else {
-                        Toast.makeText(PayMethods.this,getResources().getString(  R.string.invalid_card_no), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PayMethods.this, getResources().getString(R.string.invalid_card_no), Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -1200,16 +1205,16 @@ public class PayMethods extends AppCompatActivity {
 
                     creditValue += Double.parseDouble(t1);
                     dialog.dismiss();
-                    Toast.makeText(PayMethods.this, getResources().getString( R.string.save), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PayMethods.this, getResources().getString(R.string.save), Toast.LENGTH_SHORT).show();
                     if (creditValue != 0) {
-                        credit.setText(getResources().getString( R.string.credit)+" : " + creditValue);
+                        credit.setText(getResources().getString(R.string.credit) + " : " + creditValue);
                         credit.setBackgroundDrawable(getResources().getDrawable(R.drawable.clear_buttons));
                         mainBalance = "" + (Double.parseDouble(mainBalance) - Double.parseDouble(t1));
-                        remainingBalance.setText(getResources().getString( R.string.remaining_)+ mainBalance);
+                        remainingBalance.setText(getResources().getString(R.string.remaining_) + mainBalance);
                         couponNumber.add(countCoupon, couponNo.getText().toString());
                     }
                 } else
-                    Toast.makeText(PayMethods.this, getResources().getString( R.string.invaled_input), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PayMethods.this, getResources().getString(R.string.invaled_input), Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -1221,7 +1226,7 @@ public class PayMethods extends AppCompatActivity {
                     if (true) {
                         couponInfo.setVisibility(View.VISIBLE);
                     } else {
-                        Toast.makeText(PayMethods.this,getResources().getString(R.string.invalid_coupon_no), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PayMethods.this, getResources().getString(R.string.invalid_coupon_no), Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -1373,23 +1378,23 @@ public class PayMethods extends AppCompatActivity {
                 String t2 = cardNo.getText().toString();
 
                 if (t1.equals("") && t2.equals(""))
-                    Toast.makeText(PayMethods.this, getResources().getString( R.string.enter_recived_value_and_carfno), Toast.LENGTH_LONG).show();
+                    Toast.makeText(PayMethods.this, getResources().getString(R.string.enter_recived_value_and_carfno), Toast.LENGTH_LONG).show();
                 else if (Double.parseDouble(t1) <= Double.parseDouble(t0)) {
 
                     pointValue += Double.parseDouble(t1);
                     dialog.dismiss();
-                    Toast.makeText(PayMethods.this, getResources().getString( R.string.save), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PayMethods.this, getResources().getString(R.string.save), Toast.LENGTH_SHORT).show();
                     if (pointValue != 0) {
-                        point.setText(getResources().getString( R.string.point)+" : " + pointValue);
+                        point.setText(getResources().getString(R.string.point) + " : " + pointValue);
                         point.setBackgroundDrawable(getResources().getDrawable(R.drawable.clear_buttons));
                         mainBalance = "" + (Double.parseDouble(mainBalance) - Double.parseDouble(t1));
-                        remainingBalance.setText(getResources().getString( R.string.remaining_) + mainBalance);
+                        remainingBalance.setText(getResources().getString(R.string.remaining_) + mainBalance);
 
                         resivePoint.add(received.getText().toString());
                         pointCardNumber.add(cardNo.getText().toString());
                     }
                 } else
-                    Toast.makeText(PayMethods.this, getResources().getString( R.string.invaled_input), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PayMethods.this, getResources().getString(R.string.invaled_input), Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -1401,7 +1406,7 @@ public class PayMethods extends AppCompatActivity {
                     if (true) {
                         cardInfo.setVisibility(View.VISIBLE);
                     } else {
-                        Toast.makeText(PayMethods.this,getResources().getString(  R.string.invalid_card_no), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PayMethods.this, getResources().getString(R.string.invalid_card_no), Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -1414,21 +1419,26 @@ public class PayMethods extends AppCompatActivity {
 
     public void saveInDataBase() {
 
-        String balanceTest=remainingBalance.getText().toString().substring(remainingBalance.getText().toString().indexOf(":")+1);
-        Log.e("test ...","balanceTest--->   "+Double.parseDouble(balanceTest));
-        if(Double.parseDouble(balanceTest)== 0.00) {
+        String balanceTest = remainingBalance.getText().toString().substring(remainingBalance.getText().toString().indexOf(":") + 1);
+        Log.e("test ...", "balanceTest--->   " + Double.parseDouble(balanceTest));
+        if (Double.parseDouble(balanceTest) == 0.00) {
             Date currentTimeAndDate = Calendar.getInstance().getTime();
             SimpleDateFormat df1 = new SimpleDateFormat("dd-MM-yyyy");
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM");
             SimpleDateFormat Tf = new SimpleDateFormat("HH:mm:ss");
-            String today =convertToEnglish(df1.format(currentTimeAndDate));
+            String today = convertToEnglish(df1.format(currentTimeAndDate));
             String times = convertToEnglish(Tf.format(currentTimeAndDate));
-            int serial = mDHandler.getMaxSerial("VOUCHER_SERIAL", "PAY_METHOD");
-            String vhfSerial =convertToEnglish( df.format(currentTimeAndDate));// + "-" + (serial);
-            String newString = convertToEnglish(vhfSerial.replace("-", "") + "-" + (serial + 1));
+            int serial; //= mDHandler.getMaxSerial("VOUCHER_SERIAL", "PAY_METHOD");
+            if (orderHeaderTemp == null) {
+                serial = obj.getOrderHeaderObj().getVoucherSerial();
+            } else {
+                serial = orderHeaderTemp.get(0).getVoucherSerial();
+            }
+            String vhfSerial = convertToEnglish(df.format(currentTimeAndDate));// + "-" + (serial);
+            String newString = convertToEnglish(vhfSerial.replace("-", "") + "-" + (serial));
 
             double cashValues = 0, cardValues = 0, chequeValues = 0, giftValues = 0, couponValues = 0, pointValues = 0;
-
+            List<PayMethod> payMethodList = new ArrayList<>();
             PayMethod payMethod = new PayMethod();
 
             payMethod.setOrderType(orderType.equals("Take Away") ? 0 : 1);
@@ -1436,8 +1446,8 @@ public class PayMethods extends AppCompatActivity {
             payMethod.setVoucherDate(today);
             payMethod.setPointOfSaleNumber(Settings.POS_number);
             payMethod.setStoreNumber(Settings.store_number);
-            payMethod.setVoucherNumber(newString);
-            payMethod.setVoucherSerial(serial + 1);
+            payMethod.setVoucherNumber(""+serial);
+            payMethod.setVoucherSerial(serial);
             payMethod.setShiftName(Settings.shift_name);
             payMethod.setShiftNumber(Settings.shift_number);
             payMethod.setUserNo(Settings.password);
@@ -1450,6 +1460,7 @@ public class PayMethods extends AppCompatActivity {
                 payMethod.setPayNumber("0");
                 payMethod.setPayName("null");
                 mDHandler.addAllPayMethodItem(payMethod);
+                payMethodList.add(payMethod);
                 cashValue1 = cashValue;
                 cashValue = 0.00;
             }
@@ -1460,6 +1471,7 @@ public class PayMethods extends AppCompatActivity {
                     payMethod.setPayNumber(cardNumbers.get(i));
                     payMethod.setPayName(cardName.get(i));
                     mDHandler.addAllPayMethodItem(payMethod);
+                    payMethodList.add(payMethod);
                     cardValues += Double.parseDouble(resiveCredit.get(i));
                     Log.e("card value", String.valueOf(cardValues));
                 }
@@ -1477,6 +1489,7 @@ public class PayMethods extends AppCompatActivity {
                     payMethod.setPayNumber(chequeNambers.get(i));
                     payMethod.setPayName(bankName.get(i));
                     mDHandler.addAllPayMethodItem(payMethod);
+                    payMethodList.add(payMethod);
                     chequeValues += Double.parseDouble(resiveCheque.get(i));
                     Log.e("chequeValues", String.valueOf(chequeValues));
                 }
@@ -1494,6 +1507,7 @@ public class PayMethods extends AppCompatActivity {
                     payMethod.setPayNumber(giftCardNumber.get(i));
                     payMethod.setPayName("null");
                     mDHandler.addAllPayMethodItem(payMethod);
+                    payMethodList.add(payMethod);
                     giftValues += Double.parseDouble(resiveGift.get(i));
                     Log.e("giftValues", String.valueOf(giftValues));
                 }
@@ -1511,6 +1525,7 @@ public class PayMethods extends AppCompatActivity {
                     payMethod.setPayNumber(couponNumber.get(i));
                     payMethod.setPayName("null");
                     mDHandler.addAllPayMethodItem(payMethod);
+                    payMethodList.add(payMethod);
                     couponValues += Double.parseDouble(couponNumber.get(i));
                     Log.e("couponValues", String.valueOf(couponValues));
                 }
@@ -1526,6 +1541,7 @@ public class PayMethods extends AppCompatActivity {
                     payMethod.setPayNumber(pointCardNumber.get(i));
                     payMethod.setPayName("null");
                     mDHandler.addAllPayMethodItem(payMethod);
+                    payMethodList.add(payMethod);
                     pointValues += Double.parseDouble(resivePoint.get(i));
                     Log.e("pointValues", String.valueOf(pointValues));
                 }
@@ -1539,48 +1555,77 @@ public class PayMethods extends AppCompatActivity {
             if (orderHeaderTemp == null) { // Takeaway
                 //getting the data from order activity and save it in database.
                 Log.e("creditCardValue1", " " + creditCardValue1);
-            obj.getOrderHeaderObj().setCashValue(cashValue1);
-            obj.getOrderHeaderObj().setCardsValue(creditCardValue1);
-            obj.getOrderHeaderObj().setChequeValue(chequeValue1);
-            obj.getOrderHeaderObj().setGiftValue(giftCardValue1);
-            obj.getOrderHeaderObj().setCouponValue(creditValue1);
-            obj.getOrderHeaderObj().setPointValue(pointValue1);
+                obj.getOrderHeaderObj().setCashValue(cashValue1);
+                obj.getOrderHeaderObj().setCardsValue(creditCardValue1);
+                obj.getOrderHeaderObj().setChequeValue(chequeValue1);
+                obj.getOrderHeaderObj().setGiftValue(giftCardValue1);
+                obj.getOrderHeaderObj().setCouponValue(creditValue1);
+                obj.getOrderHeaderObj().setPointValue(pointValue1);
 
                 mDHandler.addOrderHeader(obj.getOrderHeaderObj());
-                for (int i = 0; i < obj.getOrderTransactionObj().size(); i++)
 
+                for (int i = 0; i < obj.getOrderTransactionObj().size(); i++)
                     mDHandler.addOrderTransaction(obj.getOrderTransactionObj().get(i));
+
+                sendToServer(obj.getOrderHeaderObj() , obj.getOrderTransactionObj() , payMethodList);
 
                 Intent intent = new Intent(PayMethods.this, Order.class);
                 startActivity(intent);
 
             } else { // Dine In
 
-            orderHeaderTemp.get(0).setCashValue(cashValue1);
-            orderHeaderTemp.get(0).setCardsValue(creditCardValue1);
-            orderHeaderTemp.get(0).setChequeValue(chequeValue1);
-            orderHeaderTemp.get(0).setGiftValue(giftCardValue1);
-            orderHeaderTemp.get(0).setCouponValue(creditValue1);
-            orderHeaderTemp.get(0).setPointValue(pointValue1);
+                orderHeaderTemp.get(0).setCashValue(cashValue1);
+                orderHeaderTemp.get(0).setCardsValue(creditCardValue1);
+                orderHeaderTemp.get(0).setChequeValue(chequeValue1);
+                orderHeaderTemp.get(0).setGiftValue(giftCardValue1);
+                orderHeaderTemp.get(0).setCouponValue(creditValue1);
+                orderHeaderTemp.get(0).setPointValue(pointValue1);
 
-            mDHandler.addOrderHeader(orderHeaderTemp.get(0));
-            for (int i = 0; i < orderTransTemp.size(); i++) {
-                mDHandler.addOrderTransaction(orderTransTemp.get(i));
-            }
-            mDHandler.deleteFromOrderHeaderTemp(sectionNo, tableNo);
-            mDHandler.deleteFromOrderTransactionTemp(sectionNo, tableNo);
+                mDHandler.addOrderHeader(orderHeaderTemp.get(0));
+                for (int i = 0; i < orderTransTemp.size(); i++) {
+                    mDHandler.addOrderTransaction(orderTransTemp.get(i));
+                }
+                mDHandler.deleteFromOrderHeaderTemp(sectionNo, tableNo);
+                mDHandler.deleteFromOrderTransactionTemp(sectionNo, tableNo);
+
+                sendToServer(orderHeaderTemp.get(0) , orderTransTemp , payMethodList);
 
                 Intent intent = new Intent(PayMethods.this, DineIn.class);
                 startActivity(intent);
             }
 
-            Toast.makeText(this, getResources().getString( R.string.save_successful), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.save_successful), Toast.LENGTH_SHORT).show();
             finish();
-        }else {
-            Toast.makeText(this, getResources().getString( R.string.remaining_not_o), Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, getResources().getString(R.string.remaining_not_o), Toast.LENGTH_SHORT).show();
         }
     }
 
+    void sendToServer(OrderHeader OrderHeaderObj, List<OrderTransactions> OrderTransactionsObj, List<PayMethod> PayMethodObj) {
+        try {
+            JSONObject obj1 = OrderHeaderObj.getJSONObject2();
+
+            JSONArray obj2 = new JSONArray();
+            for (int i = 0; i < OrderTransactionsObj.size(); i++)
+                obj2.put(i ,OrderTransactionsObj.get(i).getJSONObject2());
+
+            JSONArray obj3 = new JSONArray();
+            for (int i = 0; i < PayMethodObj.size(); i++)
+                obj3.put(i ,PayMethodObj.get(i).getJSONObject2());
+
+            JSONObject obj = new JSONObject();
+            obj.put("ORDERHEADER", obj1);
+            obj.put("ORDERTRANSACTIONS", obj2);
+            obj.put("PAYMETHOD", obj3);
+
+            SendCloud sendCloud = new SendCloud(PayMethods.this, obj);
+            sendCloud.startSending("Server");
+
+
+        } catch (JSONException e) {
+            Log.e("Tag", "JSONException");
+        }
+    }
 
     public String convertToEnglish(String value) {
         String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0"));

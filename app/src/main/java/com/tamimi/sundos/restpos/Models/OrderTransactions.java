@@ -38,8 +38,9 @@ public class OrderTransactions {
     private int userNo;
     private String userName;
     private String time;
+    private int screenNo;
 
-    public OrderTransactions(){
+    public OrderTransactions() {
 
     }
 
@@ -47,7 +48,7 @@ public class OrderTransactions {
                              int voucherSerial, String itemBarcode, String itemName, String secondaryName, String kitchenAlias,
                              String itemCategory, String itemFamily, int qty, double price, double total, double discount,
                              double lDiscount, double totalDiscount, double taxValue, double taxPerc, int taxKind, double service,
-                             double serviceTax, int tableNo, int sectionNo , int shiftNo , String shiftName ,int userNo, String userNmae , String time) {
+                             double serviceTax, int tableNo, int sectionNo, int shiftNo, String shiftName, int userNo, String userNmae, String time) {
         this.orderType = orderType;
         this.orderKind = orderKind;
         this.voucherDate = voucherDate;
@@ -81,6 +82,7 @@ public class OrderTransactions {
         this.time = time;
 
     }
+
     public int getUserNo() {
         return userNo;
     }
@@ -329,7 +331,15 @@ public class OrderTransactions {
         this.time = time;
     }
 
-    public JSONObject getJSONObject() {
+    public int getScreenNo() {
+        return screenNo;
+    }
+
+    public void setScreenNo(int screenNo) {
+        this.screenNo = screenNo;
+    }
+
+    public JSONObject getJSONObject() { // for kitchen
         JSONObject obj = new JSONObject();
         try {
             obj.put("ITEMCODE", itemBarcode);
@@ -338,9 +348,52 @@ public class OrderTransactions {
             obj.put("PRICE", price);
             obj.put("NOTE", "");
             obj.put("ISUPDATE", 0);
+            obj.put("SCREENNO", screenNo);
 
         } catch (JSONException e) {
-            Log.e("Tag" , "JSONException");
+            Log.e("Tag", "JSONException");
+        }
+        return obj;
+    }
+
+    public JSONObject getJSONObject2() { // for server
+        JSONObject obj = new JSONObject();
+        try {
+
+            obj.put("ORDERTYPE", orderType);
+            obj.put("ORDERKIND", orderKind);
+            obj.put("POSNO", posNo);
+            obj.put("STRNO", storeNo);
+            obj.put("VHFNO", voucherNo);
+            obj.put("VHFSERIAL", voucherSerial);
+            obj.put("ITEMBARCODE1", itemBarcode);
+            obj.put("ITEMNM", itemName);
+            obj.put("SECONDARYNAME", secondaryName);
+            obj.put("KITCHENALIAS", kitchenAlias);
+            obj.put("ITEMCAT", itemCategory);
+            obj.put("ITEMFAM", itemFamily);
+            obj.put("QTY", qty);
+            obj.put("PRICE", price);
+            obj.put("TOTAL", total);
+            obj.put("DISC", discount);
+            obj.put("LDISC", lDiscount);
+            obj.put("TOTDISC", totalDiscount);
+            obj.put("TAXVAL", taxValue);
+            obj.put("TAXPERC", taxPerc);
+            obj.put("TAXKIND", taxKind);
+            obj.put("SERVICE", service);
+            obj.put("SERVICETAX", serviceTax);
+            obj.put("TBLNO", tableNo);
+            obj.put("USERNO", userNo);
+            obj.put("USERNM", userName);
+            obj.put("SECNO", sectionNo);
+            obj.put("SHIFTNO", shiftNo);
+            obj.put("SHIFTNM", shiftName);
+            obj.put("VHFTIME", time);
+            obj.put("VHFDATE", voucherDate);
+
+        } catch (JSONException e) {
+            Log.e("Tag", "JSONException");
         }
         return obj;
     }

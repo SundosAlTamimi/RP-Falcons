@@ -37,6 +37,7 @@ import com.tamimi.sundos.restpos.Models.FamilyCategory;
 import com.tamimi.sundos.restpos.Models.ForceQuestions;
 import com.tamimi.sundos.restpos.Models.ItemWithFq;
 import com.tamimi.sundos.restpos.Models.ItemWithModifier;
+import com.tamimi.sundos.restpos.Models.ItemWithScreen;
 import com.tamimi.sundos.restpos.Models.Items;
 import com.tamimi.sundos.restpos.Models.Modifier;
 import com.tamimi.sundos.restpos.Models.OrderHeader;
@@ -328,7 +329,7 @@ public class Order extends AppCompatActivity {
             voucherSerial = transactionsTempSize + 1;
         }
         date.setText(today);
-        voucherNo = yearMonth + "-" + voucherSerial;
+        voucherNo = ""+ voucherSerial;
     }
 
     void fillCategories() {
@@ -366,9 +367,9 @@ public class Order extends AppCompatActivity {
     }
 
     void fillItems(String categoryName) {
+        ArrayList<UsedItems> subList = mDbHandler.getRequestedItems(categoryName);
 
-        if (!categoryName.equals("")) {
-            ArrayList<UsedItems> subList = mDbHandler.getRequestedItems(categoryName);
+        if (!categoryName.equals("") && subList.size() != 0) {
 
             if (subList.size() != 0) {
                 List<Items> items = mDbHandler.getAllItems();
@@ -1631,10 +1632,8 @@ public class Order extends AppCompatActivity {
             if (wantedItems.get(k).getDiscountAvailable() == 1)
                 discount = (disc / totalItemsWithDiscount) * (totalLine - lineDiscount_);
 
-//            Log.e("here", "******" + disc + "/" + totalItemsWithDiscount + "*" + totalLine + "-" + lineDiscount_);
-
             OrderTransactionsObj.add(new OrderTransactions(orderTypeFlag, 0, today, Settings.POS_number, Settings.store_number,
-                    voucherNo, voucherSerial, "" + wantedItems.get(k).getItemBarcode(), wantedItems.get(k).getMenuName(),
+                    voucherNo, k, "" + wantedItems.get(k).getItemBarcode(), wantedItems.get(k).getMenuName(),
                     wantedItems.get(k).getSecondaryName(), wantedItems.get(k).getKitchenAlias(), wantedItems.get(k).getMenuCategory(),
                     wantedItems.get(k).getFamilyName(), Integer.parseInt(convertToEnglish(textViewQty.getText().toString())), wantedItems.get(k).getPrice(),
                     totalLine, discount, lineDiscount_, discount + lineDiscount_, wantedItems.get(k).getTax(),
@@ -1682,7 +1681,7 @@ public class Order extends AppCompatActivity {
                 discount = (disc / totalItemsWithDiscount) * (totalLine - lineDiscount_);
 
             mDbHandler.addOrderTransactionTemp(new OrderTransactions(orderTypeFlag, 0, today, Settings.POS_number, Settings.store_number,
-                    voucherNo, voucherSerial, "" + wantedItems.get(k).getItemBarcode(), wantedItems.get(k).getMenuName(),
+                    voucherNo, k, "" + wantedItems.get(k).getItemBarcode(), wantedItems.get(k).getMenuName(),
                     wantedItems.get(k).getSecondaryName(), wantedItems.get(k).getKitchenAlias(), wantedItems.get(k).getMenuCategory(),
                     wantedItems.get(k).getFamilyName(), Integer.parseInt(convertToEnglish(textViewQty.getText().toString())), wantedItems.get(k).getPrice(),
                     totalLine, discount, lineDiscount_, discount + lineDiscount_, wantedItems.get(k).getTax(),
@@ -1709,28 +1708,34 @@ public class Order extends AppCompatActivity {
     }
 
     void sendToKitchen() {
-
         try {
             JSONObject obj1 = OrderHeaderObj.getJSONObject();
 
+            List<ItemWithScreen> itemWithScreens = mDbHandler.getAllItemsWithScreen();
+            for (int i = 0; i < OrderTransactionsObj.size(); i++){
+                for (int j = 0; j < itemWithScreens.size(); j++){
+                    if(OrderTransactionsObj.get(i).getItemBarcode().equals(""+itemWithScreens.get(j).getItemCode()))
+                        OrderTransactionsObj.get(i).setScreenNo(itemWithScreens.get(j).getScreenNo());
+                }
+            }
+
             JSONArray obj2 = new JSONArray();
             for (int i = 0; i < OrderTransactionsObj.size(); i++)
-                obj2.put(OrderTransactionsObj.get(i).getJSONObject());
+                obj2.put(i ,OrderTransactionsObj.get(i).getJSONObject());
 
             JSONObject obj = new JSONObject();
-            obj.put("Header", obj1);
             obj.put("Items", obj2);
+            obj.put("Header", obj1);
 
             SendCloud sendCloud = new SendCloud(Order.this, obj);
-            sendCloud.startSending();
+            sendCloud.startSending("kitchen");
 
             SendSocket sendSocket = new SendSocket(Order.this, obj);
             sendSocket.sendMessage();
-            
+
         } catch (JSONException e) {
             Log.e("Tag", "JSONException");
         }
-
     }
 
     public ArrayList<OrderTransactions> getOrderTransactionObj() {
