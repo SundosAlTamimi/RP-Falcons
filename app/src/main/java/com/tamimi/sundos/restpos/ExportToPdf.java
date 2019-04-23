@@ -532,12 +532,12 @@ public class ExportToPdf  {
         pdfPTableHeader.setWidthPercentage(100f);
         pdfPTableHeader.setSpacingAfter(20);
 
-        insertCell(pdfPTable, "Hour", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-        insertCell(pdfPTable, "TotalGusts", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-        insertCell(pdfPTable, "No Of Trans", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-        insertCell(pdfPTable, "No of Sales", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-        insertCell(pdfPTable, "Avg Per Trans", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-        insertCell(pdfPTable, "Avg Per Gusts", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable, context.getString(R.string.hour), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable, context.getString(R.string.total_gusts), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable, context.getString(R.string.num_of_trans), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable,  context.getString(R.string.sales_total), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable, context.getString(R.string.avg_per_trans), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable, context.getString(R.string.avg_per_gusts), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         pdfPTable.setHeaderRows(1);
         for (int i = 0; i < headerList.size(); i++) {
 
@@ -550,7 +550,7 @@ public class ExportToPdf  {
         }
 
         insertCell(pdfPTableHeader, "Falcon Soft ", Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
-        insertCell(pdfPTableHeader, "Sales By Hour Report", Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
+        insertCell(pdfPTableHeader,  context.getString(R.string.sales_by_hours), Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
         insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 4, arabicFont, BaseColor.WHITE);
         insertCell(pdfPTableHeader, context.getString(R.string.from_date) + hourHeader.get(0), Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
         insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 2, arabicFont, BaseColor.WHITE);
@@ -590,11 +590,11 @@ public class ExportToPdf  {
         pdfPTableHeader.setWidthPercentage(100f);
         pdfPTableHeader.setSpacingAfter(20);
 
-        insertCell(pdfPTable, "Item Code ", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-        insertCell(pdfPTable, "Item Name ", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-        insertCell(pdfPTable, "Qty", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-        insertCell(pdfPTable, "Price", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-        insertCell(pdfPTable, "Total", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable,  context.getString(R.string.item_code), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable,  context.getString(R.string.item_name), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable,  context.getString(R.string.qty), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable,  context.getString(R.string.price), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable,  context.getString(R.string.total), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         pdfPTable.setHeaderRows(1);
 
         for (int i = 0; i < orderTransactionData.size(); i++) {
@@ -614,7 +614,7 @@ public class ExportToPdf  {
         }
 
         insertCell(pdfPTableHeader, "Falcon Soft ", Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
-        insertCell(pdfPTableHeader, "Sales Volume Item Report", Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
+        insertCell(pdfPTableHeader,  context.getString(R.string.sales_volume_by_item_type), Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
         insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 4, arabicFont, BaseColor.WHITE);
         insertCell(pdfPTableHeader, context.getString(R.string.from_date) + VolumeHeader.get(0), Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
         insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 2, arabicFont, BaseColor.WHITE);
@@ -649,10 +649,10 @@ public class ExportToPdf  {
         pdfPTableHeader.setWidthPercentage(100f);
         pdfPTableHeader.setSpacingAfter(20);
 
-        insertCell(pdfPTable, "Item Code ", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-        insertCell(pdfPTable, "Item Name ", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-        insertCell(pdfPTable, "Qty", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-        insertCell(pdfPTable, "Total", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable,  context.getString(R.string.item_code), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable,  context.getString(R.string.item_name), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable,  context.getString(R.string.qty), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable,  context.getString(R.string.total), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         pdfPTable.setHeaderRows(1);
 
         for (int i = 0; i < transactionsPdf.size(); i++) {
@@ -664,7 +664,7 @@ public class ExportToPdf  {
         }
 
         insertCell(pdfPTableHeader, "Falcon Soft ", Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
-        insertCell(pdfPTableHeader, "Top Sales Item Report", Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
+        insertCell(pdfPTableHeader, context.getString(R.string.top_sales_item_report), Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
         insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 4, arabicFont, BaseColor.WHITE);
         insertCell(pdfPTableHeader, context.getString(R.string.from_date) + salesHeader.get(0), Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
         insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 2, arabicFont, BaseColor.WHITE);
@@ -821,14 +821,14 @@ public class ExportToPdf  {
         pdfPTableHeader.setWidthPercentage(100f);
         pdfPTableHeader.setSpacingAfter(20);
 
-        insertCell(pdfPTable, "Date", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-        insertCell(pdfPTable, "Time", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-        insertCell(pdfPTable, "Table No", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-        insertCell(pdfPTable, "Section", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-        insertCell(pdfPTable, "Action", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-        insertCell(pdfPTable, "To Table", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-        insertCell(pdfPTable, "To Section", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-        insertCell(pdfPTable, "Cashier", ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable, context.getString(R.string.date_), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable, context.getString(R.string.time), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable, context.getString(R.string.table_no), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable, context.getString(R.string.section), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable, context.getString(R.string.action), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable, context.getString(R.string.to_table), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable, context.getString(R.string.to_section), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable, context.getString(R.string.cashier), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         pdfPTable.setHeaderRows(1);
 
         for (int i = 0; i < actionsPdf.size(); i++) {
@@ -836,13 +836,13 @@ public class ExportToPdf  {
             String type = "";
             switch (actionsPdf.get(i).getActionType()) {
                 case 0:
-                    type = "Move";
+                    type = context.getString(R.string.move);
                     break;
                 case 1:
-                    type = "Merge";
+                    type = context.getString(R.string.merge);
                     break;
                 case 2:
-                    type = "Split";
+                    type = context.getString(R.string.split);
                     break;
             }
 
@@ -857,7 +857,7 @@ public class ExportToPdf  {
         }
 
         insertCell(pdfPTableHeader, "Falcon Soft ", Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
-        insertCell(pdfPTableHeader, "Table Action Report", Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
+        insertCell(pdfPTableHeader, context.getString(R.string.table_action_report), Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
         insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 4, arabicFont, BaseColor.WHITE);
         insertCell(pdfPTableHeader, context.getString(R.string.from_date) + tableHeader.get(0), Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
         insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 2, arabicFont, BaseColor.WHITE);
@@ -869,13 +869,13 @@ public class ExportToPdf  {
         insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 2, arabicFont, BaseColor.WHITE);
         String type = "";
         if (tableHeader.get(5).equals("-1")) {
-            type = "All";
+            type = context.getString(R.string.all);
         } else if (tableHeader.get(5).equals("0")) {
-            type = "Move";
+            type = context.getString(R.string.move);
         } else if (tableHeader.get(5).equals("1")) {
-            type = "Marge";
+            type = context.getString(R.string.merge);
         } else {
-            type = "Split";
+            type = context.getString(R.string.split);
         }
 
         insertCell(pdfPTableHeader, context.getString(R.string.trans_type) + type, Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
@@ -953,11 +953,11 @@ public class ExportToPdf  {
         insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 2, arabicFont, BaseColor.WHITE);
         String type = "";
         if (simpleHeader.get(5).equals("-1")) {
-            type = "All";
+            type = context.getString(R.string.all);
         } else if (simpleHeader.get(5).equals("0")) {
-            type = "Take Away";
+            type = context.getString(R.string.take_away);
         } else if (simpleHeader.get(5).equals("1")) {
-            type = "Dine In";
+            type = context.getString(R.string.dine_in);
         }
         insertCell(pdfPTableHeader, context.getString(R.string.trans_type) + " : " + type, Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
 

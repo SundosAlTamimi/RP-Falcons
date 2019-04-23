@@ -322,21 +322,6 @@
                 android:background="@color/text_color"
                 android:gravity="center" />
 
-            <TextView
-                android:id="@+id/refund"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:gravity="center"
-                android:text="@string/refund"
-                android:textColor="@color/text_color"
-                android:textSize="15sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_marginHorizontal="20dp"
-                android:background="@color/text_color"
-                android:gravity="center" />
 
             <TextView
                 android:id="@+id/checkOut"
