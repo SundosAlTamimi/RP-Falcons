@@ -1,5 +1,10 @@
 package com.tamimi.sundos.restpos.Models;
 
+import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class PayMethod {
 
     private int orderType;
@@ -172,5 +177,31 @@ public class PayMethod {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public JSONObject getJSONObject2() { // for server
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("ORDERTYPE", orderType);
+            obj.put("ORDERKIND", orderKind);
+            obj.put("POSNO", pointOfSaleNumber);
+            obj.put("STRNO", storeNumber);
+            obj.put("VHFNO", voucherNumber);
+            obj.put("VHFSERIAL", voucherSerial);
+            obj.put("PAYTYPE", payType);
+            obj.put("PAYVAL", payValue);
+            obj.put("PAYNO", payNumber);
+            obj.put("PAYNAME", payName);
+            obj.put("USERNM", userName);
+            obj.put("USERNO", userNo);
+            obj.put("SHIFTNM", shiftName);
+            obj.put("SHIFTNO", shiftNumber);
+            obj.put("VHFTIME", time);
+            obj.put("VHFDATE", voucherDate);
+
+        } catch (JSONException e) {
+            Log.e("Tag", "JSONException");
+        }
+        return obj;
     }
 }
