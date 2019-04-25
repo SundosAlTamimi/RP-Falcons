@@ -1,5 +1,6 @@
 package com.tamimi.sundos.restpos.BackOffice;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -93,6 +94,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -105,8 +108,6 @@ import androidx.core.content.ContextCompat;
 //import static com.itextpdf.text.Element.ALIGN_CENTER;
 
 public class BackOfficeActivity extends AppCompatActivity {
-
-
 
 
     LinearLayout lManagement, lSales, lCustomers, lEmployees, lMenu, lSettings;
@@ -153,7 +154,6 @@ public class BackOfficeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.back_office_activity);
-
 
 
         myCalendar = Calendar.getInstance();
@@ -452,9 +452,9 @@ public class BackOfficeActivity extends AppCompatActivity {
 //
                                         String remark = "-";
                                         if (blindCloseList.get(i).getSalesDiff() < 0)
-                                            remark =getResources().getString(R.string.short_);
+                                            remark = getResources().getString(R.string.short_);
                                         if (blindCloseList.get(i).getSalesDiff() > 0)
-                                            remark =getResources().getString(R.string.over);
+                                            remark = getResources().getString(R.string.over);
 
                                         String type = getResources().getString(R.string.close);
                                         if (blindCloseList.get(i).getTransType() == 1)
@@ -471,7 +471,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                                         String updateName = getResources().getString(R.string.no_user);
                                         for (int k = 0; k < blindCloseDetailsList.size(); k++) {
                                             if (blindCloseList.get(i).getTransNo() == blindCloseDetailsList.get(k).getTransNo()
-                                                    && !blindCloseDetailsList.get(k).getUpdateUserName().equals( getResources().getString(R.string.no_user))) {
+                                                    && !blindCloseDetailsList.get(k).getUpdateUserName().equals(getResources().getString(R.string.no_user))) {
 
                                                 updateName = blindCloseDetailsList.get(k).getUpdateUserName();
                                                 break;
@@ -798,7 +798,8 @@ public class BackOfficeActivity extends AppCompatActivity {
 
         List<BlindCloseDetails> blindCloseDetails = mDHandler.getAllBlindCloseDetails();
         preview.setOnClickListener(v -> {
-            blindClosePdf.clear();headerData1.clear();
+            blindClosePdf.clear();
+            headerData1.clear();
             table.removeAllViews();
             int CashierNo = -1;
             if (cashierNo.getSelectedItem().toString().equals(getResources().getString(R.string.all)))
@@ -930,8 +931,8 @@ public class BackOfficeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                ExportToPdf  objExp=new ExportToPdf(BackOfficeActivity.this);
-                objExp.RecancelReport(blindClosePdf,headerData1);
+                ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
+                objExp.RecancelReport(blindClosePdf, headerData1);
 
             }
         });
@@ -1078,7 +1079,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     customerPayment.setCustomerNo(1);
                     customerPayment.setCustomerName(convertToEnglish(customerName.getText().toString()));
                     customerPayment.setCustomerBalance(Double.parseDouble(convertToEnglish(customerBalance.getText().toString())));
-                    customerPayment.setTransNo(Integer.parseInt(convertToEnglish(transNumber+"")));
+                    customerPayment.setTransNo(Integer.parseInt(convertToEnglish(transNumber + "")));
                     customerPayment.setTransDate(today);
                     customerPayment.setPayMentType(convertToEnglish(paymentType.getSelectedItem().toString()));
                     customerPayment.setValue(Double.parseDouble(convertToEnglish(value.getText().toString())));
@@ -1186,12 +1187,15 @@ public class BackOfficeActivity extends AppCompatActivity {
         final String[] fromDat = {""};
         final String[] toDat = {""};
 
-        List <String> headerValue=new ArrayList<>();
-        List <String> otherValue=new ArrayList<>();
+        List<String> headerValue = new ArrayList<>();
+        List<String> otherValue = new ArrayList<>();
         preview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                orderTransactionDataPdf.clear();headerValue.clear();otherValue.clear();orderTransactionDataPdf2.clear();
+                orderTransactionDataPdf.clear();
+                headerValue.clear();
+                otherValue.clear();
+                orderTransactionDataPdf2.clear();
 
                 tableXreport.removeAllViews();
                 tableXreportTax.removeAllViews();
@@ -1200,6 +1204,9 @@ public class BackOfficeActivity extends AppCompatActivity {
                 fromDat[0] = fromDate.getText().toString();
                 toDat[0] = toDate.getText().toString();
                 double totalText = 0.0, tatText = 0.0, netText = 0.0;
+
+                List<Double> Total_ = new ArrayList<>();
+                List<Double> Tax_ = new ArrayList<>();
 
                 String posNoString = "POS_NO";
 
@@ -1218,6 +1225,33 @@ public class BackOfficeActivity extends AppCompatActivity {
                 }
 
                 orderTransactionData = mDHandler.getXReport(ShiftNa, posNoString, fromDat[0], toDat[0]);
+                Log.e("orderTrans", "" + orderTransactionData.size());
+
+                for (int i = 0; i < orderTransactionData.size(); i++) {
+                    double total_ = 0.0, tax_x_ = 0.0;
+                    String cou_date = orderTransactionData.get(i).getVoucherDate();
+                    String cou_total = orderTransactionData.get(i).getTime();
+                    String cou_tax = orderTransactionData.get(i).getShiftName();
+                    Log.e("tt", "" + cou_date);
+
+                    String[] arrayString = cou_date.split(",");
+                    String[] arrayTotal = cou_total.split(",");
+                    String[] arrayTax = cou_tax.split(",");
+                    Log.e("arrayString1", "" + arrayString.length);
+
+                    for (int q = 0; q < arrayString.length; q++) {
+                        if (filters(fromDat[0], toDat[0], arrayString[q])) {
+
+                            total_ += Double.parseDouble(arrayTotal[q]);
+                            tax_x_ += Double.parseDouble(arrayTax[q]);
+                        }
+
+                    }
+                    Total_.add(total_);
+                    Tax_.add(tax_x_);
+                    Log.e("arrayTotal", "" + total_ + " ///" + tax_x_);
+
+                }
                 double NetTotal = 0.0;
 
                 headerValue.add(fromDat[0]);
@@ -1226,19 +1260,23 @@ public class BackOfficeActivity extends AppCompatActivity {
                 headerValue.add(PosNo.getSelectedItem().toString());
 
 
-
                 for (int i = 0; i < orderTransactionData.size(); i++) {
                     if (Settings.tax_type == 0) {
-                        NetTotal = orderTransactionData.get(i).getTotal() - (orderTransactionData.get(i).getTaxValue() + orderTransactionData.get(i).getDiscount());
+                        NetTotal = Total_.get(i) - (Tax_.get(i) + orderTransactionData.get(i).getDiscount());
                     } else {
-                        NetTotal = orderTransactionData.get(i).getTotal() - orderTransactionData.get(i).getDiscount();
+                        NetTotal = Total_.get(i) - orderTransactionData.get(i).getDiscount();
                     }
                     Log.e("", "" + NetTotal);
 
-                    insertCashierInOutReport(tableXreport, orderTransactionData.get(i).getItemName(), String.valueOf(orderTransactionData.get(i).getTaxValue()),
-                            "", String.valueOf(orderTransactionData.get(i).getTotal())
+                    insertCashierInOutReport(tableXreport, orderTransactionData.get(i).getItemName(), String.valueOf(Tax_.get(i)),
+                            "", String.valueOf(Total_.get(i))
                             , "", "", String.valueOf(NetTotal), 4);
-                    orderTransactionDataPdf.add(orderTransactionData.get(i));
+                    OrderTransactions orderTransactions = new OrderTransactions();
+                    orderTransactions.setTaxValue(Tax_.get(i));
+                    orderTransactions.setTotal(Total_.get(i));
+                    orderTransactions.setItemName(orderTransactionData.get(i).getItemName());
+
+                    orderTransactionDataPdf.add(orderTransactions);
                 }
 
                 for (int a = 0; a < tableXreport.getChildCount(); a++) {
@@ -1270,12 +1308,50 @@ public class BackOfficeActivity extends AppCompatActivity {
                 otherValue.add("" + totalText);
                 otherValue.add("" + netText);
 
+                orderTransactionData.clear();
+                Total_.clear();
+                Tax_.clear();
                 orderTransactionData = mDHandler.getXReportPercent(ShiftNa, posNoString, fromDat[0], toDat[0]);
+
+
+                for (int i = 0; i < orderTransactionData.size(); i++) {
+                    double total_ = 0.0, tax_x_ = 0.0;
+                    String cou_date = orderTransactionData.get(i).getVoucherDate();
+                    String cou_total = orderTransactionData.get(i).getTime();
+                    String cou_tax = orderTransactionData.get(i).getShiftName();
+                    Log.e("tt", "" + cou_date);
+
+                    String[] arrayString = cou_date.split(",");
+                    String[] arrayTotal = cou_total.split(",");
+                    String[] arrayTax = cou_tax.split(",");
+                    Log.e("arrayString1", "" + arrayString.length);
+
+                    for (int q = 0; q < arrayString.length; q++) {
+                        if (filters(fromDat[0], toDat[0], arrayString[q])) {
+
+                            total_ += Double.parseDouble(arrayTotal[q]);
+                            tax_x_ += Double.parseDouble(arrayTax[q]);
+                        }
+
+                    }
+                    Total_.add(total_);
+                    Tax_.add(tax_x_);
+                    Log.e("arrayTotal", "" + total_ + " ///" + tax_x_);
+
+                }
+
                 for (int i = 0; i < orderTransactionData.size(); i++) {
                     insertCashierInOutReport(tableXreportTax, String.valueOf(orderTransactionData.get(i).getTaxPerc()),
-                            String.valueOf(orderTransactionData.get(i).getTaxValue()), "",
-                            String.valueOf(orderTransactionData.get(i).getTotal()), "", "", "", 3);
-                    orderTransactionDataPdf2.add(orderTransactionData.get(i));
+                            String.valueOf(Tax_.get(i)), "",
+                            String.valueOf(Total_.get(i)), "", "", "", 3);
+
+                    OrderTransactions orderTransactions = new OrderTransactions();
+                    orderTransactions.setTaxValue(Tax_.get(i));
+                    orderTransactions.setTotal(Total_.get(i));
+                    orderTransactions.setTaxPerc(orderTransactionData.get(i).getTaxPerc());
+
+
+                    orderTransactionDataPdf2.add(orderTransactions);
                 }
             }
         });
@@ -1284,8 +1360,8 @@ public class BackOfficeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                ExportToPdf  objExp=new ExportToPdf(BackOfficeActivity.this);
-                objExp.X_report(orderTransactionDataPdf,headerValue,otherValue,orderTransactionDataPdf2);
+                ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
+                objExp.X_report(orderTransactionDataPdf, headerValue, otherValue, orderTransactionDataPdf2);
 
             }
         });
@@ -1377,8 +1453,8 @@ public class BackOfficeActivity extends AppCompatActivity {
 
         orderTransactionData = mDHandler.getAllOrderTransactions();
 
-        List <String> headerValue=new ArrayList<>();
-        List <String> otherValue=new ArrayList<>();
+        List<String> headerValue = new ArrayList<>();
+        List<String> otherValue = new ArrayList<>();
         preview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1389,7 +1465,8 @@ public class BackOfficeActivity extends AppCompatActivity {
 
                 tableXreport.removeAllViews();
                 tableXreportTax.removeAllViews();
-
+                List<Double> Total_ = new ArrayList<>();
+                List<Double> Tax_ = new ArrayList<>();
 
                 fromDat[0] = fromDate.getText().toString();
                 double totalText = 0.0, tatText = 0.0, netText = 0.0;
@@ -1409,25 +1486,56 @@ public class BackOfficeActivity extends AppCompatActivity {
 
                 orderTransactionData = mDHandler.getXReport("SHIFT_NAME", posNoString, fromDat[0], fromDat[0]);
 
+                for (int i = 0; i < orderTransactionData.size(); i++) {
+                    double total_ = 0.0, tax_x_ = 0.0;
+                    String cou_date = orderTransactionData.get(i).getVoucherDate();
+                    String cou_total = orderTransactionData.get(i).getTime();
+                    String cou_tax = orderTransactionData.get(i).getShiftName();
+                    Log.e("tt", "" + cou_date);
+
+                    String[] arrayString = cou_date.split(",");
+                    String[] arrayTotal = cou_total.split(",");
+                    String[] arrayTax = cou_tax.split(",");
+                    Log.e("arrayString1", "" + arrayString.length);
+
+                    for (int q = 0; q < arrayString.length; q++) {
+                        if (filters(fromDat[0], fromDat[0], arrayString[q])) {
+
+                            total_ += Double.parseDouble(arrayTotal[q]);
+                            tax_x_ += Double.parseDouble(arrayTax[q]);
+                        }
+
+                    }
+                    Total_.add(total_);
+                    Tax_.add(tax_x_);
+                    Log.e("arrayTotal", "" + total_ + " ///" + tax_x_);
+
+                }
+
                 double NetTotal = 0.0;
 
                 headerValue.add(fromDat[0]);
                 headerValue.add(serial.getText().toString());
                 headerValue.add(PosNo.getText().toString());
 
-
                 for (int i = 0; i < orderTransactionData.size(); i++) {
 
                     if (Settings.tax_type == 0) {
-                        NetTotal = orderTransactionData.get(i).getTotal() - (orderTransactionData.get(i).getTaxValue() + orderTransactionData.get(i).getDiscount());
+                        NetTotal = Total_.get(i) - (Tax_.get(i) + orderTransactionData.get(i).getDiscount());
                     } else {
-                        NetTotal = orderTransactionData.get(i).getTotal() - orderTransactionData.get(i).getDiscount();
+                        NetTotal = Total_.get(i) - orderTransactionData.get(i).getDiscount();
                     }
 
-                    insertCashierInOutReport(tableXreport, orderTransactionData.get(i).getItemName(), String.valueOf(orderTransactionData.get(i).getTaxValue()),
-                            "", String.valueOf(orderTransactionData.get(i).getTotal())
+                    insertCashierInOutReport(tableXreport, orderTransactionData.get(i).getItemName(), String.valueOf(Tax_.get(i)),
+                            "", String.valueOf(Total_.get(i))
                             , "", "", String.valueOf(NetTotal), 4);
-                    orderTransactionDataPdf.add(orderTransactionData.get(i));
+
+                    OrderTransactions orderTransactions = new OrderTransactions();
+                    orderTransactions.setTaxValue(Tax_.get(i));
+                    orderTransactions.setTotal(Total_.get(i));
+                    orderTransactions.setItemName(orderTransactionData.get(i).getItemName());
+
+                    orderTransactionDataPdf.add(orderTransactions);
                 }
 
                 for (int a = 0; a < tableXreport.getChildCount(); a++) {
@@ -1459,13 +1567,54 @@ public class BackOfficeActivity extends AppCompatActivity {
                 otherValue.add("" + totalText);
                 otherValue.add("" + netText);
 
+
+                orderTransactionData.clear();
+                Total_.clear();
+                Tax_.clear();
+
                 orderTransactionData = mDHandler.getXReportPercent("SHIFT_NAME", posNoString, fromDat[0], fromDat[0]);
+
+                for (int i = 0; i < orderTransactionData.size(); i++) {
+                    double total_ = 0.0, tax_x_ = 0.0;
+                    String cou_date = orderTransactionData.get(i).getVoucherDate();
+                    String cou_total = orderTransactionData.get(i).getTime();
+                    String cou_tax = orderTransactionData.get(i).getShiftName();
+                    Log.e("tt", "" + cou_date);
+
+                    String[] arrayString = cou_date.split(",");
+                    String[] arrayTotal = cou_total.split(",");
+                    String[] arrayTax = cou_tax.split(",");
+                    Log.e("arrayString1", "" + arrayString.length);
+
+                    for (int q = 0; q < arrayString.length; q++) {
+                        if (filters(fromDat[0], fromDat[0], arrayString[q])) {
+
+                            total_ += Double.parseDouble(arrayTotal[q]);
+                            tax_x_ += Double.parseDouble(arrayTax[q]);
+                        }
+
+                    }
+                    Total_.add(total_);
+                    Tax_.add(tax_x_);
+                    Log.e("arrayTotal", "" + total_ + " ///" + tax_x_);
+
+                }
+
+
                 for (int i = 0; i < orderTransactionData.size(); i++) {
 
                     insertCashierInOutReport(tableXreportTax, String.valueOf(orderTransactionData.get(i).getTaxPerc()),
-                            String.valueOf(orderTransactionData.get(i).getTaxValue()), "",
-                            String.valueOf(orderTransactionData.get(i).getTotal()), "", "", "", 3);
-                    orderTransactionDataPdf2.add(orderTransactionData.get(i));
+                            String.valueOf(Tax_.get(i)), "",
+                            String.valueOf(Total_.get(i)), "", "", "", 3);
+
+
+                    OrderTransactions orderTransactions = new OrderTransactions();
+                    orderTransactions.setTaxValue(Tax_.get(i));
+                    orderTransactions.setTotal(Total_.get(i));
+                    orderTransactions.setTaxPerc(orderTransactionData.get(i).getTaxPerc());
+
+
+                    orderTransactionDataPdf2.add(orderTransactions);
                 }
 
 
@@ -1475,8 +1624,8 @@ public class BackOfficeActivity extends AppCompatActivity {
         export.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ExportToPdf  objExp=new ExportToPdf(BackOfficeActivity.this);
-                objExp.Z_report(orderTransactionDataPdf,headerValue,otherValue,orderTransactionDataPdf2);
+                ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
+                objExp.Z_report(orderTransactionDataPdf, headerValue, otherValue, orderTransactionDataPdf2);
 
             }
         });
@@ -1586,13 +1735,18 @@ public class BackOfficeActivity extends AppCompatActivity {
                 myCalendar.get(Calendar.DAY_OF_MONTH)).show());
         final String[] fromDat = {""};
         final String[] toDat = {""};
-List<String>userHeader=new ArrayList<>();
+        List<String> userHeader = new ArrayList<>();
         preview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 headerDataMarket.clear();
                 userHeader.clear();
                 userTable.removeAllViews();
+
+
+                List<Double> Amount_ = new ArrayList<>();
+                List<Double> count_ = new ArrayList<>();
+                List<String> username_ = new ArrayList<>();
 
                 String ShiftNa = "USER_NAME";
                 fromDat[0] = fromDate.getText().toString();
@@ -1621,12 +1775,43 @@ List<String>userHeader=new ArrayList<>();
                 userHeader.add(PosNo.getSelectedItem().toString());
 
                 headerData = mDHandler.getUserNameReport(ShiftNa, posNoString, fromDat[0], toDat[0]);
-                for (int i = 0; i < headerData.size(); i++) {
 
-                    insertCashierInOutReport(userTable, String.valueOf(headerData.get(i).getUserName()),
-                            String.valueOf(headerData.get(i).getAmountDue()), "",
-                            String.valueOf(headerData.get(i).getTime()), "", "", "", 3);
-                    headerDataMarket.add(headerData.get(i));
+                for (int i = 0; i < headerData.size(); i++) {
+                    double total_ = 0.0, tax_x_ = 0.0, amount_ = 0.0, coun_ = 0.0;
+                    String cou_date = headerData.get(i).getVoucherDate();
+                    String cou_Amount = headerData.get(i).getShiftName();
+
+                    String[] arrayString = cou_date.split(",");
+                    String[] arrayAmount = cou_Amount.split(",");
+
+                    for (int q = 0; q < arrayString.length; q++) {
+                        if (filters(fromDat[0], toDat[0], arrayString[q])) {
+
+                            amount_ += Double.parseDouble(arrayAmount[q]);
+                            coun_++;
+                        }
+
+                    }
+                    if (!(total_ == 0 && tax_x_ == 0 && amount_ == 0)) {
+                        username_.add(headerData.get(i).getUserName());
+                        Amount_.add(amount_);
+                        count_.add(coun_);
+                    }
+
+                }
+
+
+                for (int i = 0; i < username_.size(); i++) {
+
+                    insertCashierInOutReport(userTable, String.valueOf(username_.get(i)),
+                            String.valueOf(Amount_.get(i)), "",
+                            String.valueOf(count_.get(i)), "", "", "", 3);
+
+                    OrderHeader orderHeader = new OrderHeader();
+                    orderHeader.setUserName(username_.get(i));
+                    orderHeader.setAmountDue(Amount_.get(i));
+                    orderHeader.setTime(String.valueOf(count_.get(i)));
+                    headerDataMarket.add(orderHeader);
                 }
             }
         });
@@ -1635,8 +1820,8 @@ List<String>userHeader=new ArrayList<>();
             @Override
             public void onClick(View v) {
 
-                ExportToPdf objExp=new ExportToPdf(BackOfficeActivity.this);
-                objExp.userCountReport(headerDataMarket,userHeader);
+                ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
+                objExp.userCountReport(headerDataMarket, userHeader);
 
 
             }
@@ -1737,7 +1922,8 @@ List<String>userHeader=new ArrayList<>();
 
                 userTable.removeAllViews();
 
-                AnnounPdf.clear();AnnounHeader.clear();
+                AnnounPdf.clear();
+                AnnounHeader.clear();
 
                 fromDat[0] = fromDate.getText().toString();
                 toDat[0] = toDate.getText().toString();
@@ -1780,8 +1966,8 @@ List<String>userHeader=new ArrayList<>();
         export.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ExportToPdf  objExp=new ExportToPdf(BackOfficeActivity.this);
-                objExp.AnnouncementForTheDay(AnnounPdf,AnnounHeader);
+                ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
+                objExp.AnnouncementForTheDay(AnnounPdf, AnnounHeader);
 
             }
         });
@@ -1859,7 +2045,7 @@ List<String>userHeader=new ArrayList<>();
             @Override
             public void onClick(View view) {
                 if (checkMoneyInputs(serial.getText().toString(), catName.getText().toString(),
-                        convertToEnglish( catValue.getText().toString()), imageBitmap)) {
+                        convertToEnglish(catValue.getText().toString()), imageBitmap)) {
                     boolean isFound = false;
 
                     finalMoneyArray.clear();
@@ -3150,7 +3336,7 @@ List<String>userHeader=new ArrayList<>();
 
         payInData = new ArrayList<Pay>();
         PayCashier = new ArrayList<Pay>();
-        List <String>cashierHeader = new ArrayList<>();
+        List<String> cashierHeader = new ArrayList<>();
         payInData = mDHandler.getAllPayInOut();
         preview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -3192,7 +3378,7 @@ List<String>userHeader=new ArrayList<>();
                 cashierHeader.add(toDateT[0]);
                 cashierHeader.add(cashierNo.getSelectedItem().toString());
                 cashierHeader.add(PosNo.getSelectedItem().toString());
-                cashierHeader.add(""+cashierType);
+                cashierHeader.add("" + cashierType);
 
 
                 for (int i = 0; i < payInData.size(); i++) {
@@ -3230,9 +3416,9 @@ List<String>userHeader=new ArrayList<>();
         export.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ExportToPdf objExp=new ExportToPdf(BackOfficeActivity.this);
-                Log.e("1testsize",""+cashierHeader.size());
-                objExp.cashierInOutReport(PayCashier,cashierHeader);
+                ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
+                Log.e("1testsize", "" + cashierHeader.size());
+                objExp.cashierInOutReport(PayCashier, cashierHeader);
 
             }
         });
@@ -3364,7 +3550,7 @@ List<String>userHeader=new ArrayList<>();
             cancelHeader.add(toDateT[0]);
             cancelHeader.add(cashierNo.getSelectedItem().toString());
             cancelHeader.add(PosNo.getSelectedItem().toString());
-            cancelHeader.add(""+voidingType);
+            cancelHeader.add("" + voidingType);
 
             int serial = 0;
             for (int i = 0; i < canceledOrders.size(); i++) {
@@ -3452,8 +3638,8 @@ List<String>userHeader=new ArrayList<>();
             @Override
             public void onClick(View v) {
 
-                ExportToPdf objExp=new ExportToPdf(BackOfficeActivity.this);
-                objExp.canselOrderReport(canceledOrdersPdf,cancelHeader);
+                ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
+                objExp.canselOrderReport(canceledOrdersPdf, cancelHeader);
 
             }
         });
@@ -3534,10 +3720,11 @@ List<String>userHeader=new ArrayList<>();
         final String[] fromDateT = {""};
         final String[] toDateT = {""};
         List<TableActions> actions = mDHandler.getAllTableActions();
-        List<String>tableHeader=new ArrayList<>();
+        List<String> tableHeader = new ArrayList<>();
         List<TableActions> actionsPdf = new ArrayList<>();
         preview.setOnClickListener(v -> {
-            actionsPdf.clear();tableHeader.clear();
+            actionsPdf.clear();
+            tableHeader.clear();
             canceledTable.removeAllViews();
 
             int actionTyp = -1;
@@ -3577,8 +3764,7 @@ List<String>userHeader=new ArrayList<>();
             tableHeader.add(toDateT[0]);
             tableHeader.add(cashierNo.getSelectedItem().toString());
             tableHeader.add(PosNo.getSelectedItem().toString());
-            tableHeader.add( ""+actionTyp);
-
+            tableHeader.add("" + actionTyp);
 
 
             for (int i = 0; i < actions.size(); i++) {
@@ -3670,8 +3856,8 @@ List<String>userHeader=new ArrayList<>();
             @Override
             public void onClick(View v) {
 
-                ExportToPdf objExp=new ExportToPdf(BackOfficeActivity.this);
-                objExp.TableActionReport(actionsPdf,tableHeader);
+                ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
+                objExp.TableActionReport(actionsPdf, tableHeader);
 
 
             }
@@ -3751,9 +3937,9 @@ List<String>userHeader=new ArrayList<>();
         final String[] fromDateT = {""};
         final String[] toDateT = {""};
         List<OrderHeader> orderHeaders = mDHandler.getAllOrderHeader();
-        List<String> orderTotal =new ArrayList<>();
+        List<String> orderTotal = new ArrayList<>();
 
-       List<String> simpleHeader =new ArrayList<>();
+        List<String> simpleHeader = new ArrayList<>();
 
 
         preview.setOnClickListener(v -> {
@@ -3793,8 +3979,8 @@ List<String>userHeader=new ArrayList<>();
             else
                 posNoString = Integer.parseInt(PosNo.getSelectedItem().toString());
 
-             fromDateT[0] =fromDate.getText().toString();
-             toDateT[0] =toDate.getText().toString();
+            fromDateT[0] = fromDate.getText().toString();
+            toDateT[0] = toDate.getText().toString();
 
             int serial = 0;
             double totalTotal = 0;
@@ -3807,7 +3993,7 @@ List<String>userHeader=new ArrayList<>();
             simpleHeader.add(toDateT[0]);
             simpleHeader.add(cashierNo.getSelectedItem().toString());
             simpleHeader.add(PosNo.getSelectedItem().toString());
-            simpleHeader.add( ""+orderTyp);
+            simpleHeader.add("" + orderTyp);
 
             for (int i = 0; i < orderHeaders.size(); i++) {
                 if (filters(fromDate.getText().toString(), toDate.getText().toString(), orderHeaders.get(i).getVoucherDate())) {
@@ -3956,8 +4142,8 @@ List<String>userHeader=new ArrayList<>();
             @Override
             public void onClick(View v) {
 
-                ExportToPdf objExp=new ExportToPdf(BackOfficeActivity.this);
-                objExp.simpleSalesTotalReport(headerData,orderTotal,simpleHeader);
+                ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
+                objExp.simpleSalesTotalReport(headerData, orderTotal, simpleHeader);
 
             }
         });
@@ -4041,7 +4227,7 @@ List<String>userHeader=new ArrayList<>();
         List<String> hourHeader = new ArrayList<>();
 
         preview.setOnClickListener(v -> {
-           hourHeader.clear();
+            hourHeader.clear();
             headerList.clear();
             fromDateT[0] = fromDate.getText().toString();
             toDateT[0] = toDate.getText().toString();
@@ -4078,7 +4264,7 @@ List<String>userHeader=new ArrayList<>();
             hourHeader.add(toDateT[0]);
             hourHeader.add(cashierNo.getSelectedItem().toString());
             hourHeader.add(PosNo.getSelectedItem().toString());
-            hourHeader.add(""+typ);
+            hourHeader.add("" + typ);
 
             for (int i = 0; i < 24; i++) {
 
@@ -4166,8 +4352,8 @@ List<String>userHeader=new ArrayList<>();
             @Override
             public void onClick(View v) {
 
-                ExportToPdf  objExp=new ExportToPdf(BackOfficeActivity.this);
-                objExp.salesByHour(headerList,hourHeader);
+                ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
+                objExp.salesByHour(headerList, hourHeader);
 
             }
         });
@@ -4270,7 +4456,7 @@ List<String>userHeader=new ArrayList<>();
         List<PayMethod> OrderPayMDataPdf = new ArrayList<>();
         final String[] fromDateT = {""};
         final String[] toDateT = {""};
-         List<String> cardHeader = new ArrayList<>();
+        List<String> cardHeader = new ArrayList<>();
         preview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -4344,8 +4530,8 @@ List<String>userHeader=new ArrayList<>();
         export.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ExportToPdf  objExp=new ExportToPdf(BackOfficeActivity.this);
-                objExp.salesReportByCardType(OrderPayMDataPdf,cardHeader);
+                ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
+                objExp.salesReportByCardType(OrderPayMDataPdf, cardHeader);
 
 
             }
@@ -4405,6 +4591,12 @@ List<String>userHeader=new ArrayList<>();
         preview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                List<Double> Total_ = new ArrayList<>();
+                List<Double> Tax_ = new ArrayList<>();
+                List<Double> Amount_ = new ArrayList<>();
+                List<Integer> count_ = new ArrayList<>();
+                List<Integer> pos_ = new ArrayList<>();
+
                 double totalText = 0;
                 marketTable.removeAllViews();
                 headerData.clear();
@@ -4414,16 +4606,58 @@ List<String>userHeader=new ArrayList<>();
                 fromDateT[0] = fromDate2.getText().toString();
                 ToDateT[0] = toDate2.getText().toString();
                 headerDataMarket = mDHandler.getMarketReport(fromDate2.getText().toString(), toDate2.getText().toString());
-                headerData.clear();
+
                 for (int i = 0; i < headerDataMarket.size(); i++) {
-                    if (filters(fromDate2.getText().toString(), toDate2.getText().toString(), headerDataMarket.get(i).getVoucherDate())) {
-                        insertCashierInOutReport(marketTable, String.valueOf(headerDataMarket.get(i).getPointOfSaleNumber()),
-                                String.valueOf(headerDataMarket.get(i).getTotalTax()), String.valueOf(headerDataMarket.get(i).getTime()),
-                                String.valueOf(headerDataMarket.get(i).getTotal()), String.valueOf(headerDataMarket.get(i).getAmountDue() / Integer.parseInt(headerDataMarket.get(i).getTime())), "",
-                                String.valueOf(headerDataMarket.get(i).getAmountDue()), 6);
-                        headerData.add(headerDataMarket.get(i));
+                    double total_ = 0.0, tax_x_ = 0.0, amount_ = 0.0;
+                    int coun_ = 0;
+                    String cou_date = headerDataMarket.get(i).getVoucherDate();
+                    String cou_total = headerDataMarket.get(i).getTime();
+                    String cou_tax = headerDataMarket.get(i).getShiftName();
+                    String cou_Amount = headerDataMarket.get(i).getUserName();
+
+                    String[] arrayString = cou_date.split(",");
+                    String[] arrayTotal = cou_total.split(",");
+                    String[] arrayTax = cou_tax.split(",");
+                    String[] arrayAmount = cou_Amount.split(",");
+
+                    for (int q = 0; q < arrayString.length; q++) {
+                        if (filters(fromDateT[0], ToDateT[0], arrayString[q])) {
+
+                            total_ += Double.parseDouble(arrayTotal[q]);
+                            tax_x_ += Double.parseDouble(arrayTax[q]);
+                            amount_ += Double.parseDouble(arrayAmount[q]);
+                            coun_++;
+                        }
 
                     }
+                    if (!(total_ == 0 && tax_x_ == 0 && amount_ == 0)) {
+                        pos_.add(headerDataMarket.get(i).getPointOfSaleNumber());
+                        Total_.add(total_);
+                        Tax_.add(tax_x_);
+                        Amount_.add(amount_);
+                        count_.add(coun_);
+                    }
+
+                }
+
+
+                headerData.clear();
+                for (int i = 0; i < pos_.size(); i++) {
+                    insertCashierInOutReport(marketTable, String.valueOf(pos_.get(i)),
+                            String.valueOf(Tax_.get(i)), String.valueOf(count_.get(i)),
+                            String.valueOf(Total_.get(i)), String.valueOf(Amount_.get(i) / count_.get(i)), "",
+                            String.valueOf(Amount_.get(i)), 6);
+
+                    OrderHeader orderHeader = new OrderHeader();
+                    orderHeader.setPointOfSaleNumber(pos_.get(i));
+                    orderHeader.setTotal(Total_.get(i));
+                    orderHeader.setAmountDue(Amount_.get(i));
+                    orderHeader.setTotalTax(Tax_.get(i));
+                    orderHeader.setTime(String.valueOf(count_.get(i)));
+                    orderHeader.setAmountDue(Amount_.get(i));
+
+                    headerData.add(orderHeader);
+
                 }
             }
         });
@@ -4440,8 +4674,8 @@ List<String>userHeader=new ArrayList<>();
             @Override
             public void onClick(View v) {
 
-                ExportToPdf  objExp=new ExportToPdf(BackOfficeActivity.this);
-                objExp.MarketReport(headerData,fromDateT[0],ToDateT[0]);
+                ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
+                objExp.MarketReport(headerData, fromDateT[0], ToDateT[0]);
 
 
             }
@@ -4532,7 +4766,7 @@ List<String>userHeader=new ArrayList<>();
                 myCalendar.get(Calendar.DAY_OF_MONTH)).show());
         final String[] fromDateT = {""};
         final String[] toDateT = {""};
-        List <String>WaiterHeader =new ArrayList<>();
+        List<String> WaiterHeader = new ArrayList<>();
         headerData = mDHandler.getAllOrderHeader();
         preview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -4601,8 +4835,8 @@ List<String>userHeader=new ArrayList<>();
             @Override
             public void onClick(View v) {
 
-             ExportToPdf objExp=new ExportToPdf(BackOfficeActivity.this);
-                objExp.waiterReport(headerDataMarket,WaiterHeader);
+                ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
+                objExp.waiterReport(headerDataMarket, WaiterHeader);
             }
         });
 
@@ -4688,12 +4922,12 @@ List<String>userHeader=new ArrayList<>();
         List<String> VolumeHeader = new ArrayList<>();
 
         preview.setOnClickListener(v -> {
-              VolumeHeader.clear();
+            VolumeHeader.clear();
             orderTransactionData.clear();
             table.removeAllViews();
             for (int i = 0; i < categories.size(); i++) {
-                fromDateT[0] =fromDate.getText().toString();
-                toDateT[0] =toDate.getText().toString();
+                fromDateT[0] = fromDate.getText().toString();
+                toDateT[0] = toDate.getText().toString();
                 List<OrderTransactions> transactions = mDHandler.getOrdersTransactionsByCategory(categories.get(i));
                 insertSalesVolumeByItem(table, transactions, cashierNo, shiftName, PosNo, fromDate, toDate);
 
@@ -4717,8 +4951,8 @@ List<String>userHeader=new ArrayList<>();
             @Override
             public void onClick(View v) {
 
-                ExportToPdf  objExp=new ExportToPdf(BackOfficeActivity.this);
-                objExp.salesVolumeByItem(orderTransactionData,VolumeHeader);
+                ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
+                objExp.salesVolumeByItem(orderTransactionData, VolumeHeader);
 
             }
         });
@@ -4813,7 +5047,7 @@ List<String>userHeader=new ArrayList<>();
         final String[] ToDateT = {""};
 
         List<OrderTransactions> transactionsPdf = new ArrayList<>();
-        List<String>   soldHeader = new ArrayList<>();
+        List<String> soldHeader = new ArrayList<>();
         List<OrderTransactions> transactions = mDHandler.getAllOrderTransactions();
         preview.setOnClickListener(v -> {
             transactionsPdf.clear();
@@ -4936,8 +5170,8 @@ List<String>userHeader=new ArrayList<>();
             public void onClick(View v) {
 
 
-                ExportToPdf objExp=new ExportToPdf(BackOfficeActivity.this);
-                objExp.soldQtyReport(transactionsPdf,soldHeader);
+                ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
+                objExp.soldQtyReport(transactionsPdf, soldHeader);
 
             }
         });
@@ -4948,6 +5182,7 @@ List<String>userHeader=new ArrayList<>();
 
     }
 
+    @SuppressLint("SetTextI18n")
     void showTopSalesItemReport() {
         dialog = new Dialog(BackOfficeActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -5021,17 +5256,33 @@ List<String>userHeader=new ArrayList<>();
         preview.setOnClickListener(v -> {
             transactionsPdf.clear();
             salesHeader.clear();
+            List<Double> Total_ = new ArrayList<>();
+            List<Integer> qty_ = new ArrayList<>();
+            List<String> itemBarcode_ = new ArrayList<>();
+            List<String> item_name = new ArrayList<>();
+
+
             List<OrderTransactions> transactions = new ArrayList<>();
             table.removeAllViews();
 
-            switch (orderBy.getCheckedRadioButtonId()) {
-                case R.id.qty:
-                    transactions = mDHandler.getTopSalesItemsByQty();
-                    break;
-                case R.id.total:
-                    transactions = mDHandler.getTopSalesItemsByTotal();
-                    break;
+            String ShiftNa = "SHIFT_NAME";
+            String posNoString = "POS_NO";
+
+            if (shiftName.getSelectedItem().toString().equals(getResources().getString(R.string.all))) {
+                ShiftNa = "SHIFT_NAME";
+
+            } else {
+                ShiftNa = "'" + shiftName.getSelectedItem().toString() + "'";
             }
+
+            if (PosNo.getSelectedItem().toString().equals(getResources().getString(R.string.all))) {
+                posNoString = "POS_NO";
+
+            } else {
+                posNoString = "'" + PosNo.getSelectedItem().toString() + "'";
+            }
+
+            transactions = mDHandler.getTopSalesItemsByQty(ShiftNa, posNoString);
 
             Log.e("transactions", "-->" + transactions.size());
 
@@ -5041,13 +5292,13 @@ List<String>userHeader=new ArrayList<>();
             else
                 CashierNo = Integer.parseInt(cashierNo.getSelectedItem().toString());
 
-            String ShiftName = shiftName.getSelectedItem().toString();
-
-            int posNoString = -1;
-            if (PosNo.getSelectedItem().toString().equals(getResources().getString(R.string.all)))
-                posNoString = -1;
-            else
-                posNoString = Integer.parseInt(PosNo.getSelectedItem().toString());
+//            String ShiftName = shiftName.getSelectedItem().toString();
+//
+//            int posNoString = -1;
+//            if (PosNo.getSelectedItem().toString().equals(getResources().getString(R.string.all)))
+//                posNoString = -1;
+//            else
+//                posNoString = Integer.parseInt(PosNo.getSelectedItem().toString());
 
             fromDateT[0] = fromDate.getText().toString();
             toDateT[0] = toDate.getText().toString();
@@ -5057,57 +5308,99 @@ List<String>userHeader=new ArrayList<>();
             salesHeader.add(toDateT[0]);
             salesHeader.add(cashierNo.getSelectedItem().toString());
             salesHeader.add(PosNo.getSelectedItem().toString());
-            salesHeader.add(orderBy.getCheckedRadioButtonId()==R.id.qty ? getResources().getString(R.string.qty):getResources().getString(R.string.total));
+            salesHeader.add(orderBy.getCheckedRadioButtonId() == R.id.qty ? getResources().getString(R.string.qty) : getResources().getString(R.string.total));
 
             for (int i = 0; i < transactions.size(); i++) {
-                if (filters(fromDate.getText().toString(), toDate.getText().toString(), transactions.get(i).getVoucherDate())) {
+                double total_ = 0.0;
+                int coun_ = 0, qty_x_ = 0;
+                String cou_date = transactions.get(i).getVoucherDate();
+                String cou_total = transactions.get(i).getUserName();
+                String cou_qty = transactions.get(i).getShiftName();
 
-                    if (transactions.get(i).getShiftName().equals(ShiftName) || ShiftName.equals(getResources().getString(R.string.all))) {
-                        if (transactions.get(i).getUserNo() == CashierNo || CashierNo == -1) {
-                            if (transactions.get(i).getPosNo() == posNoString || posNoString == -1) {
 
-                                TableRow row = new TableRow(BackOfficeActivity.this);
+                String[] arrayString = cou_date.split(",");
+                String[] arrayTotal = cou_total.split(",");
+                String[] arrayTax = cou_qty.split(",");
 
-                                TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
-                                row.setLayoutParams(lp);
 
-                                for (int k = 0; k < 4; k++) {
-                                    TextView textView = new TextView(BackOfficeActivity.this);
-
-                                    switch (k) {
-                                        case 0:
-                                            textView.setText(transactions.get(i).getItemBarcode());
-                                            break;
-                                        case 1:
-                                            textView.setText(transactions.get(i).getItemName());
-                                            break;
-                                        case 2:
-                                            textView.setText("" + transactions.get(i).getQty());
-                                            break;
-                                        case 3:
-                                            textView.setText("" + (transactions.get(i).getTotal()));
-                                            break;
-                                    }
-
-                                    textView.setTextColor(ContextCompat.getColor(BackOfficeActivity.this, R.color.text_color));
-                                    textView.setBackgroundColor(ContextCompat.getColor(BackOfficeActivity.this, R.color.jeans_blue));
-                                    textView.setGravity(Gravity.CENTER);
-                                    textView.setTextSize(16);
-
-                                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(70, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
-                                    lp2.setMargins(1, 1, 1, 1);
-                                    textView.setLayoutParams(lp2);
-
-                                    row.addView(textView);
-                                }
-                                table.addView(row);
-                                transactionsPdf.add(transactions.get(i));
-
-                            }
-                        }
+                for (int q = 0; q < arrayString.length; q++) {
+                    if (filters(fromDateT[0], toDateT[0], arrayString[q])) {
+                        total_ += Double.parseDouble(arrayTotal[q]);
+                        qty_x_ += Double.parseDouble(arrayTax[q]);
                     }
                 }
+                if (!(total_ == 0 && qty_x_ == 0)) {
+                    itemBarcode_.add(transactions.get(i).getItemBarcode());
+                    item_name.add(transactions.get(i).getItemName());
+                    Total_.add(total_);
+                    qty_.add(qty_x_);
+                }
             }
+            transactions.clear();
+            for (int i = 0; i < itemBarcode_.size(); i++) {
+                OrderTransactions orderTransactions = new OrderTransactions();
+                orderTransactions.setItemBarcode(itemBarcode_.get(i));
+                orderTransactions.setItemName(item_name.get(i));
+                orderTransactions.setTotal(Total_.get(i));
+                orderTransactions.setQty(qty_.get(i));
+                transactions.add(orderTransactions);
+            }
+
+            switch (orderBy.getCheckedRadioButtonId()) {
+                case R.id.qty:
+                    Collections.sort(transactions, new QtySorter());
+                    break;
+                case R.id.total:
+                    Collections.sort(transactions, new TotalSorter());
+                    break;
+            }
+
+            for (int i = 0; i < transactions.size(); i++) {
+
+                TableRow row = new TableRow(BackOfficeActivity.this);
+
+                TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
+                row.setLayoutParams(lp);
+
+                for (int k = 0; k < 4; k++) {
+                    TextView textView = new TextView(BackOfficeActivity.this);
+                    switch (k) {
+                        case 0:
+                            textView.setText(transactions.get(i).getItemBarcode());
+                            break;
+                        case 1:
+                            textView.setText(transactions.get(i).getItemName());
+                            break;
+                        case 2:
+                            textView.setText("" + transactions.get(i).getQty());
+                            break;
+                        case 3:
+                            textView.setText("" + transactions.get(i).getTotal());
+                            break;
+                    }
+
+                    textView.setTextColor(ContextCompat.getColor(BackOfficeActivity.this, R.color.text_color));
+                    textView.setBackgroundColor(ContextCompat.getColor(BackOfficeActivity.this, R.color.jeans_blue));
+                    textView.setGravity(Gravity.CENTER);
+                    textView.setTextSize(16);
+
+                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(70, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+                    lp2.setMargins(1, 1, 1, 1);
+                    textView.setLayoutParams(lp2);
+
+                    row.addView(textView);
+                }
+                table.addView(row);
+//                OrderTransactions orderTransactions = new OrderTransactions();
+//                orderTransactions.setItemBarcode(itemBarcode_.get(i));
+//                orderTransactions.setItemName(item_name.get(i));
+//                orderTransactions.setQty(qty_.get(i));
+//                orderTransactions.setTotal(Total_.get(i));
+
+                transactionsPdf.add(transactions.get(i));
+
+            }
+
         });
 
         print.setOnClickListener(new View.OnClickListener() {
@@ -5121,9 +5414,8 @@ List<String>userHeader=new ArrayList<>();
             @Override
             public void onClick(View v) {
 
-                ExportToPdf  objExp=new ExportToPdf(BackOfficeActivity.this);
-                objExp.TopSalesItemReport(transactionsPdf,salesHeader);
-
+                ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
+                objExp.TopSalesItemReport(transactionsPdf, salesHeader);
 
             }
         });
@@ -5607,7 +5899,7 @@ List<String>userHeader=new ArrayList<>();
                     Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.save_successful), Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
                 } else {
-                    Toast.makeText(BackOfficeActivity.this,getResources().getString( R.string.add_member_ship_group), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.add_member_ship_group), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -5627,7 +5919,7 @@ List<String>userHeader=new ArrayList<>();
                     count2++;
                     memberGroupText.setText("");
                 } else {
-                    Toast.makeText(BackOfficeActivity.this, getResources().getString( R.string.add_member_ship_group), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.add_member_ship_group), Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -5735,7 +6027,7 @@ List<String>userHeader=new ArrayList<>();
                                  Spinner PosNo, TextView fromDate, TextView toDate) {
 
         int CashierNo = -1;
-        if (cashierNo.getSelectedItem().toString().equals(getResources().getString( R.string.all)))
+        if (cashierNo.getSelectedItem().toString().equals(getResources().getString(R.string.all)))
             CashierNo = -1;
         else
             CashierNo = Integer.parseInt(cashierNo.getSelectedItem().toString());
@@ -5743,7 +6035,7 @@ List<String>userHeader=new ArrayList<>();
         String ShiftName = shiftName.getSelectedItem().toString();
 
         int posNoString = -1;
-        if (PosNo.getSelectedItem().toString().equals(getResources().getString( R.string.all)))
+        if (PosNo.getSelectedItem().toString().equals(getResources().getString(R.string.all)))
             posNoString = -1;
         else
             posNoString = Integer.parseInt(PosNo.getSelectedItem().toString());
@@ -5753,7 +6045,7 @@ List<String>userHeader=new ArrayList<>();
         for (int i = 0; i < transactions.size(); i++) {
             if (filters(fromDate.getText().toString(), toDate.getText().toString(), transactions.get(i).getVoucherDate())) {
 
-                if (transactions.get(i).getShiftName().equals(ShiftName) || ShiftName.equals(getResources().getString( R.string.all))) {
+                if (transactions.get(i).getShiftName().equals(ShiftName) || ShiftName.equals(getResources().getString(R.string.all))) {
                     if (transactions.get(i).getUserNo() == CashierNo || CashierNo == -1) {
                         if (transactions.get(i).getPosNo() == posNoString || posNoString == -1) {
 
@@ -5844,7 +6136,7 @@ List<String>userHeader=new ArrayList<>();
                 row.addView(textView);
             }
             table.addView(row);
-            OrderTransactions transactions1=new OrderTransactions();
+            OrderTransactions transactions1 = new OrderTransactions();
             transactions1.setTime("*");
             transactions1.setItemCategory(transactions.get(0).getItemCategory());
             transactions1.setQty((int) totalQty);
@@ -5969,10 +6261,10 @@ List<String>userHeader=new ArrayList<>();
                     focusedRaw.setBackgroundColor(getResources().getColor(R.color.layer4));
 
                     AlertDialog.Builder builder1 = new AlertDialog.Builder(BackOfficeActivity.this);
-                    builder1.setMessage(getResources().getString( R.string.sure_delete_money_category));
+                    builder1.setMessage(getResources().getString(R.string.sure_delete_money_category));
                     builder1.setCancelable(false);
 
-                    builder1.setPositiveButton(getResources().getString( R.string.yes), new DialogInterface.OnClickListener() {
+                    builder1.setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog1, int id) {
                             dialog1.cancel();
 
@@ -5981,7 +6273,7 @@ List<String>userHeader=new ArrayList<>();
                         }
                     });
 
-                    builder1.setNegativeButton(getResources().getString( R.string.no), new DialogInterface.OnClickListener() {
+                    builder1.setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog1, int id) {
                             dialog1.cancel();
                             focusedRaw.setBackgroundColor(getResources().getColor(R.color.layer3));
@@ -6269,5 +6561,38 @@ List<String>userHeader=new ArrayList<>();
         userOrderCountReport.setOnClickListener(onClickListener2);
         reCancellationReport.setOnClickListener(onClickListener2);
 
+    }
+}
+
+class QtySorter implements Comparator<OrderTransactions> {
+    @Override
+    public int compare(OrderTransactions one, OrderTransactions another) {
+        int returnVal = 0;
+
+        if (one.getQty() < another.getQty()) {
+            returnVal = -1;
+        } else if (one.getQty() > another.getQty()) {
+            returnVal = 1;
+        } else if (one.getQty() == another.getQty()) {
+            returnVal = 0;
+        }
+        return returnVal;
+    }
+
+}
+
+class TotalSorter implements Comparator<OrderTransactions> {
+    @Override
+    public int compare(OrderTransactions one, OrderTransactions another) {
+        int returnVal = 0;
+
+        if (one.getTotal() < another.getTotal()) {
+            returnVal = -1;
+        } else if (one.getTotal() > another.getTotal()) {
+            returnVal = 1;
+        } else if (one.getTotal() == another.getTotal()) {
+            returnVal = 0;
+        }
+        return returnVal;
     }
 }

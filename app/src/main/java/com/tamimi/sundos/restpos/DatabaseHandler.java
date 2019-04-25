@@ -51,6 +51,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.tamimi.sundos.restpos.Settings.shift_name;
+
 public class DatabaseHandler extends SQLiteOpenHelper {
     //hellohjt
     // Database Version
@@ -2177,7 +2179,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public ArrayList<Money> getAllMoneyCategory() {
         ArrayList<Money> items = new ArrayList<>();
 
-        String selectQuery = "SELECT * FROM " + MONEY_CATEGORIES +" order by CATEGORY_VALUE  Asc";
+        String selectQuery = "SELECT * FROM " + MONEY_CATEGORIES + " order by CATEGORY_VALUE  Asc";
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -2322,9 +2324,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return cheeks_iteam;
     }
 
-    public final ArrayList<OrderTransactions> getAllRequestVoucher(String Vfh_No ) {
+    public final ArrayList<OrderTransactions> getAllRequestVoucher(String Vfh_No) {
         final ArrayList<OrderTransactions> orderTransactions = new ArrayList<>();
-        String selectQuery = "SELECT * FROM " + ORDER_TRANSACTIONS + " where VOUCHER_NO = '" + Vfh_No + "'" +" and ORDER_KIND = '0'";
+//        String selectQuery = "SELECT * FROM " + ORDER_TRANSACTIONS + " where VOUCHER_NO = '" + Vfh_No + "'" + " and ORDER_KIND = '0'";
+        String selectQuery = "SELECT * FROM " + ORDER_TRANSACTIONS + " where VOUCHER_NO = '" + Vfh_No + "'" ;
+
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -2373,7 +2377,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public final ArrayList<PayMethod> getAllRequestPayMethod(String Vfh_No) {
         final ArrayList<PayMethod> orderTransactions = new ArrayList<>();
-        String selectQuery = "SELECT * FROM " + PAY_METHOD + " where VOUCHER_NUMBER = '" + Vfh_No + "'"+" and ORDER_KIND = '0'";
+        String selectQuery = "SELECT * FROM " + PAY_METHOD + " where VOUCHER_NUMBER = '" + Vfh_No + "'" + " and ORDER_KIND = '0'";
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -2614,12 +2618,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return items;
     }
 
-    public List<OrderTransactions> getTopSalesItemsByQty() {
+    public List<OrderTransactions> getTopSalesItemsByQty(String shiftName,String pos) {
         List<OrderTransactions> items = new ArrayList<>();
 
-        String selectQuery = "select ITEM_BARCODE1 , ITEM_NAME , VOUCHER_DATE , SHIFT_NAME , POS_NO  , USER_NAME , sum(QTY) , sum(TOTAL) \n" +
-                "from ORDER_TRANSACTIONS\n" +
-                "group by ITEM_BARCODE1 ORDER BY QTY DESC;";
+        String selectQuery = "select ITEM_BARCODE1,ITEM_NAME , GROUP_CONCAT( VOUCHER_DATE) ,GROUP_CONCAT(QTY), GROUP_CONCAT( TOTAL)  from ORDER_TRANSACTIONS  " +
+                "where POS_NO = "+pos +" and SHIFT_NAME = "+shiftName +
+                " group by ITEM_BARCODE1 ORDER BY GROUP_CONCAT(QTY) DESC";
+
+
+//        String selectQuery = "select ITEM_BARCODE1 , ITEM_NAME , VOUCHER_DATE , SHIFT_NAME , POS_NO  , USER_NAME , sum(QTY) , sum(TOTAL) \n" +
+//                "from ORDER_TRANSACTIONS\n" +
+//                "group by ITEM_BARCODE1 ORDER BY QTY DESC;";
 
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -2628,13 +2637,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 OrderTransactions item = new OrderTransactions();
 
                 item.setItemBarcode(cursor.getString(0));
-                item.setItemName(cursor.getString(1));
-                item.setVoucherDate(cursor.getString(2));
-                item.setShiftName(cursor.getString(3));
-                item.setPosNo(Integer.parseInt(cursor.getString(4)));
-                item.setUserName(cursor.getString(5));
-                item.setQty(Integer.parseInt(cursor.getString(6)));
-                item.setTotal(Double.parseDouble(cursor.getString(7)));
+                item.setItemName(cursor.getString(1));//connt string of name
+                item.setVoucherDate(cursor.getString(2));//connt string of date
+                item.setShiftName(cursor.getString(3));//connt string of qty
+                item.setUserName(cursor.getString(4));//connt string of total
+
 
                 items.add(item);
             } while (cursor.moveToNext());
@@ -2642,34 +2649,37 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return items;
     }
 
-    public List<OrderTransactions> getTopSalesItemsByTotal() {
-        List<OrderTransactions> items = new ArrayList<>();
-
-        String selectQuery = "select ITEM_BARCODE1 , ITEM_NAME , VOUCHER_DATE , SHIFT_NAME , POS_NO  , USER_NAME , sum(QTY) , sum(TOTAL) \n" +
-                "from ORDER_TRANSACTIONS\n" +
-                "group by ITEM_BARCODE1 ORDER BY TOTAL DESC;";
-
-        db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-        if (cursor.moveToFirst()) {
-            do {
-                OrderTransactions item = new OrderTransactions();
-
-                item.setItemBarcode(cursor.getString(0));
-                item.setItemName(cursor.getString(1));
-                item.setVoucherDate(cursor.getString(2));
-                item.setShiftName(cursor.getString(3));
-                item.setPosNo(Integer.parseInt(cursor.getString(4)));
-                item.setUserName(cursor.getString(5));
-                item.setQty(Integer.parseInt(cursor.getString(6)));
-                item.setTotal(Double.parseDouble(cursor.getString(7)));
-
-                Log.e("log " , ""+Double.parseDouble(cursor.getString(7)));
-                items.add(item);
-            } while (cursor.moveToNext());
-        }
-        return items;
-    }
+//    public List<OrderTransactions> getTopSalesItemsByTotal(String shiftName,String pos) {
+//        List<OrderTransactions> items = new ArrayList<>();
+//
+//        String selectQuery = "select ITEM_BARCODE1,ITEM_NAME , GROUP_CONCAT( VOUCHER_DATE) ,GROUP_CONCAT(QTY), GROUP_CONCAT( TOTAL)  from ORDER_TRANSACTIONS  " +
+//                "where POS_NO = "+pos +" and SHIFT_NAME = "+shiftName +
+//                " group by ITEM_BARCODE1 ORDER BY TOTAL DESC";
+//
+//
+//
+////        String selectQuery = "select ITEM_BARCODE1 , ITEM_NAME , VOUCHER_DATE , SHIFT_NAME , POS_NO  , USER_NAME , sum(QTY) , sum(TOTAL) \n" +
+////                "from ORDER_TRANSACTIONS\n" +
+////                "group by ITEM_BARCODE1 ORDER BY TOTAL DESC;";
+//
+//        db = this.getWritableDatabase();
+//        Cursor cursor = db.rawQuery(selectQuery, null);
+//        if (cursor.moveToFirst()) {
+//            do {
+//                OrderTransactions item = new OrderTransactions();
+//
+//                item.setItemBarcode(cursor.getString(0));
+//                item.setItemName(cursor.getString(1));//connt string of name
+//                item.setVoucherDate(cursor.getString(2));//connt string of date
+//                item.setShiftName(cursor.getString(3));//connt string of qty
+//                item.setUserName(cursor.getString(4));//connt string of total
+//
+////                Log.e("log ", "" + Double.parseDouble(cursor.getString(7)));
+//                items.add(item);
+//            } while (cursor.moveToNext());
+//        }
+//        return items;
+//    }
 
     public List<String> getAllOrderedTables(int sectionNo) {
         List<String> tables = new ArrayList<>();
@@ -2715,7 +2725,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 payMethod.setTime(cursor.getString(15));
 
 
-
                 payMethodsList.add(payMethod);
 
             } while (cursor.moveToNext());
@@ -2746,7 +2755,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public int getMaxZReportSerial(String posNo) {
         ArrayList<Integer> moneys = new ArrayList<>();
         int max;
-        String selectQuery = "SELECT " + SERIAL17 + " FROM " + Z_REPORT_TABLE +" where POS_NO = "+posNo;
+        String selectQuery = "SELECT " + SERIAL17 + " FROM " + Z_REPORT_TABLE + " where POS_NO = " + posNo;
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
@@ -3188,7 +3197,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         BlindShift shift = new BlindShift();
 
         String selectQuery = "SELECT * FROM " + BLIND_SHIFT_IN + " where DATE = '" + date + "' and STATUS = '" + status + "'";
-        Log.e("*****" , selectQuery);
+        Log.e("*****", selectQuery);
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -3285,7 +3294,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public ArrayList<BlindCloseDetails> getBlindCloseDetails(int transNo) {
         ArrayList<BlindCloseDetails> shifts = new ArrayList<>();
 
-        String selectQuery = "SELECT * FROM " + BLIND_CLOSE_DETAILS + " where TRANS_NO = '" + transNo +"'";
+        String selectQuery = "SELECT * FROM " + BLIND_CLOSE_DETAILS + " where TRANS_NO = '" + transNo + "'";
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -3526,7 +3535,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 kitchenScreen.setKitchenNo(cursor.getInt(1));
 
 
-
                 kitchenScreens.add(kitchenScreen);
             } while (cursor.moveToNext());
         }
@@ -3558,17 +3566,24 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
 
-
-    public ArrayList<OrderTransactions> getXReport(String shiftName,String PosNo ,String fDate ,String toDate ) {
+    public ArrayList<OrderTransactions> getXReport(String shiftName, String PosNo, String fDate, String toDate) {
         ArrayList<OrderTransactions> orderTransactionsArrayList = new ArrayList<>();
 
-        String selectQuery ="SELECT ITEM_NAME, COALESCE(SUM(TOTAL),-1),COALESCE(SUM (TAX_VLUE),-1) FROM ORDER_TRANSACTIONS " +
-                "WHERE SHIFT_NAME = "+shiftName+" and POS_NO= "+PosNo+" AND VOUCHER_DATE BETWEEN '"+fDate+"' AND '"+toDate+"' GROUP BY ITEM_BARCODE1" ;
+
+        String selectQuery = "select ITEM_NAME, GROUP_CONCAT( VOUCHER_DATE), GROUP_CONCAT( TOTAL), GROUP_CONCAT(TAX_VLUE) from ORDER_TRANSACTIONS  " +
+                "where  SHIFT_NAME =" + shiftName + " and POS_NO= " + PosNo + "  GROUP BY ITEM_BARCODE1";
+
+//        String selectQuery=" select ITEM_NAME, sum(TOTAL),COALESCE(SUM (TAX_VLUE),-1) from ORDER_TRANSACTIONS where substr(VOUCHER_DATE,1,2)+0 >= "+ day +" and substr(VOUCHER_DATE,4,2)+0 >= "+month+" and substr(VOUCHER_DATE,7,4)+0 >= "+year+
+//                " AND substr(VOUCHER_DATE,1,2)+0 <= "+dayto+" and substr(VOUCHER_DATE,4,2)+0 <= "+monthto +" and substr(VOUCHER_DATE,7,4)+0 <= "+yearto+" AND SHIFT_NAME = "+shiftName +" and POS_NO= "+ PosNo +" GROUP BY ITEM_BARCODE1 ";
+//
+
+//        String selectQuery ="SELECT ITEM_NAME, COALESCE(SUM(TOTAL),-1),COALESCE(SUM (TAX_VLUE),-1) FROM ORDER_TRANSACTIONS " +
+//                "WHERE SHIFT_NAME = "+shiftName+" and POS_NO= "+PosNo+" AND VOUCHER_DATE BETWEEN '"+fDate+"' AND '"+toDate+"' GROUP BY ITEM_BARCODE1" ;
 
 //        String selectQuery ="SELECT ITEM_NAME, COALESCE(SUM(TOTAL),-1),COALESCE(SUM (TAX_VLUE),-1) FROM ORDER_TRANSACTIONS " +
 //               "WHERE SHIFT_NAME = "+shiftName+" and POS_NO= "+PosNo+" GROUP BY ITEM_NAME" ;
 
-        Log.e("se12",""+selectQuery);
+        Log.e("se12", "" + selectQuery);
 
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -3578,8 +3593,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 OrderTransactions orderTransactions = new OrderTransactions();
 
                 orderTransactions.setItemName(cursor.getString(0));
-                orderTransactions.setTotal(Double.parseDouble(cursor.getString(1)));
-                orderTransactions.setTaxValue(Double.parseDouble(cursor.getString(2)));
+                orderTransactions.setVoucherDate(cursor.getString(1));
+
+                orderTransactions.setTime(cursor.getString(2));
+                orderTransactions.setShiftName(cursor.getString(3)); //con list of tax value
 
 
                 orderTransactionsArrayList.add(orderTransactions);
@@ -3590,14 +3607,19 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
 
-    public ArrayList<OrderHeader> getMarketReport(String fDate,String toDate) {
+    public ArrayList<OrderHeader> getMarketReport(String fDate, String toDate) {
         ArrayList<OrderHeader> orderHeaders = new ArrayList<>();
 
-        String selectQuery ="SELECT POINT_OF_SALE_NUMBER, COALESCE(SUM(TOTAL),-1),COALESCE(SUM (TOTAL_TAX),-1),COALESCE(SUM (AMOUNT_DUE),-1) ,COUNT(*) ,VOUCHER_DATE  FROM ORDER_HEADER " +
-                " GROUP BY POINT_OF_SALE_NUMBER" ;
+
+        String selectQuery = "select POINT_OF_SALE_NUMBER, GROUP_CONCAT( TOTAL), GROUP_CONCAT(TOTAL_TAX),GROUP_CONCAT(AMOUNT_DUE) , GROUP_CONCAT( VOUCHER_DATE) from ORDER_HEADER  " +
+                " GROUP BY POINT_OF_SALE_NUMBER";
 
 
-        Log.e("se12",""+selectQuery);
+//        String selectQuery ="SELECT POINT_OF_SALE_NUMBER, COALESCE(SUM(TOTAL),-1),COALESCE(SUM (TOTAL_TAX),-1),COALESCE(SUM (AMOUNT_DUE),-1) ,COUNT(*) ,VOUCHER_DATE  FROM ORDER_HEADER " +
+//                " GROUP BY POINT_OF_SALE_NUMBER" ;
+
+
+        Log.e("se12", "" + selectQuery);
 
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -3607,11 +3629,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 OrderHeader orderHeaderModel = new OrderHeader();
 
                 orderHeaderModel.setPointOfSaleNumber(cursor.getInt(0));
-                orderHeaderModel.setTotal(Double.parseDouble(cursor.getString(1)));
-                orderHeaderModel.setTotalTax(Double.parseDouble(cursor.getString(2)));
-                orderHeaderModel.setAmountDue(Double.parseDouble(cursor.getString(3)));
-                orderHeaderModel.setTime(cursor.getString(4));// this for count of order
-                orderHeaderModel.setVoucherDate(cursor.getString(5));
+                orderHeaderModel.setTime(cursor.getString(1));
+                orderHeaderModel.setShiftName(cursor.getString(2));
+                orderHeaderModel.setUserName(cursor.getString(3));
+                orderHeaderModel.setVoucherDate(cursor.getString(4));
 
                 orderHeaders.add(orderHeaderModel);
 
@@ -3621,16 +3642,35 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
 
-    public ArrayList<OrderTransactions> getXReportPercent(String shiftName,String PosNo ,String fDate ,String toDate ) {
+    public ArrayList<OrderTransactions> getXReportPercent(String shiftName, String PosNo, String fDate, String toDate) {
         ArrayList<OrderTransactions> orderTransactionsArrayList = new ArrayList<>();
 
-        String selectQuery ="SELECT TAX_PERC, COALESCE(SUM(TOTAL),-1),COALESCE(SUM (TAX_VLUE),-1) FROM ORDER_TRANSACTIONS " +
-                "WHERE SHIFT_NAME = "+shiftName+" and POS_NO= "+PosNo+" AND VOUCHER_DATE BETWEEN '"+fDate+"' AND '"+toDate+"' GROUP BY TAX_PERC" ;
+
+        String selectQuery = "select TAX_PERC, GROUP_CONCAT( VOUCHER_DATE), GROUP_CONCAT(TOTAL), GROUP_CONCAT(TAX_VLUE) from ORDER_TRANSACTIONS  " +
+                "where  SHIFT_NAME =" + shiftName + " and POS_NO= " + PosNo + "  GROUP BY TAX_PERC";
+
+//        int day= Integer.parseInt(fDate.substring(0,fDate.indexOf("-")));
+//        int month=Integer.parseInt(fDate.substring(fDate.indexOf("-")+1,fDate.lastIndexOf("-")));
+//        int year=Integer.parseInt(fDate.substring(fDate.lastIndexOf("-")+1,fDate.length()));
+//
+//        int dayto= Integer.parseInt(toDate.substring(0,toDate.indexOf("-")));
+//        int monthto=Integer.parseInt(toDate.substring(toDate.indexOf("-")+1,toDate.lastIndexOf("-")));
+//        int yearto=Integer.parseInt(toDate.substring(toDate.lastIndexOf("-")+1,toDate.length()));
+//
+//        Log.e("fdate",""+day +"******"+month +"******"+year);
+//        Log.e("todate",""+dayto +"******"+monthto +"******"+yearto);
+//
+//        String selectQuery=" select TAX_PERC, sum(TOTAL),COALESCE(SUM (TAX_VLUE),-1) from ORDER_TRANSACTIONS where substr(VOUCHER_DATE,1,2)+0 >= "+ day +" and substr(VOUCHER_DATE,4,2)+0 >= "+month+" and substr(VOUCHER_DATE,7,4)+0 >= "+year+
+//        " AND substr(VOUCHER_DATE,1,2)+0 <= "+dayto+" and substr(VOUCHER_DATE,4,2)+0 <= "+monthto +" and substr(VOUCHER_DATE,7,4)+0 <= "+yearto+" AND SHIFT_NAME = "+shiftName +" and POS_NO= "+PosNo +" GROUP BY TAX_PERC ";
+
+
+//        String selectQuery ="SELECT TAX_PERC, COALESCE(SUM(TOTAL),-1),COALESCE(SUM (TAX_VLUE),-1) FROM ORDER_TRANSACTIONS " +
+//                "WHERE SHIFT_NAME = "+shiftName+" and POS_NO= "+PosNo+" AND VOUCHER_DATE BETWEEN '"+fDate+"' AND '"+toDate+"' GROUP BY TAX_PERC" ;
 
 //        String selectQuery ="SELECT ITEM_NAME, COALESCE(SUM(TOTAL),-1),COALESCE(SUM (TAX_VLUE),-1) FROM ORDER_TRANSACTIONS " +
 //               "WHERE SHIFT_NAME = "+shiftName+" and POS_NO= "+PosNo+" GROUP BY ITEM_NAME" ;
 
-        Log.e("se123",""+selectQuery);
+        Log.e("se123", "" + selectQuery);
 
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -3640,8 +3680,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 OrderTransactions orderTransactions = new OrderTransactions();
 
                 orderTransactions.setTaxPerc(Integer.parseInt(cursor.getString(0)));
-                orderTransactions.setTotal(Double.parseDouble(cursor.getString(1)));
-                orderTransactions.setTaxValue(Double.parseDouble(cursor.getString(2)));
+                orderTransactions.setVoucherDate(cursor.getString(1));
+                orderTransactions.setTime(cursor.getString(2));
+                orderTransactions.setShiftName(cursor.getString(3));
 
 
                 orderTransactionsArrayList.add(orderTransactions);
@@ -3649,21 +3690,25 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
 
-        Log.e("orderTrans ::: ",""+orderTransactionsArrayList.toString());
+//        Log.e("orderTrans ::: ",""+orderTransactionsArrayList.get(0).getTime().toString()+"...."+orderTransactionsArrayList.get(0).getVoucherDate().toString());
 
         return orderTransactionsArrayList;
     }
 
-    public ArrayList<OrderHeader> getUserNameReport(String userName,String PosNo ,String fDate ,String toDate ) {
+    public ArrayList<OrderHeader> getUserNameReport(String userName, String PosNo, String fDate, String toDate) {
         ArrayList<OrderHeader> orderHeaderArrayList = new ArrayList<>();
 
-        String selectQuery ="SELECT USER_NAME , COUNT(*) , COALESCE(SUM(AMOUNT_DUE),-1) FROM ORDER_HEADER " +
-                "WHERE USER_NAME = "+userName+" and POINT_OF_SALE_NUMBER= "+PosNo+" AND VOUCHER_DATE BETWEEN '"+fDate+"' AND '"+toDate+"' GROUP BY USER_NAME" ;
+        String selectQuery = "select USER_NAME , GROUP_CONCAT( VOUCHER_DATE), GROUP_CONCAT( AMOUNT_DUE) from ORDER_HEADER  " +
+                "WHERE USER_NAME = " + userName + " and POINT_OF_SALE_NUMBER= " + PosNo + " GROUP BY USER_NAME";
+
+
+//        String selectQuery ="SELECT USER_NAME , COUNT(*) , COALESCE(SUM(AMOUNT_DUE),-1) FROM ORDER_HEADER " +
+//                "WHERE USER_NAME = "+userName+" and POINT_OF_SALE_NUMBER= "+PosNo+" AND VOUCHER_DATE BETWEEN '"+fDate+"' AND '"+toDate+"' GROUP BY USER_NAME" ;
 
 //        String selectQuery ="SELECT ITEM_NAME, COALESCE(SUM(TOTAL),-1),COALESCE(SUM (TAX_VLUE),-1) FROM ORDER_TRANSACTIONS " +
 //               "WHERE SHIFT_NAME = "+shiftName+" and POS_NO= "+PosNo+" GROUP BY ITEM_NAME" ;
 
-        Log.e("se123",""+selectQuery);
+        Log.e("se123", "" + selectQuery);
 
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -3673,15 +3718,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 OrderHeader orderHeader = new OrderHeader();
 
                 orderHeader.setUserName(cursor.getString(0));
-                orderHeader.setTime(cursor.getString(1));
-                orderHeader.setAmountDue(Double.parseDouble(cursor.getString(2)));
+                orderHeader.setVoucherDate(cursor.getString(1));
+                orderHeader.setShiftName(cursor.getString(2));
 
                 orderHeaderArrayList.add(orderHeader);
 
             } while (cursor.moveToNext());
         }
 
-        Log.e("orderTrans ::: ",""+orderHeaderArrayList.toString());
+        Log.e("orderTrans ::: ", "" + orderHeaderArrayList.toString());
 
         return orderHeaderArrayList;
     }
@@ -3728,20 +3773,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.update(USED_CATEGORIES, values, CATEGORY_NAME + " = '" + usedCategories.getCategoryName() + "'", null);
     }
 
-    public void updateAnnounementIsShow(String message,String date) {
+    public void updateAnnounementIsShow(String message, String date) {
         db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        String filter=MESSAGE18 + " = '" + message  + "' and " +ANNOUNCEMENT_DATE18 +"= '"+date+"'";
+        String filter = MESSAGE18 + " = '" + message + "' and " + ANNOUNCEMENT_DATE18 + "= '" + date + "'";
         values.put(IS_SHOW18, 1);
 
         // updating row
         db.update(ANNOUNCEMENT_TABLE, values, filter, null);
     }
 
-    public void updateStatusInBlindShiftIn(String userName,String date) {
+    public void updateStatusInBlindShiftIn(String userName, String date) {
         db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        String filter=USER_NAME10 + " = '" + userName  + "' and " +DATE10 +"= '"+date+"'";
+        String filter = USER_NAME10 + " = '" + userName + "' and " + DATE10 + "= '" + date + "'";
         values.put(STATUS10, 0);
 
         // updating row
@@ -3792,7 +3837,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.update(BLIND_CLOSE, values, "TRANS_NO = '" + transNo + "'", null);
     }
 
-    public void updateBlindCloseReason(int transNo , String reason) {
+    public void updateBlindCloseReason(int transNo, String reason) {
 
         db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -3929,16 +3974,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void deleteFromOrderTransactionTemp2(String sectionNo, String tableNo ,int itemCode) {
+    public void deleteFromOrderTransactionTemp2(String sectionNo, String tableNo, int itemCode) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("delete from ORDER_TRANSACTIONS_TEMP WHERE SECTION_NO = '" + sectionNo + "' and TABLE_NO = '" + tableNo + "' and ITEM_BARCODE1 = '" + itemCode + "'" );
+        db.execSQL("delete from ORDER_TRANSACTIONS_TEMP WHERE SECTION_NO = '" + sectionNo + "' and TABLE_NO = '" + tableNo + "' and ITEM_BARCODE1 = '" + itemCode + "'");
         db.close();
     }
 
     public void deleteModifierAndForce(int itemCode) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("delete from ITEM_WITH_FQ WHERE ITEM_CODE = '" + itemCode + "'" );
-        db.execSQL("delete from ITEM_WITH_MODIFIER WHERE ITEM_CODE = '" + itemCode + "'" );
+        db.execSQL("delete from ITEM_WITH_FQ WHERE ITEM_CODE = '" + itemCode + "'");
+        db.execSQL("delete from ITEM_WITH_MODIFIER WHERE ITEM_CODE = '" + itemCode + "'");
         db.close();
     }
 
