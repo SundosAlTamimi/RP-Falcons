@@ -9,6 +9,7 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.EmbossMaskFilter;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -64,6 +65,7 @@ import com.tamimi.sundos.restpos.Models.Announcemet;
 import com.tamimi.sundos.restpos.Models.CancleOrder;
 import com.tamimi.sundos.restpos.Models.CategoryWithModifier;
 import com.tamimi.sundos.restpos.Models.CustomerPayment;
+import com.tamimi.sundos.restpos.Models.EmployeeRegistrationModle;
 import com.tamimi.sundos.restpos.Models.FamilyCategory;
 import com.tamimi.sundos.restpos.Models.ForceQuestions;
 import com.tamimi.sundos.restpos.Models.ItemWithFq;
@@ -3295,6 +3297,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         toDate.setText(today);
         ArrayList<String> shiftNameArray = new ArrayList<>();
         ArrayList<String> userArray = new ArrayList<>();
+        List<EmployeeRegistrationModle> userName2 = new ArrayList<>();
         ArrayList<String> posNoArray = new ArrayList<>();
 
         for (int i = 0; i < mDHandler.getAllShifts().size(); i++) {
@@ -3305,6 +3308,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         for (int i = 0; i < mDHandler.getAllEmployeeRegistration().size(); i++) {
             if (mDHandler.getAllEmployeeRegistration().get(i).getEmployeeType() == 0) {
                 userArray.add(String.valueOf(mDHandler.getAllEmployeeRegistration().get(i).getEmployeeNO()));
+                userName2.add(mDHandler.getAllEmployeeRegistration().get(i));
             }
         }
         userArray.add(0, getResources().getString(R.string.all));
@@ -3354,12 +3358,18 @@ public class BackOfficeActivity extends AppCompatActivity {
                 } else if (Out.isChecked()) {
                     cashierType = 1;
                 }
-                int CashierNo = -1;
+                String CashierNo =cashierNo.getSelectedItem().toString();
 
-                if (cashierNo.getSelectedItem().toString().equals(getResources().getString(R.string.all))) {
-                    CashierNo = -1;
+                if (CashierNo.equals(getResources().getString(R.string.all))) {
+                    CashierNo = getResources().getString(R.string.all);
                 } else {
-                    CashierNo = Integer.parseInt(cashierNo.getSelectedItem().toString());
+                    for(int i=0;i<userName2.size();i++){
+                        if(cashierNo.getSelectedItem().toString().equals(String.valueOf(userName2.get(i).getEmployeeNO()))){
+                            CashierNo = userName2.get(i).getEmployeeName();
+                            break;
+                        }
+                    }
+
                 }
 
 
@@ -3384,7 +3394,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                 for (int i = 0; i < payInData.size(); i++) {
                     if (filters(fromDate.getText().toString(), toDate.getText().toString(), payInData.get(i).getTransDate())) {
                         if (payInData.get(i).getShiftName().equals(ShiftName) || ShiftName.equals(getResources().getString(R.string.all))) {
-                            if (payInData.get(i).getUserNo() == CashierNo || CashierNo == -1) {
+                            if (payInData.get(i).getUserName().equals( CashierNo) || CashierNo.equals(getResources().getString(R.string.all))) {
                                 if (payInData.get(i).getPosNo() == posNoString || posNoString == -1) {
                                     if (cashierType == payInData.get(i).getTransType() || cashierType == -1) {
                                         count++;
@@ -3467,6 +3477,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         toDate.setText(today);
         ArrayList<String> shiftNameArray = new ArrayList<>();
         ArrayList<String> userArray = new ArrayList<>();
+        ArrayList<EmployeeRegistrationModle> userName2 = new ArrayList<>();
         ArrayList<String> posNoArray = new ArrayList<>();
 
         for (int i = 0; i < mDHandler.getAllShifts().size(); i++) {
@@ -3477,6 +3488,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         for (int i = 0; i < mDHandler.getAllEmployeeRegistration().size(); i++) {
             if (mDHandler.getAllEmployeeRegistration().get(i).getEmployeeType() == 0) {
                 userArray.add(String.valueOf(mDHandler.getAllEmployeeRegistration().get(i).getEmployeeNO()));
+                userName2.add(mDHandler.getAllEmployeeRegistration().get(i));
             }
         }
         userArray.add(0, getResources().getString(R.string.all));
@@ -3528,11 +3540,20 @@ public class BackOfficeActivity extends AppCompatActivity {
                     break;
             }
 
-            int CashierNo = -1;
-            if (cashierNo.getSelectedItem().toString().equals(getResources().getString(R.string.all)))
-                CashierNo = -1;
-            else
-                CashierNo = Integer.parseInt(cashierNo.getSelectedItem().toString());
+            String CashierNo =cashierNo.getSelectedItem().toString();
+
+            if (CashierNo.equals(getResources().getString(R.string.all))) {
+                CashierNo = getResources().getString(R.string.all);
+            } else {
+                for(int i=0;i<userName2.size();i++){
+                    if(cashierNo.getSelectedItem().toString().equals(String.valueOf(userName2.get(i).getEmployeeNO()))){
+                        CashierNo = userName2.get(i).getEmployeeName();
+                        break;
+                    }
+                }
+
+            }
+            Log.e("cashier ==>",""+CashierNo);
 
             String ShiftName = shiftName.getSelectedItem().toString();
 
@@ -3557,7 +3578,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                 if (filters(fromDate.getText().toString(), toDate.getText().toString(), canceledOrders.get(i).getTransDate())) {
 
                     if (canceledOrders.get(i).getShiftName().equals(ShiftName) || ShiftName.equals(getResources().getString(R.string.all))) {
-                        if (canceledOrders.get(i).getUserNo() == CashierNo || CashierNo == -1) {
+                        if (canceledOrders.get(i).getUserName().equals(CashierNo) || CashierNo.equals(getResources().getString(R.string.all))) {
                             if (canceledOrders.get(i).getPosNO() == posNoString || posNoString == -1) {
                                 if (voidingType == canceledOrders.get(i).getIsAllCancel() || voidingType == -1) {
 
@@ -3681,6 +3702,8 @@ public class BackOfficeActivity extends AppCompatActivity {
         toDate.setText(today);
         ArrayList<String> shiftNameArray = new ArrayList<>();
         ArrayList<String> userArray = new ArrayList<>();
+        ArrayList<EmployeeRegistrationModle> userName2 = new ArrayList<>();
+        ArrayList<EmployeeRegistrationModle> temp = new ArrayList<>();
         ArrayList<String> posNoArray = new ArrayList<>();
 
         for (int i = 0; i < mDHandler.getAllShifts().size(); i++) {
@@ -3688,9 +3711,12 @@ public class BackOfficeActivity extends AppCompatActivity {
         }
         shiftNameArray.add(0, getResources().getString(R.string.all));
 
-        for (int i = 0; i < mDHandler.getAllEmployeeRegistration().size(); i++) {
-            if (mDHandler.getAllEmployeeRegistration().get(i).getEmployeeType() == 0) {
-                userArray.add(String.valueOf(mDHandler.getAllEmployeeRegistration().get(i).getEmployeeNO()));
+        temp= mDHandler.getAllEmployeeRegistration();
+
+        for (int i = 0; i < temp.size(); i++) {
+            if (temp.get(i).getEmployeeType() == 0) {
+                userArray.add(String.valueOf(temp.get(i).getEmployeeNO()));
+                userName2.add(temp.get(i));
             }
         }
         userArray.add(0, getResources().getString(R.string.all));
@@ -3743,11 +3769,19 @@ public class BackOfficeActivity extends AppCompatActivity {
                     break;
             }
 
-            int CashierNo = -1;
-            if (cashierNo.getSelectedItem().toString().equals(getResources().getString(R.string.all)))
-                CashierNo = -1;
-            else
-                CashierNo = Integer.parseInt(cashierNo.getSelectedItem().toString());
+            String CashierNo =cashierNo.getSelectedItem().toString();
+
+            if (CashierNo.equals(getResources().getString(R.string.all))) {
+                CashierNo = getResources().getString(R.string.all);
+            } else {
+                for(int i=0;i<userName2.size();i++){
+                    if(cashierNo.getSelectedItem().toString().equals(String.valueOf(userName2.get(i).getEmployeeNO()))){
+                        CashierNo = userName2.get(i).getEmployeeName();
+                        break;
+                    }
+                }
+
+            }
 
             String ShiftName = shiftName.getSelectedItem().toString();
 
@@ -3771,7 +3805,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                 if (filters(fromDate.getText().toString(), toDate.getText().toString(), actions.get(i).getActionDate())) {
 
                     if (actions.get(i).getShiftName().equals(ShiftName) || ShiftName.equals(getResources().getString(R.string.all))) {
-                        if (actions.get(i).getUserNo() == CashierNo || CashierNo == -1) {
+                        if (actions.get(i).getUserName().equals(CashierNo) || CashierNo.equals(getResources().getString(R.string.all))) {
                             if (actions.get(i).getPOSNumber() == posNoString || posNoString == -1) {
                                 if (actionTyp == actions.get(i).getActionType() || actionTyp == -1) {
 
@@ -3900,15 +3934,21 @@ public class BackOfficeActivity extends AppCompatActivity {
         ArrayList<String> shiftNameArray = new ArrayList<>();
         ArrayList<String> userArray = new ArrayList<>();
         ArrayList<String> posNoArray = new ArrayList<>();
+        ArrayList<EmployeeRegistrationModle> userName2 = new ArrayList<>();
+        ArrayList<EmployeeRegistrationModle> temp = new ArrayList<>();
 
         for (int i = 0; i < mDHandler.getAllShifts().size(); i++) {
             shiftNameArray.add(mDHandler.getAllShifts().get(i).getShiftName());
         }
         shiftNameArray.add(0, getResources().getString(R.string.all));
 
-        for (int i = 0; i < mDHandler.getAllEmployeeRegistration().size(); i++) {
-            if (mDHandler.getAllEmployeeRegistration().get(i).getEmployeeType() == 0) {
-                userArray.add(String.valueOf(mDHandler.getAllEmployeeRegistration().get(i).getEmployeeNO()));
+
+        temp= mDHandler.getAllEmployeeRegistration();
+
+        for (int i = 0; i < temp.size(); i++) {
+            if (temp.get(i).getEmployeeType() == 0) {
+                userArray.add(String.valueOf(temp.get(i).getEmployeeNO()));
+                userName2.add(temp.get(i));
             }
         }
         userArray.add(0, getResources().getString(R.string.all));
@@ -3965,11 +4005,19 @@ public class BackOfficeActivity extends AppCompatActivity {
 
             }
 
-            int CashierNo = -1;
-            if (cashierNo.getSelectedItem().toString().equals(getResources().getString(R.string.all)))
-                CashierNo = -1;
-            else
-                CashierNo = Integer.parseInt(cashierNo.getSelectedItem().toString());
+            String CashierNo =cashierNo.getSelectedItem().toString();
+
+            if (CashierNo.equals(getResources().getString(R.string.all))) {
+                CashierNo = getResources().getString(R.string.all);
+            } else {
+                for(int i=0;i<userName2.size();i++){
+                    if(cashierNo.getSelectedItem().toString().equals(String.valueOf(userName2.get(i).getEmployeeNO()))){
+                        CashierNo = userName2.get(i).getEmployeeName();
+                        break;
+                    }
+                }
+
+            }
 
             String ShiftName = shiftName.getSelectedItem().toString();
 
@@ -3999,7 +4047,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                 if (filters(fromDate.getText().toString(), toDate.getText().toString(), orderHeaders.get(i).getVoucherDate())) {
 
                     if (orderHeaders.get(i).getShiftName().equals(ShiftName) || ShiftName.equals(getResources().getString(R.string.all))) {
-                        if (orderHeaders.get(i).getUserNo() == CashierNo || CashierNo == -1) {
+                        if (orderHeaders.get(i).getUserName().equals(CashierNo) || CashierNo.equals(getResources().getString(R.string.all))) {
                             if (orderHeaders.get(i).getPointOfSaleNumber() == posNoString || posNoString == -1) {
                                 if (orderTyp == orderHeaders.get(i).getOrderType() || orderTyp == -1) {
 
@@ -4183,6 +4231,8 @@ public class BackOfficeActivity extends AppCompatActivity {
         toDate.setText(today);
         ArrayList<String> shiftNameArray = new ArrayList<>();
         ArrayList<String> userArray = new ArrayList<>();
+        ArrayList<EmployeeRegistrationModle> userName2 = new ArrayList<>();
+
         ArrayList<String> posNoArray = new ArrayList<>();
 
         for (int i = 0; i < mDHandler.getAllShifts().size(); i++) {
@@ -4193,6 +4243,8 @@ public class BackOfficeActivity extends AppCompatActivity {
         for (int i = 0; i < mDHandler.getAllEmployeeRegistration().size(); i++) {
             if (mDHandler.getAllEmployeeRegistration().get(i).getEmployeeType() == 0) {
                 userArray.add(String.valueOf(mDHandler.getAllEmployeeRegistration().get(i).getEmployeeNO()));
+                userName2.add(mDHandler.getAllEmployeeRegistration().get(i));
+
             }
         }
         userArray.add(0, getResources().getString(R.string.all));
@@ -4244,11 +4296,19 @@ public class BackOfficeActivity extends AppCompatActivity {
                     break;
             }
 
-            int CashierNo = -1;
-            if (cashierNo.getSelectedItem().toString().equals(getResources().getString(R.string.all)))
-                CashierNo = -1;
-            else
-                CashierNo = Integer.parseInt(cashierNo.getSelectedItem().toString());
+            String CashierNo =cashierNo.getSelectedItem().toString();
+
+            if (CashierNo.equals(getResources().getString(R.string.all))) {
+                CashierNo = getResources().getString(R.string.all);
+            } else {
+                for(int i=0;i<userName2.size();i++){
+                    if(cashierNo.getSelectedItem().toString().equals(String.valueOf(userName2.get(i).getEmployeeNO()))){
+                        CashierNo = userName2.get(i).getEmployeeName();
+                        break;
+                    }
+                }
+
+            }
 
             String ShiftName = shiftName.getSelectedItem().toString();
 
@@ -4365,14 +4425,14 @@ public class BackOfficeActivity extends AppCompatActivity {
     }
 
     public List<OrderHeader> getFilteredArrayByHour(List<OrderHeader> orderHeaders, int hour, TextView fromDate, TextView toDate, String ShiftName,
-                                                    int CashierNo, int posNoString) {
+                                                    String CashierNo, int posNoString) {
         List<OrderHeader> filteredOrderHeaders = new ArrayList<>();
         for (int i = 0; i < orderHeaders.size(); i++) {
             int orderHour = Integer.parseInt(orderHeaders.get(i).getTime().substring(0, 2));
 
             if (filters(fromDate.getText().toString(), toDate.getText().toString(), orderHeaders.get(i).getVoucherDate())) {
                 if (orderHeaders.get(i).getShiftName().equals(ShiftName) || ShiftName.equals(getResources().getString(R.string.all))) {
-                    if (orderHeaders.get(i).getUserNo() == CashierNo || CashierNo == -1) {
+                    if (orderHeaders.get(i).getUserName().equals(CashierNo)|| CashierNo.equals(getResources().getString(R.string.all))) {
                         if (orderHeaders.get(i).getPointOfSaleNumber() == posNoString || posNoString == -1) {
                             if (orderHour == hour) {
                                 filteredOrderHeaders.add(orderHeaders.get(i));
@@ -4879,6 +4939,8 @@ public class BackOfficeActivity extends AppCompatActivity {
         toDate.setText(today);
         ArrayList<String> shiftNameArray = new ArrayList<>();
         ArrayList<String> userArray = new ArrayList<>();
+        ArrayList<EmployeeRegistrationModle> userName2 = new ArrayList<>();
+        ArrayList<EmployeeRegistrationModle> temp = new ArrayList<>();
         ArrayList<String> posNoArray = new ArrayList<>();
 
         for (int i = 0; i < mDHandler.getAllShifts().size(); i++) {
@@ -4886,9 +4948,12 @@ public class BackOfficeActivity extends AppCompatActivity {
         }
         shiftNameArray.add(0, getResources().getString(R.string.all));
 
-        for (int i = 0; i < mDHandler.getAllEmployeeRegistration().size(); i++) {
-            if (mDHandler.getAllEmployeeRegistration().get(i).getEmployeeType() == 0) {
-                userArray.add(String.valueOf(mDHandler.getAllEmployeeRegistration().get(i).getEmployeeNO()));
+        temp= mDHandler.getAllEmployeeRegistration();
+
+        for (int i = 0; i < temp.size(); i++) {
+            if (temp.get(i).getEmployeeType() == 0) {
+                userArray.add(String.valueOf(temp.get(i).getEmployeeNO()));
+                userName2.add(temp.get(i));
             }
         }
         userArray.add(0, getResources().getString(R.string.all));
@@ -4929,7 +4994,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                 fromDateT[0] = fromDate.getText().toString();
                 toDateT[0] = toDate.getText().toString();
                 List<OrderTransactions> transactions = mDHandler.getOrdersTransactionsByCategory(categories.get(i));
-                insertSalesVolumeByItem(table, transactions, cashierNo, shiftName, PosNo, fromDate, toDate);
+                insertSalesVolumeByItem(table, transactions, cashierNo, shiftName, PosNo, fromDate, toDate,userName2);
 
                 VolumeHeader.add(fromDateT[0]);
                 VolumeHeader.add(shiftName.getSelectedItem().toString());
@@ -4993,15 +5058,20 @@ public class BackOfficeActivity extends AppCompatActivity {
         ArrayList<String> posNoArray = new ArrayList<>();
         ArrayList<String> categoryArray = new ArrayList<>();
         ArrayList<String> familyArray = new ArrayList<>();
+        ArrayList<EmployeeRegistrationModle> userName2 = new ArrayList<>();
+        ArrayList<EmployeeRegistrationModle> temp = new ArrayList<>();
 
         for (int i = 0; i < mDHandler.getAllShifts().size(); i++) {
             shiftNameArray.add(mDHandler.getAllShifts().get(i).getShiftName());
         }
         shiftNameArray.add(0, getResources().getString(R.string.all));
 
-        for (int i = 0; i < mDHandler.getAllEmployeeRegistration().size(); i++) {
-            if (mDHandler.getAllEmployeeRegistration().get(i).getEmployeeType() == 0) {
-                userArray.add(String.valueOf(mDHandler.getAllEmployeeRegistration().get(i).getEmployeeNO()));
+        temp= mDHandler.getAllEmployeeRegistration();
+
+        for (int i = 0; i < temp.size(); i++) {
+            if (temp.get(i).getEmployeeType() == 0) {
+                userArray.add(String.valueOf(temp.get(i).getEmployeeNO()));
+                userName2.add(temp.get(i));
             }
         }
         userArray.add(0, getResources().getString(R.string.all));
@@ -5053,11 +5123,19 @@ public class BackOfficeActivity extends AppCompatActivity {
             transactionsPdf.clear();
             soldHeader.clear();
             table.removeAllViews();
-            int CashierNo = -1;
-            if (cashierNo.getSelectedItem().toString().equals(getResources().getString(R.string.all)))
-                CashierNo = -1;
-            else
-                CashierNo = Integer.parseInt(cashierNo.getSelectedItem().toString());
+            String CashierNo =cashierNo.getSelectedItem().toString();
+
+            if (CashierNo.equals(getResources().getString(R.string.all))) {
+                CashierNo = getResources().getString(R.string.all);
+            } else {
+                for(int i=0;i<userName2.size();i++){
+                    if(cashierNo.getSelectedItem().toString().equals(String.valueOf(userName2.get(i).getEmployeeNO()))){
+                        CashierNo = userName2.get(i).getEmployeeName();
+                        break;
+                    }
+                }
+
+            }
 
             String ShiftName = shiftName.getSelectedItem().toString();
             String categoryName = category.getSelectedItem().toString();
@@ -5084,7 +5162,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                 if (filters(fromDate.getText().toString(), toDate[0].getText().toString(), transactions.get(i).getVoucherDate())) {
 
                     if (transactions.get(i).getShiftName().equals(ShiftName) || ShiftName.equals(getResources().getString(R.string.all))) {
-                        if (transactions.get(i).getUserNo() == CashierNo || CashierNo == -1) {
+                        if (transactions.get(i).getUserName().equals(CashierNo) || CashierNo.equals(getResources().getString(R.string.all))) {
                             if (transactions.get(i).getPosNo() == posNoString || posNoString == -1) {
                                 if (transactions.get(i).getItemCategory().equals(categoryName) || categoryName.equals(getResources().getString(R.string.all))) {
                                     if (transactions.get(i).getItemFamily().equals(familyName) || familyName.equals(getResources().getString(R.string.all))) {
@@ -5212,6 +5290,8 @@ public class BackOfficeActivity extends AppCompatActivity {
         toDate.setText(today);
         ArrayList<String> shiftNameArray = new ArrayList<>();
         ArrayList<String> userArray = new ArrayList<>();
+        ArrayList<EmployeeRegistrationModle> userName2 = new ArrayList<>();
+        ArrayList<EmployeeRegistrationModle> temp = new ArrayList<>();
         ArrayList<String> posNoArray = new ArrayList<>();
 
         for (int i = 0; i < mDHandler.getAllShifts().size(); i++) {
@@ -5219,9 +5299,12 @@ public class BackOfficeActivity extends AppCompatActivity {
         }
         shiftNameArray.add(0, getResources().getString(R.string.all));
 
-        for (int i = 0; i < mDHandler.getAllEmployeeRegistration().size(); i++) {
-            if (mDHandler.getAllEmployeeRegistration().get(i).getEmployeeType() == 0) {
-                userArray.add(String.valueOf(mDHandler.getAllEmployeeRegistration().get(i).getEmployeeNO()));
+        temp= mDHandler.getAllEmployeeRegistration();
+
+        for (int i = 0; i < temp.size(); i++) {
+            if (temp.get(i).getEmployeeType() == 0) {
+                userArray.add(String.valueOf(temp.get(i).getEmployeeNO()));
+                userName2.add(temp.get(i));
             }
         }
         userArray.add(0, getResources().getString(R.string.all));
@@ -5282,15 +5365,25 @@ public class BackOfficeActivity extends AppCompatActivity {
                 posNoString = "'" + PosNo.getSelectedItem().toString() + "'";
             }
 
-            transactions = mDHandler.getTopSalesItemsByQty(ShiftNa, posNoString);
+            String CashierNo ="USER_NAME";
+            if (CashierNo.equals(getResources().getString(R.string.all))) {
+                CashierNo = "USER_NAME";
+            } else {
+                for(int i=0;i<userName2.size();i++){
+                    if(cashierNo.getSelectedItem().toString().equals(String.valueOf(userName2.get(i).getEmployeeNO()))){
+                        CashierNo = "'"+userName2.get(i).getEmployeeName()+"'";
+                        break;
+                    }
+                }
+
+            }
+
+            transactions = mDHandler.getTopSalesItemsByQty(ShiftNa, posNoString,CashierNo);
 
             Log.e("transactions", "-->" + transactions.size());
 
-            int CashierNo = -1;
-            if (cashierNo.getSelectedItem().toString().equals(getResources().getString(R.string.all)))
-                CashierNo = -1;
-            else
-                CashierNo = Integer.parseInt(cashierNo.getSelectedItem().toString());
+
+
 
 //            String ShiftName = shiftName.getSelectedItem().toString();
 //
@@ -5311,6 +5404,7 @@ public class BackOfficeActivity extends AppCompatActivity {
             salesHeader.add(orderBy.getCheckedRadioButtonId() == R.id.qty ? getResources().getString(R.string.qty) : getResources().getString(R.string.total));
 
             for (int i = 0; i < transactions.size(); i++) {
+
                 double total_ = 0.0;
                 int coun_ = 0, qty_x_ = 0;
                 String cou_date = transactions.get(i).getVoucherDate();
@@ -6024,14 +6118,21 @@ public class BackOfficeActivity extends AppCompatActivity {
     }
 
     void insertSalesVolumeByItem(TableLayout table, List<OrderTransactions> transactions, Spinner cashierNo, Spinner shiftName,
-                                 Spinner PosNo, TextView fromDate, TextView toDate) {
+                                 Spinner PosNo, TextView fromDate, TextView toDate,ArrayList<EmployeeRegistrationModle> userName2) {
 
-        int CashierNo = -1;
-        if (cashierNo.getSelectedItem().toString().equals(getResources().getString(R.string.all)))
-            CashierNo = -1;
-        else
-            CashierNo = Integer.parseInt(cashierNo.getSelectedItem().toString());
+        String CashierNo =cashierNo.getSelectedItem().toString();
 
+        if (CashierNo.equals(getResources().getString(R.string.all))) {
+            CashierNo = getResources().getString(R.string.all);
+        } else {
+            for(int i=0;i<userName2.size();i++){
+                if(cashierNo.getSelectedItem().toString().equals(String.valueOf(userName2.get(i).getEmployeeNO()))){
+                    CashierNo = userName2.get(i).getEmployeeName();
+                    break;
+                }
+            }
+
+        }
         String ShiftName = shiftName.getSelectedItem().toString();
 
         int posNoString = -1;
@@ -6046,7 +6147,7 @@ public class BackOfficeActivity extends AppCompatActivity {
             if (filters(fromDate.getText().toString(), toDate.getText().toString(), transactions.get(i).getVoucherDate())) {
 
                 if (transactions.get(i).getShiftName().equals(ShiftName) || ShiftName.equals(getResources().getString(R.string.all))) {
-                    if (transactions.get(i).getUserNo() == CashierNo || CashierNo == -1) {
+                    if (transactions.get(i).getUserName().equals(CashierNo) || CashierNo.equals(getResources().getString(R.string.all))) {
                         if (transactions.get(i).getPosNo() == posNoString || posNoString == -1) {
 
                             totalQty += transactions.get(i).getQty();

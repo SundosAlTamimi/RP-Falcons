@@ -2625,11 +2625,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return items;
     }
 
-    public List<OrderTransactions> getTopSalesItemsByQty(String shiftName,String pos) {
+    public List<OrderTransactions> getTopSalesItemsByQty(String shiftName,String pos,String USER_NAME) {
         List<OrderTransactions> items = new ArrayList<>();
 
         String selectQuery = "select ITEM_BARCODE1,ITEM_NAME , GROUP_CONCAT( VOUCHER_DATE) ,GROUP_CONCAT(QTY), GROUP_CONCAT( TOTAL)  from ORDER_TRANSACTIONS  " +
-                "where POS_NO = "+pos +" and SHIFT_NAME = "+shiftName +
+                "where POS_NO = "+pos +" and SHIFT_NAME = "+shiftName +" and USER_NAME = "+USER_NAME +
                 " group by ITEM_BARCODE1 ORDER BY GROUP_CONCAT(QTY) DESC";
 
 
@@ -3448,8 +3448,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
                 cancleOrder.setOrderNo(cursor.getString(0));
                 cancleOrder.setTransDate(cursor.getString(1));
-                cancleOrder.setUserName(cursor.getString(2));
-                cancleOrder.setUserNo(cursor.getInt(3));
+                cancleOrder.setUserName(cursor.getString(3));
+                cancleOrder.setUserNo(cursor.getInt(2));
                 cancleOrder.setShiftName(cursor.getString(4));
                 cancleOrder.setShiftNo(cursor.getInt(5));
                 cancleOrder.setWaiterName(cursor.getString(6));
@@ -3482,8 +3482,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 TableActions action = new TableActions();
 
                 action.setPOSNumber(cursor.getInt(0));
-                action.setUserName(cursor.getString(1));
-                action.setUserNo(cursor.getInt(2));
+                action.setUserNo(cursor.getInt(1));
+                action.setUserName(cursor.getString(2));
                 action.setShiftName(cursor.getString(3));
                 action.setShiftNo(cursor.getInt(4));
                 action.setActionType(cursor.getInt(5));
