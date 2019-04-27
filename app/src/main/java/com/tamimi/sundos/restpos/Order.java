@@ -172,7 +172,7 @@ public class Order extends AppCompatActivity {
                         if (!(Double.parseDouble(amountDue.getText().toString()) == 0)) {
                             saveInOrderTransactionObj();
                             saveInOrderHeaderObj();
-                            sendToKitchen();
+//                            sendToKitchen();
 
                             Intent intentPay = new Intent(Order.this, PayMethods.class);
                             startActivity(intentPay);
@@ -1707,36 +1707,49 @@ public class Order extends AppCompatActivity {
                 0.00, 0.00, Settings.shift_name, Settings.shift_number, waiter, seatNo, Settings.user_name, Settings.password, time));
     }
 
-    void sendToKitchen() {
-        try {
-            JSONObject obj1 = OrderHeaderObj.getJSONObject();
-
-            List<ItemWithScreen> itemWithScreens = mDbHandler.getAllItemsWithScreen();
-            for (int i = 0; i < OrderTransactionsObj.size(); i++){
-                for (int j = 0; j < itemWithScreens.size(); j++){
-                    if(OrderTransactionsObj.get(i).getItemBarcode().equals(""+itemWithScreens.get(j).getItemCode()))
-                        OrderTransactionsObj.get(i).setScreenNo(itemWithScreens.get(j).getScreenNo());
-                }
-            }
-
-            JSONArray obj2 = new JSONArray();
-            for (int i = 0; i < OrderTransactionsObj.size(); i++)
-                obj2.put(i ,OrderTransactionsObj.get(i).getJSONObject());
-
-            JSONObject obj = new JSONObject();
-            obj.put("Items", obj2);
-            obj.put("Header", obj1);
-
-            SendCloud sendCloud = new SendCloud(Order.this, obj);
-            sendCloud.startSending("kitchen");
-
-            SendSocket sendSocket = new SendSocket(Order.this, obj);
-            sendSocket.sendMessage();
-
-        } catch (JSONException e) {
-            Log.e("Tag", "JSONException");
-        }
-    }
+//    void sendToKitchen() {
+//        try {
+//            JSONObject obj1 = OrderHeaderObj.getJSONObject();
+//
+//            List<ItemWithScreen> itemWithScreens = mDbHandler.getAllItemsWithScreen();
+//            for (int i = 0; i < OrderTransactionsObj.size(); i++){
+//                for (int j = 0; j < itemWithScreens.size(); j++){
+//                    if(OrderTransactionsObj.get(i).getItemBarcode().equals(""+itemWithScreens.get(j).getItemCode()))
+//                        OrderTransactionsObj.get(i).setScreenNo(itemWithScreens.get(j).getScreenNo());
+//                }
+//                OrderTransactionsObj.get(i).setNote("");
+//            }
+//
+//            for (int i = 0; i < OrderTransactionsObj.size(); i++) {
+//                if(OrderTransactionsObj.get(i).getQty() == 0) {
+//                    OrderTransactionsObj.get(i - 1).setNote((OrderTransactionsObj.get(i-1).getNote()) + "\n" + OrderTransactionsObj.get(i).getItemName());
+//                    OrderTransactionsObj.remove(i);
+//                    i--;
+//                }
+//            }
+//
+//            JSONArray obj2 = new JSONArray();
+//            for (int i = 0; i < OrderTransactionsObj.size(); i++)
+//                obj2.put(i ,OrderTransactionsObj.get(i).getJSONObject());
+//
+//            JSONObject obj = new JSONObject();
+//            obj.put("Items", obj2);
+//            obj.put("Header", obj1);
+//
+//            Log.e("socket", "J");
+//            SendSocket sendSocket = new SendSocket(Order.this, obj1,OrderTransactionsObj);
+//            sendSocket.sendMessage();
+//
+//
+//            Log.e("sendCloud", "J");
+//            SendCloud sendCloud = new SendCloud(Order.this, obj);
+//            sendCloud.startSending("kitchen");
+//
+//
+//        } catch (JSONException e) {
+//            Log.e("Tag", "JSONException");
+//        }
+//    }
 
     public ArrayList<OrderTransactions> getOrderTransactionObj() {
         return OrderTransactionsObj;
