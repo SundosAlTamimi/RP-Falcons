@@ -7,6 +7,7 @@ import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -48,8 +49,12 @@ import com.tamimi.sundos.restpos.Models.PayMethod;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -58,7 +63,7 @@ public class Main extends AppCompatActivity {
 
     Button back, exit;
     Button takeAway, dineIn;
-    TextView userName, shift, date, payIn, payOut, timeCard, safeMode, refund,cashDrawer, annText;
+    TextView userName, shift, date, payIn, payOut, timeCard, safeMode, refund, cashDrawer, annText;
 
     DatabaseHandler mDHandler;
     Dialog dialog;
@@ -101,7 +106,7 @@ public class Main extends AppCompatActivity {
 
         date.setText(today);
         userName.setText(mDHandler.getOpenedShifts(today, 1).getUserName());
-        shift.setText(getResources().getString(R.string.shift)+" : " + mDHandler.getOpenedShifts(today, 1).getShiftName());
+        shift.setText(getResources().getString(R.string.shift) + " : " + mDHandler.getOpenedShifts(today, 1).getShiftName());
 
         showAnnouncement();
 
@@ -962,7 +967,7 @@ public class Main extends AppCompatActivity {
         date.setText(today);
 
         ArrayList<Pay> pays = mDHandler.getAllPayInOut();
-        serial.setText(pays.size() == 0 ? getResources().getString(R.string.trans_no)+" : "+"1" : getResources().getString(R.string.trans_no)+" : " +(pays.size() + 1));
+        serial.setText(pays.size() == 0 ? getResources().getString(R.string.trans_no) + " : " + "1" : getResources().getString(R.string.trans_no) + " : " + (pays.size() + 1));
 
         exit.setOnClickListener(new OnClickListener() {
             @Override
@@ -1094,9 +1099,9 @@ public class Main extends AppCompatActivity {
 
                 Date currentTimeAndDate = Calendar.getInstance().getTime();
                 SimpleDateFormat dfTime = new SimpleDateFormat("HH:mm:ss");
-                String time =convertToEnglish( dfTime.format(currentTimeAndDate));
+                String time = convertToEnglish(dfTime.format(currentTimeAndDate));
                 Log.e("time123", "" + time);
-                if (!value.getText().toString().equals("") && !mainTotal.getText().toString().equals("")&&(Double.parseDouble(value.getText().toString())!=0)) {
+                if (!value.getText().toString().equals("") && !mainTotal.getText().toString().equals("") && (Double.parseDouble(value.getText().toString()) != 0)) {
                     if (Double.parseDouble(value.getText().toString()) == Double.parseDouble(mainTotal.getText().toString())) {
 
                         //SAVE IN PAY_IN_OUT TABLE ...
@@ -1133,7 +1138,7 @@ public class Main extends AppCompatActivity {
                         mDHandler.addCashierInOut(cashier);
                         dialog.dismiss();
                     } else
-                        Toast.makeText(Main.this,getResources().getString(R.string.total_from_cash_not_equal_value) , Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Main.this, getResources().getString(R.string.total_from_cash_not_equal_value), Toast.LENGTH_SHORT).show();
                 } else
                     Toast.makeText(Main.this, getResources().getString(R.string.ensure_your_input), Toast.LENGTH_SHORT).show();
             }
@@ -1531,7 +1536,7 @@ public class Main extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (!focusedTextView.getText().toString().equals("")) {
-                    if (String.valueOf(Settings.password ).equals(focusedTextView.getText().toString())) {
+                    if (String.valueOf(Settings.password).equals(focusedTextView.getText().toString())) {
 
                         int Size = mDHandler.getAllExistingClockInClockOut().size() - 1;
                         String TransType;
@@ -1563,7 +1568,7 @@ public class Main extends AppCompatActivity {
                         focusedTextView.setText("");
                     }
                 } else {
-                    Toast.makeText(Main.this,getResources().getString( R.string.enter_your_password), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Main.this, getResources().getString(R.string.enter_your_password), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -1606,7 +1611,7 @@ public class Main extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                final String times =convertToEnglish( time.getText().toString());
+                final String times = convertToEnglish(time.getText().toString());
 
                 Settings.time_card = 1;
 
@@ -1648,7 +1653,7 @@ public class Main extends AppCompatActivity {
         masege = (TextView) dialog.findViewById(R.id.clockinsuccessfull);
         time = (TextView) dialog.findViewById(R.id.time2);
         date = (TextView) dialog.findViewById(R.id.date2);
-        masege.setText( getResources().getString(R.string.clockinsuccessful) +"(" + Settings.user_name + ")");
+        masege.setText(getResources().getString(R.string.clockinsuccessful) + "(" + Settings.user_name + ")");
         Button ok = (Button) dialog.findViewById(R.id.ok1);
 
         time.setText(convertToEnglish(times));
@@ -1699,7 +1704,7 @@ public class Main extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Settings.time_card = 0;
-                final String times =convertToEnglish( time.getText().toString());
+                final String times = convertToEnglish(time.getText().toString());
                 ClockInClockOut clockInClockOut = new ClockInClockOut();
 
                 clockInClockOut.setPointOfSaleNumber(Settings.POS_number);
@@ -1798,7 +1803,7 @@ public class Main extends AppCompatActivity {
             public void onClick(View v) {
 
 
-                VHF_NO[0] =  convertToEnglish(vhfNo.getText().toString());
+                VHF_NO[0] = convertToEnglish(vhfNo.getText().toString());
 
                 for (int i = 0; i < inVoucher.size(); i++) {
                     if (!inVoucher.get(i).equals(VHF_NO[0])) {
@@ -1811,6 +1816,9 @@ public class Main extends AppCompatActivity {
                 if (!check[0] && flag[0]) {
                     inVoucher.add(VHF_NO[0]);
                     orderTransactions = mDHandler.getAllRequestVoucher(VHF_NO[0]);
+                    ArrayList<OrderTransactions> orderTransactions1 = new ArrayList<>();
+                    List<String> item_ = new ArrayList<>();
+
                     if (!orderTransactions.isEmpty()) {
                         originalDate.setText(orderTransactions.get(0).getVoucherDate());
                         originalTime.setText(orderTransactions.get(0).getTime());
@@ -1821,11 +1829,62 @@ public class Main extends AppCompatActivity {
                         }
                         customer.setText("customer");
 
+                        for (int q = 0; q < orderTransactions.size(); q++) {
+                            item_.add(orderTransactions.get(q).getItemBarcode());
+                        }
+                        Set<String> sets = new HashSet<String>(item_);
+                        item_.clear();
+                        item_.addAll(sets);
 
-                        for (int i = 0; i < orderTransactions.size(); i++) {
-//                            if(!(orderTransactions.get(i).getOrderKind()==998)) {
-                            insertRow(orderTransactions.get(i).getVoucherSerial(), orderTransactions.get(i).getItemName(), orderTransactions.get(i).getQty(), orderTransactions, refundTables);
-//                            }
+                        int ind = -1, cou = 0;
+                        for (int x = 0; x < item_.size(); x++) {
+                            int qtyR_ = 0, qty_ = 0;
+                            double total_R = 0.0, total = 0.0;
+                            double liDec = 0.0, Dec = 0.0, liDec_r = 0.0, Dec_r = 0.0;
+                            for (int y = 0; y < orderTransactions.size(); y++) {
+
+                                if (item_.get(x).equals(orderTransactions.get(y).getItemBarcode())) {
+                                    ind = y;
+                                    if (orderTransactions.get(y).getQty() != 0) {
+                                        if (orderTransactions.get(y).getOrderKind() == 998) {
+                                            total_R += orderTransactions.get(y).getTotal();
+                                            qtyR_ += orderTransactions.get(y).getQty();
+                                            liDec_r += orderTransactions.get(y).getlDiscount();
+                                            Dec_r += orderTransactions.get(y).getDiscount();
+                                        } else if (orderTransactions.get(y).getOrderKind() == 0) {
+                                            total += orderTransactions.get(y).getTotal();
+                                            qty_ += orderTransactions.get(y).getQty();
+                                            liDec += orderTransactions.get(y).getlDiscount();
+                                            Dec += orderTransactions.get(y).getDiscount();
+                                        }
+                                    }
+                                }
+
+                            }
+                            int cv = qty_ - qtyR_;
+                            if (ind != -1 && cv > 0) {
+
+                                orderTransactions1.add(orderTransactions.get(ind));
+                                orderTransactions1.get(cou).setQty(qty_ - qtyR_);
+                                orderTransactions1.get(cou).setTotal(total - total_R);
+                                orderTransactions1.get(cou).setDiscount(Dec - Dec_r);
+                                orderTransactions1.get(cou).setlDiscount(liDec - liDec_r);
+                                cou++;
+                            }
+                        }
+                        orderTransactions.clear();
+                        orderTransactions = orderTransactions1;
+
+                        if (orderTransactions.size() == 0)
+                            notCorrectValueDialog(getString(R.string.cannot_return));
+
+                        for (int i = 0; i < orderTransactions.size(); i++) {//if
+                            if (!(orderTransactions.get(i).getQty() <= 0)) {
+
+                                insertRow(orderTransactions.get(i).getVoucherSerial(), orderTransactions.get(i).getItemName(), orderTransactions.get(i).getQty(), orderTransactions, refundTables);
+
+
+                            }
                         }
                         flag[0] = false;
                     } else {
@@ -1843,7 +1902,7 @@ public class Main extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                double textData;
+                int textData;
 
                 for (int i = 0; i < orderTransactions.size(); i++) {
                     text = dialog.findViewById(Integer.parseInt(i + "" + 5));
@@ -1854,14 +1913,16 @@ public class Main extends AppCompatActivity {
                     }
                 }
                 if (netTotals != 0.0 && CheckTrue) {
+                    int index = 0;
                     for (int i = 0; i < orderTransactions.size(); i++) {
                         text = dialog.findViewById(Integer.parseInt(i + "3"));
                         if (!text.getText().toString().equals("")) {
-                            textData = Double.parseDouble(text.getText().toString());
+                            textData = Integer.parseInt(text.getText().toString());
                             rowRefund.add(orderTransactions.get(i));
-
+                            rowRefund.get(index).setQty(Integer.parseInt(text.getText().toString()));
+                            index++;
                         } else {
-                            textData = 0.0;
+                            textData = 0;
                         }
 
                         double lDiscon = orderTransactions.get(i).getlDiscount();
@@ -1922,7 +1983,7 @@ public class Main extends AppCompatActivity {
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                         idGeneral = Integer.parseInt(row.getId() + "4");
-                        data =  convertToEnglish(editText.getText().toString());
+                        data = convertToEnglish(editText.getText().toString());
                         int id = row.getId();
 
                         if (!data.equals("")) {
@@ -1938,7 +1999,7 @@ public class Main extends AppCompatActivity {
                             } else {
                                 text = (TextView) dialog.findViewById(idGeneral);
 
-                                notCorrectValueDialog();
+                                notCorrectValueDialog(getResources().getString(R.string.this_value_not_correct));
                                 rows = row;
                                 rows.setBackgroundColor(getResources().getColor(R.color.exit_hover));
                                 text.setText("0.0");
@@ -1962,11 +2023,12 @@ public class Main extends AppCompatActivity {
 
                         for (int i = 0; i < list.size(); i++) {
                             text = dialog.findViewById(Integer.parseInt(i + "4"));
-                            String da = convertToEnglish( text.getText().toString());
+                            Log.e("i=", "" + i + "4");
+                            String da = convertToEnglish(text.getText().toString());
                             totalAdd += Double.parseDouble(da);
                             text = dialog.findViewById(Integer.parseInt(i + "3"));
-                            String dataTest =  convertToEnglish(text.getText().toString());
-                            if (da == "0.0" || dataTest.equals("")) {
+                            String dataTest = convertToEnglish(text.getText().toString());
+                            if (da.equals("0.0") || dataTest.equals("")) {
                                 discountAdd += 0.0;
                             } else {
                                 discountAdd += ((list.get(i).getDiscount() / list.get(i).getQty()) + (list.get(i).getlDiscount() / list.get(i).getQty())) * Integer.parseInt(dataTest);
@@ -2054,7 +2116,7 @@ public class Main extends AppCompatActivity {
         String categoryName;
         double categoryValue = 0.0;
         int categoryQty = 0;
-
+        final boolean[] flag = {true};
 
         netTotalText = (TextView) dialog.findViewById(R.id.nettotal);
         netTotalText.setText("" + netTotals);
@@ -2065,6 +2127,7 @@ public class Main extends AppCompatActivity {
             public void onClick(View v) {
                 point.setText("");
                 focusedTextView = point;
+                flag[0] = true;
 
             }
         });
@@ -2073,6 +2136,7 @@ public class Main extends AppCompatActivity {
             public void onClick(View v) {
                 card.setText("");
                 focusedTextView = card;
+                flag[0] = true;
 
             }
         });
@@ -2081,6 +2145,7 @@ public class Main extends AppCompatActivity {
             public void onClick(View v) {
                 gift.setText("");
                 focusedTextView = gift;
+                flag[0] = true;
 
             }
         });
@@ -2090,6 +2155,7 @@ public class Main extends AppCompatActivity {
             public void onClick(View v) {
                 cashValue.setText("");
                 focusedTextView = cashValue;
+                flag[0] = true;
 
             }
         });
@@ -2098,6 +2164,7 @@ public class Main extends AppCompatActivity {
             public void onClick(View v) {
                 chequeValue.setText("");
                 focusedTextView = chequeValue;
+                flag[0] = true;
 
             }
         });
@@ -2106,6 +2173,7 @@ public class Main extends AppCompatActivity {
             public void onClick(View v) {
                 CreditValue.setText("");
                 focusedTextView = CreditValue;
+                flag[0] = true;
 
             }
         });
@@ -2190,9 +2258,9 @@ public class Main extends AppCompatActivity {
         dot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                focusedTextView.setText(focusedTextView.getText().toString() + ".");
-
+                if (flag[0])
+                    focusedTextView.setText(focusedTextView.getText().toString() + ".");
+                flag[0] = false;
 
             }
         });
@@ -2240,49 +2308,65 @@ public class Main extends AppCompatActivity {
 
                 if (netTotalText.getText().toString().equals("0.0")) {
 
-                    OrderHeader orderHeader = new OrderHeader(rowRefund.get(0).getOrderType(), 998, today, Settings.POS_number, Settings.store_number,
+                    OrderHeader orderHeader = new OrderHeader(rowRefund.get(0).getOrderType(), 998, convertToEnglish(today), Settings.POS_number, Settings.store_number,
                             rowRefund.get(0).getVoucherNo(), rowRefund.get(0).getVoucherSerial(), totalAdd, lineDiscount.get(0), DiscountArray.get(0), lineDiscount.get(0) + DiscountArray.get(0),
                             Settings.service_value, rowRefund.get(0).getTaxValue(), rowRefund.get(0).getServiceTax(), netTotals,
                             netTotals, 1, rowRefund.get(0).getTableNo(),
                             rowRefund.get(0).getSectionNo(), cashValues, creditValues, chequeVales, cardValues,
-                            giftCardValues, pointValues, Settings.shift_name, Settings.shift_number, "No Waiter", 0, Settings.user_name, Settings.password, times);
+                            giftCardValues, pointValues, Settings.shift_name, Settings.shift_number, orderTransactions.get(0).getUserName(), 0, Settings.user_name, Settings.password, convertToEnglish(times));
 
                     mDHandler.addOrderHeader(orderHeader);
 
                     for (int i = 0; i < rowRefund.size(); i++) {
 
-                        OrderTransactions orderTransactions = new OrderTransactions(rowRefund.get(i).getOrderType(), 998, today, Settings.POS_number, Settings.store_number,
+                        OrderTransactions orderTransactions = new OrderTransactions(rowRefund.get(i).getOrderType(), 998, convertToEnglish(today), Settings.POS_number, Settings.store_number,
                                 rowRefund.get(i).getVoucherNo(), rowRefund.get(i).getVoucherSerial(), "" + rowRefund.get(i).getItemBarcode(), rowRefund.get(i).getItemName(),
                                 rowRefund.get(i).getSecondaryName(), rowRefund.get(i).getKitchenAlias(), rowRefund.get(i).getItemCategory(),
                                 rowRefund.get(i).getItemFamily(), rowRefund.get(i).getQty(), rowRefund.get(i).getPrice(),
-                                totalAdd, DiscountArray.get(i), lineDiscount.get(i), lineDiscount.get(i) + DiscountArray.get(i), rowRefund.get(i).getTaxValue(),
+                                rowRefund.get(i).getQty() * rowRefund.get(i).getPrice(), DiscountArray.get(i), lineDiscount.get(i), lineDiscount.get(i) + DiscountArray.get(i), rowRefund.get(i).getTaxValue(),
                                 rowRefund.get(i).getTaxPerc(), 0, rowRefund.get(i).getService(), rowRefund.get(i).getServiceTax(),
-                                rowRefund.get(i).getTableNo(), rowRefund.get(i).getSectionNo(), Settings.shift_number, Settings.shift_name, Settings.password, Settings.user_name, times);
+                                rowRefund.get(i).getTableNo(), rowRefund.get(i).getSectionNo(), Settings.shift_number, Settings.shift_name, Settings.password, Settings.user_name, convertToEnglish(times));
 
 
                         mDHandler.addOrderTransaction(orderTransactions);
 
                     }
 
-                    for (int i = 0; i < money.size(); i++) {
-                        TableRow tRow = (TableRow) categories.getChildAt(i);
-                        TextView t = (TextView) tRow.getChildAt(2);
-                        TextView t0 = (TextView) tRow.getChildAt(0);
-                        TextView t1 = (TextView) tRow.getChildAt(1);
-                        if (!t1.getText().toString().equals("0") && !t1.getText().toString().equals("")) {
-                            Cashier cashier = new Cashier();
-                            ArrayList<Cashier> cashiersList = new ArrayList<Cashier>();
-                            cashier.setCashierName(Settings.user_name);
-                            cashier.setCategoryName(t0.getText().toString());
-                            cashier.setCategoryQty(Integer.parseInt(t1.getText().toString()));
-                            cashier.setCategoryValue(Double.parseDouble("-" + t.getText().toString()));
-                            cashier.setCheckInDate(today);
-                            cashier.setOrderKind(1);
+//                    for (int i = 0; i < money.size(); i++) {
+//                        TableRow tRow = (TableRow) categories.getChildAt(i);
+//                        TextView t = (TextView) tRow.getChildAt(2);
+//                        TextView t0 = (TextView) tRow.getChildAt(0);
+//                        TextView t1 = (TextView) tRow.getChildAt(1);
+//                        if (!t1.getText().toString().equals("0") && !t1.getText().toString().equals("")) {
+//                            Cashier cashier = new Cashier();
+//                            ArrayList<Cashier> cashiersList = new ArrayList<Cashier>();
+//                            cashier.setCashierName(Settings.user_name);
+//                            cashier.setCategoryName(t0.getText().toString());
+//                            cashier.setCategoryQty(Integer.parseInt(t1.getText().toString()));
+//                            cashier.setCategoryValue(Double.parseDouble("-" + t.getText().toString()));
+//                            cashier.setCheckInDate(today);
+//                            cashier.setOrderKind(1);
+//
+//                            cashiersList.add(cashier);
+//
+//                            mDHandler.addCashierInOut(cashiersList);
+//                        }
+//                    }
 
-                            cashiersList.add(cashier);
 
-                            mDHandler.addCashierInOut(cashiersList);
-                        }
+                    if (Double.parseDouble(cashValue.getText().toString()) != 0 && !cashValue.getText().toString().equals("")) {
+                        Cashier cashier = new Cashier();
+                        ArrayList<Cashier> cashiersList = new ArrayList<Cashier>();
+                        cashier.setCashierName(Settings.user_name);
+                        cashier.setCategoryName("null");
+                        cashier.setCategoryQty(-1);
+                        cashier.setCategoryValue(Double.parseDouble(cashValue.getText().toString()));
+                        cashier.setCheckInDate(today);
+                        cashier.setOrderKind(1);
+
+                        cashiersList.add(cashier);
+
+                        mDHandler.addCashierInOut(cashiersList);
                     }
 
                     ArrayList<PayMethod> listOrder = new ArrayList();
@@ -2303,10 +2387,10 @@ public class Main extends AppCompatActivity {
 
                         PayMethod payMethod = new PayMethod(list.get(0).getOrderType(),
                                 998,
-                                today,
+                                convertToEnglish(today),
                                 Settings.POS_number,
                                 Settings.store_number, list.get(0).getVoucherNo(), list.get(0).getVoucherSerial(), listForPay.get(x),
-                                listValuePay.get(x), payNumber, payName, Settings.shift_name, Settings.shift_number, Settings.user_name, Settings.password, times);
+                                listValuePay.get(x), payNumber, payName, Settings.shift_name, Settings.shift_number, Settings.user_name, Settings.password, convertToEnglish(times));
 
                         mDHandler.addAllPayMethodItem(payMethod);
                     }
@@ -2396,92 +2480,92 @@ public class Main extends AppCompatActivity {
 
 
         ///"""""""""""""""""""""""""""""""""""""""
-
-        for (int i = 0; i < money.size(); i++) {
-            final int position = i;
-            TableRow row = new TableRow(Main.this);
-            TableLayout.LayoutParams lp = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT);
-            lp.setMargins(0, 10, 0, 5);
-            row.setLayoutParams(lp);
-
-            TextView textView = new TextView(Main.this);
-            textView.setText(money.get(i).getCatName() + "   ");
-            textView.setTag(money.get(i).getCatValue());
-            textView.setGravity(Gravity.CENTER);
-            textView.setTextColor(getResources().getColor(R.color.text_color));
-
-            final TextView textView1 = new TextView(Main.this);
-            textView1.setBackgroundColor(getResources().getColor(R.color.layer1));
-            textView1.setHeight(26);
-            textView1.setPadding(10, 0, 0, 0);
-            textView1.setTextColor(getResources().getColor(R.color.text_color));
-            textView1.setText("0");
-            textView1.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (focusedTextView != null &&  convertToEnglish(focusedTextView.getText().toString()).equals("")) {
-                        focusedTextView.setText("0");
-                    }
-
-                    focusedTextView = textView1;
-                    focusedTextView.setTag("" + position);
-                    focusedTextView.setText("");
-                }
-            });
-
-            textView1.addTextChangedListener(new TextWatcher() {
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    if (focusedTextView != null) {
-                        if (! convertToEnglish(focusedTextView.getText().toString()).equals("")) {
-
-                            TableRow tableRow = (TableRow) categories.getChildAt(Integer.parseInt( convertToEnglish(focusedTextView.getTag().toString())));
-                            TextView text = (TextView) tableRow.getChildAt(0);
-                            TextView text2 = (TextView) tableRow.getChildAt(2);
-
-                            double total = Double.parseDouble( convertToEnglish(text.getTag().toString())) * Double.parseDouble( convertToEnglish(focusedTextView.getText().toString()));
-                            text2.setText("" + total);
-                        }
-
-                        cashValue.setText("0.000");
-                        for (int i = 0; i < money.size(); i++) {
-                            TableRow tRow = (TableRow) categories.getChildAt(i);
-                            TextView t = (TextView) tRow.getChildAt(2);
-                            cashValue.setText("" + (Double.parseDouble(cashValue.getText().toString()) + Double.parseDouble(t.getText().toString())));
-                        }
-
-                    }
-                }
-
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count,
-                                              int after) {
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                }
-            });
-
-
-            TextView textView2 = new TextView(  Main.this);
-            textView2.setText("0");
-
-            TableRow.LayoutParams lp2 = new TableRow.LayoutParams(130, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
-            lp2.setMargins(15, 0, 15, 0);
-            textView.setLayoutParams(lp2);
-            textView1.setLayoutParams(lp2);
-            textView2.setLayoutParams(lp2);
-            textView2.setGravity(Gravity.CENTER);
-            textView2.setTextColor(getResources().getColor(R.color.text_color));
-
-            row.addView(textView);
-            row.addView(textView1);
-            row.addView(textView2);
-
-            categories.addView(row);
-        }
+//
+//        for (int i = 0; i < money.size(); i++) {
+//            final int position = i;
+//            TableRow row = new TableRow(Main.this);
+//            TableLayout.LayoutParams lp = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT);
+//            lp.setMargins(0, 10, 0, 5);
+//            row.setLayoutParams(lp);
+//
+//            TextView textView = new TextView(Main.this);
+//            textView.setText(money.get(i).getCatName() + "   ");
+//            textView.setTag(money.get(i).getCatValue());
+//            textView.setGravity(Gravity.CENTER);
+//            textView.setTextColor(getResources().getColor(R.color.text_color));
+//
+//            final TextView textView1 = new TextView(Main.this);
+//            textView1.setBackgroundColor(getResources().getColor(R.color.layer1));
+//            textView1.setHeight(26);
+//            textView1.setPadding(10, 0, 0, 0);
+//            textView1.setTextColor(getResources().getColor(R.color.text_color));
+//            textView1.setText("0");
+//            textView1.setOnClickListener(new OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    if (focusedTextView != null && convertToEnglish(focusedTextView.getText().toString()).equals("")) {
+//                        focusedTextView.setText("0");
+//                    }
+//
+//                    focusedTextView = textView1;
+//                    focusedTextView.setTag("" + position);
+//                    focusedTextView.setText("");
+//                }
+//            });
+//
+//            textView1.addTextChangedListener(new TextWatcher() {
+//
+//                @Override
+//                public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                    if (focusedTextView != null) {
+//                        if (!convertToEnglish(focusedTextView.getText().toString()).equals("")) {
+//
+//                            TableRow tableRow = (TableRow) categories.getChildAt(Integer.parseInt(convertToEnglish(focusedTextView.getTag().toString())));
+//                            TextView text = (TextView) tableRow.getChildAt(0);
+//                            TextView text2 = (TextView) tableRow.getChildAt(2);
+//
+//                            double total = Double.parseDouble(convertToEnglish(text.getTag().toString())) * Double.parseDouble(convertToEnglish(focusedTextView.getText().toString()));
+//                            text2.setText("" + total);
+//                        }
+//
+//                        cashValue.setText("0.000");
+//                        for (int i = 0; i < money.size(); i++) {
+//                            TableRow tRow = (TableRow) categories.getChildAt(i);
+//                            TextView t = (TextView) tRow.getChildAt(2);
+//                            cashValue.setText("" + (Double.parseDouble(cashValue.getText().toString()) + Double.parseDouble(t.getText().toString())));
+//                        }
+//
+//                    }
+//                }
+//
+//                @Override
+//                public void beforeTextChanged(CharSequence s, int start, int count,
+//                                              int after) {
+//                }
+//
+//                @Override
+//                public void afterTextChanged(Editable s) {
+//                }
+//            });
+//
+//
+//            TextView textView2 = new TextView(Main.this);
+//            textView2.setText("0");
+//
+//            TableRow.LayoutParams lp2 = new TableRow.LayoutParams(130, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+//            lp2.setMargins(15, 0, 15, 0);
+//            textView.setLayoutParams(lp2);
+//            textView1.setLayoutParams(lp2);
+//            textView2.setLayoutParams(lp2);
+//            textView2.setGravity(Gravity.CENTER);
+//            textView2.setTextColor(getResources().getColor(R.color.text_color));
+//
+//            row.addView(textView);
+//            row.addView(textView1);
+//            row.addView(textView2);
+//
+//            categories.addView(row);
+//        }
 
         ///"""""""""""""""""""""""""""""""""""""""
 
@@ -2490,12 +2574,15 @@ public class Main extends AppCompatActivity {
     }
 
 
-    public void notCorrectValueDialog() {
+    public void notCorrectValueDialog(String mass) {
         Dialog dialog1 = new Dialog(Main.this);
         dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog1.setCancelable(false);
         dialog1.setContentView(R.layout.not_correct_dialog);
         dialog1.setCanceledOnTouchOutside(true);
+        TextView text = (TextView) dialog1.findViewById(R.id.not);
+
+        text.setText(mass);
 
         dialog1.show();
 

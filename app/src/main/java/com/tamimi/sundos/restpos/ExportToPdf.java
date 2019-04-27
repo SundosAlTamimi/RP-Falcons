@@ -674,7 +674,7 @@ public class ExportToPdf  {
         insertCell(pdfPTableHeader, context.getString(R.string.cashier_no) + " : " + salesHeader.get(3), Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
         insertCell(pdfPTableHeader, context.getString(R.string.point_of_sale) + " : " + salesHeader.get(4), Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
         insertCell(pdfPTableHeader, "", Element.ALIGN_LEFT, 2, arabicFont, BaseColor.WHITE);
-        insertCell(pdfPTableHeader, context.getString(R.string.cashier) + " : " + salesHeader.get(5), Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+        insertCell(pdfPTableHeader, context.getString(R.string.order_by) + " : " + salesHeader.get(5), Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
 
         try {
             doc.add(pdfPTableHeader);
