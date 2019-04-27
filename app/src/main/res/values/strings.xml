@@ -567,6 +567,8 @@
     <string name="enter_received">Enter Received:</string>
     <string name="tables_merged">Tables merged !</string>
     <string name="table_moved">Table Moved !</string>
+    <string name="this_value_not_correct">This value not correct</string>
+    <string name="cannot_return">can\'t Return from this Voucher</string>
 
 
 </resources>

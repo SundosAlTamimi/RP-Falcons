@@ -11,7 +11,7 @@
         android:layout_width="579dp"
         android:layout_height="79dp"
         android:gravity="center"
-        android:text="This value not correct"
+        android:text="@string/this_value_not_correct"
         android:textColor="@color/text_color"
         android:textSize="25sp" />
 </LinearLayout>

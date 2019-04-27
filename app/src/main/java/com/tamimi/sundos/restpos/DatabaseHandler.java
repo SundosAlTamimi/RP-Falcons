@@ -1206,12 +1206,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 //                + KITCHEN_NO + " INTEGER " + ")";
 //        db.execSQL(CREATE_TABLE_KITCHEN_SCREEN_TABLE);
 
-        String CREATE_TABLE_ITEM_WITH_SCREEN = "CREATE TABLE " + ITEM_WITH_SCREEN + "("
-                + ITEM_CODE3 + " INTEGER ,"
-                + ITEM_NAME3 + " TEXT,"
-                + SCREEN_NO3 + " INTEGER,"
-                + SCREEN_NAME3 + " TEXT " + ")";
-        db.execSQL(CREATE_TABLE_ITEM_WITH_SCREEN);
+//        String CREATE_TABLE_ITEM_WITH_SCREEN = "CREATE TABLE " + ITEM_WITH_SCREEN + "("
+//                + ITEM_CODE3 + " INTEGER ,"
+//                + ITEM_NAME3 + " TEXT,"
+//                + SCREEN_NO3 + " INTEGER,"
+//                + SCREEN_NAME3 + " TEXT " + ")";
+//        db.execSQL(CREATE_TABLE_ITEM_WITH_SCREEN);
     }
 
     //Insert values to the table Items
@@ -3686,7 +3686,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             do {
                 OrderTransactions orderTransactions = new OrderTransactions();
 
-                orderTransactions.setTaxPerc(Integer.parseInt(cursor.getString(0)));
+                orderTransactions.setTaxPerc(Double.parseDouble(cursor.getString(0)));
                 orderTransactions.setVoucherDate(cursor.getString(1));
                 orderTransactions.setTime(cursor.getString(2));
                 orderTransactions.setShiftName(cursor.getString(3));

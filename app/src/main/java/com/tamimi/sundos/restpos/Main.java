@@ -7,6 +7,7 @@ import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -1835,35 +1836,33 @@ public class Main extends AppCompatActivity {
                         item_.clear();
                         item_.addAll(sets);
 
-                        Log.e("item --", "" + item_.toString() + item_.size() + sets.size());
-
-
-                        double total_R = 0.0, total = 0.0;
-                        double liDec = 0.0, Dec = 0.0, liDec_r = 0.0, Dec_r = 0.0;
-                        int qtyR_ = 0, qty_ = 0;
+                        int ind = -1, cou = 0;
                         for (int x = 0; x < item_.size(); x++) {
-                            int ind = -1,cou=0;
+                            int qtyR_ = 0, qty_ = 0;
+                            double total_R = 0.0, total = 0.0;
+                            double liDec = 0.0, Dec = 0.0, liDec_r = 0.0, Dec_r = 0.0;
                             for (int y = 0; y < orderTransactions.size(); y++) {
 
                                 if (item_.get(x).equals(orderTransactions.get(y).getItemBarcode())) {
                                     ind = y;
-                                    if(orderTransactions.get(y).getQty()!=0){
-                                    if (orderTransactions.get(y).getOrderKind() == 998) {
-                                        total_R += orderTransactions.get(y).getTotal();
-                                        qtyR_ += orderTransactions.get(y).getQty();
-                                        liDec_r += orderTransactions.get(y).getlDiscount();
-                                        Dec_r += orderTransactions.get(y).getDiscount();
-                                    } else if (orderTransactions.get(y).getOrderKind() == 0) {
-                                        total += orderTransactions.get(y).getTotal();
-                                        qty_ += orderTransactions.get(y).getQty();
-                                        liDec += orderTransactions.get(y).getlDiscount();
-                                        Dec += orderTransactions.get(y).getDiscount();
-                                    }}
+                                    if (orderTransactions.get(y).getQty() != 0) {
+                                        if (orderTransactions.get(y).getOrderKind() == 998) {
+                                            total_R += orderTransactions.get(y).getTotal();
+                                            qtyR_ += orderTransactions.get(y).getQty();
+                                            liDec_r += orderTransactions.get(y).getlDiscount();
+                                            Dec_r += orderTransactions.get(y).getDiscount();
+                                        } else if (orderTransactions.get(y).getOrderKind() == 0) {
+                                            total += orderTransactions.get(y).getTotal();
+                                            qty_ += orderTransactions.get(y).getQty();
+                                            liDec += orderTransactions.get(y).getlDiscount();
+                                            Dec += orderTransactions.get(y).getDiscount();
+                                        }
+                                    }
                                 }
 
                             }
-                            int cv=qty_ - qtyR_;
-                            if (ind != -1 && cv>0) {
+                            int cv = qty_ - qtyR_;
+                            if (ind != -1 && cv > 0) {
 
                                 orderTransactions1.add(orderTransactions.get(ind));
                                 orderTransactions1.get(cou).setQty(qty_ - qtyR_);
@@ -1876,10 +1875,15 @@ public class Main extends AppCompatActivity {
                         orderTransactions.clear();
                         orderTransactions = orderTransactions1;
 
-                        Log.e("or size", "" + orderTransactions.size());
+                        if (orderTransactions.size() == 0)
+                            notCorrectValueDialog(getString(R.string.cannot_return));
+
                         for (int i = 0; i < orderTransactions.size(); i++) {//if
                             if (!(orderTransactions.get(i).getQty() <= 0)) {
+
                                 insertRow(orderTransactions.get(i).getVoucherSerial(), orderTransactions.get(i).getItemName(), orderTransactions.get(i).getQty(), orderTransactions, refundTables);
+
+
                             }
                         }
                         flag[0] = false;
@@ -1995,7 +1999,7 @@ public class Main extends AppCompatActivity {
                             } else {
                                 text = (TextView) dialog.findViewById(idGeneral);
 
-                                notCorrectValueDialog();
+                                notCorrectValueDialog(getResources().getString(R.string.this_value_not_correct));
                                 rows = row;
                                 rows.setBackgroundColor(getResources().getColor(R.color.exit_hover));
                                 text.setText("0.0");
@@ -2319,7 +2323,7 @@ public class Main extends AppCompatActivity {
                                 rowRefund.get(i).getVoucherNo(), rowRefund.get(i).getVoucherSerial(), "" + rowRefund.get(i).getItemBarcode(), rowRefund.get(i).getItemName(),
                                 rowRefund.get(i).getSecondaryName(), rowRefund.get(i).getKitchenAlias(), rowRefund.get(i).getItemCategory(),
                                 rowRefund.get(i).getItemFamily(), rowRefund.get(i).getQty(), rowRefund.get(i).getPrice(),
-                                totalAdd, DiscountArray.get(i), lineDiscount.get(i), lineDiscount.get(i) + DiscountArray.get(i), rowRefund.get(i).getTaxValue(),
+                                rowRefund.get(i).getQty() * rowRefund.get(i).getPrice(), DiscountArray.get(i), lineDiscount.get(i), lineDiscount.get(i) + DiscountArray.get(i), rowRefund.get(i).getTaxValue(),
                                 rowRefund.get(i).getTaxPerc(), 0, rowRefund.get(i).getService(), rowRefund.get(i).getServiceTax(),
                                 rowRefund.get(i).getTableNo(), rowRefund.get(i).getSectionNo(), Settings.shift_number, Settings.shift_name, Settings.password, Settings.user_name, convertToEnglish(times));
 
@@ -2328,25 +2332,41 @@ public class Main extends AppCompatActivity {
 
                     }
 
-                    for (int i = 0; i < money.size(); i++) {
-                        TableRow tRow = (TableRow) categories.getChildAt(i);
-                        TextView t = (TextView) tRow.getChildAt(2);
-                        TextView t0 = (TextView) tRow.getChildAt(0);
-                        TextView t1 = (TextView) tRow.getChildAt(1);
-                        if (!t1.getText().toString().equals("0") && !t1.getText().toString().equals("")) {
-                            Cashier cashier = new Cashier();
-                            ArrayList<Cashier> cashiersList = new ArrayList<Cashier>();
-                            cashier.setCashierName(Settings.user_name);
-                            cashier.setCategoryName(t0.getText().toString());
-                            cashier.setCategoryQty(Integer.parseInt(t1.getText().toString()));
-                            cashier.setCategoryValue(Double.parseDouble("-" + t.getText().toString()));
-                            cashier.setCheckInDate(today);
-                            cashier.setOrderKind(1);
+//                    for (int i = 0; i < money.size(); i++) {
+//                        TableRow tRow = (TableRow) categories.getChildAt(i);
+//                        TextView t = (TextView) tRow.getChildAt(2);
+//                        TextView t0 = (TextView) tRow.getChildAt(0);
+//                        TextView t1 = (TextView) tRow.getChildAt(1);
+//                        if (!t1.getText().toString().equals("0") && !t1.getText().toString().equals("")) {
+//                            Cashier cashier = new Cashier();
+//                            ArrayList<Cashier> cashiersList = new ArrayList<Cashier>();
+//                            cashier.setCashierName(Settings.user_name);
+//                            cashier.setCategoryName(t0.getText().toString());
+//                            cashier.setCategoryQty(Integer.parseInt(t1.getText().toString()));
+//                            cashier.setCategoryValue(Double.parseDouble("-" + t.getText().toString()));
+//                            cashier.setCheckInDate(today);
+//                            cashier.setOrderKind(1);
+//
+//                            cashiersList.add(cashier);
+//
+//                            mDHandler.addCashierInOut(cashiersList);
+//                        }
+//                    }
 
-                            cashiersList.add(cashier);
 
-                            mDHandler.addCashierInOut(cashiersList);
-                        }
+                    if (Double.parseDouble(cashValue.getText().toString()) != 0 && !cashValue.getText().toString().equals("")) {
+                        Cashier cashier = new Cashier();
+                        ArrayList<Cashier> cashiersList = new ArrayList<Cashier>();
+                        cashier.setCashierName(Settings.user_name);
+                        cashier.setCategoryName("null");
+                        cashier.setCategoryQty(-1);
+                        cashier.setCategoryValue(Double.parseDouble(cashValue.getText().toString()));
+                        cashier.setCheckInDate(today);
+                        cashier.setOrderKind(1);
+
+                        cashiersList.add(cashier);
+
+                        mDHandler.addCashierInOut(cashiersList);
                     }
 
                     ArrayList<PayMethod> listOrder = new ArrayList();
@@ -2460,92 +2480,92 @@ public class Main extends AppCompatActivity {
 
 
         ///"""""""""""""""""""""""""""""""""""""""
-
-        for (int i = 0; i < money.size(); i++) {
-            final int position = i;
-            TableRow row = new TableRow(Main.this);
-            TableLayout.LayoutParams lp = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT);
-            lp.setMargins(0, 10, 0, 5);
-            row.setLayoutParams(lp);
-
-            TextView textView = new TextView(Main.this);
-            textView.setText(money.get(i).getCatName() + "   ");
-            textView.setTag(money.get(i).getCatValue());
-            textView.setGravity(Gravity.CENTER);
-            textView.setTextColor(getResources().getColor(R.color.text_color));
-
-            final TextView textView1 = new TextView(Main.this);
-            textView1.setBackgroundColor(getResources().getColor(R.color.layer1));
-            textView1.setHeight(26);
-            textView1.setPadding(10, 0, 0, 0);
-            textView1.setTextColor(getResources().getColor(R.color.text_color));
-            textView1.setText("0");
-            textView1.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (focusedTextView != null && convertToEnglish(focusedTextView.getText().toString()).equals("")) {
-                        focusedTextView.setText("0");
-                    }
-
-                    focusedTextView = textView1;
-                    focusedTextView.setTag("" + position);
-                    focusedTextView.setText("");
-                }
-            });
-
-            textView1.addTextChangedListener(new TextWatcher() {
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    if (focusedTextView != null) {
-                        if (!convertToEnglish(focusedTextView.getText().toString()).equals("")) {
-
-                            TableRow tableRow = (TableRow) categories.getChildAt(Integer.parseInt(convertToEnglish(focusedTextView.getTag().toString())));
-                            TextView text = (TextView) tableRow.getChildAt(0);
-                            TextView text2 = (TextView) tableRow.getChildAt(2);
-
-                            double total = Double.parseDouble(convertToEnglish(text.getTag().toString())) * Double.parseDouble(convertToEnglish(focusedTextView.getText().toString()));
-                            text2.setText("" + total);
-                        }
-
-                        cashValue.setText("0.000");
-                        for (int i = 0; i < money.size(); i++) {
-                            TableRow tRow = (TableRow) categories.getChildAt(i);
-                            TextView t = (TextView) tRow.getChildAt(2);
-                            cashValue.setText("" + (Double.parseDouble(cashValue.getText().toString()) + Double.parseDouble(t.getText().toString())));
-                        }
-
-                    }
-                }
-
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count,
-                                              int after) {
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                }
-            });
-
-
-            TextView textView2 = new TextView(Main.this);
-            textView2.setText("0");
-
-            TableRow.LayoutParams lp2 = new TableRow.LayoutParams(130, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
-            lp2.setMargins(15, 0, 15, 0);
-            textView.setLayoutParams(lp2);
-            textView1.setLayoutParams(lp2);
-            textView2.setLayoutParams(lp2);
-            textView2.setGravity(Gravity.CENTER);
-            textView2.setTextColor(getResources().getColor(R.color.text_color));
-
-            row.addView(textView);
-            row.addView(textView1);
-            row.addView(textView2);
-
-            categories.addView(row);
-        }
+//
+//        for (int i = 0; i < money.size(); i++) {
+//            final int position = i;
+//            TableRow row = new TableRow(Main.this);
+//            TableLayout.LayoutParams lp = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT);
+//            lp.setMargins(0, 10, 0, 5);
+//            row.setLayoutParams(lp);
+//
+//            TextView textView = new TextView(Main.this);
+//            textView.setText(money.get(i).getCatName() + "   ");
+//            textView.setTag(money.get(i).getCatValue());
+//            textView.setGravity(Gravity.CENTER);
+//            textView.setTextColor(getResources().getColor(R.color.text_color));
+//
+//            final TextView textView1 = new TextView(Main.this);
+//            textView1.setBackgroundColor(getResources().getColor(R.color.layer1));
+//            textView1.setHeight(26);
+//            textView1.setPadding(10, 0, 0, 0);
+//            textView1.setTextColor(getResources().getColor(R.color.text_color));
+//            textView1.setText("0");
+//            textView1.setOnClickListener(new OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    if (focusedTextView != null && convertToEnglish(focusedTextView.getText().toString()).equals("")) {
+//                        focusedTextView.setText("0");
+//                    }
+//
+//                    focusedTextView = textView1;
+//                    focusedTextView.setTag("" + position);
+//                    focusedTextView.setText("");
+//                }
+//            });
+//
+//            textView1.addTextChangedListener(new TextWatcher() {
+//
+//                @Override
+//                public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                    if (focusedTextView != null) {
+//                        if (!convertToEnglish(focusedTextView.getText().toString()).equals("")) {
+//
+//                            TableRow tableRow = (TableRow) categories.getChildAt(Integer.parseInt(convertToEnglish(focusedTextView.getTag().toString())));
+//                            TextView text = (TextView) tableRow.getChildAt(0);
+//                            TextView text2 = (TextView) tableRow.getChildAt(2);
+//
+//                            double total = Double.parseDouble(convertToEnglish(text.getTag().toString())) * Double.parseDouble(convertToEnglish(focusedTextView.getText().toString()));
+//                            text2.setText("" + total);
+//                        }
+//
+//                        cashValue.setText("0.000");
+//                        for (int i = 0; i < money.size(); i++) {
+//                            TableRow tRow = (TableRow) categories.getChildAt(i);
+//                            TextView t = (TextView) tRow.getChildAt(2);
+//                            cashValue.setText("" + (Double.parseDouble(cashValue.getText().toString()) + Double.parseDouble(t.getText().toString())));
+//                        }
+//
+//                    }
+//                }
+//
+//                @Override
+//                public void beforeTextChanged(CharSequence s, int start, int count,
+//                                              int after) {
+//                }
+//
+//                @Override
+//                public void afterTextChanged(Editable s) {
+//                }
+//            });
+//
+//
+//            TextView textView2 = new TextView(Main.this);
+//            textView2.setText("0");
+//
+//            TableRow.LayoutParams lp2 = new TableRow.LayoutParams(130, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+//            lp2.setMargins(15, 0, 15, 0);
+//            textView.setLayoutParams(lp2);
+//            textView1.setLayoutParams(lp2);
+//            textView2.setLayoutParams(lp2);
+//            textView2.setGravity(Gravity.CENTER);
+//            textView2.setTextColor(getResources().getColor(R.color.text_color));
+//
+//            row.addView(textView);
+//            row.addView(textView1);
+//            row.addView(textView2);
+//
+//            categories.addView(row);
+//        }
 
         ///"""""""""""""""""""""""""""""""""""""""
 
@@ -2554,12 +2574,15 @@ public class Main extends AppCompatActivity {
     }
 
 
-    public void notCorrectValueDialog() {
+    public void notCorrectValueDialog(String mass) {
         Dialog dialog1 = new Dialog(Main.this);
         dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog1.setCancelable(false);
         dialog1.setContentView(R.layout.not_correct_dialog);
         dialog1.setCanceledOnTouchOutside(true);
+        TextView text = (TextView) dialog1.findViewById(R.id.not);
+
+        text.setText(mass);
 
         dialog1.show();
 

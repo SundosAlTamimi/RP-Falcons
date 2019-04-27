@@ -572,6 +572,6 @@
     <string name="enter_received">ادخل الباقي :</string>
     <string name="tables_merged">تم دمج الطاولة !</string>
     <string name="table_moved">تم نقل الطاولة !</string>
-
-
+    <string name="this_value_not_correct">هذه القيمة غير صحيحة </string>
+    <string name="cannot_return">لا يمكن الارجاع من هذه الفاتورة</string>
 </resources>
