@@ -39,6 +39,7 @@ public class OrderTransactions {
     private String userName;
     private String time;
     private int screenNo;
+    private String note;
 
     public OrderTransactions() {
 
@@ -339,6 +340,14 @@ public class OrderTransactions {
         this.screenNo = screenNo;
     }
 
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
     public JSONObject getJSONObject() { // for kitchen
         JSONObject obj = new JSONObject();
         try {
@@ -346,7 +355,7 @@ public class OrderTransactions {
             obj.put("ITEMNAME", itemName);
             obj.put("QTY", qty);
             obj.put("PRICE", price);
-            obj.put("NOTE", "");
+            obj.put("NOTE", note);
             obj.put("ISUPDATE", 0);
             obj.put("SCREENNO", screenNo);
 

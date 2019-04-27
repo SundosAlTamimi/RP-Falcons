@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.tamimi.sundos.restpos.Models.Cashier;
 import com.tamimi.sundos.restpos.Models.Cheque;
 import com.tamimi.sundos.restpos.Models.CreditCard;
+import com.tamimi.sundos.restpos.Models.ItemWithScreen;
 import com.tamimi.sundos.restpos.Models.Money;
 import com.tamimi.sundos.restpos.Models.OrderHeader;
 import com.tamimi.sundos.restpos.Models.OrderTransactions;
@@ -1567,6 +1568,7 @@ public class PayMethods extends AppCompatActivity {
                 for (int i = 0; i < obj.getOrderTransactionObj().size(); i++)
                     mDHandler.addOrderTransaction(obj.getOrderTransactionObj().get(i));
 
+                sendToKitchen(obj.getOrderHeaderObj() , obj.getOrderTransactionObj() , payMethodList);
                 sendToServer(obj.getOrderHeaderObj() , obj.getOrderTransactionObj() , payMethodList);
 
                 Intent intent = new Intent(PayMethods.this, Order.class);
@@ -1588,6 +1590,7 @@ public class PayMethods extends AppCompatActivity {
                 mDHandler.deleteFromOrderHeaderTemp(sectionNo, tableNo);
                 mDHandler.deleteFromOrderTransactionTemp(sectionNo, tableNo);
 
+                sendToKitchen(orderHeaderTemp.get(0) , orderTransTemp , payMethodList);
                 sendToServer(orderHeaderTemp.get(0) , orderTransTemp , payMethodList);
 
                 Intent intent = new Intent(PayMethods.this, DineIn.class);
@@ -1598,6 +1601,50 @@ public class PayMethods extends AppCompatActivity {
             finish();
         } else {
             Toast.makeText(this, getResources().getString(R.string.remaining_not_o), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    void sendToKitchen(OrderHeader OrderHeaderObj, List<OrderTransactions> OrderTransactionsObj, List<PayMethod> PayMethodObj) {
+        try {
+            JSONObject obj1 = OrderHeaderObj.getJSONObject();
+
+            List<ItemWithScreen> itemWithScreens = mDHandler.getAllItemsWithScreen();
+            for (int i = 0; i < OrderTransactionsObj.size(); i++){
+                for (int j = 0; j < itemWithScreens.size(); j++){
+                    if(OrderTransactionsObj.get(i).getItemBarcode().equals(""+itemWithScreens.get(j).getItemCode()))
+                        OrderTransactionsObj.get(i).setScreenNo(itemWithScreens.get(j).getScreenNo());
+                }
+                OrderTransactionsObj.get(i).setNote("");
+            }
+
+            for (int i = 0; i < OrderTransactionsObj.size(); i++) {
+                if(OrderTransactionsObj.get(i).getQty() == 0) {
+                    OrderTransactionsObj.get(i - 1).setNote((OrderTransactionsObj.get(i-1).getNote()) + "\n" + OrderTransactionsObj.get(i).getItemName());
+                    OrderTransactionsObj.remove(i);
+                    i--;
+                }
+            }
+
+            JSONArray obj2 = new JSONArray();
+            for (int i = 0; i < OrderTransactionsObj.size(); i++)
+                obj2.put(i ,OrderTransactionsObj.get(i).getJSONObject());
+
+            JSONObject obj = new JSONObject();
+            obj.put("Items", obj2);
+            obj.put("Header", obj1);
+
+            Log.e("socket", "J");
+            SendSocket sendSocket = new SendSocket(PayMethods.this, obj1,OrderTransactionsObj);
+            sendSocket.sendMessage();
+
+
+            Log.e("sendCloud", "J");
+            SendCloud sendCloud = new SendCloud(PayMethods.this, obj);
+            sendCloud.startSending("kitchen");
+
+
+        } catch (JSONException e) {
+            Log.e("Tag", "JSONException");
         }
     }
 
