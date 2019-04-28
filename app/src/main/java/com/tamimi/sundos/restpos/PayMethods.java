@@ -34,6 +34,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -52,6 +53,7 @@ public class PayMethods extends AppCompatActivity {
 
     DatabaseHandler mDHandler;
     Dialog dialog, dialog1;
+    DecimalFormat twoDForm = new DecimalFormat("#.00");
     TextView focusedTextView;
     int flag = 0;
     int position1;
@@ -426,12 +428,57 @@ public class PayMethods extends AppCompatActivity {
                         mainBalance = "" + (Double.parseDouble(mainBalance) - Double.parseDouble(t1));
                         remainingBalance.setText(getResources().getString(R.string.remaining_) + mainBalance);
                     }
-                } else
+                } else if(Double.parseDouble(t1)> Double.parseDouble(t0)) {
                     Toast.makeText(PayMethods.this, getResources().getString(R.string.invaled_input), Toast.LENGTH_SHORT).show();
-
+                    double received_value = Double.parseDouble(t1) - Double.parseDouble(t0);
+                    payGraterDialog(String.valueOf(received_value), today, t0);
+                    cashValue += Double.parseDouble(t0);
+                    if (cashValue != 0) {
+                        cash.setText(getResources().getString(R.string.cash) + " : " + cashValue);
+                        cash.setBackgroundDrawable(getResources().getDrawable(R.drawable.clear_buttons));
+                        mainBalance = "" + (Double.parseDouble(mainBalance) - Double.parseDouble(t0));
+                        remainingBalance.setText(getResources().getString(R.string.remaining_) + mainBalance);
+                    }
+                    dialog.dismiss();
+                }
             }
         });
         dialog.show();
+    }
+
+
+    void payGraterDialog(String message,String today,String balance_value) {
+        Dialog dialog2 = new Dialog(PayMethods.this);
+        dialog2.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog2.setContentView(R.layout.pay_grater_than);
+        dialog2.setCanceledOnTouchOutside(false);
+        dialog2.setCancelable(false);
+
+        TextView mess=(TextView)dialog2.findViewById(R.id.text_return);
+        Button b_mess=(Button) dialog2.findViewById(R.id.b_done);
+
+        b_mess.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Cashier cashier = new Cashier();
+                ArrayList<Cashier> cashiersList = new ArrayList<Cashier>();
+                cashier.setCashierName(Settings.user_name);
+                cashier.setCategoryName("null");
+                cashier.setCategoryQty(-1);
+                cashier.setCategoryValue(Double.parseDouble(balance_value));
+                cashier.setCheckInDate(today);
+                cashier.setOrderKind(1);
+
+                cashiersList.add(cashier);
+                mDHandler.addCashierInOut(cashiersList);
+                Toast.makeText(PayMethods.this, getResources().getString(R.string.save), Toast.LENGTH_SHORT).show();
+                dialog2.dismiss();
+            }
+        });
+
+        mess.setText(twoDForm.format(Double.parseDouble(convertToEnglish(message))));
+
+        dialog2.show();
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -1447,7 +1494,7 @@ public class PayMethods extends AppCompatActivity {
             payMethod.setVoucherDate(today);
             payMethod.setPointOfSaleNumber(Settings.POS_number);
             payMethod.setStoreNumber(Settings.store_number);
-            payMethod.setVoucherNumber(""+serial);
+            payMethod.setVoucherNumber("" + serial);
             payMethod.setVoucherSerial(serial);
             payMethod.setShiftName(Settings.shift_name);
             payMethod.setShiftNumber(Settings.shift_number);
@@ -1568,8 +1615,8 @@ public class PayMethods extends AppCompatActivity {
                 for (int i = 0; i < obj.getOrderTransactionObj().size(); i++)
                     mDHandler.addOrderTransaction(obj.getOrderTransactionObj().get(i));
 
-                sendToKitchen(obj.getOrderHeaderObj() , obj.getOrderTransactionObj() , payMethodList);
-                sendToServer(obj.getOrderHeaderObj() , obj.getOrderTransactionObj() , payMethodList);
+                sendToKitchen(obj.getOrderHeaderObj(), obj.getOrderTransactionObj(), payMethodList);
+                sendToServer(obj.getOrderHeaderObj(), obj.getOrderTransactionObj(), payMethodList);
 
                 Intent intent = new Intent(PayMethods.this, Order.class);
                 startActivity(intent);
@@ -1590,8 +1637,8 @@ public class PayMethods extends AppCompatActivity {
                 mDHandler.deleteFromOrderHeaderTemp(sectionNo, tableNo);
                 mDHandler.deleteFromOrderTransactionTemp(sectionNo, tableNo);
 
-                sendToKitchen(orderHeaderTemp.get(0) , orderTransTemp , payMethodList);
-                sendToServer(orderHeaderTemp.get(0) , orderTransTemp , payMethodList);
+                sendToKitchen(orderHeaderTemp.get(0), orderTransTemp, payMethodList);
+                sendToServer(orderHeaderTemp.get(0), orderTransTemp, payMethodList);
 
                 Intent intent = new Intent(PayMethods.this, DineIn.class);
                 startActivity(intent);
@@ -1609,17 +1656,17 @@ public class PayMethods extends AppCompatActivity {
             JSONObject obj1 = OrderHeaderObj.getJSONObject();
 
             List<ItemWithScreen> itemWithScreens = mDHandler.getAllItemsWithScreen();
-            for (int i = 0; i < OrderTransactionsObj.size(); i++){
-                for (int j = 0; j < itemWithScreens.size(); j++){
-                    if(OrderTransactionsObj.get(i).getItemBarcode().equals(""+itemWithScreens.get(j).getItemCode()))
+            for (int i = 0; i < OrderTransactionsObj.size(); i++) {
+                for (int j = 0; j < itemWithScreens.size(); j++) {
+                    if (OrderTransactionsObj.get(i).getItemBarcode().equals("" + itemWithScreens.get(j).getItemCode()))
                         OrderTransactionsObj.get(i).setScreenNo(itemWithScreens.get(j).getScreenNo());
                 }
                 OrderTransactionsObj.get(i).setNote("");
             }
 
             for (int i = 0; i < OrderTransactionsObj.size(); i++) {
-                if(OrderTransactionsObj.get(i).getQty() == 0) {
-                    OrderTransactionsObj.get(i - 1).setNote((OrderTransactionsObj.get(i-1).getNote()) + "\n" + OrderTransactionsObj.get(i).getItemName());
+                if (OrderTransactionsObj.get(i).getQty() == 0) {
+                    OrderTransactionsObj.get(i - 1).setNote((OrderTransactionsObj.get(i - 1).getNote()) + "\n" + OrderTransactionsObj.get(i).getItemName());
                     OrderTransactionsObj.remove(i);
                     i--;
                 }
@@ -1627,14 +1674,14 @@ public class PayMethods extends AppCompatActivity {
 
             JSONArray obj2 = new JSONArray();
             for (int i = 0; i < OrderTransactionsObj.size(); i++)
-                obj2.put(i ,OrderTransactionsObj.get(i).getJSONObject());
+                obj2.put(i, OrderTransactionsObj.get(i).getJSONObject());
 
             JSONObject obj = new JSONObject();
             obj.put("Items", obj2);
             obj.put("Header", obj1);
 
             Log.e("socket", "J");
-            SendSocket sendSocket = new SendSocket(PayMethods.this, obj1,OrderTransactionsObj);
+            SendSocket sendSocket = new SendSocket(PayMethods.this, obj1, OrderTransactionsObj);
             sendSocket.sendMessage();
 
 
@@ -1654,11 +1701,11 @@ public class PayMethods extends AppCompatActivity {
 
             JSONArray obj2 = new JSONArray();
             for (int i = 0; i < OrderTransactionsObj.size(); i++)
-                obj2.put(i ,OrderTransactionsObj.get(i).getJSONObject2());
+                obj2.put(i, OrderTransactionsObj.get(i).getJSONObject2());
 
             JSONArray obj3 = new JSONArray();
             for (int i = 0; i < PayMethodObj.size(); i++)
-                obj3.put(i ,PayMethodObj.get(i).getJSONObject2());
+                obj3.put(i, PayMethodObj.get(i).getJSONObject2());
 
             JSONObject obj = new JSONObject();
             obj.put("ORDERHEADER", obj1);

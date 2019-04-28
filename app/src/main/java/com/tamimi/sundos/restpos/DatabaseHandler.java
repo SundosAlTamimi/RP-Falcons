@@ -56,7 +56,7 @@ import static com.tamimi.sundos.restpos.Settings.shift_name;
 public class DatabaseHandler extends SQLiteOpenHelper {
     //hellohjt
     // Database Version
-    private static final int DATABASE_VERSION = 24;
+    private static final int DATABASE_VERSION = 25;
 
     // Database Name
     private static final String DATABASE_NAME = "RestPos";
@@ -551,6 +551,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     private static final String KITCHEN_NO = "KITCHEN_NO";
     private static final String KITCHEN_NAME = "KITCHEN_NAME";
+    private static final String KITCHEN_IP = "KITCHEN_IP";
 
 
     //___________________________________________________________________________________
@@ -1148,7 +1149,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         String CREATE_TABLE_KITCHEN_SCREEN_TABLE = "CREATE TABLE " + KITCHEN_SCREEN_TABLE + "("
                 + KITCHEN_NAME + " TEXT,"
-                + KITCHEN_NO + " INTEGER " + ")";
+                + KITCHEN_NO + " INTEGER,"
+                + KITCHEN_IP + " TEXT " + ")";
         db.execSQL(CREATE_TABLE_KITCHEN_SCREEN_TABLE);
 
     }
@@ -1212,6 +1214,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 //                + SCREEN_NO3 + " INTEGER,"
 //                + SCREEN_NAME3 + " TEXT " + ")";
 //        db.execSQL(CREATE_TABLE_ITEM_WITH_SCREEN);
+        db.execSQL("ALTER TABLE KITCHEN_SCREEN_TABLE ADD KITCHEN_IP TEXT NOT NULL DEFAULT ''");
     }
 
     //Insert values to the table Items
@@ -1973,6 +1976,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         values.put(KITCHEN_NAME, kitchenScreen.getKitchenName());
         values.put(KITCHEN_NO, kitchenScreen.getKitchenNo());
+        values.put(KITCHEN_IP, kitchenScreen.getKitchenIP());
 
 
         db.insert(KITCHEN_SCREEN_TABLE, null, values);
@@ -3540,6 +3544,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
                 kitchenScreen.setKitchenName(cursor.getString(0));
                 kitchenScreen.setKitchenNo(cursor.getInt(1));
+                kitchenScreen.setKitchenIP(cursor.getString(2));
 
 
                 kitchenScreens.add(kitchenScreen);

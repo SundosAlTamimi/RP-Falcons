@@ -5905,21 +5905,22 @@ public class BackOfficeActivity extends AppCompatActivity {
 
 
         Button save, exit;
-        TextView kitchenNo, kitchenName;
+        EditText kitchenNo, kitchenName ,kitchenIP;
 
         save = (Button) dialog.findViewById(R.id.save);
         exit = (Button) dialog.findViewById(R.id.exit);
 
-        kitchenNo = (TextView) dialog.findViewById(R.id.kitNo);
-        kitchenName = (TextView) dialog.findViewById(R.id.kitName);
+        kitchenNo = (EditText) dialog.findViewById(R.id.kitNo);
+        kitchenName = (EditText) dialog.findViewById(R.id.kitName);
+        kitchenIP= (EditText) dialog.findViewById(R.id.ip_);
 
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (!kitchenName.getText().toString().equals("") && !convertToEnglish(kitchenNo.getText().toString()).equals("")) {
+                if (!kitchenName.getText().toString().equals("") && !convertToEnglish(kitchenNo.getText().toString()).equals("")&&!kitchenIP.getText().toString().equals("")) {
 
-                    KitchenScreen kitchenScreen = new KitchenScreen(Integer.parseInt(convertToEnglish(kitchenNo.getText().toString())), kitchenName.getText().toString());
+                    KitchenScreen kitchenScreen = new KitchenScreen(Integer.parseInt(convertToEnglish(kitchenNo.getText().toString())), kitchenName.getText().toString(),convertToEnglish(kitchenIP.getText().toString()));
 
                     mDHandler.addKitchenScreen(kitchenScreen);
 

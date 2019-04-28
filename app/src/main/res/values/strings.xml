@@ -569,6 +569,8 @@
     <string name="table_moved">Table Moved !</string>
     <string name="this_value_not_correct">This value not correct</string>
     <string name="cannot_return">can\'t Return from this Voucher</string>
+    <string name="please_return_this_value">Please return this value :</string>
+    <string name="kitchen_ip">Kitchen IP</string>
 
 
 </resources>
