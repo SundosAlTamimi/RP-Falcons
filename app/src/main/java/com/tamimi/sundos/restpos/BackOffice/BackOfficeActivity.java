@@ -5926,6 +5926,7 @@ public class BackOfficeActivity extends AppCompatActivity {
 
                     kitchenName.setText("");
                     kitchenNo.setText("");
+                    kitchenIP.setText("");
 
                     Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.save_successful), Toast.LENGTH_SHORT).show();
 
