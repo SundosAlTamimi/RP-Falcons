@@ -225,7 +225,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="2dp"
-                    android:text="@string/cashier_no"
+                    android:text="@string/cashier_name"
                     android:textColor="@color/text_color"
                     android:textSize="18sp" />
 

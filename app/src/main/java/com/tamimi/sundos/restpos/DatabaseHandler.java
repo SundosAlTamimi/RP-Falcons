@@ -2629,11 +2629,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return items;
     }
 
-    public List<OrderTransactions> getTopSalesItemsByQty(String shiftName,String pos,String USER_NAME) {
+    public List<OrderTransactions> getTopSalesItemsByQty(String shiftName,String pos,String USER_No) {
         List<OrderTransactions> items = new ArrayList<>();
 
         String selectQuery = "select ITEM_BARCODE1,ITEM_NAME , GROUP_CONCAT( VOUCHER_DATE) ,GROUP_CONCAT(QTY), GROUP_CONCAT( TOTAL)  from ORDER_TRANSACTIONS  " +
-                "where POS_NO = "+pos +" and SHIFT_NAME = "+shiftName +" and USER_NAME = "+USER_NAME +
+                "where POS_NO = "+pos +" and SHIFT_NAME = "+shiftName +" and USER_NO = "+USER_No +
                 " group by ITEM_BARCODE1 ORDER BY GROUP_CONCAT(QTY) DESC";
 
 
