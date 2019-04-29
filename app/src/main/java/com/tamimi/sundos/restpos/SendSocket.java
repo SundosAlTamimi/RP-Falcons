@@ -17,7 +17,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketAddress;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,53 +45,60 @@ public class SendSocket {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    Socket s = null;
-                    OutputStream out = null;
-                    PrintWriter output = null;
-                    List<KitchenScreen> kitchenScreens = new ArrayList<>();
-                    JSONArray obj3 = new JSONArray();
 
-                    //this for get all kitchen ...
-                    kitchenScreens = db.getAllKitchenScreen();
+                Socket s = null;
+                OutputStream out = null;
+                PrintWriter output = null;
+                List<KitchenScreen> kitchenScreens = new ArrayList<>();
+                JSONArray obj3 = new JSONArray();
 
-                    //this for_loop for filter and send all data to target kitchen has same kitchen no and have ip
-                    for (int i = 0; i < kitchenScreens.size(); i++) {
-                        if (!kitchenScreens.get(i).getKitchenIP().equals("")) {
+                //this for get all kitchen ...
+                kitchenScreens = db.getAllKitchenScreen();
+
+                //this for_loop for filter and send all data to target kitchen has same kitchen no and have ip
+                for (int i = 0; i < kitchenScreens.size(); i++) {
+                    if (!kitchenScreens.get(i).getKitchenIP().equals("")) {//&& isHostAvailable(kitchenScreens.get(i).getKitchenIP(), 9002,100)
+
+                            if (checkHosts(kitchenScreens.get(i).getKitchenIP())){
                             obj3 = getObjectForKitchenNo(kitchenScreens.get(i).getKitchenNo());
                             if (obj3.toString().length() > 2) {
-                                s = new Socket(kitchenScreens.get(i).getKitchenIP(), 9002);
-                                out = s.getOutputStream();
-                                output = new PrintWriter(out);
-                                output.println(obj3.toString());
-                                output.flush();
-                                Log.e("obj3 " + i + " sec " + kitchenScreens.get(i).getKitchenNo(), "obj3.toString().length()" + obj3.toString());
-                                output.close();
-                                out.close();
-                                s.close();
+                                try {
+                                    String ip=kitchenScreens.get(i).getKitchenIP();
+                                    s = new Socket(ip.trim(), 9002);
+                                    out = s.getOutputStream();
+                                    output = new PrintWriter(out);
+                                    output.println(obj3.toString());
+                                    output.flush();
+                                    Log.e("obj3 " + i + " sec " + kitchenScreens.get(i).getKitchenNo(), "obj3.toString().length()" + obj3.toString());
+                                    output.close();
+                                    out.close();
+                                    s.close();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
                             }
-                        }
-                    }
+                        }//
 
-                    //tis for read data send from server ...
+                    }
+                }
+
+                //tis for read data send from server ...
 
 //                    BufferedReader input = new BufferedReader(new InputStreamReader(s.getInputStream()));
 //                    final String st = input.readLine();
 
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-//                            String s = mTextViewReplyFromServer.getText().toString();
-//                            if (st.trim().length() != 0)
-//                                mTextViewReplyFromServer.setText(s + "\nFrom Server : " + st);
-//                                Toast.makeText(context, "From Server : successful Socket " + st, Toast.LENGTH_SHORT).show();
-                        }
-                    });
+//                    handler.post(new Runnable() {
+//                        @Override
+//                        public void run() {
+////                            String s = mTextViewReplyFromServer.getText().toString();
+////                            if (st.trim().length() != 0)
+////                                mTextViewReplyFromServer.setText(s + "\nFrom Server : " + st);
+////                            if (st.trim().length() != 0)
+////                                Toast.makeText(context, "From Server : successful Socket " + st, Toast.LENGTH_SHORT).show();
+//                        }
+//                    });
 
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
             }
         });
 
@@ -126,6 +138,24 @@ public class SendSocket {
 
         return objNo;
     }
+
+    public boolean checkHosts(String subnet){
+        int timeout=1000;
+        boolean fa=false;
+            try {
+                if (InetAddress.getByName(subnet).isReachable(timeout)){
+                    System.out.println(subnet + " is reachable");
+                    fa=true;
+
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                fa=false;
+            }
+        Log.e("tesr3","fa ==>"+fa);
+            return fa;
+        }
+
 
 
 }
