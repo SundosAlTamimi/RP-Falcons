@@ -750,6 +750,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         Spinner cashierNo = (Spinner) dialog.findViewById(R.id.casherNo);
         Spinner PosNo = (Spinner) dialog.findViewById(R.id.posNo);
 
+        final boolean[] openPdf = {false};
         fromDate.setText(today);
         toDate.setText(today);
         ArrayList<String> shiftNameArray = new ArrayList<>();
@@ -805,6 +806,7 @@ public class BackOfficeActivity extends AppCompatActivity {
 
         List<BlindCloseDetails> blindCloseDetails = mDHandler.getAllBlindCloseDetails();
         preview.setOnClickListener(v -> {
+            openPdf[0] = true;
             blindClosePdf.clear();
             headerData1.clear();
             table.removeAllViews();
@@ -944,8 +946,13 @@ public class BackOfficeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
-                objExp.RecancelReport(blindClosePdf, headerData1);
+
+                if (openPdf[0] && (blindClosePdf.size() != 0) && (headerData1.size() != 0)) {
+                    ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
+                    objExp.RecancelReport(blindClosePdf, headerData1);
+                } else {
+                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.not_data), Toast.LENGTH_SHORT).show();
+                }
 
             }
         });
@@ -1136,6 +1143,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         totalTax = (TextView) dialog.findViewById(R.id.totalTax);
         net = (TextView) dialog.findViewById(R.id.net);
 
+        final boolean[] openPdf = {false};
 
         TextView toDate = (TextView) dialog.findViewById(R.id.toDateX);
         TextView fromDate = (TextView) dialog.findViewById(R.id.fromDateX);
@@ -1205,6 +1213,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         preview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                openPdf[0] = true;
                 orderTransactionDataPdf.clear();
                 headerValue.clear();
                 otherValue.clear();
@@ -1220,6 +1229,8 @@ public class BackOfficeActivity extends AppCompatActivity {
 
                 List<Double> Total_ = new ArrayList<>();
                 List<Double> Tax_ = new ArrayList<>();
+                List<Double> Dis_ = new ArrayList<>();
+
 
                 String posNoString = "POS_NO";
 
@@ -1241,15 +1252,18 @@ public class BackOfficeActivity extends AppCompatActivity {
                 Log.e("orderTrans", "" + orderTransactionData.size());
 
                 for (int i = 0; i < orderTransactionData.size(); i++) {
-                    double total_ = 0.0, tax_x_ = 0.0;
+                    double total_ = 0.0, tax_x_ = 0.0, dis_ = 0.0;
                     String cou_date = orderTransactionData.get(i).getVoucherDate();
                     String cou_total = orderTransactionData.get(i).getTime();
                     String cou_tax = orderTransactionData.get(i).getShiftName();
+                    String cou_disto = orderTransactionData.get(i).getUserName();
+
                     Log.e("tt", "" + cou_date);
 
                     String[] arrayString = cou_date.split(",");
                     String[] arrayTotal = cou_total.split(",");
                     String[] arrayTax = cou_tax.split(",");
+                    String[] arrayDis = cou_disto.split(",");
                     Log.e("arrayString1", "" + arrayString.length);
 
                     for (int q = 0; q < arrayString.length; q++) {
@@ -1257,11 +1271,13 @@ public class BackOfficeActivity extends AppCompatActivity {
 
                             total_ += Double.parseDouble(arrayTotal[q]);
                             tax_x_ += Double.parseDouble(arrayTax[q]);
+                            dis_ += Double.parseDouble(arrayDis[q]);
                         }
 
                     }
                     Total_.add(total_);
                     Tax_.add(tax_x_);
+                    Dis_.add(dis_);
                     Log.e("arrayTotal", "" + total_ + " ///" + tax_x_);
 
                 }
@@ -1275,9 +1291,9 @@ public class BackOfficeActivity extends AppCompatActivity {
 
                 for (int i = 0; i < orderTransactionData.size(); i++) {
                     if (Settings.tax_type == 0) {
-                        NetTotal = Total_.get(i) - (Tax_.get(i) + orderTransactionData.get(i).getDiscount());
+                        NetTotal = Total_.get(i) - (Tax_.get(i) + Dis_.get(i));
                     } else {
-                        NetTotal = Total_.get(i) - orderTransactionData.get(i).getDiscount();
+                        NetTotal = Total_.get(i) - Dis_.get(i);
                     }
                     Log.e("", "" + NetTotal);
 
@@ -1324,6 +1340,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                 orderTransactionData.clear();
                 Total_.clear();
                 Tax_.clear();
+                Dis_.clear();
                 orderTransactionData = mDHandler.getXReportPercent(ShiftNa, posNoString, fromDat[0], toDat[0]);
 
 
@@ -1372,13 +1389,14 @@ public class BackOfficeActivity extends AppCompatActivity {
         export.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
-                objExp.X_report(orderTransactionDataPdf, headerValue, otherValue, orderTransactionDataPdf2);
-
+                if (openPdf[0] && (orderTransactionDataPdf.size() != 0) && (orderTransactionDataPdf2.size() != 0)) {
+                    ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
+                    objExp.X_report(orderTransactionDataPdf, headerValue, otherValue, orderTransactionDataPdf2);
+                } else {
+                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.not_data), Toast.LENGTH_SHORT).show();
+                }
             }
         });
-
 
         print.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1412,7 +1430,7 @@ public class BackOfficeActivity extends AppCompatActivity {
 
 
         TextView totalBeforTax, tax, totalAfterTax, services, servicesTax, totalTax, net, serial, PosNo;
-
+        final boolean[] openPdf = {false};
         totalBeforTax = (TextView) dialog.findViewById(R.id.total);
         tax = (TextView) dialog.findViewById(R.id.tax);
         totalAfterTax = (TextView) dialog.findViewById(R.id.totalAfterTax);
@@ -1471,6 +1489,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         preview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                openPdf[0] = true;
                 headerValue.clear();
                 otherValue.clear();
                 orderTransactionDataPdf2.clear();
@@ -1480,6 +1499,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                 tableXreportTax.removeAllViews();
                 List<Double> Total_ = new ArrayList<>();
                 List<Double> Tax_ = new ArrayList<>();
+                List<Double> Dic_ = new ArrayList<>();
 
                 fromDat[0] = fromDate.getText().toString();
                 double totalText = 0.0, tatText = 0.0, netText = 0.0;
@@ -1500,15 +1520,17 @@ public class BackOfficeActivity extends AppCompatActivity {
                 orderTransactionData = mDHandler.getXReport("SHIFT_NAME", posNoString, fromDat[0], fromDat[0]);
 
                 for (int i = 0; i < orderTransactionData.size(); i++) {
-                    double total_ = 0.0, tax_x_ = 0.0;
+                    double total_ = 0.0, tax_x_ = 0.0, dis_ = 0.0;
                     String cou_date = orderTransactionData.get(i).getVoucherDate();
                     String cou_total = orderTransactionData.get(i).getTime();
                     String cou_tax = orderTransactionData.get(i).getShiftName();
+                    String cou_dis = orderTransactionData.get(i).getUserName();
                     Log.e("tt", "" + cou_date);
 
                     String[] arrayString = cou_date.split(",");
                     String[] arrayTotal = cou_total.split(",");
                     String[] arrayTax = cou_tax.split(",");
+                    String[] arrayDis = cou_dis.split(",");
                     Log.e("arrayString1", "" + arrayString.length);
 
                     for (int q = 0; q < arrayString.length; q++) {
@@ -1516,11 +1538,13 @@ public class BackOfficeActivity extends AppCompatActivity {
 
                             total_ += Double.parseDouble(arrayTotal[q]);
                             tax_x_ += Double.parseDouble(arrayTax[q]);
+                            dis_ += Double.parseDouble(arrayDis[q]);
                         }
 
                     }
                     Total_.add(total_);
                     Tax_.add(tax_x_);
+                    Dic_.add(tax_x_);
                     Log.e("arrayTotal", "" + total_ + " ///" + tax_x_);
 
                 }
@@ -1534,9 +1558,9 @@ public class BackOfficeActivity extends AppCompatActivity {
                 for (int i = 0; i < orderTransactionData.size(); i++) {
 
                     if (Settings.tax_type == 0) {
-                        NetTotal = Total_.get(i) - (Tax_.get(i) + orderTransactionData.get(i).getDiscount());
+                        NetTotal = Total_.get(i) - (Tax_.get(i) + Dic_.get(i));
                     } else {
-                        NetTotal = Total_.get(i) - orderTransactionData.get(i).getDiscount();
+                        NetTotal = Total_.get(i) - Dic_.get(i);
                     }
 
                     insertCashierInOutReport(tableXreport, orderTransactionData.get(i).getItemName(), String.valueOf(Tax_.get(i)),
@@ -1592,11 +1616,14 @@ public class BackOfficeActivity extends AppCompatActivity {
                     String cou_date = orderTransactionData.get(i).getVoucherDate();
                     String cou_total = orderTransactionData.get(i).getTime();
                     String cou_tax = orderTransactionData.get(i).getShiftName();
+
                     Log.e("tt", "" + cou_date);
 
                     String[] arrayString = cou_date.split(",");
                     String[] arrayTotal = cou_total.split(",");
                     String[] arrayTax = cou_tax.split(",");
+
+
                     Log.e("arrayString1", "" + arrayString.length);
 
                     for (int q = 0; q < arrayString.length; q++) {
@@ -1604,6 +1631,7 @@ public class BackOfficeActivity extends AppCompatActivity {
 
                             total_ += Double.parseDouble(arrayTotal[q]);
                             tax_x_ += Double.parseDouble(arrayTax[q]);
+
                         }
 
                     }
@@ -1637,8 +1665,14 @@ public class BackOfficeActivity extends AppCompatActivity {
         export.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
-                objExp.Z_report(orderTransactionDataPdf, headerValue, otherValue, orderTransactionDataPdf2);
+
+                if (openPdf[0] && (orderTransactionDataPdf.size() != 0) && (orderTransactionDataPdf2.size() != 0)) {
+                    ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
+                    objExp.Z_report(orderTransactionDataPdf, headerValue, otherValue, orderTransactionDataPdf2);
+
+                } else {
+                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.not_data), Toast.LENGTH_SHORT).show();
+                }
 
             }
         });
@@ -1710,7 +1744,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         exit = (Button) dialog.findViewById(R.id.exitReport);
         export = (Button) dialog.findViewById(R.id.exportReport);
         print = (Button) dialog.findViewById(R.id.printReport);
-
+        final boolean[] openPdf = {false};
         TableLayout userTable = (TableLayout) dialog.findViewById(R.id.userTable);
 
 
@@ -1752,6 +1786,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         preview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                openPdf[0] = true;
                 headerDataMarket.clear();
                 userHeader.clear();
                 userTable.removeAllViews();
@@ -1832,9 +1867,13 @@ public class BackOfficeActivity extends AppCompatActivity {
         export.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (openPdf[0] && (headerDataMarket.size() != 0) && (userHeader.size() != 0)) {
+                    ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
+                    objExp.userCountReport(headerDataMarket, userHeader);
 
-                ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
-                objExp.userCountReport(headerDataMarket, userHeader);
+                } else {
+                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.not_data), Toast.LENGTH_SHORT).show();
+                }
 
 
             }
@@ -1928,11 +1967,19 @@ public class BackOfficeActivity extends AppCompatActivity {
                 .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                 myCalendar.get(Calendar.DAY_OF_MONTH)).show());
 
+        final boolean[] openPdf = {false};
+//    openPdf[0] =true;
+//    if( openPdf[0] &&(orderTransactionDataPdf.size()!=0)&&(orderTransactionDataPdf2.size()!=0)) {
+//        ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
+//        objExp.X_report(orderTransactionDataPdf, headerValue, otherValue, orderTransactionDataPdf2);
+//    }else{
+//        Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.not_data), Toast.LENGTH_SHORT).show();
+//    }
 
         preview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                openPdf[0] = true;
                 userTable.removeAllViews();
 
                 AnnounPdf.clear();
@@ -1979,8 +2026,14 @@ public class BackOfficeActivity extends AppCompatActivity {
         export.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
-                objExp.AnnouncementForTheDay(AnnounPdf, AnnounHeader);
+
+                if (openPdf[0] && (AnnounPdf.size() != 0) && (AnnounHeader.size() != 0)) {
+                    ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
+                    objExp.AnnouncementForTheDay(AnnounPdf, AnnounHeader);
+                } else {
+                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.not_data), Toast.LENGTH_SHORT).show();
+                }
+
 
             }
         });
@@ -3282,6 +3335,8 @@ public class BackOfficeActivity extends AppCompatActivity {
 
         RadioButton All, In, Out;
 
+        final boolean[] openPdf = {false};
+
         Button exit, preview, export, print;
         TableLayout cashierTable = (TableLayout) dialog.findViewById(R.id.cashierTable);
 
@@ -3356,6 +3411,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         preview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                openPdf[0] = true;
                 cashierHeader.clear();
                 PayCashier.clear();
                 count = 0;
@@ -3433,9 +3489,14 @@ public class BackOfficeActivity extends AppCompatActivity {
         export.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
-                Log.e("1testsize", "" + cashierHeader.size());
-                objExp.cashierInOutReport(PayCashier, cashierHeader);
+                if (openPdf[0] && (cashierHeader.size() != 0) && (PayCashier.size() != 0)) {
+                    ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
+                    Log.e("1testsize", "" + cashierHeader.size());
+                    objExp.cashierInOutReport(PayCashier, cashierHeader);
+
+                } else {
+                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.not_data), Toast.LENGTH_SHORT).show();
+                }
 
             }
         });
@@ -3467,7 +3528,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         Button preview = (Button) dialog.findViewById(R.id.doneReport);
         Button export = (Button) dialog.findViewById(R.id.exportReport);
         Button print = (Button) dialog.findViewById(R.id.printReport);
-
+        final boolean[] openPdf = {false};
         TextView fromDate = (TextView) dialog.findViewById(R.id.frDate);
         TextView toDate = (TextView) dialog.findViewById(R.id.toDate);
 
@@ -3529,6 +3590,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         List<CancleOrder> canceledOrdersPdf = new ArrayList<>();
         List<String> cancelHeader = new ArrayList<>();
         preview.setOnClickListener(v -> {
+            openPdf[0] = true;
             canceledTable.removeAllViews();
             cancelHeader.clear();
             canceledOrdersPdf.clear();
@@ -3662,8 +3724,14 @@ public class BackOfficeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
-                objExp.canselOrderReport(canceledOrdersPdf, cancelHeader);
+                if (openPdf[0] && (canceledOrdersPdf.size() != 0) && (cancelHeader.size() != 0)) {
+                    ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
+                    objExp.canselOrderReport(canceledOrdersPdf, cancelHeader);
+
+                } else {
+                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.not_data), Toast.LENGTH_SHORT).show();
+                }
+
 
             }
         });
@@ -3682,7 +3750,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         dialog.setCanceledOnTouchOutside(true);
 
         TableLayout canceledTable = (TableLayout) dialog.findViewById(R.id.table);
-
+        final boolean[] openPdf = {false};
         Button exit = (Button) dialog.findViewById(R.id.exitReport);
         Button preview = (Button) dialog.findViewById(R.id.doneReport);
         Button export = (Button) dialog.findViewById(R.id.exportReport);
@@ -3752,6 +3820,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         List<String> tableHeader = new ArrayList<>();
         List<TableActions> actionsPdf = new ArrayList<>();
         preview.setOnClickListener(v -> {
+            openPdf[0] = true;
             actionsPdf.clear();
             tableHeader.clear();
             canceledTable.removeAllViews();
@@ -3889,8 +3958,12 @@ public class BackOfficeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
-                objExp.TableActionReport(actionsPdf, tableHeader);
+                if (openPdf[0] && (actionsPdf.size() != 0) && (tableHeader.size() != 0)) {
+                    ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
+                    objExp.TableActionReport(actionsPdf, tableHeader);
+                } else {
+                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.not_data), Toast.LENGTH_SHORT).show();
+                }
 
 
             }
@@ -3980,8 +4053,10 @@ public class BackOfficeActivity extends AppCompatActivity {
 
         List<String> simpleHeader = new ArrayList<>();
 
+        final boolean[] openPdf = {false};
 
         preview.setOnClickListener(v -> {
+            openPdf[0] = true;
             simpleHeader.clear();
             orderTotal.clear();
             headerData.clear();
@@ -4186,8 +4261,14 @@ public class BackOfficeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
-                objExp.simpleSalesTotalReport(headerData, orderTotal, simpleHeader);
+                if (openPdf[0] && (orderTotal.size() != 0) && (headerData.size() != 0) && (simpleHeader.size() != 0)) {
+                    ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
+                    objExp.simpleSalesTotalReport(headerData, orderTotal, simpleHeader);
+
+                } else {
+                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.not_data), Toast.LENGTH_SHORT).show();
+                }
+
 
             }
         });
@@ -4273,8 +4354,10 @@ public class BackOfficeActivity extends AppCompatActivity {
         List<OrderHeader> orderHeaders = mDHandler.getAllOrderHeader();
         List<OrderHeader> headerList = new ArrayList<>();
         List<String> hourHeader = new ArrayList<>();
+        final boolean[] openPdf = {false};
 
         preview.setOnClickListener(v -> {
+            openPdf[0] = true;
             hourHeader.clear();
             headerList.clear();
             fromDateT[0] = fromDate.getText().toString();
@@ -4404,8 +4487,12 @@ public class BackOfficeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
-                objExp.salesByHour(headerList, hourHeader);
+                if (openPdf[0] && (headerList.size() != 0) && (hourHeader.size() != 0)) {
+                    ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
+                    objExp.salesByHour(headerList, hourHeader);
+                } else {
+                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.not_data), Toast.LENGTH_SHORT).show();
+                }
 
             }
         });
@@ -4509,9 +4596,12 @@ public class BackOfficeActivity extends AppCompatActivity {
         final String[] fromDateT = {""};
         final String[] toDateT = {""};
         List<String> cardHeader = new ArrayList<>();
+        final boolean[] openPdf = {false};
+
         preview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                openPdf[0] = true;
                 cardHeader.clear();
                 OrderPayMDataPdf.clear();
                 count = 0;
@@ -4582,10 +4672,13 @@ public class BackOfficeActivity extends AppCompatActivity {
         export.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
-                objExp.salesReportByCardType(OrderPayMDataPdf, cardHeader);
+                if (openPdf[0] && (OrderPayMDataPdf.size() != 0) && (cardHeader.size() != 0)) {
+                    ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
+                    objExp.salesReportByCardType(OrderPayMDataPdf, cardHeader);
 
-
+                } else {
+                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.not_data), Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -4640,9 +4733,11 @@ public class BackOfficeActivity extends AppCompatActivity {
                 myCalendar.get(Calendar.DAY_OF_MONTH)).show());
 
 
+        final boolean[] openPdf = {false};
         preview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                openPdf[0] = true;
                 List<Double> Total_ = new ArrayList<>();
                 List<Double> Tax_ = new ArrayList<>();
                 List<Double> Amount_ = new ArrayList<>();
@@ -4726,8 +4821,13 @@ public class BackOfficeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
-                objExp.MarketReport(headerData, fromDateT[0], ToDateT[0]);
+                if (openPdf[0] && (headerData.size() != 0)) {
+                    ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
+                    objExp.MarketReport(headerData, fromDateT[0], ToDateT[0]);
+
+                } else {
+                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.not_data), Toast.LENGTH_SHORT).show();
+                }
 
 
             }
@@ -4820,9 +4920,11 @@ public class BackOfficeActivity extends AppCompatActivity {
         final String[] toDateT = {""};
         List<String> WaiterHeader = new ArrayList<>();
         headerData = mDHandler.getAllOrderHeader();
+        final boolean[] openPdf = {false};
         preview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                openPdf[0] = true;
                 headerDataMarket.clear();
                 WaiterHeader.clear();
                 waiterTable.removeAllViews();
@@ -4887,8 +4989,13 @@ public class BackOfficeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
-                objExp.waiterReport(headerDataMarket, WaiterHeader);
+                if (openPdf[0] && (headerDataMarket.size() != 0) && (WaiterHeader.size() != 0)) {
+                    ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
+                    objExp.waiterReport(headerDataMarket, WaiterHeader);
+                } else {
+                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.not_data), Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
@@ -4978,7 +5085,10 @@ public class BackOfficeActivity extends AppCompatActivity {
         List<String> categories = mDHandler.getAllOrderedCategories();
         List<String> VolumeHeader = new ArrayList<>();
 
+        final boolean[] openPdf = {false};
+
         preview.setOnClickListener(v -> {
+            openPdf[0] = true;
             VolumeHeader.clear();
             orderTransactionData.clear();
             table.removeAllViews();
@@ -5007,9 +5117,13 @@ public class BackOfficeActivity extends AppCompatActivity {
         export.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (openPdf[0] && (orderTransactionData.size() != 0) && (VolumeHeader.size() != 0)) {
+                    ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
+                    objExp.salesVolumeByItem(orderTransactionData, VolumeHeader);
+                } else {
+                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.not_data), Toast.LENGTH_SHORT).show();
+                }
 
-                ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
-                objExp.salesVolumeByItem(orderTransactionData, VolumeHeader);
 
             }
         });
@@ -5111,7 +5225,9 @@ public class BackOfficeActivity extends AppCompatActivity {
         List<OrderTransactions> transactionsPdf = new ArrayList<>();
         List<String> soldHeader = new ArrayList<>();
         List<OrderTransactions> transactions = mDHandler.getAllOrderTransactions();
+        final boolean[] openPdf = {false};
         preview.setOnClickListener(v -> {
+            openPdf[0] = true;
             transactionsPdf.clear();
             soldHeader.clear();
             table.removeAllViews();
@@ -5235,11 +5351,12 @@ public class BackOfficeActivity extends AppCompatActivity {
         export.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
-                ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
-                objExp.soldQtyReport(transactionsPdf, soldHeader);
-
+                if (openPdf[0] && (transactionsPdf.size() != 0) && (soldHeader.size() != 0)) {
+                    ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
+                    objExp.soldQtyReport(transactionsPdf, soldHeader);
+                } else {
+                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.not_data), Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -5325,7 +5442,9 @@ public class BackOfficeActivity extends AppCompatActivity {
 
         List<OrderTransactions> transactionsPdf = new ArrayList<>();
         List<String> salesHeader = new ArrayList<>();
+        final boolean[] openPdf = {false};
         preview.setOnClickListener(v -> {
+            openPdf[0] = true;
             transactionsPdf.clear();
             salesHeader.clear();
             List<Double> Total_ = new ArrayList<>();
@@ -5493,9 +5612,12 @@ public class BackOfficeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
-                objExp.TopSalesItemReport(transactionsPdf, salesHeader);
-
+                if (openPdf[0] && (transactionsPdf.size() != 0) && (salesHeader.size() != 0)) {
+                    ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
+                    objExp.TopSalesItemReport(transactionsPdf, salesHeader);
+                } else {
+                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.not_data), Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

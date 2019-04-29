@@ -3582,7 +3582,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ArrayList<OrderTransactions> orderTransactionsArrayList = new ArrayList<>();
 
 
-        String selectQuery = "select ITEM_NAME, GROUP_CONCAT( VOUCHER_DATE), GROUP_CONCAT( TOTAL), GROUP_CONCAT(TAX_VLUE) from ORDER_TRANSACTIONS  " +
+        String selectQuery = "select ITEM_NAME, GROUP_CONCAT( VOUCHER_DATE), GROUP_CONCAT( TOTAL), GROUP_CONCAT(TAX_VLUE) , GROUP_CONCAT(DISCOUNT) from ORDER_TRANSACTIONS  " +
                 "where  SHIFT_NAME =" + shiftName + " and POS_NO= " + PosNo + "  GROUP BY ITEM_BARCODE1";
 
 //        String selectQuery=" select ITEM_NAME, sum(TOTAL),COALESCE(SUM (TAX_VLUE),-1) from ORDER_TRANSACTIONS where substr(VOUCHER_DATE,1,2)+0 >= "+ day +" and substr(VOUCHER_DATE,4,2)+0 >= "+month+" and substr(VOUCHER_DATE,7,4)+0 >= "+year+
@@ -3609,6 +3609,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
                 orderTransactions.setTime(cursor.getString(2));
                 orderTransactions.setShiftName(cursor.getString(3)); //con list of tax value
+                orderTransactions.setUserName(cursor.getString(4));
 
 
                 orderTransactionsArrayList.add(orderTransactions);
