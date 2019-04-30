@@ -1106,7 +1106,7 @@ public class Main extends AppCompatActivity {
 
                         //SAVE IN PAY_IN_OUT TABLE ...
                         if (!value.getText().toString().equals("")) {
-                            mDHandler.addPayInOut(new Pay(transType, Settings.POS_number, Settings.password, Settings.user_name, today,
+                            mDHandler.addPayInOut(new Pay(transType, Settings.POS_number, Settings.user_no, Settings.user_name, today,
                                     Double.parseDouble(value.getText().toString()), remark.getText().toString(), Settings.shift_number,
                                     Settings.shift_name, time));
                             Toast.makeText(Main.this, getResources().getString(R.string.save_successful), Toast.LENGTH_SHORT).show();
@@ -1343,7 +1343,7 @@ public class Main extends AppCompatActivity {
                     sysOthers += payMethods.get(i).getPayValue();
 
             mDHandler.addBlindClose(new BlindClose(transNo, today, time, Settings.POS_number, Settings.shift_number,
-                    Settings.shift_name, Settings.password, Settings.user_name, sysSales, userSales, userSales - sysSales,
+                    Settings.shift_name, Settings.user_no, Settings.user_name, sysSales, userSales, userSales - sysSales,
                     sysCash, userCash, userCash - sysCash, sysOthers, userOthers, userOthers - sysOthers, 0, tranType,
                     "", toUser.getText().toString()));
 
@@ -1362,7 +1362,7 @@ public class Main extends AppCompatActivity {
                     catQty = Integer.parseInt(text1.getText().toString());
 
                 mDHandler.addBlindCloseDetails(new BlindCloseDetails(transNo, today, time, Settings.POS_number, Settings.shift_number,
-                        Settings.shift_name, Settings.password, Settings.user_name, catName, catQty, catValue, catQty * catValue,
+                        Settings.shift_name, Settings.user_no, Settings.user_name, catName, catQty, catValue, catQty * catValue,
                         "Cash", "", "", -1, "no-user"));
             }
 
@@ -1389,27 +1389,27 @@ public class Main extends AppCompatActivity {
 
             if (creditCardValue != 0)
                 mDHandler.addBlindCloseDetails(new BlindCloseDetails(transNo, today, time, Settings.POS_number, Settings.shift_number,
-                        Settings.shift_name, Settings.password, Settings.user_name, "Credit Card", 1, creditCardValue,
+                        Settings.shift_name, Settings.user_no, Settings.user_name, "Credit Card", 1, creditCardValue,
                         creditCardValue, "Credit Card", "", "", -1, "no-user"));
 
             if (chequeValue != 0)
                 mDHandler.addBlindCloseDetails(new BlindCloseDetails(transNo, today, time, Settings.POS_number, Settings.shift_number,
-                        Settings.shift_name, Settings.password, Settings.user_name, "Cheque", 1, chequeValue,
+                        Settings.shift_name, Settings.user_no, Settings.user_name, "Cheque", 1, chequeValue,
                         chequeValue, "Cheque", "", "", -1, "no-user"));
 
             if (giftCardValue != 0)
                 mDHandler.addBlindCloseDetails(new BlindCloseDetails(transNo, today, time, Settings.POS_number, Settings.shift_number,
-                        Settings.shift_name, Settings.password, Settings.user_name, "Gift Card", 1, giftCardValue,
+                        Settings.shift_name, Settings.user_no, Settings.user_name, "Gift Card", 1, giftCardValue,
                         giftCardValue, "Gift Card", "", "", -1, "no-user"));
 
             if (creditValue != 0)
                 mDHandler.addBlindCloseDetails(new BlindCloseDetails(transNo, today, time, Settings.POS_number, Settings.shift_number,
-                        Settings.shift_name, Settings.password, Settings.user_name, "Credit", 1, creditValue,
+                        Settings.shift_name, Settings.user_no, Settings.user_name, "Credit", 1, creditValue,
                         creditValue, "Credit", "", "", -1, "no-user"));
 
             if (pointValue != 0)
                 mDHandler.addBlindCloseDetails(new BlindCloseDetails(transNo, today, time, Settings.POS_number, Settings.shift_number,
-                        Settings.shift_name, Settings.password, Settings.user_name, "Point", 1, pointValue,
+                        Settings.shift_name, Settings.user_no, Settings.user_name, "Point", 1, pointValue,
                         pointValue, "Point", "", "", -1, "no-user"));
 
             dialogCashierOut.dismiss();
@@ -1619,7 +1619,7 @@ public class Main extends AppCompatActivity {
 
                 clockInClockOut.setPointOfSaleNumber(Settings.POS_number);
                 clockInClockOut.setDate(today);
-                clockInClockOut.setUserNO(Settings.password);
+                clockInClockOut.setUserNO(Settings.user_no);
                 clockInClockOut.setUserName(Settings.user_name);
                 clockInClockOut.setTranstype("ClockIN");
                 clockInClockOut.setDateCard(today);
@@ -1709,7 +1709,7 @@ public class Main extends AppCompatActivity {
 
                 clockInClockOut.setPointOfSaleNumber(Settings.POS_number);
                 clockInClockOut.setDate(today);
-                clockInClockOut.setUserNO(Settings.password);
+                clockInClockOut.setUserNO(Settings.user_no);
                 clockInClockOut.setUserName(Settings.user_name);
                 clockInClockOut.setTranstype("ClockOut");
                 clockInClockOut.setDateCard(today);
@@ -1735,7 +1735,7 @@ public class Main extends AppCompatActivity {
 
                 clockInClockOut.setPointOfSaleNumber(Settings.POS_number);
                 clockInClockOut.setDate(today);
-                clockInClockOut.setUserNO(Settings.password);
+                clockInClockOut.setUserNO(Settings.user_no);
                 clockInClockOut.setUserName(Settings.user_name);
                 clockInClockOut.setTranstype("BreakIN");
                 clockInClockOut.setDateCard(today);
@@ -2313,7 +2313,7 @@ public class Main extends AppCompatActivity {
                             Settings.service_value, rowRefund.get(0).getTaxValue(), rowRefund.get(0).getServiceTax(), netTotals,
                             netTotals, 1, rowRefund.get(0).getTableNo(),
                             rowRefund.get(0).getSectionNo(), cashValues, creditValues, chequeVales, cardValues,
-                            giftCardValues, pointValues, Settings.shift_name, Settings.shift_number, orderTransactions.get(0).getUserName(), 0, Settings.user_name, Settings.password, convertToEnglish(times));
+                            giftCardValues, pointValues, Settings.shift_name, Settings.shift_number, orderTransactions.get(0).getUserName(), 0, Settings.user_name, Settings.user_no, convertToEnglish(times));
 
                     mDHandler.addOrderHeader(orderHeader);
 
@@ -2325,7 +2325,7 @@ public class Main extends AppCompatActivity {
                                 rowRefund.get(i).getItemFamily(), rowRefund.get(i).getQty(), rowRefund.get(i).getPrice(),
                                 rowRefund.get(i).getQty() * rowRefund.get(i).getPrice(), DiscountArray.get(i), lineDiscount.get(i), lineDiscount.get(i) + DiscountArray.get(i), rowRefund.get(i).getTaxValue(),
                                 rowRefund.get(i).getTaxPerc(), 0, rowRefund.get(i).getService(), rowRefund.get(i).getServiceTax(),
-                                rowRefund.get(i).getTableNo(), rowRefund.get(i).getSectionNo(), Settings.shift_number, Settings.shift_name, Settings.password, Settings.user_name, convertToEnglish(times));
+                                rowRefund.get(i).getTableNo(), rowRefund.get(i).getSectionNo(), Settings.shift_number, Settings.shift_name, Settings.user_no, Settings.user_name, convertToEnglish(times));
 
 
                         mDHandler.addOrderTransaction(orderTransactions);
@@ -2390,7 +2390,7 @@ public class Main extends AppCompatActivity {
                                 convertToEnglish(today),
                                 Settings.POS_number,
                                 Settings.store_number, list.get(0).getVoucherNo(), list.get(0).getVoucherSerial(), listForPay.get(x),
-                                listValuePay.get(x), payNumber, payName, Settings.shift_name, Settings.shift_number, Settings.user_name, Settings.password, convertToEnglish(times));
+                                listValuePay.get(x), payNumber, payName, Settings.shift_name, Settings.shift_number, Settings.user_name, Settings.user_no, convertToEnglish(times));
 
                         mDHandler.addAllPayMethodItem(payMethod);
                     }
@@ -2628,7 +2628,7 @@ public class Main extends AppCompatActivity {
 
                 clockInClockOut.setPointOfSaleNumber(Settings.POS_number);
                 clockInClockOut.setDate(dates);
-                clockInClockOut.setUserNO(Settings.password);
+                clockInClockOut.setUserNO(Settings.user_no);
                 clockInClockOut.setUserName(Settings.user_name);
                 clockInClockOut.setTranstype("BreakOut");
                 clockInClockOut.setDateCard(dates);

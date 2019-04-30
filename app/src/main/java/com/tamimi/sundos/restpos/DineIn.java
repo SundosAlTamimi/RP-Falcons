@@ -634,7 +634,7 @@ public class DineIn extends AppCompatActivity {
                         // update on tables temp
                         mHandler.moveTablesTemp(fromSection, focusedLeft, toSection, focusedRight);
 
-                        mHandler.addTableAction(new TableActions(Settings.POS_number, Settings.user_name, Settings.password,
+                        mHandler.addTableAction(new TableActions(Settings.POS_number, Settings.user_name, Settings.user_no,
                                 Settings.shift_name, Settings.shift_number, 0, today, time, focusedLeft, fromSection,
                                 focusedRight, toSection));
 
@@ -835,7 +835,7 @@ public class DineIn extends AppCompatActivity {
                         // update on tables temp
                         mHandler.mergeTablesTemp(fromSection, focusedLeft, toSection, focusedRight);
 
-                        mHandler.addTableAction(new TableActions(Settings.POS_number, Settings.user_name, Settings.password,
+                        mHandler.addTableAction(new TableActions(Settings.POS_number, Settings.user_name, Settings.user_no,
                                 Settings.shift_name, Settings.shift_number, 1, today, time, focusedLeft, fromSection,
                                 focusedRight, toSection));
 

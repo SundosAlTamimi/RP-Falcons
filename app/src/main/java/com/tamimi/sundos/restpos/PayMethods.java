@@ -1498,7 +1498,7 @@ public class PayMethods extends AppCompatActivity {
             payMethod.setVoucherSerial(serial);
             payMethod.setShiftName(Settings.shift_name);
             payMethod.setShiftNumber(Settings.shift_number);
-            payMethod.setUserNo(Settings.password);
+            payMethod.setUserNo(Settings.user_no);
             payMethod.setUserName(Settings.user_name);
             payMethod.setTime(times);
 

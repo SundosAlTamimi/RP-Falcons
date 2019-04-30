@@ -646,25 +646,25 @@ public class BackOfficeActivity extends AppCompatActivity {
 
                         mDHandler.updateBlindCloseDetails(focusedRowData.get(0).getTransNo(), cat.getText().toString(),
                                 Integer.parseInt(qty.getText().toString()), catValue, Double.parseDouble(total.getText().toString()),
-                                today, time, Settings.password, Settings.user_name);
+                                today, time, Settings.user_no, Settings.user_name);
 
                         newPhysical += Double.parseDouble(total.getText().toString());
                     }
                     mDHandler.updateBlindCloseDetails(focusedRowData.get(0).getTransNo(), "Credit Card", 1,
                             Double.parseDouble(creditCard.getText().toString()), Double.parseDouble(creditCard.getText().toString()),
-                            today, time, Settings.password, Settings.user_name);
+                            today, time, Settings.user_no, Settings.user_name);
                     mDHandler.updateBlindCloseDetails(focusedRowData.get(0).getTransNo(), "Cheque", 1,
                             Double.parseDouble(cheque.getText().toString()), Double.parseDouble(cheque.getText().toString()),
-                            today, time, Settings.password, Settings.user_name);
+                            today, time, Settings.user_no, Settings.user_name);
                     mDHandler.updateBlindCloseDetails(focusedRowData.get(0).getTransNo(), "Gift Card", 1,
                             Double.parseDouble(giftCard.getText().toString()), Double.parseDouble(giftCard.getText().toString()),
-                            today, time, Settings.password, Settings.user_name);
+                            today, time, Settings.user_no, Settings.user_name);
                     mDHandler.updateBlindCloseDetails(focusedRowData.get(0).getTransNo(), "Credit", 1,
                             Double.parseDouble(credit.getText().toString()), Double.parseDouble(credit.getText().toString()),
-                            today, time, Settings.password, Settings.user_name);
+                            today, time, Settings.user_no, Settings.user_name);
                     mDHandler.updateBlindCloseDetails(focusedRowData.get(0).getTransNo(), "Point", 1,
                             Double.parseDouble(point.getText().toString()), Double.parseDouble(point.getText().toString()),
-                            today, time, Settings.password, Settings.user_name);
+                            today, time, Settings.user_no, Settings.user_name);
 
                     newOtherPayments += Double.parseDouble(creditCard.getText().toString());
                     newOtherPayments += Double.parseDouble(cheque.getText().toString());
@@ -1094,7 +1094,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                 if (!value.getText().toString().equals("") && !customerBalance.getText().toString().equals("") && !customerName.getText().toString().equals("") && !convertToEnglish(customerNo.getText().toString()).equals("")) {
 
                     customerPayment.setPointOfSaleNumber(Settings.POS_number);
-                    customerPayment.setUserNO(Settings.password);
+                    customerPayment.setUserNO(Settings.user_no);
                     customerPayment.setUserName(Settings.user_name);
                     customerPayment.setCustomerNo(1);
                     customerPayment.setCustomerName(convertToEnglish(customerName.getText().toString()));
@@ -1684,7 +1684,7 @@ public class BackOfficeActivity extends AppCompatActivity {
 
                 if (!isZReportPrinting(fromDate.getText().toString())) {
                     ZReport zReport = new ZReport(fromDate.getText().toString(), Settings.POS_number
-                            , Settings.password, Settings.user_name, (Integer.parseInt(serial.getText().toString())));
+                            , Settings.user_no, Settings.user_name, (Integer.parseInt(serial.getText().toString())));
 
                     mDHandler.addZReportTable(zReport);
 
@@ -2491,7 +2491,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                 CheckBox checkBox = (CheckBox) tableRow.getChildAt(1);
                 int active = checkBox.isChecked() ? 1 : 0;
 
-                mDHandler.addVoidReason(new VoidResons(Settings.shift_number, Settings.shift_name, Settings.password,
+                mDHandler.addVoidReason(new VoidResons(Settings.shift_number, Settings.shift_name, Settings.user_no,
                         Settings.user_name, textView.getText().toString(), today, active));
             }
             dialog.dismiss();
@@ -5700,7 +5700,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                         jobGroups.setJobGroup(text);
                         jobGroups.setInDate(today);
                         jobGroups.setUserName(Settings.user_name);
-                        jobGroups.setUserNo(Settings.password);
+                        jobGroups.setUserNo(Settings.user_no);
                         jobGroups.setShiftName(Settings.shift_name);
                         jobGroups.setShiftNo(Settings.shift_number);
                         jobGroups.setActive(jobActive.get(i));
@@ -6092,7 +6092,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                         memberShipGroup.setMemberShipGroup(text);
                         memberShipGroup.setInDate(today);
                         memberShipGroup.setUserName(Settings.user_name);
-                        memberShipGroup.setUserNo(Settings.password);
+                        memberShipGroup.setUserNo(Settings.user_no);
                         memberShipGroup.setShiftName(Settings.shift_name);
                         memberShipGroup.setShiftNo(Settings.shift_number);
                         memberShipGroup.setActive(memberActive.get(i));

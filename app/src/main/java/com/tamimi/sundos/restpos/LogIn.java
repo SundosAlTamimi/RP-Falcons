@@ -114,8 +114,10 @@ public class LogIn extends AppCompatActivity {
                                 Settings.shift_number = mDHandler.getOpenedShifts(date, 1).getShiftNo();
                             }
                             Settings.password = Integer.parseInt(password);
+                            Settings.user_no = foundUserNo(Settings.user_name,Integer.parseInt(password));
                             Settings.POS_number = 1;
                             Settings.store_number = 7;
+                            Log.e("userNo = ",""+Settings.user_no);
 
                             logIn();
                         } else
@@ -298,6 +300,19 @@ public class LogIn extends AppCompatActivity {
     public String convertToEnglish(String value) {
         String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0"));
         return newValue;
+    }
+
+    int foundUserNo(String userName,int Password){
+        int userNo=-1;
+        if(!userName.equals("master")) {
+            List<EmployeeRegistrationModle> allEmployee = mDHandler.getAllEmployeeRegistration();
+            for(int i=0;i<allEmployee.size();i++){
+                if(allEmployee.get(i).getEmployeeName().equals(userName)&&allEmployee.get(i).getUserPassword()==Password){
+                    userNo=allEmployee.get(i).getEmployeeNO();
+                }
+            }
+        }
+        return userNo;
     }
 
 

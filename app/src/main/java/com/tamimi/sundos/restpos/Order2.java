@@ -771,12 +771,12 @@ public class Order2 extends AppCompatActivity {
                                 } else {
                                     reasonText = newReason.getText().toString();
                                     mDbHandler.addVoidReason(new VoidResons(Settings.shift_number, Settings.shift_name,
-                                            Settings.password, Settings.user_name, reasonText, today, 1));
+                                            Settings.user_no, Settings.user_name, reasonText, today, 1));
                                 }
 
                                 int index = Integer.parseInt(convertToEnglish(raw.getTag().toString()));
 
-                                mDbHandler.addCancleOrder(new CancleOrder(voucherNo, today, Settings.user_name, Settings.password, Settings.shift_name,
+                                mDbHandler.addCancleOrder(new CancleOrder(voucherNo, today, Settings.user_name, Settings.user_no, Settings.shift_name,
                                         Settings.shift_number, waiter, Integer.parseInt(waiterNo), "" + wantedItems.get(index).getItemBarcode(),
                                         wantedItems.get(index).getMenuName(), Integer.parseInt(textViewQty.getText().toString()),
                                         wantedItems.get(index).getPrice(), Double.parseDouble(textViewTotal.getText().toString()),
@@ -901,7 +901,7 @@ public class Order2 extends AppCompatActivity {
                 } else {
                     reasonText =convertToEnglish(newReason.getText().toString());
                     mDbHandler.addVoidReason(new VoidResons(Settings.shift_number, Settings.shift_name,
-                            Settings.password, Settings.user_name, reasonText, today, 1));
+                            Settings.user_no, Settings.user_name, reasonText, today, 1));
                 }
 
                 for (int k = 0; k < tableLayout.getChildCount(); k++) {
@@ -909,7 +909,7 @@ public class Order2 extends AppCompatActivity {
                     TextView textViewQty = (TextView) raw.getChildAt(0);
                     TextView textViewTotal = (TextView) raw.getChildAt(3);
 
-                    mDbHandler.addCancleOrder(new CancleOrder(voucherNo, today, Settings.user_name, Settings.password, Settings.shift_name,
+                    mDbHandler.addCancleOrder(new CancleOrder(voucherNo, today, Settings.user_name, Settings.user_no, Settings.shift_name,
                             Settings.shift_number, waiter, Integer.parseInt(waiterNo), "" + wantedItems.get(k).getItemBarcode(),
                             wantedItems.get(k).getMenuName(), Integer.parseInt(convertToEnglish(textViewQty.getText().toString())),
                             wantedItems.get(k).getPrice(), Double.parseDouble(convertToEnglish(textViewTotal.getText().toString())),
@@ -1587,7 +1587,7 @@ public class Order2 extends AppCompatActivity {
                     wantedItems.get(k).getFamilyName(), Integer.parseInt(convertToEnglish(textViewQty.getText().toString())), wantedItems.get(k).getPrice(),
                     totalLine, discount, lineDiscount_, discount + lineDiscount_, wantedItems.get(k).getTax(),
                     wantedItems.get(k).getTax(), 0, Double.parseDouble(service.getText().toString()), serviceTax,
-                    tableNumber, sectionNumber, Settings.shift_number, Settings.shift_name, Settings.password, Settings.user_name, time));
+                    tableNumber, sectionNumber, Settings.shift_number, Settings.shift_name, Settings.user_no, Settings.user_name, time));
         }
     }
 
@@ -1605,7 +1605,7 @@ public class Order2 extends AppCompatActivity {
                 Settings.service_value, Double.parseDouble((convertToEnglish(tax.getText().toString()))), serviceTax, Double.parseDouble((convertToEnglish(subTotal.getText().toString()))),
                 Double.parseDouble(convertToEnglish(amountDue.getText().toString())), Double.parseDouble(convertToEnglish(deliveryCharge.getText().toString())), tableNumber,
                 sectionNumber, PayMethods.cashValue1, PayMethods.creditCardValue1, PayMethods.chequeValue1, PayMethods.creditValue1,
-                PayMethods.giftCardValue1, PayMethods.pointValue1, Settings.shift_name, Settings.shift_number, "No Waiter", 0, Settings.user_name, Settings.password, time);
+                PayMethods.giftCardValue1, PayMethods.pointValue1, Settings.shift_name, Settings.shift_number, "No Waiter", 0, Settings.user_name, Settings.user_no, time);
 
 
     }
@@ -1638,7 +1638,7 @@ public class Order2 extends AppCompatActivity {
                     wantedItems.get(k).getFamilyName(), Integer.parseInt(convertToEnglish(textViewQty.getText().toString())), wantedItems.get(k).getPrice(),
                     totalLine, discount, lineDiscount_, discount + lineDiscount_, wantedItems.get(k).getTax(),
                     wantedItems.get(k).getTax(), 0, Double.parseDouble(convertToEnglish(service.getText().toString())), serviceTax,
-                    tableNumber, sectionNumber, Settings.shift_number, Settings.shift_name, Settings.password, Settings.user_name, time));
+                    tableNumber, sectionNumber, Settings.shift_number, Settings.shift_name, Settings.user_no, Settings.user_name, time));
         }
     }
 
@@ -1656,7 +1656,7 @@ public class Order2 extends AppCompatActivity {
                 Settings.service_value, Double.parseDouble(convertToEnglish(tax.getText().toString())), serviceTax, Double.parseDouble(convertToEnglish(subTotal.getText().toString())),
                 Double.parseDouble(convertToEnglish(amountDue.getText().toString())), Double.parseDouble(convertToEnglish(deliveryCharge.getText().toString())), sectionNumber,
                 tableNumber, 0.00, 0.00, 0.00, 0.00,
-                0.00, 0.00, Settings.shift_name, Settings.shift_number, waiter, seatNo, Settings.user_name, Settings.password, time));
+                0.00, 0.00, Settings.shift_name, Settings.shift_number, waiter, seatNo, Settings.user_name, Settings.user_no, time));
     }
 
     public ArrayList<OrderTransactions> getOrderTransactionObj() {
