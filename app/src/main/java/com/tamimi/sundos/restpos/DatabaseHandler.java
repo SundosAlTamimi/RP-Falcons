@@ -3708,11 +3708,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return orderTransactionsArrayList;
     }
 
-    public ArrayList<OrderHeader> getUserNameReport(String userName, String PosNo, String fDate, String toDate) {
+    public ArrayList<OrderHeader> getUserNameReport(String userName, String PosNo) {
         ArrayList<OrderHeader> orderHeaderArrayList = new ArrayList<>();
 
         String selectQuery = "select USER_NAME , GROUP_CONCAT( VOUCHER_DATE), GROUP_CONCAT( AMOUNT_DUE) from ORDER_HEADER  " +
-                "WHERE USER_NAME = " + userName + " and POINT_OF_SALE_NUMBER= " + PosNo + " GROUP BY USER_NAME";
+                "WHERE USER_NO = " + userName + " and POINT_OF_SALE_NUMBER= " + PosNo + " GROUP BY USER_NAME";
 
 
 //        String selectQuery ="SELECT USER_NAME , COUNT(*) , COALESCE(SUM(AMOUNT_DUE),-1) FROM ORDER_HEADER " +

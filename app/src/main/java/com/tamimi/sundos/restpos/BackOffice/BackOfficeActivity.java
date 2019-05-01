@@ -1747,14 +1747,15 @@ public class BackOfficeActivity extends AppCompatActivity {
         final boolean[] openPdf = {false};
         TableLayout userTable = (TableLayout) dialog.findViewById(R.id.userTable);
 
-
+         ArrayList<EmployeeRegistrationModle> userTest = new ArrayList<>();
         ArrayList<String> userArray = new ArrayList<>();
         ArrayList<String> posNoArray = new ArrayList<>();
-
-
-        for (int i = 0; i < mDHandler.getAllEmployeeRegistration().size(); i++) {
-            if (mDHandler.getAllEmployeeRegistration().get(i).getEmployeeType() == 0) {
-                userArray.add(String.valueOf(mDHandler.getAllEmployeeRegistration().get(i).getEmployeeName()));
+          ArrayList<Integer> userNo = new ArrayList<>();
+        userTest=mDHandler.getAllEmployeeRegistration();
+        for (int i = 0; i <userTest.size(); i++) {
+            if (userTest.get(i).getEmployeeType() == 0) {
+                userArray.add(String.valueOf(userTest.get(i).getEmployeeName()));
+                userNo.add(userTest.get(i).getEmployeeNO());
             }
         }
         userArray.add(0, getResources().getString(R.string.all));
@@ -1796,7 +1797,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                 List<Double> count_ = new ArrayList<>();
                 List<String> username_ = new ArrayList<>();
 
-                String ShiftNa = "USER_NAME";
+                String ShiftNa = "USER_NO";
                 fromDat[0] = fromDate.getText().toString();
                 toDat[0] = toDate.getText().toString();
                 double totalText = 0.0, tatText = 0.0, netText = 0.0;
@@ -1804,10 +1805,11 @@ public class BackOfficeActivity extends AppCompatActivity {
                 String posNoString = "POINT_OF_SALE_NUMBER";
 
                 if (userName.getSelectedItem().toString().equals(getResources().getString(R.string.all))) {
-                    ShiftNa = "USER_NAME";
+                    ShiftNa = "USER_NO";
 
                 } else {
-                    ShiftNa = "'" + userName.getSelectedItem().toString() + "'";
+                    int userNoPostion=userName.getSelectedItemPosition()-1;
+                    ShiftNa = "'" + userNo.get(userNoPostion) + "'";
                 }
 
                 if (PosNo.getSelectedItem().toString().equals(getResources().getString(R.string.all))) {
@@ -1822,7 +1824,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                 userHeader.add(toDat[0]);
                 userHeader.add(PosNo.getSelectedItem().toString());
 
-                headerData = mDHandler.getUserNameReport(ShiftNa, posNoString, fromDat[0], toDat[0]);
+                headerData = mDHandler.getUserNameReport(ShiftNa, posNoString);
 
                 for (int i = 0; i < headerData.size(); i++) {
                     double total_ = 0.0, tax_x_ = 0.0, amount_ = 0.0, coun_ = 0.0;
