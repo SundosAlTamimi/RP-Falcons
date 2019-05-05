@@ -982,7 +982,7 @@ public class Main extends AppCompatActivity {
         categories = (TableLayout) dialog.findViewById(R.id.money_categories);
         final TextView mainTotal = (TextView) dialog.findViewById(R.id.mainTotal);
 
-
+        value.setText("0");
         Button b1, b2, b3, b4, b5, b6, b7, b8, b9, b0, clear;
         b1 = (Button) dialog.findViewById(R.id.b1);
         b2 = (Button) dialog.findViewById(R.id.b2);
