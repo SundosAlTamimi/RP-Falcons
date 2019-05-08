@@ -1747,12 +1747,12 @@ public class BackOfficeActivity extends AppCompatActivity {
         final boolean[] openPdf = {false};
         TableLayout userTable = (TableLayout) dialog.findViewById(R.id.userTable);
 
-         ArrayList<EmployeeRegistrationModle> userTest = new ArrayList<>();
+        ArrayList<EmployeeRegistrationModle> userTest = new ArrayList<>();
         ArrayList<String> userArray = new ArrayList<>();
         ArrayList<String> posNoArray = new ArrayList<>();
-          ArrayList<Integer> userNo = new ArrayList<>();
-        userTest=mDHandler.getAllEmployeeRegistration();
-        for (int i = 0; i <userTest.size(); i++) {
+        ArrayList<Integer> userNo = new ArrayList<>();
+        userTest = mDHandler.getAllEmployeeRegistration();
+        for (int i = 0; i < userTest.size(); i++) {
             if (userTest.get(i).getEmployeeType() == 0) {
                 userArray.add(String.valueOf(userTest.get(i).getEmployeeName()));
                 userNo.add(userTest.get(i).getEmployeeNO());
@@ -1808,7 +1808,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     ShiftNa = "USER_NO";
 
                 } else {
-                    int userNoPostion=userName.getSelectedItemPosition()-1;
+                    int userNoPostion = userName.getSelectedItemPosition() - 1;
                     ShiftNa = "'" + userNo.get(userNoPostion) + "'";
                 }
 
@@ -5935,6 +5935,7 @@ public class BackOfficeActivity extends AppCompatActivity {
 
         ArrayList<String> shiftNameArray = new ArrayList<>();
         ArrayList<String> userArray = new ArrayList<>();
+        ArrayList<Integer> userNo = new ArrayList<>();
         ArrayList<String> posNoArray = new ArrayList<>();
 
         for (int i = 0; i < mDHandler.getAllShifts().size(); i++) {
@@ -5945,6 +5946,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         for (int i = 0; i < mDHandler.getAllEmployeeRegistration().size(); i++) {
             if (mDHandler.getAllEmployeeRegistration().get(i).getEmployeeType() == 0) {
                 userArray.add(String.valueOf(mDHandler.getAllEmployeeRegistration().get(i).getEmployeeName()));
+                userNo.add(mDHandler.getAllEmployeeRegistration().get(i).getEmployeeNO());
             }
         }
         userArray.add(0, getResources().getString(R.string.all));
@@ -5966,11 +5968,17 @@ public class BackOfficeActivity extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                int userNosp = -1;
+                int userNoValue = -1;
                 String ShiftNameString = convertToEnglish(shiftName.getSelectedItem().toString());
                 String userNameString = convertToEnglish(userName.getSelectedItem().toString());
                 String messageString = message.getText().toString();
                 String DateString = convertToEnglish(date.getText().toString());
+                if (!userNameString.equals(getResources().getString(R.string.all))) {
+                    userNosp = userName.getSelectedItemPosition() - 1;
+                    userNoValue = userNo.get(userNosp);
+                }
+
                 int posNoString = -1;
                 if (posNo.getSelectedItem().toString().equals(getResources().getString(R.string.all))) {
                     posNoString = -1;
@@ -5981,7 +5989,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                 if (!messageString.equals("")) {
 
                     Announcemet announcemet = new Announcemet(ShiftNameString,
-                            DateString, userNameString, posNoString, messageString, 0);
+                            DateString, userNameString, posNoString, messageString, 0, userNoValue);
 
                     mDHandler.addAnnouncement(announcemet);
 
