@@ -40,16 +40,21 @@ public class OrderTransactions {
     private String time;
     private int screenNo;
     private String note;
+    private  String orgNo ;
+    private  int orgPos ;
+    private int returnQty;
+
 
     public OrderTransactions() {
 
     }
 
-    public OrderTransactions(int orderType, int orderKind, String voucherDate, int posNo, int storeNo, String voucherNo,
-                             int voucherSerial, String itemBarcode, String itemName, String secondaryName, String kitchenAlias,
-                             String itemCategory, String itemFamily, int qty, double price, double total, double discount,
-                             double lDiscount, double totalDiscount, double taxValue, double taxPerc, int taxKind, double service,
-                             double serviceTax, int tableNo, int sectionNo, int shiftNo, String shiftName, int userNo, String userNmae, String time) {
+    public OrderTransactions(int orderType, int orderKind, String voucherDate, int posNo, int storeNo,
+                             String voucherNo, int voucherSerial, String itemBarcode, String itemName,
+                             String secondaryName, String kitchenAlias, String itemCategory, String itemFamily,
+                             int qty, double price, double total, double discount, double lDiscount, double totalDiscount,
+                             double taxValue, double taxPerc, int taxKind, double service, double serviceTax, int tableNo,
+                             int sectionNo, int shiftNo, String shiftName, int userNo, String userName, String time, String orgNo, int orgPos, int returnQty) {
         this.orderType = orderType;
         this.orderKind = orderKind;
         this.voucherDate = voucherDate;
@@ -79,9 +84,11 @@ public class OrderTransactions {
         this.shiftNo = shiftNo;
         this.shiftName = shiftName;
         this.userNo = userNo;
-        this.userName = userNmae;
+        this.userName = userName;
         this.time = time;
-
+        this.orgNo = orgNo;
+        this.orgPos = orgPos;
+        this.returnQty = returnQty;
     }
 
     public int getUserNo() {
@@ -348,6 +355,30 @@ public class OrderTransactions {
         this.note = note;
     }
 
+    public String getOrgNo() {
+        return orgNo;
+    }
+
+    public void setOrgNo(String orgNo) {
+        this.orgNo = orgNo;
+    }
+
+    public int getOrgPos() {
+        return orgPos;
+    }
+
+    public void setOrgPos(int orgPos) {
+        this.orgPos = orgPos;
+    }
+
+    public int getReturnQty() {
+        return returnQty;
+    }
+
+    public void setReturnQty(int returnQty) {
+        this.returnQty = returnQty;
+    }
+
     public JSONObject getJSONObject() { // for kitchen
         JSONObject obj = new JSONObject();
         try {
@@ -356,7 +387,13 @@ public class OrderTransactions {
             obj.put("QTY", qty);
             obj.put("PRICE", price);
             obj.put("NOTE", note);
-            obj.put("ISUPDATE", 0);
+            if(getOrderKind()==998){
+                Log.e("isUpdate1 =","up =1 "+"order kind = "+getOrderKind());
+                obj.put("ISUPDATE", 1);}
+            else if(getOrderKind()==0){
+                Log.e("isUpdate2 =","up =0 "+"order kind = "+getOrderKind());
+                obj.put("ISUPDATE", 0);}
+
             obj.put("SCREENNO", screenNo);
 
         } catch (JSONException e) {

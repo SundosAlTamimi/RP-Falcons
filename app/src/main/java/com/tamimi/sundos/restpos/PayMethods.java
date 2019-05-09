@@ -1501,6 +1501,8 @@ public class PayMethods extends AppCompatActivity {
             payMethod.setUserNo(Settings.user_no);
             payMethod.setUserName(Settings.user_name);
             payMethod.setTime(times);
+            payMethod.setOrgPos(-1);
+            payMethod.setOrgNo("0");
 
             if (cashValue != 0.00) {
                 payMethod.setPayType("Cash");
@@ -1651,7 +1653,7 @@ public class PayMethods extends AppCompatActivity {
         }
     }
 
-    void sendToKitchen(OrderHeader OrderHeaderObj, List<OrderTransactions> OrderTransactionsObj, List<PayMethod> PayMethodObj) {
+   public void sendToKitchen(OrderHeader OrderHeaderObj, List<OrderTransactions> OrderTransactionsObj, List<PayMethod> PayMethodObj) {
         try {
             JSONObject obj1 = OrderHeaderObj.getJSONObject();
 

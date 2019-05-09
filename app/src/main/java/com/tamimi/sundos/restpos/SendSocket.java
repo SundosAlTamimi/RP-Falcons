@@ -120,13 +120,16 @@ public class SendSocket {
                     obj.put("QTY", orderTransactions.get(i).getQty());
                     obj.put("PRICE", orderTransactions.get(i).getPrice());
                     obj.put("NOTE", orderTransactions.get(i).getNote());
-                    obj.put("ISUPDATE", 0);
 //                    obj.put("SCREENNO", orderTransactions.get(i).getScreenNo());
                     obj.put("POSNO", orderTransactions.get(i).getPosNo());
                     obj.put("ORDERNO", orderTransactions.get(i).getVoucherNo());
                     obj.put("ORDERTYPE", orderTransactions.get(i).getOrderType());
                     obj.put("TABLENO", orderTransactions.get(i).getTableNo());
                     obj.put("SECTIONNO", orderTransactions.get(i).getSectionNo());
+                    if(orderTransactions.get(i).getOrderKind()==998){
+                        obj.put("ISUPDATE", 1);}
+                    else if(orderTransactions.get(i).getOrderKind()==0){
+                        obj.put("ISUPDATE", 0);}
                     objNo.put(obj);
 
                 } catch (JSONException e) {
