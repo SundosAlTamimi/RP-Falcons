@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
@@ -29,37 +28,18 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.tamimi.sundos.restpos.BackOffice.BackOfficeActivity;
-import com.tamimi.sundos.restpos.BackOffice.MenuRegistration;
-import com.tamimi.sundos.restpos.BackOffice.OrderLayout;
 import com.tamimi.sundos.restpos.Models.CancleOrder;
 import com.tamimi.sundos.restpos.Models.FamilyCategory;
 import com.tamimi.sundos.restpos.Models.ForceQuestions;
 import com.tamimi.sundos.restpos.Models.ItemWithFq;
 import com.tamimi.sundos.restpos.Models.ItemWithModifier;
-import com.tamimi.sundos.restpos.Models.ItemWithScreen;
 import com.tamimi.sundos.restpos.Models.Items;
-import com.tamimi.sundos.restpos.Models.Modifier;
 import com.tamimi.sundos.restpos.Models.OrderHeader;
 import com.tamimi.sundos.restpos.Models.OrderTransactions;
-import com.tamimi.sundos.restpos.Models.PayMethod;
 import com.tamimi.sundos.restpos.Models.UsedCategories;
 import com.tamimi.sundos.restpos.Models.UsedItems;
 import com.tamimi.sundos.restpos.Models.VoidResons;
 
-import org.askerov.dynamicgrid.DynamicGridView;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -1632,13 +1612,21 @@ public class Order extends AppCompatActivity {
             if (wantedItems.get(k).getDiscountAvailable() == 1)
                 discount = (disc / totalItemsWithDiscount) * (totalLine - lineDiscount_);
 
+            double taxValue = 0;
+            if (wantedItems.get(k).getTaxType() == 0) {
+                if (Settings.tax_type == 0) {
+                    taxValue = discount * wantedItems.get(k).getTax() / 100;
+                } else
+                    taxValue = ((wantedItems.get(k).getTax()-discount) * wantedItems.get(k).getTax() / 100) / (1 + (wantedItems.get(k).getTax() / 100));
+            }
+
             OrderTransactionsObj.add(new OrderTransactions(orderTypeFlag, 0, today, Settings.POS_number, Settings.store_number,
                     voucherNo, k, "" + wantedItems.get(k).getItemBarcode(), wantedItems.get(k).getMenuName(),
                     wantedItems.get(k).getSecondaryName(), wantedItems.get(k).getKitchenAlias(), wantedItems.get(k).getMenuCategory(),
                     wantedItems.get(k).getFamilyName(), Integer.parseInt(convertToEnglish(textViewQty.getText().toString())), wantedItems.get(k).getPrice(),
-                    totalLine, discount, lineDiscount_, discount + lineDiscount_, wantedItems.get(k).getTax(),
-                    wantedItems.get(k).getTax(), 0, Double.parseDouble(service.getText().toString()), serviceTax,
-                    tableNumber, sectionNumber, Settings.shift_number, Settings.shift_name, Settings.user_no, Settings.user_name, time));
+                    totalLine, discount, lineDiscount_, discount + lineDiscount_,taxValue, wantedItems.get(k).getTax(),
+                    0, Double.parseDouble(service.getText().toString()), serviceTax, tableNumber, sectionNumber,
+                    Settings.shift_number, Settings.shift_name, Settings.user_no, Settings.user_name, time));
         }
     }
 
@@ -1680,13 +1668,21 @@ public class Order extends AppCompatActivity {
             if (wantedItems.get(k).getDiscountAvailable() == 1)
                 discount = (disc / totalItemsWithDiscount) * (totalLine - lineDiscount_);
 
+            double taxValue = 0;
+            if (wantedItems.get(k).getTaxType() == 0) {
+                if (Settings.tax_type == 0) {
+                    taxValue = discount * wantedItems.get(k).getTax() / 100;
+                } else
+                    taxValue = ((wantedItems.get(k).getTax()-discount) * wantedItems.get(k).getTax() / 100) / (1 + (wantedItems.get(k).getTax() / 100));
+            }
+
             mDbHandler.addOrderTransactionTemp(new OrderTransactions(orderTypeFlag, 0, today, Settings.POS_number, Settings.store_number,
                     voucherNo, k, "" + wantedItems.get(k).getItemBarcode(), wantedItems.get(k).getMenuName(),
                     wantedItems.get(k).getSecondaryName(), wantedItems.get(k).getKitchenAlias(), wantedItems.get(k).getMenuCategory(),
                     wantedItems.get(k).getFamilyName(), Integer.parseInt(convertToEnglish(textViewQty.getText().toString())), wantedItems.get(k).getPrice(),
-                    totalLine, discount, lineDiscount_, discount + lineDiscount_, wantedItems.get(k).getTax(),
-                    wantedItems.get(k).getTax(), 0, Double.parseDouble(convertToEnglish(service.getText().toString())), serviceTax,
-                    tableNumber, sectionNumber, Settings.shift_number, Settings.shift_name, Settings.user_no, Settings.user_name, time));
+                    totalLine, discount, lineDiscount_, discount + lineDiscount_, taxValue, wantedItems.get(k).getTax(),
+                    0, Double.parseDouble(convertToEnglish(service.getText().toString())), serviceTax, tableNumber,
+                    sectionNumber, Settings.shift_number, Settings.shift_name, Settings.user_no, Settings.user_name, time));
         }
     }
 
