@@ -8,19 +8,21 @@ public class Announcemet {
     private int posNo;
     private String message;
     private int  isShow;
+    private int userNo;
 
     public Announcemet() {
 
     }
 
     public Announcemet(String shiftName, String
-            announcementDate, String userName, int posNo, String message, int isShow) {
+            announcementDate, String userName, int posNo, String message, int isShow,int userNo) {
         this.shiftName = shiftName;
         this.AnnouncementDate = announcementDate;
         this.userName = userName;
         this.posNo = posNo;
         this.message = message;
         this.isShow = isShow;
+        this.userNo = userNo;
     }
 
     public String getShiftName() {
@@ -69,5 +71,13 @@ public class Announcemet {
 
     public void setIsShow(int isShow) {
         this.isShow = isShow;
+    }
+
+    public int getUserNo() {
+        return userNo;
+    }
+
+    public void setUserNo(int userNo) {
+        this.userNo = userNo;
     }
 }

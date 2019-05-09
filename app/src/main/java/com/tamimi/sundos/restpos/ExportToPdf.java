@@ -135,9 +135,10 @@ public class ExportToPdf  {
 
 
     public void X_report(List<OrderTransactions> orderTransactionDataPdf, List<String> orderHeder, List<String> otherInfo, List<OrderTransactions> orderTransactionDataPdf2) {
+        float[] fromDat = {1.5f, 1f, 1f, 1.5f};
 
         PdfPTable pdfPTable = new PdfPTable(4);
-        PdfPTable pdfPTableDetal = new PdfPTable(4);
+        PdfPTable pdfPTableDetal = new PdfPTable(fromDat);
         PdfPTable pdfPTableHeader = new PdfPTable(4);
         PdfPTable pdfPTableTax = new PdfPTable(3);
 
@@ -346,9 +347,9 @@ public class ExportToPdf  {
     }
 
     public void Z_report(List<OrderTransactions> orderTransactionDataPdf, List<String> orderHeder, List<String> otherInfo, List<OrderTransactions> orderTransactionDataPdf2) {
-
+        float[] fromDat = {1.5f, 1f, 1f, 1.5f};
         PdfPTable pdfPTable = new PdfPTable(4);
-        PdfPTable pdfPTableDetal = new PdfPTable(4);
+        PdfPTable pdfPTableDetal = new PdfPTable(fromDat);
         PdfPTable pdfPTableHeader = new PdfPTable(4);
         PdfPTable pdfPTableTax = new PdfPTable(3);
 
@@ -434,7 +435,7 @@ public class ExportToPdf  {
         insertCell(pdfPTable, context.getString(R.string.point_of_sale), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable, context.getString(R.string.sale_before_tax), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable, context.getString(R.string.tax), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-        insertCell(pdfPTable, context.getString(R.string.net_sales), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable, context.getString(R.string.net_salesM), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable, context.getString(R.string.order_count), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable, context.getString(R.string.average), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
 
@@ -481,7 +482,7 @@ public class ExportToPdf  {
         pdfPTableHeader.setSpacingAfter(20);
 
         insertCell(pdfPTable, context.getString(R.string.shift_name), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-        insertCell(pdfPTable, context.getString(R.string.user_name), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+        insertCell(pdfPTable, context.getString(R.string.user_name_), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable, context.getString(R.string.point_of_sale), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable, context.getString(R.string.date_), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         insertCell(pdfPTable, context.getString(R.string.message), ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);

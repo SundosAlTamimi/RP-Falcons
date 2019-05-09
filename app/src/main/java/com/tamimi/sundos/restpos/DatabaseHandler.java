@@ -56,7 +56,7 @@ import static com.tamimi.sundos.restpos.Settings.shift_name;
 public class DatabaseHandler extends SQLiteOpenHelper {
     //hellohjt
     // Database Version
-    private static final int DATABASE_VERSION = 25;
+    private static final int DATABASE_VERSION = 26;
 
     // Database Name
     private static final String DATABASE_NAME = "RestPos";
@@ -545,6 +545,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String POS_NO18 = "POS_NO";
     private static final String MESSAGE18 = "MESSAGE";
     private static final String IS_SHOW18 = "IS_SHOW";
+    private static final String USER_NO18 = "USER_NO";
 
     //____________________________________________________________________________________
     private static final String KITCHEN_SCREEN_TABLE = "KITCHEN_SCREEN_TABLE";
@@ -1142,7 +1143,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + USER_NAME18 + " TEXT,"
                 + POS_NO18 + " INTEGER,"
                 + MESSAGE18 + " TEXT,"
-                + IS_SHOW18 + " INTEGER " + ")";
+                + IS_SHOW18 + " INTEGER,"
+                + USER_NO18 + " INTEGER " + ")";
         db.execSQL(CREATE_TABLE_ANNOUNCEMENT_TABLE);
 
         //_____________________________________________________________________
@@ -1214,7 +1216,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 //                + SCREEN_NO3 + " INTEGER,"
 //                + SCREEN_NAME3 + " TEXT " + ")";
 //        db.execSQL(CREATE_TABLE_ITEM_WITH_SCREEN);
-        db.execSQL("ALTER TABLE KITCHEN_SCREEN_TABLE ADD KITCHEN_IP TEXT NOT NULL DEFAULT ''");
+        db.execSQL("ALTER TABLE ANNOUNCEMENT_TABLE ADD USER_NO INTEGER NOT NULL DEFAULT '-1'");
     }
 
     //Insert values to the table Items
@@ -1963,6 +1965,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(POS_NO18, announcemet.getPosNo());
         values.put(MESSAGE18, announcemet.getMessage());
         values.put(IS_SHOW18, announcemet.getIsShow());
+        values.put(USER_NO18, announcemet.getUserNo());
 
         db.insert(ANNOUNCEMENT_TABLE, null, values);
 
@@ -3522,6 +3525,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 announcemet.setPosNo(cursor.getInt(3));
                 announcemet.setMessage(cursor.getString(4));
                 announcemet.setIsShow(cursor.getInt(5));
+                announcemet.setUserNo(cursor.getInt(6));
 
 
                 announcementArrayList.add(announcemet);
@@ -3708,11 +3712,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return orderTransactionsArrayList;
     }
 
-    public ArrayList<OrderHeader> getUserNameReport(String userName, String PosNo, String fDate, String toDate) {
+    public ArrayList<OrderHeader> getUserNameReport(String userName, String PosNo) {
         ArrayList<OrderHeader> orderHeaderArrayList = new ArrayList<>();
 
         String selectQuery = "select USER_NAME , GROUP_CONCAT( VOUCHER_DATE), GROUP_CONCAT( AMOUNT_DUE) from ORDER_HEADER  " +
-                "WHERE USER_NAME = " + userName + " and POINT_OF_SALE_NUMBER= " + PosNo + " GROUP BY USER_NAME";
+                "WHERE USER_NO = " + userName + " and POINT_OF_SALE_NUMBER= " + PosNo + " GROUP BY USER_NAME";
 
 
 //        String selectQuery ="SELECT USER_NAME , COUNT(*) , COALESCE(SUM(AMOUNT_DUE),-1) FROM ORDER_HEADER " +

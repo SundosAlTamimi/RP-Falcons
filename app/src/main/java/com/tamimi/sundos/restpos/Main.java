@@ -220,8 +220,9 @@ public class Main extends AppCompatActivity {
         for (int i = 0; i < announcemets.size(); i++) {
             if (announcemets.get(i).getAnnouncementDate().equals(today)) {
                 if (announcemets.get(i).getUserName().equals(Settings.user_name) || announcemets.get(i).getUserName().equals(getResources().getString(R.string.all))) {
-                    if (announcemets.get(i).getPosNo() == (Settings.POS_number) || announcemets.get(i).getPosNo() == (-1)) {
-                        if (announcemets.get(i).getShiftName().equals(Settings.shift_name) || announcemets.get(i).getShiftName().equals(getResources().getString(R.string.all))) {
+                    if (announcemets.get(i).getUserNo()==(Settings.user_no) || announcemets.get(i).getUserNo()==(-1)) {
+                        if (announcemets.get(i).getPosNo() == (Settings.POS_number) || announcemets.get(i).getPosNo() == (-1)) {
+                            if (announcemets.get(i).getShiftName().equals(Settings.shift_name) || announcemets.get(i).getShiftName().equals(getResources().getString(R.string.all))) {
                             count++;
                             final TableRow row = new TableRow(Main.this);
 
@@ -249,7 +250,7 @@ public class Main extends AppCompatActivity {
 
                         }
                     }
-
+                }
 
                 }
             }
@@ -982,7 +983,7 @@ public class Main extends AppCompatActivity {
         categories = (TableLayout) dialog.findViewById(R.id.money_categories);
         final TextView mainTotal = (TextView) dialog.findViewById(R.id.mainTotal);
 
-
+        value.setText("0");
         Button b1, b2, b3, b4, b5, b6, b7, b8, b9, b0, clear;
         b1 = (Button) dialog.findViewById(R.id.b1);
         b2 = (Button) dialog.findViewById(R.id.b2);
