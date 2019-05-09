@@ -3901,11 +3901,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.update(ANNOUNCEMENT_TABLE, values, filter, null);
     }
 
-    public void updateOrderTrancactionReturn(int Pos, String itemBarcode,String Vserial,String OrderKind, int returnQty,int oldReturnQty) {
+    public void updateOrderTrancactionReturn(int Pos, String itemBarcode,String Vserial,String OrderKind, int returnQty) {
         db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         String filter = POS_NO1 + " = '" + Pos + "' and " + ITEM_BARCODE1 + "= '" + itemBarcode +"' and " + VOUCHER_NO1 + "= '" + Vserial + "' and " + ORDER_KIND1 + "= '" + OrderKind +"'";
-        values.put(RETURN_QTY1, oldReturnQty+returnQty);
+        values.put(RETURN_QTY1, returnQty);
 
         // updating row
         db.update(ORDER_TRANSACTIONS, values, filter, null);

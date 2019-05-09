@@ -2573,7 +2573,7 @@ public class Main extends AppCompatActivity {
                         mDHandler.addAllPayMethodItem(payMethod);
                     }
                     for(int i=0;i<rowRefund.size();i++) {
-                        mDHandler.updateOrderTrancactionReturn(rowRefund.get(i).getOrgPos(), rowRefund.get(i).getItemBarcode(), rowRefund.get(i).getOrgNo(), "0", rowRefund.get(i).getQty(),rowRefund.get(i).getReturnQty());
+                        mDHandler.updateOrderTrancactionReturn(rowRefund.get(i).getPosNo(), rowRefund.get(i).getItemBarcode(), rowRefund.get(i).getVoucherNo(), "0", rowRefund.get(i).getQty()+rowRefund.get(i).getReturnQty());
                     }
 
 //                    PayMethods pay=new PayMethods();
