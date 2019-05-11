@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 
 import com.tamimi.sundos.restpos.Models.Announcemet;
 import com.tamimi.sundos.restpos.Models.BlindClose;
@@ -1357,6 +1358,33 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         db.close();
     }
+    public ArrayList<Cashier> getCacher()
+    {
+        ArrayList<Cashier> allCasher=new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + CASHIER_IN_OUT ;
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+               Cashier cash=new Cashier();
+               cash.setCashierName(cursor.getString(0));
+               cash.setCheckInDate(cursor.getString(1));
+               cash.setCategoryName(cursor.getString(2));
+               cash.setCategoryValue(Double.parseDouble(cursor.getString(3)));
+                cash.setCategoryQty(Integer.parseInt(cursor.getString(4)));
+                cash.setOrderKind(Integer.parseInt(cursor.getString(5)));
+
+
+
+                allCasher.add(cash);
+
+            } while (cursor.moveToNext());
+        }
+        return allCasher;
+            }
+
+
 
     public void addBlindClose(BlindClose obj) {
         db = this.getReadableDatabase();
