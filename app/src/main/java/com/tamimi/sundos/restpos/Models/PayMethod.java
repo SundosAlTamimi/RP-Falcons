@@ -23,6 +23,8 @@ public class PayMethod {
     private String userName;
     private int userNo;
     private String time;
+    private  String orgNo ;
+    private  int orgPos ;
 
 
     public PayMethod() {
@@ -31,7 +33,7 @@ public class PayMethod {
 
     public PayMethod(int orderType, int orderKind, String voucherDate, int pointOfSaleNumber, int storeNumber,
                      String voucherNumber, int voucherSerial, String payType, double payValue, String payNumber,
-                     String payName, String shiftName, int shiftNumber, String userName, int userNo, String time) {
+                     String payName, String shiftName, int shiftNumber, String userName, int userNo, String time,String orgNo,int orgPos) {
 
         this.orderType = orderType;
         this.orderKind = orderKind;
@@ -49,6 +51,8 @@ public class PayMethod {
         this.userName = userName;
         this.userNo = userNo;
         this.time = time;
+        this.orgNo = orgNo;
+        this.orgPos = orgPos;
     }
 
     public void setOrderType(int orderType) {
@@ -177,6 +181,22 @@ public class PayMethod {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public String getOrgNo() {
+        return orgNo;
+    }
+
+    public void setOrgNo(String orgNo) {
+        this.orgNo = orgNo;
+    }
+
+    public int getOrgPos() {
+        return orgPos;
+    }
+
+    public void setOrgPos(int orgPos) {
+        this.orgPos = orgPos;
     }
 
     public JSONObject getJSONObject2() { // for server

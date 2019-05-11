@@ -2,6 +2,7 @@ package com.tamimi.sundos.restpos;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -1505,6 +1506,8 @@ public class PayMethods extends AppCompatActivity {
             payMethod.setUserNo(Settings.user_no);
             payMethod.setUserName(Settings.user_name);
             payMethod.setTime(times);
+            payMethod.setOrgPos(-1);
+            payMethod.setOrgNo("0");
 
             if (cashValue != 0.00) {
                 payMethod.setPayType("Cash");
@@ -1603,6 +1606,7 @@ public class PayMethods extends AppCompatActivity {
                 pointCardNumber.clear();
                 resivePoint.clear();
             }
+            List<ItemWithScreen> itemWithScreens = mDHandler.getAllItemsWithScreen();
 
             if (orderHeaderTemp == null) { // Takeaway
                 //getting the data from order activity and save it in database.
@@ -1619,7 +1623,8 @@ public class PayMethods extends AppCompatActivity {
                 for (int i = 0; i < obj.getOrderTransactionObj().size(); i++)
                     mDHandler.addOrderTransaction(obj.getOrderTransactionObj().get(i));
 
-                sendToKitchen(obj.getOrderHeaderObj(), obj.getOrderTransactionObj(), payMethodList);
+
+                sendToKitchen(PayMethods.this,obj.getOrderHeaderObj(), obj.getOrderTransactionObj(), payMethodList,itemWithScreens);
                 sendToServer(obj.getOrderHeaderObj(), obj.getOrderTransactionObj(), payMethodList);
 
 //                Intent intent = new Intent(PayMethods.this, Order.class);
@@ -1642,7 +1647,7 @@ public class PayMethods extends AppCompatActivity {
                 mDHandler.deleteFromOrderHeaderTemp(sectionNo, tableNo);
                 mDHandler.deleteFromOrderTransactionTemp(sectionNo, tableNo);
 
-                sendToKitchen(orderHeaderTemp.get(0), orderTransTemp, payMethodList);
+                sendToKitchen(PayMethods.this,orderHeaderTemp.get(0), orderTransTemp, payMethodList,itemWithScreens);
                 sendToServer(orderHeaderTemp.get(0), orderTransTemp, payMethodList);
 
                 Intent intent = new Intent(PayMethods.this, DineIn.class);
@@ -1655,14 +1660,13 @@ public class PayMethods extends AppCompatActivity {
         } else {
             Toast.makeText(this, getResources().getString(R.string.remaining_not_o), Toast.LENGTH_SHORT).show();
         }
-
     }
 
-    void sendToKitchen(OrderHeader OrderHeaderObj, List<OrderTransactions> OrderTransactionsObj, List<PayMethod> PayMethodObj) {
+   public void sendToKitchen(Context context,OrderHeader OrderHeaderObj, List<OrderTransactions> OrderTransactionsObj, List<PayMethod> PayMethodObj, List<ItemWithScreen> itemWithScreens) {
         try {
             JSONObject obj1 = OrderHeaderObj.getJSONObject();
 
-            List<ItemWithScreen> itemWithScreens = mDHandler.getAllItemsWithScreen();
+//            List<ItemWithScreen> itemWithScreens = mDHandler.getAllItemsWithScreen();
             for (int i = 0; i < OrderTransactionsObj.size(); i++) {
                 for (int j = 0; j < itemWithScreens.size(); j++) {
                     if (OrderTransactionsObj.get(i).getItemBarcode().equals("" + itemWithScreens.get(j).getItemCode()))
@@ -1671,13 +1675,13 @@ public class PayMethods extends AppCompatActivity {
                 OrderTransactionsObj.get(i).setNote("");
             }
 
-            for (int i = 0; i < OrderTransactionsObj.size(); i++) {
-                if (OrderTransactionsObj.get(i).getQty() == 0) {
-                    OrderTransactionsObj.get(i - 1).setNote((OrderTransactionsObj.get(i - 1).getNote()) + "\n" + OrderTransactionsObj.get(i).getItemName());
-                    OrderTransactionsObj.remove(i);
-                    i--;
-                }
-            }
+//            for (int i = 0; i < OrderTransactionsObj.size(); i++) {
+//                if (OrderTransactionsObj.get(i).getQty() == 0) {
+//                    OrderTransactionsObj.get(i - 1).setNote((OrderTransactionsObj.get(i - 1).getNote()) + "\n" + OrderTransactionsObj.get(i).getItemName());
+//                    OrderTransactionsObj.remove(i);
+//                    i--;
+//                }
+//            }
 
             JSONArray obj2 = new JSONArray();
             for (int i = 0; i < OrderTransactionsObj.size(); i++)
@@ -1688,23 +1692,17 @@ public class PayMethods extends AppCompatActivity {
             obj.put("Header", obj1);
 
             Log.e("socket", "J");
-            SendSocket sendSocket = new SendSocket(PayMethods.this, obj1, OrderTransactionsObj);
+            SendSocket sendSocket = new SendSocket(context, obj1, OrderTransactionsObj);
             sendSocket.sendMessage();
 
-
             Log.e("sendCloud", "J");
-//            SendCloud sendCloud = new SendCloud(PayMethods.this, obj);
-//            sendCloud.startSending("kitchen");
-
-            // here
-            //Print(OrderTransactionsObj);
+            SendCloud sendCloud = new SendCloud(context, obj);
+            sendCloud.startSending("kitchen");
 
         } catch (JSONException e) {
             Log.e("Tag", "JSONException");
         }
     }
-
-
 
     void sendToServer(OrderHeader OrderHeaderObj, List<OrderTransactions> OrderTransactionsObj, List<PayMethod> PayMethodObj) {
         try {
@@ -1723,8 +1721,8 @@ public class PayMethods extends AppCompatActivity {
             obj.put("ORDERTRANSACTIONS", obj2);
             obj.put("PAYMETHOD", obj3);
 
-//            SendCloud sendCloud = new SendCloud(PayMethods.this, obj);
-//            sendCloud.startSending("Server");
+            SendCloud sendCloud = new SendCloud(PayMethods.this, obj);
+            sendCloud.startSending("Server");
 
 
         } catch (JSONException e) {
