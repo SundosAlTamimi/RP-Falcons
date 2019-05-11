@@ -1842,6 +1842,8 @@ public class PayMethods extends AppCompatActivity {
                 Bitmap bitmap = linearLayout.getDrawingCache();
                 photoPrinter.printBitmap("invoice2.jpg", bitmap);
 
+                Intent intent = new Intent(PayMethods.this, Order.class);
+                startActivity(intent);
             }
         });
         dialog.show();
