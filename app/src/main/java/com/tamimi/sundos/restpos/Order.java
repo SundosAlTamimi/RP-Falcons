@@ -1694,7 +1694,7 @@ public class Order extends AppCompatActivity {
                 } else
                     taxValue = ((totalLine - discount) * wantedItems.get(k).getTax() / 100) / (1 + (wantedItems.get(k).getTax() / 100));
             }
-            
+
             mDbHandler.addOrderTransactionTemp(new OrderTransactions(orderTypeFlag, 0, today, Settings.POS_number, Settings.store_number,
                     voucherNo, k, "" + wantedItems.get(k).getItemBarcode(), wantedItems.get(k).getMenuName(),
                     wantedItems.get(k).getSecondaryName(), wantedItems.get(k).getKitchenAlias(), wantedItems.get(k).getMenuCategory(),
