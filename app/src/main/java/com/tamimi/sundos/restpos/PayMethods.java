@@ -2,6 +2,7 @@ package com.tamimi.sundos.restpos;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -1619,7 +1620,7 @@ public class PayMethods extends AppCompatActivity {
                     mDHandler.addOrderTransaction(obj.getOrderTransactionObj().get(i));
 
 
-                sendToKitchen(obj.getOrderHeaderObj(), obj.getOrderTransactionObj(), payMethodList,itemWithScreens);
+                sendToKitchen(PayMethods.this,obj.getOrderHeaderObj(), obj.getOrderTransactionObj(), payMethodList,itemWithScreens);
                 sendToServer(obj.getOrderHeaderObj(), obj.getOrderTransactionObj(), payMethodList);
 
                 Intent intent = new Intent(PayMethods.this, Order.class);
@@ -1641,7 +1642,7 @@ public class PayMethods extends AppCompatActivity {
                 mDHandler.deleteFromOrderHeaderTemp(sectionNo, tableNo);
                 mDHandler.deleteFromOrderTransactionTemp(sectionNo, tableNo);
 
-                sendToKitchen(orderHeaderTemp.get(0), orderTransTemp, payMethodList,itemWithScreens);
+                sendToKitchen(PayMethods.this,orderHeaderTemp.get(0), orderTransTemp, payMethodList,itemWithScreens);
                 sendToServer(orderHeaderTemp.get(0), orderTransTemp, payMethodList);
 
                 Intent intent = new Intent(PayMethods.this, DineIn.class);
@@ -1655,7 +1656,7 @@ public class PayMethods extends AppCompatActivity {
         }
     }
 
-   public void sendToKitchen(OrderHeader OrderHeaderObj, List<OrderTransactions> OrderTransactionsObj, List<PayMethod> PayMethodObj,List<ItemWithScreen> itemWithScreens) {
+   public void sendToKitchen(Context context,OrderHeader OrderHeaderObj, List<OrderTransactions> OrderTransactionsObj, List<PayMethod> PayMethodObj, List<ItemWithScreen> itemWithScreens) {
         try {
             JSONObject obj1 = OrderHeaderObj.getJSONObject();
 
@@ -1685,12 +1686,12 @@ public class PayMethods extends AppCompatActivity {
             obj.put("Header", obj1);
 
             Log.e("socket", "J");
-            SendSocket sendSocket = new SendSocket(PayMethods.this, obj1, OrderTransactionsObj);
+            SendSocket sendSocket = new SendSocket(context, obj1, OrderTransactionsObj);
             sendSocket.sendMessage();
 
 
             Log.e("sendCloud", "J");
-            SendCloud sendCloud = new SendCloud(PayMethods.this, obj);
+            SendCloud sendCloud = new SendCloud(context, obj);
             sendCloud.startSending("kitchen");
 
 
