@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 
 import com.tamimi.sundos.restpos.Models.Announcemet;
 import com.tamimi.sundos.restpos.Models.BlindClose;
@@ -55,7 +56,7 @@ import static com.tamimi.sundos.restpos.Settings.shift_name;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
     // Database Version
-    private static final int DATABASE_VERSION = 30;
+    private static final int DATABASE_VERSION = 31;
 
     // Database Name
     private static final String DATABASE_NAME = "RestPos";
@@ -1251,7 +1252,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 //
 //        db.execSQL("ALTER TABLE ORDER_HEADER_TEMP ADD ORG_NO TAXE NOT NULL DEFAULT '0'");
 //        db.execSQL("ALTER TABLE ORDER_HEADER_TEMP ADD ORG_POS INTEGER NOT NULL DEFAULT '-1'");
-
+        db.execSQL("ALTER TABLE KITCHEN_SCREEN_TABLE ADD KITCHEN_IP TAXE NOT NULL DEFAULT '-1'");
 
     }
 
@@ -1393,6 +1394,33 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         db.close();
     }
+    public ArrayList<Cashier> getCacher()
+    {
+        ArrayList<Cashier> allCasher=new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + CASHIER_IN_OUT ;
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+               Cashier cash=new Cashier();
+               cash.setCashierName(cursor.getString(0));
+               cash.setCheckInDate(cursor.getString(1));
+               cash.setCategoryName(cursor.getString(2));
+               cash.setCategoryValue(Double.parseDouble(cursor.getString(3)));
+                cash.setCategoryQty(Integer.parseInt(cursor.getString(4)));
+                cash.setOrderKind(Integer.parseInt(cursor.getString(5)));
+
+
+
+                allCasher.add(cash);
+
+            } while (cursor.moveToNext());
+        }
+        return allCasher;
+            }
+
+
 
     public void addBlindClose(BlindClose obj) {
         db = this.getReadableDatabase();
