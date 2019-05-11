@@ -54,13 +54,14 @@ public class SendSocket {
 
                 //this for get all kitchen ...
                 kitchenScreens = db.getAllKitchenScreen();
+                Log.e("size : " , "**" + orderTransactions.size());
 
                 //this for_loop for filter and send all data to target kitchen has same kitchen no and have ip
                 for (int i = 0; i < kitchenScreens.size(); i++) {
                     if (!kitchenScreens.get(i).getKitchenIP().equals("")) {//&& isHostAvailable(kitchenScreens.get(i).getKitchenIP(), 9002,100)
 
                             if (checkHosts(kitchenScreens.get(i).getKitchenIP())){
-                            obj3 = getObjectForKitchenNo(kitchenScreens.get(i).getKitchenNo());
+                            obj3 = getObjectForKitchenNo(orderTransactions ,kitchenScreens.get(i).getKitchenNo());
                             if (obj3.toString().length() > 2) {
                                 try {
                                     String ip=kitchenScreens.get(i).getKitchenIP();
@@ -107,7 +108,7 @@ public class SendSocket {
 
     // this for get all object  send to target kitchen by kitchen no ...
 
-    JSONArray getObjectForKitchenNo(int KitchenNo) {
+    JSONArray getObjectForKitchenNo(List<OrderTransactions> orderTransactions ,int KitchenNo) {
 
         JSONArray objNo = new JSONArray();
 
@@ -115,6 +116,7 @@ public class SendSocket {
             if (orderTransactions.get(i).getScreenNo() == KitchenNo) {
                 try {
                     JSONObject obj = new JSONObject();
+                    Log.e("ISUPDATE  =1","1234 ==>"+orderTransactions.get(i).getOrderKind()+"    "+orderTransactions.get(i).toString());
                     obj.put("ITEMCODE", orderTransactions.get(i).getItemBarcode());
                     obj.put("ITEMNAME", orderTransactions.get(i).getItemName());
                     obj.put("QTY", orderTransactions.get(i).getQty());
@@ -127,9 +129,11 @@ public class SendSocket {
                     obj.put("TABLENO", orderTransactions.get(i).getTableNo());
                     obj.put("SECTIONNO", orderTransactions.get(i).getSectionNo());
                     if(orderTransactions.get(i).getOrderKind()==998){
-                        obj.put("ISUPDATE", 1);}
+                        obj.put("ISUPDATE", 1);
+                        Log.e("ISUPDATE  =1",""+orderTransactions.get(i).getOrderKind());}
                     else if(orderTransactions.get(i).getOrderKind()==0){
-                        obj.put("ISUPDATE", 0);}
+                        obj.put("ISUPDATE", 0);
+                        Log.e("ISUPDATE =0",""+orderTransactions.get(i).getOrderKind());}
                     objNo.put(obj);
 
                 } catch (JSONException e) {

@@ -226,37 +226,37 @@ public class Main extends AppCompatActivity {
         for (int i = 0; i < announcemets.size(); i++) {
             if (announcemets.get(i).getAnnouncementDate().equals(today)) {
                 if (announcemets.get(i).getUserName().equals(Settings.user_name) || announcemets.get(i).getUserName().equals(getResources().getString(R.string.all))) {
-                    if (announcemets.get(i).getUserNo()==(Settings.user_no) || announcemets.get(i).getUserNo()==(-1)) {
+                    if (announcemets.get(i).getUserNo() == (Settings.user_no) || announcemets.get(i).getUserNo() == (-1)) {
                         if (announcemets.get(i).getPosNo() == (Settings.POS_number) || announcemets.get(i).getPosNo() == (-1)) {
                             if (announcemets.get(i).getShiftName().equals(Settings.shift_name) || announcemets.get(i).getShiftName().equals(getResources().getString(R.string.all))) {
-                            count++;
-                            final TableRow row = new TableRow(Main.this);
+                                count++;
+                                final TableRow row = new TableRow(Main.this);
 
-                            TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
-                            lp.setMargins(0, 5, 0, 5);
-                            row.setLayoutParams(lp);
-
-
-                            TextView textView = new TextView(Main.this);
-                            textView.setText("" + count + ") " + announcemets.get(i).getMessage());
+                                TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
+                                lp.setMargins(0, 5, 0, 5);
+                                row.setLayoutParams(lp);
 
 
-                            textView.setTextColor(ContextCompat.getColor(Main.this, R.color.text_color));
-                            textView.setGravity(Gravity.START);
+                                TextView textView = new TextView(Main.this);
+                                textView.setText("" + count + ") " + announcemets.get(i).getMessage());
 
-                            TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
-                            textView.setLayoutParams(lp2);
-                            textView.setTextSize(16);
 
-                            row.addView(textView);
+                                textView.setTextColor(ContextCompat.getColor(Main.this, R.color.text_color));
+                                textView.setGravity(Gravity.START);
 
-                            AnnouncementTable.addView(row);
-                            mDHandler.updateAnnounementIsShow(announcemets.get(i).getMessage(), announcemets.get(i).getAnnouncementDate());
-                            blinkAnnouncement(annText);
+                                TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+                                textView.setLayoutParams(lp2);
+                                textView.setTextSize(16);
 
+                                row.addView(textView);
+
+                                AnnouncementTable.addView(row);
+                                mDHandler.updateAnnounementIsShow(announcemets.get(i).getMessage(), announcemets.get(i).getAnnouncementDate());
+                                blinkAnnouncement(annText);
+
+                            }
                         }
                     }
-                }
 
                 }
             }
@@ -1835,21 +1835,21 @@ public class Main extends AppCompatActivity {
                         }
                         customer.setText("customer");
 
-                 for(int i=0;i<orderTransactions.size();i++){
-                     int qty_=orderTransactions.get(i).getQty()-orderTransactions.get(i).getReturnQty();
-                     if((qty_)!=0){
-                         orderTransactions1.add(orderTransactions.get(i));
-                     }
-                 }
+                        for (int i = 0; i < orderTransactions.size(); i++) {
+                            int qty_ = orderTransactions.get(i).getQty() + orderTransactions.get(i).getReturnQty();
+                            if ((qty_) != 0) {
+                                orderTransactions1.add(orderTransactions.get(i));
+                            }
+                        }
 
                         orderTransactions.clear();
-                        orderTransactions=orderTransactions1;
+                        orderTransactions = orderTransactions1;
 
                         if (orderTransactions.size() == 0)
                             notCorrectValueDialog(getString(R.string.cannot_return));
 
                         for (int i = 0; i < orderTransactions.size(); i++) {//if
-                                insertRow(orderTransactions.get(i).getVoucherSerial(), orderTransactions.get(i).getItemName(), orderTransactions.get(i).getQty()-orderTransactions.get(i).getReturnQty(), orderTransactions, refundTables);
+                            insertRow(orderTransactions.get(i).getVoucherSerial(), orderTransactions.get(i).getItemName(), orderTransactions.get(i).getQty()+ orderTransactions.get(i).getReturnQty(), orderTransactions, refundTables);
 
                         }
                         flag[0] = false;
@@ -1885,13 +1885,13 @@ public class Main extends AppCompatActivity {
                         if (!text.getText().toString().equals("")) {
                             textData = Integer.parseInt(text.getText().toString());
                             rowRefund.add(orderTransactions.get(i));
-                            rowRefund.get(index).setQty(Integer.parseInt(text.getText().toString()));
+                            rowRefund.get(index).setQty(Integer.parseInt("-"+text.getText().toString()));
                             double lDiscon = orderTransactions.get(i).getlDiscount();
                             int q = orderTransactions.get(i).getQty();
                             rowRefund.get(index).setlDiscount(textData * (lDiscon / q));
-                            rowRefund.get(index).setDiscount(textData *orderTransactions.get(i).getDiscount() / q);
-                            rowRefund.get(index).setTaxValue(textData *orderTransactions.get(i).getTaxValue() / q);
-                            rowRefund.get(index).setService(textData *orderTransactions.get(i).getService() / q);
+                            rowRefund.get(index).setDiscount(textData * orderTransactions.get(i).getDiscount() / q);
+                            rowRefund.get(index).setTaxValue(textData * orderTransactions.get(i).getTaxValue() / q);
+                            rowRefund.get(index).setService(textData * orderTransactions.get(i).getService() / q);
                             rowRefund.get(index).setOrderKind(998);
                             index++;
                         } else {
@@ -2469,45 +2469,45 @@ public class Main extends AppCompatActivity {
                     cardValues = Double.parseDouble(card.getText().toString());
                 }
 
-                int returnSerial=1;
-                List<OrderTransactions>temp=mDHandler.getAllOrderTransactions();
-                for(int i=0;i<temp.size();i++) {
-                   if(temp.get(i).getOrderKind()==998){
-                       returnSerial++;
-                   }
+                int returnSerial = 1;
+                List<OrderTransactions> temp = mDHandler.getAllOrderTransactions();
+                for (int i = 0; i < temp.size(); i++) {
+                    if (temp.get(i).getOrderKind() == 998) {
+                        returnSerial++;
+                    }
                 }
 
-                double total=0.0,lineDic=0.0,dic=0.0,service=0.0,tax=0.0,netTotal1=0.0;
-                for(int p=0;p<rowRefund.size();p++){
+                double total = 0.0, lineDic = 0.0, dic = 0.0, service = 0.0, tax = 0.0, netTotal1 = 0.0;
+                for (int p = 0; p < rowRefund.size(); p++) {
 
-                    total+=rowRefund.get(p).getTotal();
-                    lineDic+=rowRefund.get(p).getlDiscount();
-                    dic+=rowRefund.get(p).getDiscount();
-                    service+=rowRefund.get(p).getService();
-                    tax+=rowRefund.get(p).getTaxValue();
+                    total += rowRefund.get(p).getTotal();
+                    lineDic += rowRefund.get(p).getlDiscount();
+                    dic += rowRefund.get(p).getDiscount();
+                    service += rowRefund.get(p).getService();
+                    tax += rowRefund.get(p).getTaxValue();
                 }
-                netTotal1=total-(lineDic+dic+service+tax);
+                netTotal1 = total - (lineDic + dic + service + tax);
                 OrderHeader orderHeader;
                 if (netTotalText.getText().toString().equals("0.0")) {
 
                     orderHeader = new OrderHeader(rowRefund.get(0).getOrderType(), 998, convertToEnglish(today), Settings.POS_number, Settings.store_number,
-                            String.valueOf(returnSerial), 1, totalAdd, lineDic, dic, lineDic +dic,
-                            Settings.service_value,tax, service, netTotal1,
+                            String.valueOf(returnSerial), 1, totalAdd, lineDic, dic, lineDic + dic,
+                            Settings.service_value, tax, service, netTotal1,
                             netTotal1, 1, rowRefund.get(0).getTableNo(),
                             rowRefund.get(0).getSectionNo(), cashValues, creditValues, chequeVales, cardValues,
-                            giftCardValues, pointValues, Settings.shift_name, Settings.shift_number, orderTransactions.get(0).getUserName(), 0, Settings.user_name, Settings.user_no, convertToEnglish(times), rowRefund.get(0).getVoucherNo(),rowRefund.get(0).getPosNo());
-
+                            giftCardValues, pointValues, Settings.shift_name, Settings.shift_number, orderTransactions.get(0).getUserName(), 0, Settings.user_name, Settings.user_no, convertToEnglish(times), rowRefund.get(0).getVoucherNo(), rowRefund.get(0).getPosNo());
+                    orderHeader.setVoucherNumber(rowRefund.get(0).getVoucherNo());
                     mDHandler.addOrderHeader(orderHeader);
 
                     for (int i = 0; i < rowRefund.size(); i++) {
 
                         OrderTransactions orderTransactions = new OrderTransactions(rowRefund.get(i).getOrderType(), 998, convertToEnglish(today), Settings.POS_number, Settings.store_number,
-                                String.valueOf(returnSerial), i+1, "" + rowRefund.get(i).getItemBarcode(), rowRefund.get(i).getItemName(),
+                                String.valueOf(returnSerial), i + 1, "" + rowRefund.get(i).getItemBarcode(), rowRefund.get(i).getItemName(),
                                 rowRefund.get(i).getSecondaryName(), rowRefund.get(i).getKitchenAlias(), rowRefund.get(i).getItemCategory(),
-                                rowRefund.get(i).getItemFamily(), Integer.parseInt("-"+rowRefund.get(i).getQty()), rowRefund.get(i).getPrice(),
-                                rowRefund.get(i).getQty() * rowRefund.get(i).getPrice(), rowRefund.get(i).getDiscount(),rowRefund.get(i).getlDiscount(), rowRefund.get(i).getDiscount()+rowRefund.get(i).getlDiscount(), rowRefund.get(i).getTaxValue(),
+                                rowRefund.get(i).getItemFamily(),  rowRefund.get(i).getQty(), rowRefund.get(i).getPrice(),
+                                rowRefund.get(i).getQty() * rowRefund.get(i).getPrice(), rowRefund.get(i).getDiscount(), rowRefund.get(i).getlDiscount(), rowRefund.get(i).getDiscount() + rowRefund.get(i).getlDiscount(), rowRefund.get(i).getTaxValue(),
                                 rowRefund.get(i).getTaxPerc(), rowRefund.get(i).getTaxKind(), rowRefund.get(i).getService(), rowRefund.get(i).getServiceTax(),
-                                rowRefund.get(i).getTableNo(), rowRefund.get(i).getSectionNo(), Settings.shift_number, Settings.shift_name, Settings.user_no, Settings.user_name, convertToEnglish(times), rowRefund.get(i).getVoucherNo(),rowRefund.get(i).getPosNo(),0);
+                                rowRefund.get(i).getTableNo(), rowRefund.get(i).getSectionNo(), Settings.shift_number, Settings.shift_name, Settings.user_no, Settings.user_name, convertToEnglish(times), rowRefund.get(i).getVoucherNo(), rowRefund.get(i).getPosNo(), 0);
 
 
                         mDHandler.addOrderTransaction(orderTransactions);
@@ -2572,23 +2572,22 @@ public class Main extends AppCompatActivity {
                                 998,
                                 convertToEnglish(today),
                                 Settings.POS_number,
-                                Settings.store_number, String.valueOf(returnSerial), x+1, listForPay.get(x),
-                                listValuePay.get(x), payNumber, payName, Settings.shift_name, Settings.shift_number, Settings.user_name, Settings.user_no, convertToEnglish(times),rowRefund.get(0).getVoucherNo(),Settings.POS_number);
+                                Settings.store_number, String.valueOf(returnSerial), x + 1, listForPay.get(x),
+                                listValuePay.get(x), payNumber, payName, Settings.shift_name, Settings.shift_number, Settings.user_name, Settings.user_no, convertToEnglish(times), rowRefund.get(0).getVoucherNo(), Settings.POS_number);
                         payObj.add(payMethod);
                         mDHandler.addAllPayMethodItem(payMethod);
                     }
-                    for(int i=0;i<rowRefund.size();i++) {
-                        mDHandler.updateOrderTrancactionReturn(rowRefund.get(i).getPosNo(), rowRefund.get(i).getItemBarcode(), rowRefund.get(i).getVoucherNo(), "0", rowRefund.get(i).getQty()+rowRefund.get(i).getReturnQty());
+                    for (int i = 0; i < rowRefund.size(); i++) {
+                        mDHandler.updateOrderTrancactionReturn(rowRefund.get(i).getPosNo(), rowRefund.get(i).getItemBarcode(), rowRefund.get(i).getVoucherNo(), "0", rowRefund.get(i).getQty() + rowRefund.get(i).getReturnQty());
                     }
 
-//                    List<ItemWithScreen> itemWithScreens = mDHandler.getAllItemsWithScreen();
-//                    PayMethods pay=new PayMethods();
-                    sendToKitchen(orderHeader,rowRefund,payObj);
-
+                    List<ItemWithScreen> itemWithScreens = mDHandler.getAllItemsWithScreen();
+                    PayMethods pay = new PayMethods();
+                    pay.sendToKitchen(Main.this, orderHeader, rowRefund, payObj, itemWithScreens);
 
                     netTotals = 0.0;
                     dialog.dismiss();
-                    rowRefund.clear();
+
 
                 } else {
                     Toast.makeText(Main.this, getResources().getString(R.string.total_not_allow), Toast.LENGTH_SHORT).show();
@@ -2840,12 +2839,11 @@ public class Main extends AppCompatActivity {
     }
 
 
-
-    void sendToKitchen(OrderHeader OrderHeaderObj, List<OrderTransactions> OrderTransactionsObj, List<PayMethod> PayMethodObj) {
+    void sendToKitchenNew(OrderHeader OrderHeaderObj, List<OrderTransactions> OrderTransactionsObj, List<PayMethod> PayMethodObj) {
         try {
             JSONObject obj1 = OrderHeaderObj.getJSONObject();
 
-            Log.e("",""+OrderTransactionsObj.get(0).getItemName());
+            Log.e("test for ", "" + OrderTransactionsObj.get(0).getItemName());
 
             List<ItemWithScreen> itemWithScreens = mDHandler.getAllItemsWithScreen();
             for (int i = 0; i < OrderTransactionsObj.size(); i++) {
@@ -2873,6 +2871,8 @@ public class Main extends AppCompatActivity {
             obj.put("Header", obj1);
 
             Log.e("socket", "J");
+            Log.e("socket***", "J**" + " " + OrderTransactionsObj.size());
+
             SendSocket sendSocket = new SendSocket(Main.this, obj1, OrderTransactionsObj);
             sendSocket.sendMessage();
 
