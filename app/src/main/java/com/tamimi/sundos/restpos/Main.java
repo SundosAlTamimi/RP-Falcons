@@ -41,11 +41,16 @@ import com.tamimi.sundos.restpos.Models.BlindClose;
 import com.tamimi.sundos.restpos.Models.BlindCloseDetails;
 import com.tamimi.sundos.restpos.Models.Cashier;
 import com.tamimi.sundos.restpos.Models.ClockInClockOut;
+import com.tamimi.sundos.restpos.Models.ItemWithScreen;
 import com.tamimi.sundos.restpos.Models.Money;
 import com.tamimi.sundos.restpos.Models.OrderHeader;
 import com.tamimi.sundos.restpos.Models.OrderTransactions;
 import com.tamimi.sundos.restpos.Models.Pay;
 import com.tamimi.sundos.restpos.Models.PayMethod;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -2573,11 +2578,13 @@ public class Main extends AppCompatActivity {
                         mDHandler.addAllPayMethodItem(payMethod);
                     }
                     for(int i=0;i<rowRefund.size();i++) {
-                        mDHandler.updateOrderTrancactionReturn(rowRefund.get(i).getOrgPos(), rowRefund.get(i).getItemBarcode(), rowRefund.get(i).getOrgNo(), "0", rowRefund.get(i).getQty(),rowRefund.get(i).getReturnQty());
+                        mDHandler.updateOrderTrancactionReturn(rowRefund.get(i).getPosNo(), rowRefund.get(i).getItemBarcode(), rowRefund.get(i).getVoucherNo(), "0", rowRefund.get(i).getQty()+rowRefund.get(i).getReturnQty());
                     }
 
+//                    List<ItemWithScreen> itemWithScreens = mDHandler.getAllItemsWithScreen();
 //                    PayMethods pay=new PayMethods();
-//                    pay.sendToKitchen(orderHeader,rowRefund,payObj);
+                    sendToKitchen(orderHeader,rowRefund,payObj);
+
 
                     netTotals = 0.0;
                     dialog.dismiss();
@@ -2830,6 +2837,54 @@ public class Main extends AppCompatActivity {
 
 
         dialog.show();
+    }
+
+
+
+    void sendToKitchen(OrderHeader OrderHeaderObj, List<OrderTransactions> OrderTransactionsObj, List<PayMethod> PayMethodObj) {
+        try {
+            JSONObject obj1 = OrderHeaderObj.getJSONObject();
+
+            Log.e("",""+OrderTransactionsObj.get(0).getItemName());
+
+            List<ItemWithScreen> itemWithScreens = mDHandler.getAllItemsWithScreen();
+            for (int i = 0; i < OrderTransactionsObj.size(); i++) {
+                for (int j = 0; j < itemWithScreens.size(); j++) {
+                    if (OrderTransactionsObj.get(i).getItemBarcode().equals("" + itemWithScreens.get(j).getItemCode()))
+                        OrderTransactionsObj.get(i).setScreenNo(itemWithScreens.get(j).getScreenNo());
+                }
+                OrderTransactionsObj.get(i).setNote("");
+            }
+
+            for (int i = 0; i < OrderTransactionsObj.size(); i++) {
+                if (OrderTransactionsObj.get(i).getQty() == 0) {
+                    OrderTransactionsObj.get(i - 1).setNote((OrderTransactionsObj.get(i - 1).getNote()) + "\n" + OrderTransactionsObj.get(i).getItemName());
+                    OrderTransactionsObj.remove(i);
+                    i--;
+                }
+            }
+
+            JSONArray obj2 = new JSONArray();
+            for (int i = 0; i < OrderTransactionsObj.size(); i++)
+                obj2.put(i, OrderTransactionsObj.get(i).getJSONObject());
+
+            JSONObject obj = new JSONObject();
+            obj.put("Items", obj2);
+            obj.put("Header", obj1);
+
+            Log.e("socket", "J");
+            SendSocket sendSocket = new SendSocket(Main.this, obj1, OrderTransactionsObj);
+            sendSocket.sendMessage();
+
+
+            Log.e("sendCloud", "J");
+            SendCloud sendCloud = new SendCloud(Main.this, obj);
+            sendCloud.startSending("kitchen");
+
+
+        } catch (JSONException e) {
+            Log.e("Tag", "JSONException");
+        }
     }
 
     @Override

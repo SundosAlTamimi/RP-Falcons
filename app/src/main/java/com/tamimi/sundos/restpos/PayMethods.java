@@ -1601,6 +1601,7 @@ public class PayMethods extends AppCompatActivity {
                 pointCardNumber.clear();
                 resivePoint.clear();
             }
+            List<ItemWithScreen> itemWithScreens = mDHandler.getAllItemsWithScreen();
 
             if (orderHeaderTemp == null) { // Takeaway
                 //getting the data from order activity and save it in database.
@@ -1617,7 +1618,8 @@ public class PayMethods extends AppCompatActivity {
                 for (int i = 0; i < obj.getOrderTransactionObj().size(); i++)
                     mDHandler.addOrderTransaction(obj.getOrderTransactionObj().get(i));
 
-                sendToKitchen(obj.getOrderHeaderObj(), obj.getOrderTransactionObj(), payMethodList);
+
+                sendToKitchen(obj.getOrderHeaderObj(), obj.getOrderTransactionObj(), payMethodList,itemWithScreens);
                 sendToServer(obj.getOrderHeaderObj(), obj.getOrderTransactionObj(), payMethodList);
 
                 Intent intent = new Intent(PayMethods.this, Order.class);
@@ -1639,7 +1641,7 @@ public class PayMethods extends AppCompatActivity {
                 mDHandler.deleteFromOrderHeaderTemp(sectionNo, tableNo);
                 mDHandler.deleteFromOrderTransactionTemp(sectionNo, tableNo);
 
-                sendToKitchen(orderHeaderTemp.get(0), orderTransTemp, payMethodList);
+                sendToKitchen(orderHeaderTemp.get(0), orderTransTemp, payMethodList,itemWithScreens);
                 sendToServer(orderHeaderTemp.get(0), orderTransTemp, payMethodList);
 
                 Intent intent = new Intent(PayMethods.this, DineIn.class);
@@ -1653,11 +1655,11 @@ public class PayMethods extends AppCompatActivity {
         }
     }
 
-   public void sendToKitchen(OrderHeader OrderHeaderObj, List<OrderTransactions> OrderTransactionsObj, List<PayMethod> PayMethodObj) {
+   public void sendToKitchen(OrderHeader OrderHeaderObj, List<OrderTransactions> OrderTransactionsObj, List<PayMethod> PayMethodObj,List<ItemWithScreen> itemWithScreens) {
         try {
             JSONObject obj1 = OrderHeaderObj.getJSONObject();
 
-            List<ItemWithScreen> itemWithScreens = mDHandler.getAllItemsWithScreen();
+//            List<ItemWithScreen> itemWithScreens = mDHandler.getAllItemsWithScreen();
             for (int i = 0; i < OrderTransactionsObj.size(); i++) {
                 for (int j = 0; j < itemWithScreens.size(); j++) {
                     if (OrderTransactionsObj.get(i).getItemBarcode().equals("" + itemWithScreens.get(j).getItemCode()))
