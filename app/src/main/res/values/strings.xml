@@ -500,6 +500,7 @@
     <string name="sure_delete_money_category">sure you delete this Money Category ?</string>
     <string name="not_have_any_data">Not Have Any Data In Table</string>
     <string name="password_length">Length of user password must 4 number Please Edit password</string>
+    <string name="user_exist">User is already exists</string>
     <string name="add_job_group_before_new_emplo">Please Add Job Group Before Adding new Employee</string>
     <string name="clearAlert">Are you sure, you want to clear the form ?</string>
     <string name="chang_ITEM_BARCOGE">Please change itemBarcode - another item have this itemBarcode -</string>

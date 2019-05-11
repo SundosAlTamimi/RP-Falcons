@@ -25,6 +25,7 @@ import com.tamimi.sundos.restpos.Settings;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -152,56 +153,61 @@ public class EmployeeRegistration extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (!jopGroupSpinner.isEmpty()) {
-                    if (!empName.getText().toString().equals("") && !convertToEnglish(empNo.getText().toString()).equals("") && !convertToEnglish(mobileNo.getText().toString()).equals("") && !hireDate.getText().toString().equals("") &&
+                    if (!empName.getText().toString().equals("") && !convertToEnglish(empNo.getText().toString()).equals("") &&
+                            !convertToEnglish(mobileNo.getText().toString()).equals("") && !hireDate.getText().toString().equals("") &&
                             !termination.getText().toString().equals("") && !payRate.getText().toString().equals("")) {
-                        if (convertToEnglish(userPassword.getText().toString()).length() == 4) {
-                            String pass = convertToEnglish(userPassword.getText().toString());
-                            jobList.add(jobGroup.getSelectedItem().toString());
-                            empNameList.add(empName.getText().toString());
-//                        empNOList.add(Integer.parseInt(empNo.getText().toString()));
-                            empNOList.add(serial[0]);
-                            mobileList.add(Integer.parseInt(convertToEnglish(mobileNo.getText().toString())));
-                            securityList.add(securityLevel.getSelectedItem().toString());
-                            userPassList.add(Integer.parseInt(pass));
-                            if (active.isChecked()) {
-                                ActiveList.add(1);
+                        if (!isExists(empName.getText().toString())) {
+                            if (convertToEnglish(userPassword.getText().toString()).length() == 4) {
+                                String pass = convertToEnglish(userPassword.getText().toString());
+                                jobList.add(jobGroup.getSelectedItem().toString());
+                                empNameList.add(empName.getText().toString());
+//                              empNOList.add(Integer.parseInt(empNo.getText().toString()));
+                                empNOList.add(serial[0]);
+                                mobileList.add(Integer.parseInt(convertToEnglish(mobileNo.getText().toString())));
+                                securityList.add(securityLevel.getSelectedItem().toString());
+                                userPassList.add(Integer.parseInt(pass));
+                                if (active.isChecked()) {
+                                    ActiveList.add(1);
+                                } else {
+                                    ActiveList.add(0);
+                                }
+                                hireDateList.add(convertToEnglish(hireDate.getText().toString()));
+                                terminationList.add(convertToEnglish(termination.getText().toString()));
+                                payBasicList.add(convertToEnglish(payBasic.getSelectedItem().toString()));
+                                payRateList.add(payRate.getText().toString());
+                                holidayList.add(holidayPay.getSelectedItem().toString());
+                                switch (employeeType.getSelectedItem().toString()) {
+                                    case "Cashier":
+                                        empTypeList.add(0);
+                                        break;
+                                    case "waiter":
+                                        empTypeList.add(1);
+                                        break;
+                                    case "Employee":
+                                        empTypeList.add(2);
+                                        break;
+                                }
+
+                                Toast.makeText(EmployeeRegistration.this, "OK ", Toast.LENGTH_SHORT).show();
+                                insertRaw3(empName.getText().toString(), serial[0], Integer.parseInt(mobileNo.getText().toString()),
+                                        securityLevel.getSelectedItem().toString(), Integer.parseInt(pass), convertToEnglish(hireDate.getText().toString()), convertToEnglish(termination.getText().toString())
+                                        , payBasic.getSelectedItem().toString(), payRate.getText().toString(), holidayPay.getSelectedItem().toString(), employeeType.getSelectedItem().toString(), tableEmployee);
+
+                                empName.setText("");
+                                empNo.setText("");
+                                mobileNo.setText("");
+                                userPassword.setText("");
+                                hireDate.setText("");
+                                termination.setText("");
+                                payRate.setText("");
+                                serial[0]++;
+                                empNo.setText("" + serial[0]);
+
                             } else {
-                                ActiveList.add(0);
+                                Toast.makeText(EmployeeRegistration.this, getResources().getString(R.string.password_length), Toast.LENGTH_SHORT).show();
                             }
-                            hireDateList.add(convertToEnglish(hireDate.getText().toString()));
-                            terminationList.add(convertToEnglish(termination.getText().toString()));
-                            payBasicList.add(convertToEnglish(payBasic.getSelectedItem().toString()));
-                            payRateList.add(payRate.getText().toString());
-                            holidayList.add(holidayPay.getSelectedItem().toString());
-                            switch (employeeType.getSelectedItem().toString()) {
-                                case "Cashier":
-                                    empTypeList.add(0);
-                                    break;
-                                case "waiter":
-                                    empTypeList.add(1);
-                                    break;
-                                case "Employee":
-                                    empTypeList.add(2);
-                                    break;
-                            }
-
-                            Toast.makeText(EmployeeRegistration.this, "OK ", Toast.LENGTH_SHORT).show();
-                            insertRaw3(empName.getText().toString(), serial[0], Integer.parseInt(mobileNo.getText().toString()),
-                                    securityLevel.getSelectedItem().toString(), Integer.parseInt(pass),convertToEnglish( hireDate.getText().toString()), convertToEnglish(termination.getText().toString())
-                                    , payBasic.getSelectedItem().toString(), payRate.getText().toString(), holidayPay.getSelectedItem().toString(), employeeType.getSelectedItem().toString(), tableEmployee);
-
-                            empName.setText("");
-                            empNo.setText("");
-                            mobileNo.setText("");
-                            userPassword.setText("");
-                            hireDate.setText("");
-                            termination.setText("");
-                            payRate.setText("");
-                            serial[0]++;
-                            empNo.setText("" + serial[0]);
-
                         } else {
-                            Toast.makeText(EmployeeRegistration.this, getResources().getString(R.string.password_length), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(EmployeeRegistration.this, getResources().getString(R.string.user_exist), Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         Toast.makeText(EmployeeRegistration.this, getResources().getString(R.string.please_insert_all_data), Toast.LENGTH_SHORT).show();
@@ -221,6 +227,15 @@ public class EmployeeRegistration extends AppCompatActivity {
         });
 
 
+    }
+
+    boolean isExists(String empName){
+        List<EmployeeRegistrationModle> employeeRegistrations = mDHandler.getAllEmployeeRegistration();
+        for(int i = 0 ; i<employeeRegistrations.size() ; i++){
+            if(empName.equals(employeeRegistrations.get(i).getEmployeeName()))
+                return true;
+        }
+        return false;
     }
 
 

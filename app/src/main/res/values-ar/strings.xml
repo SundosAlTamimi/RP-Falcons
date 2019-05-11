@@ -502,6 +502,7 @@
 
     <string name="not_have_any_data">لا يوجد اي معلومات في الجدول</string>
     <string name="password_length">طول كلمة المرور يجب ان يكون 4 ارقام فقط الرجاء اعادة تعين كلمة المرور</string>
+    <string name="user_exist">اسم المستخدم محجوز</string>
     <string name="add_job_group_before_new_emplo">الرجاء اضافة مجموعة عمل قبل اضافة موظف جديد</string>
 
     <string name="clearAlert">هل أنت متأكد أنك تريد مسح النموذج؟</string>
