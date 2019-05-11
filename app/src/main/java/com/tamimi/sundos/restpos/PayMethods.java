@@ -1669,13 +1669,13 @@ public class PayMethods extends AppCompatActivity {
                 OrderTransactionsObj.get(i).setNote("");
             }
 
-            for (int i = 0; i < OrderTransactionsObj.size(); i++) {
-                if (OrderTransactionsObj.get(i).getQty() == 0) {
-                    OrderTransactionsObj.get(i - 1).setNote((OrderTransactionsObj.get(i - 1).getNote()) + "\n" + OrderTransactionsObj.get(i).getItemName());
-                    OrderTransactionsObj.remove(i);
-                    i--;
-                }
-            }
+//            for (int i = 0; i < OrderTransactionsObj.size(); i++) {
+//                if (OrderTransactionsObj.get(i).getQty() == 0) {
+//                    OrderTransactionsObj.get(i - 1).setNote((OrderTransactionsObj.get(i - 1).getNote()) + "\n" + OrderTransactionsObj.get(i).getItemName());
+//                    OrderTransactionsObj.remove(i);
+//                    i--;
+//                }
+//            }
 
             JSONArray obj2 = new JSONArray();
             for (int i = 0; i < OrderTransactionsObj.size(); i++)
@@ -1689,11 +1689,9 @@ public class PayMethods extends AppCompatActivity {
             SendSocket sendSocket = new SendSocket(context, obj1, OrderTransactionsObj);
             sendSocket.sendMessage();
 
-
             Log.e("sendCloud", "J");
             SendCloud sendCloud = new SendCloud(context, obj);
             sendCloud.startSending("kitchen");
-
 
         } catch (JSONException e) {
             Log.e("Tag", "JSONException");
