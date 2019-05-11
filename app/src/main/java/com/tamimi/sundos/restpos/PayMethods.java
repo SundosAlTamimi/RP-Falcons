@@ -385,7 +385,7 @@ public class PayMethods extends AppCompatActivity {
                 String t0 = balance.getText().toString();
                 String t1 = received.getText().toString();
                 String t2 = cashMoney.getText().toString();
-
+                cashValue=0.0;
                 Date currentTimeAndDate = Calendar.getInstance().getTime();
                 SimpleDateFormat df1 = new SimpleDateFormat("dd-MM-yyyy");
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM");
@@ -1514,7 +1514,7 @@ public class PayMethods extends AppCompatActivity {
                 payMethodList.add(payMethod);
                 cashValue1 = cashValue;
                 cashValue = 0.00;
-            }
+            }else { cashValue1 = 0.0;}
             if (creditCardValue != 0.00) {
                 for (int i = 0; i < cardNumbers.size(); i++) {
                     payMethod.setPayType("Credit Card");
@@ -1532,7 +1532,7 @@ public class PayMethods extends AppCompatActivity {
                 resiveCredit.clear();
                 creditCardValue1 = cardValues;
                 creditCardValue = 0.00;
-            }
+            }else { creditCardValue1 = 0.0;}
             if (chequeValue != 0.00) {
                 for (int i = 0; i < chequeNambers.size(); i++) {
                     payMethod.setPayType("Cheque");
@@ -1550,7 +1550,7 @@ public class PayMethods extends AppCompatActivity {
                 bankName.clear();
                 resiveCheque.clear();
                 countCheque = 0;
-            }
+            }else { chequeValue1 = 0.0;}
             if (giftCardValue != 0.00) {
                 for (int i = 0; i < giftCardNumber.size(); i++) {
                     payMethod.setPayType("Gift Card");
@@ -1567,7 +1567,7 @@ public class PayMethods extends AppCompatActivity {
                 giftCardNumber.clear();
                 resiveGift.clear();
                 countGift = 0;
-            }
+            }else { giftCardValue1 = 0.0;}
             Log.e("creditValue", "" + creditValue);
             if (creditValue != 0.00) {
                 for (int i = 0; i < couponNumber.size(); i++) {
@@ -1584,7 +1584,7 @@ public class PayMethods extends AppCompatActivity {
                 creditValue = 0.00;
                 couponNumber.clear();
                 countCoupon = 0;
-            }
+            }else { creditValue1 = 0.0;}
             if (pointValue != 0.00) {
                 for (int i = 0; i < pointCardNumber.size(); i++) {
                     payMethod.setPayType("Point Card");
@@ -1601,7 +1601,7 @@ public class PayMethods extends AppCompatActivity {
                 countPoint = 0;
                 pointCardNumber.clear();
                 resivePoint.clear();
-            }
+            }else { pointValue1 = 0.0;}
             List<ItemWithScreen> itemWithScreens = mDHandler.getAllItemsWithScreen();
 
             if (orderHeaderTemp == null) { // Takeaway
@@ -1648,6 +1648,7 @@ public class PayMethods extends AppCompatActivity {
                 Intent intent = new Intent(PayMethods.this, DineIn.class);
                 startActivity(intent);
             }
+            Log.e("cash ","**"+cashValue1);
 
             Toast.makeText(this, getResources().getString(R.string.save_successful), Toast.LENGTH_SHORT).show();
             finish();
