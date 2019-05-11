@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+android:background="@color/layer2"
+    android:layout_width="750dp"
+    android:layout_height="wrap_content">
+<LinearLayout android:orientation="horizontal"
+    android:layout_height="wrap_content"
+    android:layout_width="wrap_content">
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_marginLeft="200dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        app:srcCompat="@drawable/add_modifier" />
+    <Button android:layout_height="50dp"
+        android:id="@+id/print_btn"
+        android:layout_width="wrap_content"
+        android:text="Print "
+        android:layout_margin="20dp"
+        android:background="@drawable/done_buttons"/>
+</LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/blue_ice"
+        android:textColor="@color/blue_ice"
+        android:layout_marginVertical="10dp"
+        android:layout_marginHorizontal="20dp"
+        android:textSize="8sp" />
+<ScrollView android:layout_height="wrap_content"
+    android:layout_width="match_parent">
+    <LinearLayout android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:id="@+id/linear2"
+        android:orientation="vertical">
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginTop="5dp"
+            android:padding="10dp"
+            android:gravity="center"
+
+            >
+
+            <TextView
+                android:id="@+id/resturantname"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:textColor="@color/text_color"
+                android:text="Resturant  "
+                android:padding="5dp"
+                android:textSize="16sp"
+
+
+                />
+
+            <TextView
+                android:id="@+id/resturantnameText"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:textColor="@color/text_color"
+                android:text="  Falcons  "
+                android:padding="5dp"
+                android:textSize="16sp"
+             />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+           android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginTop="5dp"
+            android:padding="10dp"
+
+            >
+
+            <TextView
+                android:id="@+id/textViewtaxno"
+                android:layout_width="100dp"
+                android:layout_height="30dp"
+                android:textColor="@color/text_color"
+                android:text="Tax No : "
+                android:padding="5dp"
+                android:textSize="12sp"
+
+                android:layout_marginLeft="10dp"
+               />
+
+            <TextView
+                android:id="@+id/textViewtaxnoText"
+                android:layout_width="100dp"
+                android:layout_height="30dp"
+                android:textColor="@color/text_color"
+                android:text="   "
+                android:padding="5dp"
+                android:textSize="12sp"
+               android:layout_marginLeft="5dp" />
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginTop="5dp"
+            android:padding="10dp"
+
+            >
+
+            <TextView
+                android:id="@+id/textViewDate"
+                android:layout_width="100dp"
+                android:layout_height="30dp"
+                android:textColor="@color/text_color"
+                android:text="Date : "
+                android:padding="5dp"
+                android:textSize="12sp"
+
+                android:layout_marginLeft="10dp"
+                />
+
+            <TextView
+                android:id="@+id/textViewdateText"
+                android:layout_width="100dp"
+                android:layout_height="30dp"
+                android:textColor="@color/text_color"
+                android:text="   "
+                android:textSize="12sp"
+                android:padding="5dp"
+                android:layout_marginLeft="5dp"/>
+            <TextView
+                android:id="@+id/textViewTime"
+                android:layout_width="100dp"
+                android:textColor="@color/text_color"
+                android:layout_height="30dp"
+                android:text="Time: "
+                android:textSize="12sp"
+                android:padding="5dp"
+            android:layout_marginLeft="20dp"
+
+                />
+
+            <TextView
+                android:id="@+id/textViewtimeText"
+                android:layout_width="100dp"
+                android:layout_height="30dp"
+                android:textColor="@color/text_color"
+                android:text="   "
+                android:textSize="12sp"
+                android:padding="5dp"
+                android:layout_marginLeft="5dp"
+                />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginTop="5dp"
+            android:padding="10dp"
+
+            >
+
+            <TextView
+                android:id="@+id/textViewWDAte"
+                android:layout_width="100dp"
+                android:layout_height="30dp"
+                android:textColor="@color/text_color"
+                android:text="W Date : "
+                android:textSize="12sp"
+                android:padding="5dp"
+
+                android:layout_marginLeft="10dp"
+                />
+
+            <TextView
+                android:id="@+id/textViewWDAteText"
+                android:layout_width="100dp"
+                android:layout_height="30dp"
+                android:textColor="@color/text_color"
+                android:text="   "
+                android:textSize="12sp"
+                android:padding="5dp"
+                android:layout_marginLeft="5dp" />
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginTop="5dp"
+            android:padding="10dp"
+
+            >
+
+            <TextView
+                android:id="@+id/textViewInvoiceNo"
+                android:layout_width="100dp"
+                android:layout_height="30dp"
+                android:text="Invoice No : "
+                android:textColor="@color/text_color"
+                android:textSize="12sp"
+                android:padding="5dp"
+
+                android:layout_marginLeft="10dp"
+                />
+
+            <TextView
+                android:id="@+id/textViewWInvoiceNoText"
+                android:layout_width="100dp"
+                android:layout_height="30dp"
+                android:textColor="@color/text_color"
+                android:text="   "
+                android:padding="5dp"
+                android:textSize="12sp"
+                android:layout_marginLeft="5dp"
+
+              />
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginTop="5dp"
+            android:padding="10dp"
+
+            >
+
+            <TextView
+                android:id="@+id/textViewCacher"
+                android:layout_width="100dp"
+                android:layout_height="30dp"
+                android:text="Cacher : "
+                android:textColor="@color/text_color"
+                android:textSize="12sp"
+                android:padding="5dp"
+                android:layout_marginLeft="10dp"
+                />
+
+            <TextView
+                android:id="@+id/textViewWCacherText"
+                android:layout_width="100dp"
+                android:layout_height="30dp"
+                android:textColor="@color/text_color"
+                android:text="   "
+                android:padding="5dp"
+                android:textSize="12sp"
+                android:layout_marginLeft="5dp"
+ />
+        </TableRow>
+    </TableLayout>
+
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginVertical="20dp"
+        android:background="@color/blue_ice"
+        android:textColor="@color/blue_ice"
+        android:layout_marginHorizontal="20dp"
+        android:textSize="8sp" />
+        <!--<ScrollView android:layout_height="wrap_content"-->
+            <!--android:layout_width="match_parent">-->
+    <TableLayout
+        android:id="@+id/table_"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:padding="5dp"
+       >
+    </TableLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginVertical="20dp"
+            android:background="@color/blue_ice"
+            android:textColor="@color/blue_ice"
+            android:layout_marginHorizontal="20dp"
+            android:textSize="8sp" />
+        <LinearLayout android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp">
+            <TextView
+                android:id="@+id/TotalValue"
+                android:layout_width="110dp"
+                android:layout_height="30dp"
+                android:textColor="@color/text_color"
+                android:text="Total Money:"
+                android:padding="3dp"
+                android:textSize="14sp"
+
+                android:layout_marginLeft="310dp"
+                />
+            <TextView
+                android:id="@+id/TotalValueMoneyText"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:textColor="@color/text_color"
+                android:text=" "
+                android:padding="3dp"
+                android:textSize="14sp"
+                android:layout_marginLeft="5dp"
+
+                />
+        </LinearLayout>
+
+
+        <!--</ScrollView>-->
+
+        <ImageView
+            android:id="@+id/imageView5"
+            android:layout_width="158dp"
+            android:layout_height="70dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            app:srcCompat="@drawable/we" />
+    </LinearLayout>
+</ScrollView>
+</LinearLayout>

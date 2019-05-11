@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 
 import com.tamimi.sundos.restpos.Models.Announcemet;
 import com.tamimi.sundos.restpos.Models.BlindClose;
@@ -1232,25 +1233,25 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 //                + SCREEN_NO3 + " INTEGER,"
 //                + SCREEN_NAME3 + " TEXT " + ")";
 //        db.execSQL(CREATE_TABLE_ITEM_WITH_SCREEN);
-        db.execSQL("ALTER TABLE ANNOUNCEMENT_TABLE ADD USER_NO INTEGER NOT NULL DEFAULT '-1'");
-
-        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS ADD ORG_NO TAXE NOT NULL DEFAULT '0'");
-        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS ADD ORG_POS INTEGER NOT NULL DEFAULT '-1'");
-        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS ADD RETURN_QTY INTEGER NOT NULL DEFAULT '0'");
-
-        db.execSQL("ALTER TABLE ORDER_HEADER ADD ORG_NO TAXE NOT NULL DEFAULT '0'");
-        db.execSQL("ALTER TABLE ORDER_HEADER ADD ORG_POS INTEGER NOT NULL DEFAULT '-1'");
-
-        db.execSQL("ALTER TABLE PAY_METHOD ADD ORG_NO TAXE NOT NULL DEFAULT '0'");
-        db.execSQL("ALTER TABLE PAY_METHOD ADD ORG_POS INTEGER NOT NULL DEFAULT '-1'");
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS_TEMP ADD ORG_NO TAXE NOT NULL DEFAULT '0'");
-        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS_TEMP ADD ORG_POS INTEGER NOT NULL DEFAULT '-1'");
-        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS_TEMP ADD RETURN_QTY INTEGER NOT NULL DEFAULT '0'");
-
-        db.execSQL("ALTER TABLE ORDER_HEADER_TEMP ADD ORG_NO TAXE NOT NULL DEFAULT '0'");
-        db.execSQL("ALTER TABLE ORDER_HEADER_TEMP ADD ORG_POS INTEGER NOT NULL DEFAULT '-1'");
+//        db.execSQL("ALTER TABLE ANNOUNCEMENT_TABLE ADD USER_NO INTEGER NOT NULL DEFAULT '-1'");
+//
+//        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS ADD ORG_NO TAXE NOT NULL DEFAULT '0'");
+//        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS ADD ORG_POS INTEGER NOT NULL DEFAULT '-1'");
+//        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS ADD RETURN_QTY INTEGER NOT NULL DEFAULT '0'");
+//
+//        db.execSQL("ALTER TABLE ORDER_HEADER ADD ORG_NO TAXE NOT NULL DEFAULT '0'");
+//        db.execSQL("ALTER TABLE ORDER_HEADER ADD ORG_POS INTEGER NOT NULL DEFAULT '-1'");
+//
+//        db.execSQL("ALTER TABLE PAY_METHOD ADD ORG_NO TAXE NOT NULL DEFAULT '0'");
+//        db.execSQL("ALTER TABLE PAY_METHOD ADD ORG_POS INTEGER NOT NULL DEFAULT '-1'");
+////++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//
+//        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS_TEMP ADD ORG_NO TAXE NOT NULL DEFAULT '0'");
+//        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS_TEMP ADD ORG_POS INTEGER NOT NULL DEFAULT '-1'");
+//        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS_TEMP ADD RETURN_QTY INTEGER NOT NULL DEFAULT '0'");
+//
+//        db.execSQL("ALTER TABLE ORDER_HEADER_TEMP ADD ORG_NO TAXE NOT NULL DEFAULT '0'");
+//        db.execSQL("ALTER TABLE ORDER_HEADER_TEMP ADD ORG_POS INTEGER NOT NULL DEFAULT '-1'");
 
 
     }
@@ -1393,6 +1394,33 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         db.close();
     }
+    public ArrayList<Cashier> getCacher()
+    {
+        ArrayList<Cashier> allCasher=new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + CASHIER_IN_OUT ;
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+               Cashier cash=new Cashier();
+               cash.setCashierName(cursor.getString(0));
+               cash.setCheckInDate(cursor.getString(1));
+               cash.setCategoryName(cursor.getString(2));
+               cash.setCategoryValue(Double.parseDouble(cursor.getString(3)));
+                cash.setCategoryQty(Integer.parseInt(cursor.getString(4)));
+                cash.setOrderKind(Integer.parseInt(cursor.getString(5)));
+
+
+
+                allCasher.add(cash);
+
+            } while (cursor.moveToNext());
+        }
+        return allCasher;
+            }
+
+
 
     public void addBlindClose(BlindClose obj) {
         db = this.getReadableDatabase();
