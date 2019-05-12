@@ -3300,7 +3300,6 @@ public class BackOfficeActivity extends AppCompatActivity {
                 returnsDiscountText.setText("" + allDiscountReturn);
                 netDiscountText.setText("" + netDiscount);
 
-
                 salesServiceText.setText("" + totalServiceSales);
                 returnsServiceText.setText("" + totalServiceReturn);
                 netServiceText.setText("" + netService);

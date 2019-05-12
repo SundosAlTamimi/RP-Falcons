@@ -3633,7 +3633,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 announcemet.setIsShow(cursor.getInt(5));
                 announcemet.setUserNo(cursor.getInt(6));
 
-
                 announcementArrayList.add(announcemet);
             } while (cursor.moveToNext());
         }
