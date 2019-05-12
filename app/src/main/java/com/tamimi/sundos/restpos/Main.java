@@ -1885,15 +1885,20 @@ public class Main extends AppCompatActivity {
                         if (!text.getText().toString().equals("")) {
                             textData = Integer.parseInt(text.getText().toString());
                             rowRefund.add(orderTransactions.get(i));
+                            int q = orderTransactions.get(i).getQty();
                             rowRefund.get(index).setQty(Integer.parseInt("-"+text.getText().toString()));
                             double lDiscon = orderTransactions.get(i).getlDiscount();
-                            int q = orderTransactions.get(i).getQty();
                             rowRefund.get(index).setlDiscount(textData * (lDiscon / q));
-                            rowRefund.get(index).setDiscount(textData * orderTransactions.get(i).getDiscount() / q);
-                            rowRefund.get(index).setTaxValue(textData * orderTransactions.get(i).getTaxValue() / q);
-                            rowRefund.get(index).setService(textData * orderTransactions.get(i).getService() / q);
+                            rowRefund.get(index).setDiscount(textData * (orderTransactions.get(i).getDiscount() / q));
+                            rowRefund.get(index).setTaxValue(textData * (orderTransactions.get(i).getTaxValue() / q));
+                            rowRefund.get(index).setService(textData * (orderTransactions.get(i).getService() / q));
                             rowRefund.get(index).setOrderKind(998);
                             index++;
+                            Log.e("taxRefund ","="+ textData * (lDiscon / q)+"linD/"+
+                            textData * (orderTransactions.get(i).getDiscount() / q)+"Dic/"+
+                            textData * (orderTransactions.get(i).getTaxValue() / q)+"tax/"+
+                            textData * (orderTransactions.get(i).getService() / q)+"srvice/"+
+                           998);
                         } else {
                             textData = 0;
                         }
@@ -2839,53 +2844,6 @@ public class Main extends AppCompatActivity {
     }
 
 
-    void sendToKitchenNew(OrderHeader OrderHeaderObj, List<OrderTransactions> OrderTransactionsObj, List<PayMethod> PayMethodObj) {
-        try {
-            JSONObject obj1 = OrderHeaderObj.getJSONObject();
-
-            Log.e("test for ", "" + OrderTransactionsObj.get(0).getItemName());
-
-            List<ItemWithScreen> itemWithScreens = mDHandler.getAllItemsWithScreen();
-            for (int i = 0; i < OrderTransactionsObj.size(); i++) {
-                for (int j = 0; j < itemWithScreens.size(); j++) {
-                    if (OrderTransactionsObj.get(i).getItemBarcode().equals("" + itemWithScreens.get(j).getItemCode()))
-                        OrderTransactionsObj.get(i).setScreenNo(itemWithScreens.get(j).getScreenNo());
-                }
-                OrderTransactionsObj.get(i).setNote("");
-            }
-
-            for (int i = 0; i < OrderTransactionsObj.size(); i++) {
-                if (OrderTransactionsObj.get(i).getQty() == 0) {
-                    OrderTransactionsObj.get(i - 1).setNote((OrderTransactionsObj.get(i - 1).getNote()) + "\n" + OrderTransactionsObj.get(i).getItemName());
-                    OrderTransactionsObj.remove(i);
-                    i--;
-                }
-            }
-
-            JSONArray obj2 = new JSONArray();
-            for (int i = 0; i < OrderTransactionsObj.size(); i++)
-                obj2.put(i, OrderTransactionsObj.get(i).getJSONObject());
-
-            JSONObject obj = new JSONObject();
-            obj.put("Items", obj2);
-            obj.put("Header", obj1);
-
-            Log.e("socket", "J");
-            Log.e("socket***", "J**" + " " + OrderTransactionsObj.size());
-
-            SendSocket sendSocket = new SendSocket(Main.this, obj1, OrderTransactionsObj);
-            sendSocket.sendMessage();
-
-
-            Log.e("sendCloud", "J");
-            SendCloud sendCloud = new SendCloud(Main.this, obj);
-            sendCloud.startSending("kitchen");
-
-
-        } catch (JSONException e) {
-            Log.e("Tag", "JSONException");
-        }
-    }
 
     @Override
     public void onBackPressed() {

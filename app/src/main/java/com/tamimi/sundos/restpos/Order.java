@@ -1635,8 +1635,12 @@ public class Order extends AppCompatActivity {
             if (wantedItems.get(k).getTaxType() == 0) {
                 if (Settings.tax_type != 0) {
                     taxValue = (totalLine - discount) * wantedItems.get(k).getTax() / 100;
-                } else
+                    Log.e("tax__1" , "(("+ totalLine + "-" + discount +")*" +wantedItems.get(k).getTax() + "/100)");
+                } else {
                     taxValue = ((totalLine - discount) * wantedItems.get(k).getTax() / 100) / (1 + (wantedItems.get(k).getTax() / 100));
+
+                    Log.e("tax__2" , "(("+ totalLine + "-" + discount +")*" +  wantedItems.get(k).getTax() + "/100)/(1+" + wantedItems.get(k).getTax() + "/100)" );
+                }
             }
          Log.e("tax "," = "+taxValue);
             OrderTransactionsObj.add(new OrderTransactions(orderTypeFlag, 0, today, Settings.POS_number, Settings.store_number,

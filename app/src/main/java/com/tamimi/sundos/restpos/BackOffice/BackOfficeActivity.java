@@ -1292,6 +1292,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                 for (int i = 0; i < orderTransactionData.size(); i++) {
                     if (Settings.tax_type == 0) {
                         NetTotal = Total_.get(i) - (Tax_.get(i) + Dis_.get(i));
+
                     } else {
                         NetTotal = Total_.get(i) - Dis_.get(i);
                     }
@@ -3305,7 +3306,8 @@ public class BackOfficeActivity extends AppCompatActivity {
                 salesServiceText.setText("" + totalServiceSales);
                 returnsServiceText.setText("" + totalServiceReturn);
                 netServiceText.setText("" + netService);
-
+                headerData.clear();
+                payData.clear();
             }
         });
 
@@ -3320,6 +3322,8 @@ public class BackOfficeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
+                headerData.clear();
+                payData.clear();
             }
         });
 
