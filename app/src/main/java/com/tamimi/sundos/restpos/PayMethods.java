@@ -1679,6 +1679,7 @@ public class PayMethods extends AppCompatActivity {
             for (int i = 0; i < OrderTransactionsObj.size(); i++) {
                 if (OrderTransactionsObj.get(i).getQty() == 0) {
                     OrderTransactionsObj.get(i).setScreenNo(OrderTransactionsObj.get(i - 1).getScreenNo());
+                    OrderTransactionsObj.get(i).setNote("mf");
                 }
             }
 
