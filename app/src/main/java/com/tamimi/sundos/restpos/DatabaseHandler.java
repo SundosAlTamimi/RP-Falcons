@@ -1252,7 +1252,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 //
 //        db.execSQL("ALTER TABLE ORDER_HEADER_TEMP ADD ORG_NO TAXE NOT NULL DEFAULT '0'");
 //        db.execSQL("ALTER TABLE ORDER_HEADER_TEMP ADD ORG_POS INTEGER NOT NULL DEFAULT '-1'");
-        db.execSQL("ALTER TABLE KITCHEN_SCREEN_TABLE ADD KITCHEN_IP TAXE NOT NULL DEFAULT '-1'");
+//        db.execSQL("ALTER TABLE KITCHEN_SCREEN_TABLE ADD KITCHEN_IP TAXE NOT NULL DEFAULT '-1'");
 
     }
 
@@ -2473,9 +2473,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return orderTransactions;
     }
 
-    public final ArrayList<PayMethod> getAllRequestPayMethod(String Vfh_No) {
+    public final ArrayList<PayMethod> getAllRequestPayMethod(String Vfh_No,String pos) {
         final ArrayList<PayMethod> orderTransactions = new ArrayList<>();
-        String selectQuery = "SELECT * FROM " + PAY_METHOD + " where VOUCHER_NUMBER = '" + Vfh_No + "'" + " and ORDER_KIND = '0'";
+        String selectQuery = "SELECT * FROM " + PAY_METHOD + " where VOUCHER_NUMBER = '" + Vfh_No + "'" + " and ORDER_KIND = '0'"+"and POINT_OF_SALE_NUMBER = '"+pos+"'";
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -3694,15 +3694,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String selectQuery = "select ITEM_NAME, GROUP_CONCAT( VOUCHER_DATE), GROUP_CONCAT( TOTAL), GROUP_CONCAT(TAX_VLUE) , GROUP_CONCAT(DISCOUNT) from ORDER_TRANSACTIONS  " +
                 "where  SHIFT_NAME =" + shiftName + " and POS_NO= " + PosNo + "  GROUP BY ITEM_BARCODE1";
 
-//        String selectQuery=" select ITEM_NAME, sum(TOTAL),COALESCE(SUM (TAX_VLUE),-1) from ORDER_TRANSACTIONS where substr(VOUCHER_DATE,1,2)+0 >= "+ day +" and substr(VOUCHER_DATE,4,2)+0 >= "+month+" and substr(VOUCHER_DATE,7,4)+0 >= "+year+
-//                " AND substr(VOUCHER_DATE,1,2)+0 <= "+dayto+" and substr(VOUCHER_DATE,4,2)+0 <= "+monthto +" and substr(VOUCHER_DATE,7,4)+0 <= "+yearto+" AND SHIFT_NAME = "+shiftName +" and POS_NO= "+ PosNo +" GROUP BY ITEM_BARCODE1 ";
-//
-
-//        String selectQuery ="SELECT ITEM_NAME, COALESCE(SUM(TOTAL),-1),COALESCE(SUM (TAX_VLUE),-1) FROM ORDER_TRANSACTIONS " +
-//                "WHERE SHIFT_NAME = "+shiftName+" and POS_NO= "+PosNo+" AND VOUCHER_DATE BETWEEN '"+fDate+"' AND '"+toDate+"' GROUP BY ITEM_BARCODE1" ;
-
-//        String selectQuery ="SELECT ITEM_NAME, COALESCE(SUM(TOTAL),-1),COALESCE(SUM (TAX_VLUE),-1) FROM ORDER_TRANSACTIONS " +
-//               "WHERE SHIFT_NAME = "+shiftName+" and POS_NO= "+PosNo+" GROUP BY ITEM_NAME" ;
 
         Log.e("se12", "" + selectQuery);
 
@@ -3737,10 +3728,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 " GROUP BY POINT_OF_SALE_NUMBER";
 
 
-//        String selectQuery ="SELECT POINT_OF_SALE_NUMBER, COALESCE(SUM(TOTAL),-1),COALESCE(SUM (TOTAL_TAX),-1),COALESCE(SUM (AMOUNT_DUE),-1) ,COUNT(*) ,VOUCHER_DATE  FROM ORDER_HEADER " +
-//                " GROUP BY POINT_OF_SALE_NUMBER" ;
-
-
         Log.e("se12", "" + selectQuery);
 
         db = this.getWritableDatabase();
@@ -3770,27 +3757,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         String selectQuery = "select TAX_PERC, GROUP_CONCAT( VOUCHER_DATE), GROUP_CONCAT(TOTAL), GROUP_CONCAT(TAX_VLUE) from ORDER_TRANSACTIONS  " +
                 "where  SHIFT_NAME =" + shiftName + " and POS_NO= " + PosNo + "  GROUP BY TAX_PERC";
-
-//        int day= Integer.parseInt(fDate.substring(0,fDate.indexOf("-")));
-//        int month=Integer.parseInt(fDate.substring(fDate.indexOf("-")+1,fDate.lastIndexOf("-")));
-//        int year=Integer.parseInt(fDate.substring(fDate.lastIndexOf("-")+1,fDate.length()));
-//
-//        int dayto= Integer.parseInt(toDate.substring(0,toDate.indexOf("-")));
-//        int monthto=Integer.parseInt(toDate.substring(toDate.indexOf("-")+1,toDate.lastIndexOf("-")));
-//        int yearto=Integer.parseInt(toDate.substring(toDate.lastIndexOf("-")+1,toDate.length()));
-//
-//        Log.e("fdate",""+day +"******"+month +"******"+year);
-//        Log.e("todate",""+dayto +"******"+monthto +"******"+yearto);
-//
-//        String selectQuery=" select TAX_PERC, sum(TOTAL),COALESCE(SUM (TAX_VLUE),-1) from ORDER_TRANSACTIONS where substr(VOUCHER_DATE,1,2)+0 >= "+ day +" and substr(VOUCHER_DATE,4,2)+0 >= "+month+" and substr(VOUCHER_DATE,7,4)+0 >= "+year+
-//        " AND substr(VOUCHER_DATE,1,2)+0 <= "+dayto+" and substr(VOUCHER_DATE,4,2)+0 <= "+monthto +" and substr(VOUCHER_DATE,7,4)+0 <= "+yearto+" AND SHIFT_NAME = "+shiftName +" and POS_NO= "+PosNo +" GROUP BY TAX_PERC ";
-
-
-//        String selectQuery ="SELECT TAX_PERC, COALESCE(SUM(TOTAL),-1),COALESCE(SUM (TAX_VLUE),-1) FROM ORDER_TRANSACTIONS " +
-//                "WHERE SHIFT_NAME = "+shiftName+" and POS_NO= "+PosNo+" AND VOUCHER_DATE BETWEEN '"+fDate+"' AND '"+toDate+"' GROUP BY TAX_PERC" ;
-
-//        String selectQuery ="SELECT ITEM_NAME, COALESCE(SUM(TOTAL),-1),COALESCE(SUM (TAX_VLUE),-1) FROM ORDER_TRANSACTIONS " +
-//               "WHERE SHIFT_NAME = "+shiftName+" and POS_NO= "+PosNo+" GROUP BY ITEM_NAME" ;
 
         Log.e("se123", "" + selectQuery);
 
@@ -3822,13 +3788,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         String selectQuery = "select USER_NAME , GROUP_CONCAT( VOUCHER_DATE), GROUP_CONCAT( AMOUNT_DUE) from ORDER_HEADER  " +
                 "WHERE USER_NO = " + userName + " and POINT_OF_SALE_NUMBER= " + PosNo + " GROUP BY USER_NAME";
-
-
-//        String selectQuery ="SELECT USER_NAME , COUNT(*) , COALESCE(SUM(AMOUNT_DUE),-1) FROM ORDER_HEADER " +
-//                "WHERE USER_NAME = "+userName+" and POINT_OF_SALE_NUMBER= "+PosNo+" AND VOUCHER_DATE BETWEEN '"+fDate+"' AND '"+toDate+"' GROUP BY USER_NAME" ;
-
-//        String selectQuery ="SELECT ITEM_NAME, COALESCE(SUM(TOTAL),-1),COALESCE(SUM (TAX_VLUE),-1) FROM ORDER_TRANSACTIONS " +
-//               "WHERE SHIFT_NAME = "+shiftName+" and POS_NO= "+PosNo+" GROUP BY ITEM_NAME" ;
 
         Log.e("se123", "" + selectQuery);
 

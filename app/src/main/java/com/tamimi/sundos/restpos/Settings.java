@@ -5,7 +5,7 @@ public class Settings {
     public static String user_name = "no user";
     public static int password = -1;
     public static int user_no = -1;
-    public static int POS_number = 0;
+    public static int POS_number = 1;
     public static int store_number = 0;
     public static int shift_number =0;
     public static String shift_name = "no shift";
