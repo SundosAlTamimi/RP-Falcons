@@ -9,11 +9,9 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.EmbossMaskFilter;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.InputType;
@@ -55,7 +53,6 @@ import android.widget.Toast;
 //import com.itextpdf.text.pdf.fonts.otf.Language;
 //import com.itextpdf.text.pdf.languages.ArabicLigaturizer;
 import com.tamimi.sundos.restpos.DatabaseHandler;
-import com.tamimi.sundos.restpos.DineIn;
 import com.tamimi.sundos.restpos.DineInLayout;
 import com.tamimi.sundos.restpos.ExportToPdf;
 import com.tamimi.sundos.restpos.Main;
@@ -1292,12 +1289,13 @@ public class BackOfficeActivity extends AppCompatActivity {
                 for (int i = 0; i < orderTransactionData.size(); i++) {
                     if (Settings.tax_type == 0) {
                         NetTotal = Total_.get(i) - (Tax_.get(i) + Dis_.get(i));
+
                     } else {
                         NetTotal = Total_.get(i) - Dis_.get(i);
                     }
                     Log.e("", "" + NetTotal);
 
-                    insertCashierInOutReport(tableXreport, orderTransactionData.get(i).getItemName(), String.valueOf(Tax_.get(i)),
+                    insertRowForReport(tableXreport, orderTransactionData.get(i).getItemName(), String.valueOf(Tax_.get(i)),
                             "", String.valueOf(Total_.get(i))
                             , "", "", String.valueOf(NetTotal), 4);
                     OrderTransactions orderTransactions = new OrderTransactions();
@@ -1324,8 +1322,8 @@ public class BackOfficeActivity extends AppCompatActivity {
                 totalBeforTax.setText("" + totalText);
                 tax.setText("" + tatText);
                 totalAfterTax.setText("" + netText);
-                services.setText("" + totalText);
-                servicesTax.setText("" + totalText);
+                services.setText("" +0.0);
+                servicesTax.setText("" + 0.0);
                 totalTax.setText("" + totalText);
                 net.setText("" + netText);
 
@@ -1371,7 +1369,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                 }
 
                 for (int i = 0; i < orderTransactionData.size(); i++) {
-                    insertCashierInOutReport(tableXreportTax, String.valueOf(orderTransactionData.get(i).getTaxPerc()),
+                    insertRowForReport(tableXreportTax, String.valueOf(orderTransactionData.get(i).getTaxPerc()),
                             String.valueOf(Tax_.get(i)), "",
                             String.valueOf(Total_.get(i)), "", "", "", 3);
 
@@ -1563,7 +1561,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                         NetTotal = Total_.get(i) - Dic_.get(i);
                     }
 
-                    insertCashierInOutReport(tableXreport, orderTransactionData.get(i).getItemName(), String.valueOf(Tax_.get(i)),
+                    insertRowForReport(tableXreport, orderTransactionData.get(i).getItemName(), String.valueOf(Tax_.get(i)),
                             "", String.valueOf(Total_.get(i))
                             , "", "", String.valueOf(NetTotal), 4);
 
@@ -1644,7 +1642,7 @@ public class BackOfficeActivity extends AppCompatActivity {
 
                 for (int i = 0; i < orderTransactionData.size(); i++) {
 
-                    insertCashierInOutReport(tableXreportTax, String.valueOf(orderTransactionData.get(i).getTaxPerc()),
+                    insertRowForReport(tableXreportTax, String.valueOf(orderTransactionData.get(i).getTaxPerc()),
                             String.valueOf(Tax_.get(i)), "",
                             String.valueOf(Total_.get(i)), "", "", "", 3);
 
@@ -1853,7 +1851,7 @@ public class BackOfficeActivity extends AppCompatActivity {
 
                 for (int i = 0; i < username_.size(); i++) {
 
-                    insertCashierInOutReport(userTable, String.valueOf(username_.get(i)),
+                    insertRowForReport(userTable, String.valueOf(username_.get(i)),
                             String.valueOf(Amount_.get(i)), "",
                             String.valueOf(count_.get(i)), "", "", "", 3);
 
@@ -2017,7 +2015,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                         } else {
                             posNoAll[0] = String.valueOf(Announcement.get(i).getPosNo());
                         }
-                        insertCashierInOutReport(userTable, Announcement.get(i).getShiftName(), posNoAll[0],
+                        insertRowForReport(userTable, Announcement.get(i).getShiftName(), posNoAll[0],
                                 Announcement.get(i).getMessage(), Announcement.get(i).getUserName(), String.valueOf(Announcement.get(i).getIsShow()), "", Announcement.get(i).getAnnouncementDate(), 6);
                         AnnounPdf.add(Announcement.get(i));
                     }
@@ -3302,11 +3300,11 @@ public class BackOfficeActivity extends AppCompatActivity {
                 returnsDiscountText.setText("" + allDiscountReturn);
                 netDiscountText.setText("" + netDiscount);
 
-
                 salesServiceText.setText("" + totalServiceSales);
                 returnsServiceText.setText("" + totalServiceReturn);
                 netServiceText.setText("" + netService);
-
+                headerData.clear();
+                payData.clear();
             }
         });
 
@@ -3321,6 +3319,8 @@ public class BackOfficeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
+                headerData.clear();
+                payData.clear();
             }
         });
 
@@ -3463,7 +3463,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                                 if (payInData.get(i).getPosNo() == posNoString || posNoString == -1) {
                                     if (cashierType == payInData.get(i).getTransType() || cashierType == -1) {
                                         count++;
-                                        insertCashierInOutReport(cashierTable, String.valueOf(count), payInData.get(i).getTransDate()
+                                        insertRowForReport(cashierTable, String.valueOf(count), payInData.get(i).getTransDate()
                                                 , String.valueOf(payInData.get(i).getPosNo()), payInData.get(i).getUserName(), String.valueOf(payInData.get(i).getTransType())
                                                 , String.valueOf(payInData.get(i).getValue()), payInData.get(i).getTime(), 7);
                                         PayCashier.add(payInData.get(i));
@@ -4640,7 +4640,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                             (OrderPayMData.get(i).getPayType().equals("Credit Card")) &&
                             (posNoString == -1 || posNoString == OrderPayMData.get(i).getPointOfSaleNumber())) {
                         count++;
-                        insertCashierInOutReport(cardTypeTable, String.valueOf(count), OrderPayMData.get(i).getTime(),
+                        insertRowForReport(cardTypeTable, String.valueOf(count), OrderPayMData.get(i).getTime(),
                                 OrderPayMData.get(i).getVoucherNumber(), OrderPayMData.get(i).getVoucherDate(),
                                 String.valueOf(OrderPayMData.get(i).getPayValue()), OrderPayMData.get(i).getUserName(),
                                 String.valueOf(OrderPayMData.get(i).getPointOfSaleNumber()), 7);
@@ -4792,7 +4792,7 @@ public class BackOfficeActivity extends AppCompatActivity {
 
                 headerData.clear();
                 for (int i = 0; i < pos_.size(); i++) {
-                    insertCashierInOutReport(marketTable, String.valueOf(pos_.get(i)),
+                    insertRowForReport(marketTable, String.valueOf(pos_.get(i)),
                             String.valueOf(Tax_.get(i)), String.valueOf(count_.get(i)),
                             String.valueOf(Total_.get(i)), String.valueOf(Amount_.get(i) / count_.get(i)), "",
                             String.valueOf(Amount_.get(i)), 6);
@@ -4961,7 +4961,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                                 if (headerData.get(i).getPointOfSaleNumber() == posNoString || posNoString == -1) {
                                     if (headerData.get(i).getOrderType() == 1) {
 
-                                        insertCashierInOutReport(waiterTable, headerData.get(i).getWaiter(), String.valueOf(headerData.get(i).getTotalDiscount()),
+                                        insertRowForReport(waiterTable, headerData.get(i).getWaiter(), String.valueOf(headerData.get(i).getTotalDiscount()),
                                                 String.valueOf(headerData.get(i).getAmountDue()),
                                                 String.valueOf(headerData.get(i).getTotal()), String.valueOf(headerData.get(i).getTotalService()),
                                                 String.valueOf(headerData.get(i).getTotalServiceTax()), String.valueOf(headerData.get(i).getTotalTax()), 7);
@@ -6182,8 +6182,8 @@ public class BackOfficeActivity extends AppCompatActivity {
     }
 
 
-    void insertCashierInOutReport(TableLayout tableLayout, String num, String Date, String pos, String cashierName,
-                                  String transType, String Amount, String Times, int switchCount) {
+    void insertRowForReport(TableLayout tableLayout, String num, String Date, String pos, String cashierName,
+                            String transType, String Amount, String Times, int switchCount) {
         final TableRow row = new TableRow(BackOfficeActivity.this);
 
         TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);

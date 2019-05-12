@@ -389,7 +389,7 @@ public class PayMethods extends AppCompatActivity {
                 String t0 = balance.getText().toString();
                 String t1 = received.getText().toString();
                 String t2 = cashMoney.getText().toString();
-
+                cashValue=0.0;
                 Date currentTimeAndDate = Calendar.getInstance().getTime();
                 SimpleDateFormat df1 = new SimpleDateFormat("dd-MM-yyyy");
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM");
@@ -433,7 +433,7 @@ public class PayMethods extends AppCompatActivity {
                         mainBalance = "" + (Double.parseDouble(mainBalance) - Double.parseDouble(t1));
                         remainingBalance.setText(getResources().getString(R.string.remaining_) + mainBalance);
                     }
-                } else if(Double.parseDouble(t1)> Double.parseDouble(t0)) {
+                } else if (Double.parseDouble(t1) > Double.parseDouble(t0)) {
                     Toast.makeText(PayMethods.this, getResources().getString(R.string.invaled_input), Toast.LENGTH_SHORT).show();
                     double received_value = Double.parseDouble(t1) - Double.parseDouble(t0);
                     payGraterDialog(String.valueOf(received_value), today, t0);
@@ -452,15 +452,15 @@ public class PayMethods extends AppCompatActivity {
     }
 
 
-    void payGraterDialog(String message,String today,String balance_value) {
+    void payGraterDialog(String message, String today, String balance_value) {
         Dialog dialog2 = new Dialog(PayMethods.this);
         dialog2.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog2.setContentView(R.layout.pay_grater_than);
         dialog2.setCanceledOnTouchOutside(false);
         dialog2.setCancelable(false);
 
-        TextView mess=(TextView)dialog2.findViewById(R.id.text_return);
-        Button b_mess=(Button) dialog2.findViewById(R.id.b_done);
+        TextView mess = (TextView) dialog2.findViewById(R.id.text_return);
+        Button b_mess = (Button) dialog2.findViewById(R.id.b_done);
 
         b_mess.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1518,13 +1518,13 @@ public class PayMethods extends AppCompatActivity {
                 payMethodList.add(payMethod);
                 cashValue1 = cashValue;
                 cashValue = 0.00;
-            }
+            }else { cashValue1 = 0.0;}
             if (creditCardValue != 0.00) {
                 for (int i = 0; i < cardNumbers.size(); i++) {
-                    payMethod.setPayType("Credit Card");
+                    payMethod.setPayType(cardName.get(i));
                     payMethod.setPayValue(Double.parseDouble(resiveCredit.get(i)));
                     payMethod.setPayNumber(cardNumbers.get(i));
-                    payMethod.setPayName(cardName.get(i));
+                    payMethod.setPayName("Credit Card");
                     mDHandler.addAllPayMethodItem(payMethod);
                     payMethodList.add(payMethod);
                     cardValues += Double.parseDouble(resiveCredit.get(i));
@@ -1536,7 +1536,7 @@ public class PayMethods extends AppCompatActivity {
                 resiveCredit.clear();
                 creditCardValue1 = cardValues;
                 creditCardValue = 0.00;
-            }
+            }else { creditCardValue1 = 0.0;}
             if (chequeValue != 0.00) {
                 for (int i = 0; i < chequeNambers.size(); i++) {
                     payMethod.setPayType("Cheque");
@@ -1554,7 +1554,7 @@ public class PayMethods extends AppCompatActivity {
                 bankName.clear();
                 resiveCheque.clear();
                 countCheque = 0;
-            }
+            }else { chequeValue1 = 0.0;}
             if (giftCardValue != 0.00) {
                 for (int i = 0; i < giftCardNumber.size(); i++) {
                     payMethod.setPayType("Gift Card");
@@ -1571,7 +1571,7 @@ public class PayMethods extends AppCompatActivity {
                 giftCardNumber.clear();
                 resiveGift.clear();
                 countGift = 0;
-            }
+            }else { giftCardValue1 = 0.0;}
             Log.e("creditValue", "" + creditValue);
             if (creditValue != 0.00) {
                 for (int i = 0; i < couponNumber.size(); i++) {
@@ -1588,7 +1588,7 @@ public class PayMethods extends AppCompatActivity {
                 creditValue = 0.00;
                 couponNumber.clear();
                 countCoupon = 0;
-            }
+            }else { creditValue1 = 0.0;}
             if (pointValue != 0.00) {
                 for (int i = 0; i < pointCardNumber.size(); i++) {
                     payMethod.setPayType("Point Card");
@@ -1605,7 +1605,7 @@ public class PayMethods extends AppCompatActivity {
                 countPoint = 0;
                 pointCardNumber.clear();
                 resivePoint.clear();
-            }
+            }else { pointValue1 = 0.0;}
             List<ItemWithScreen> itemWithScreens = mDHandler.getAllItemsWithScreen();
 
             if (orderHeaderTemp == null) { // Takeaway
@@ -1623,9 +1623,9 @@ public class PayMethods extends AppCompatActivity {
                 for (int i = 0; i < obj.getOrderTransactionObj().size(); i++)
                     mDHandler.addOrderTransaction(obj.getOrderTransactionObj().get(i));
 
-//
-//                sendToKitchen(PayMethods.this,obj.getOrderHeaderObj(), obj.getOrderTransactionObj(), payMethodList,itemWithScreens);
-//                sendToServer(obj.getOrderHeaderObj(), obj.getOrderTransactionObj(), payMethodList);
+
+                sendToKitchen(PayMethods.this, obj.getOrderHeaderObj(), obj.getOrderTransactionObj(), payMethodList, itemWithScreens);
+                sendToServer(obj.getOrderHeaderObj(), obj.getOrderTransactionObj(), payMethodList);
 
 //                Intent intent = new Intent(PayMethods.this, Order.class);
 //                startActivity(intent);
@@ -1647,7 +1647,7 @@ public class PayMethods extends AppCompatActivity {
                 mDHandler.deleteFromOrderHeaderTemp(sectionNo, tableNo);
                 mDHandler.deleteFromOrderTransactionTemp(sectionNo, tableNo);
 
-                sendToKitchen(PayMethods.this,orderHeaderTemp.get(0), orderTransTemp, payMethodList,itemWithScreens);
+                sendToKitchen(PayMethods.this, orderHeaderTemp.get(0), orderTransTemp, payMethodList, itemWithScreens);
                 sendToServer(orderHeaderTemp.get(0), orderTransTemp, payMethodList);
 
                 Intent intent = new Intent(PayMethods.this, DineIn.class);
@@ -1655,14 +1655,14 @@ public class PayMethods extends AppCompatActivity {
             }
 
             Toast.makeText(this, getResources().getString(R.string.save_successful), Toast.LENGTH_SHORT).show();
-          //  finish();
+            //  finish();
 //            Print(obj.getOrderTransactionObj());
         } else {
             Toast.makeText(this, getResources().getString(R.string.remaining_not_o), Toast.LENGTH_SHORT).show();
         }
     }
 
-   public void sendToKitchen(Context context,OrderHeader OrderHeaderObj, List<OrderTransactions> OrderTransactionsObj, List<PayMethod> PayMethodObj, List<ItemWithScreen> itemWithScreens) {
+    public void sendToKitchen(Context context, OrderHeader OrderHeaderObj, List<OrderTransactions> OrderTransactionsObj, List<PayMethod> PayMethodObj, List<ItemWithScreen> itemWithScreens) {
         try {
             JSONObject obj1 = OrderHeaderObj.getJSONObject();
 
@@ -1675,13 +1675,12 @@ public class PayMethods extends AppCompatActivity {
                 OrderTransactionsObj.get(i).setNote("");
             }
 
-//            for (int i = 0; i < OrderTransactionsObj.size(); i++) {
-//                if (OrderTransactionsObj.get(i).getQty() == 0) {
-//                    OrderTransactionsObj.get(i - 1).setNote((OrderTransactionsObj.get(i - 1).getNote()) + "\n" + OrderTransactionsObj.get(i).getItemName());
-//                    OrderTransactionsObj.remove(i);
-//                    i--;
-//                }
-//            }
+            for (int i = 0; i < OrderTransactionsObj.size(); i++) {
+                if (OrderTransactionsObj.get(i).getQty() == 0) {
+                    OrderTransactionsObj.get(i).setScreenNo(OrderTransactionsObj.get(i - 1).getScreenNo());
+                    OrderTransactionsObj.get(i).setNote("mf");
+                }
+            }
 
             JSONArray obj2 = new JSONArray();
             for (int i = 0; i < OrderTransactionsObj.size(); i++)

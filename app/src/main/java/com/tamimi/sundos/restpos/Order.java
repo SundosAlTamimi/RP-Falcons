@@ -1586,7 +1586,7 @@ public class Order extends AppCompatActivity {
 //                    Log.e("************", "discount (" + discountValue + "/" + totalItemsWithDiscount + ")*(" +totalAfterDisc +")");
 
                     double totalLineAfterDisc = totalAfterDisc - itemDiscount;
-                    if (Settings.tax_type == 0) {
+                    if (Settings.tax_type != 0) {
                         totalItemsTaxInclude += totalLineAfterDisc * wantedItems.get(k).getTax() / 100;
 //                        Log.e("**********", "totalItemsTaxInclude = " + totalLineAfterDisc +"*"+ wantedItems.get(k).getTax()+"/100 = " + totalAfterDisc * wantedItems.get(k).getTax() / 100);
                     } else
@@ -1633,10 +1633,14 @@ public class Order extends AppCompatActivity {
 
             double taxValue = 0;
             if (wantedItems.get(k).getTaxType() == 0) {
-                if (Settings.tax_type == 0) {
+                if (Settings.tax_type != 0) {
                     taxValue = (totalLine - discount) * wantedItems.get(k).getTax() / 100;
-                } else
+                    Log.e("tax__1" , "(("+ totalLine + "-" + discount +")*" +wantedItems.get(k).getTax() + "/100)");
+                } else {
                     taxValue = ((totalLine - discount) * wantedItems.get(k).getTax() / 100) / (1 + (wantedItems.get(k).getTax() / 100));
+
+                    Log.e("tax__2" , "(("+ totalLine + "-" + discount +")*" +  wantedItems.get(k).getTax() + "/100)/(1+" + wantedItems.get(k).getTax() + "/100)" );
+                }
             }
          Log.e("tax "," = "+taxValue);
             OrderTransactionsObj.add(new OrderTransactions(orderTypeFlag, 0, today, Settings.POS_number, Settings.store_number,
@@ -1689,12 +1693,12 @@ public class Order extends AppCompatActivity {
 
             double taxValue = 0;
             if (wantedItems.get(k).getTaxType() == 0) {
-                if (Settings.tax_type == 0) {
+                if (Settings.tax_type != 0) {
                     taxValue = (totalLine - discount) * wantedItems.get(k).getTax() / 100;
                 } else
                     taxValue = ((totalLine - discount) * wantedItems.get(k).getTax() / 100) / (1 + (wantedItems.get(k).getTax() / 100));
             }
-            
+
             mDbHandler.addOrderTransactionTemp(new OrderTransactions(orderTypeFlag, 0, today, Settings.POS_number, Settings.store_number,
                     voucherNo, k, "" + wantedItems.get(k).getItemBarcode(), wantedItems.get(k).getMenuName(),
                     wantedItems.get(k).getSecondaryName(), wantedItems.get(k).getKitchenAlias(), wantedItems.get(k).getMenuCategory(),
