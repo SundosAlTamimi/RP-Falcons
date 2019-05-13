@@ -2473,6 +2473,27 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return orderTransactions;
     }
 
+    public final String getAllRequestVoucherHeader(String Vfh_No,String POS) {
+         String waterName ="";
+//        String selectQuery = "SELECT * FROM " + ORDER_TRANSACTIONS + " where VOUCHER_NO = '" + Vfh_No + "'" + " and ORDER_KIND = '0'";
+        String selectQuery = "SELECT WAITER FROM " + ORDER_HEADER + " where VOUCHER_NO = '" + Vfh_No + "'" + " and ORDER_KIND = '0"+"'" + " and POS_NO = '"+POS+"'" ;
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                OrderHeader item = new OrderHeader();
+
+                item.setWaiter(cursor.getString(0));
+                waterName=item.getWaiter();
+
+            } while (cursor.moveToNext());
+        }
+
+        return waterName;
+    }
+
     public final ArrayList<PayMethod> getAllRequestPayMethod(String Vfh_No,String pos) {
         final ArrayList<PayMethod> orderTransactions = new ArrayList<>();
         String selectQuery = "SELECT * FROM " + PAY_METHOD + " where VOUCHER_NUMBER = '" + Vfh_No + "'" + " and ORDER_KIND = '0'"+"and POINT_OF_SALE_NUMBER = '"+pos+"'";

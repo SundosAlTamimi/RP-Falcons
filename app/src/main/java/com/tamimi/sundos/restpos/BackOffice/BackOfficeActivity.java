@@ -3199,8 +3199,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         posNo.setAdapter(adapterPosNo);
 
 
-        headerData = mDHandler.getAllOrderHeader();
-        payData = mDHandler.getAllExistingPay();
+
 
         fromDate.setOnClickListener(v -> new DatePickerDialog(BackOfficeActivity.this, dateListener(fromDate), myCalendar
                 .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
@@ -3215,6 +3214,9 @@ public class BackOfficeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 double sales = 0.0, returns = 0.0, allDiscountSales = 0.0, allDiscountReturn = 0.0,
                         totalServiceSales = 0.0, totalServiceReturn = 0.0, cashValue = 0.0, pointValue = 0.0, visaValue = 0.0, masterValue = 0.0, giftValue = 0.0, creditValue = 0.0, chequeValue = 0.0, netSales = 0.0, netPayMethod = 0.0, netDiscount = 0.0, netService = 0.0;
+
+                headerData = mDHandler.getAllOrderHeader();
+                payData = mDHandler.getAllExistingPay();
 
                 userString[0] = users.getSelectedItem().toString();
                 shiftNameString[0] = shiftName.getSelectedItem().toString();
@@ -3234,17 +3236,27 @@ public class BackOfficeActivity extends AppCompatActivity {
                                         sales += headerData.get(i).getAmountDue();
                                         allDiscountSales += headerData.get(i).getAllDiscount();
                                         totalServiceSales += headerData.get(i).getTotalService();
+                                        cashValue += headerData.get(i).getCashValue();
+                                        pointValue += headerData.get(i).getPointValue();
+                                        giftValue += headerData.get(i).getGiftValue();
+                                        creditValue += headerData.get(i).getCouponValue();  /////???? replace coupon to credit """"
+                                        chequeValue += headerData.get(i).getChequeValue();
                                     } else if (headerData.get(i).getOrderKind() == 998) {
                                         returns += headerData.get(i).getAmountDue();
                                         allDiscountReturn += headerData.get(i).getAllDiscount();
                                         totalServiceReturn += headerData.get(i).getTotalService();
+                                        cashValue -= headerData.get(i).getCashValue();
+                                        pointValue -= headerData.get(i).getPointValue();
+                                        giftValue -= headerData.get(i).getGiftValue();
+                                        creditValue -= headerData.get(i).getCouponValue();  /////???? replace coupon to credit """"
+                                        chequeValue -= headerData.get(i).getChequeValue();
                                     }
 
-                                    cashValue += headerData.get(i).getCashValue();
-                                    pointValue += headerData.get(i).getPointValue();
-                                    giftValue += headerData.get(i).getGiftValue();
-                                    creditValue += headerData.get(i).getCouponValue();  /////???? replace coupon to credit """"
-                                    chequeValue += headerData.get(i).getChequeValue();
+//                                    cashValue += headerData.get(i).getCashValue();
+//                                    pointValue += headerData.get(i).getPointValue();
+//                                    giftValue += headerData.get(i).getGiftValue();
+//                                    creditValue += headerData.get(i).getCouponValue();  /////???? replace coupon to credit """"
+//                                    chequeValue += headerData.get(i).getChequeValue();
 
                                 }
                             }
@@ -3258,15 +3270,15 @@ public class BackOfficeActivity extends AppCompatActivity {
                             if (payData.get(i).getUserName().equals(userString[0]) || userString[0].equals(getResources().getString(R.string.all))) {
                                 if (payData.get(i).getPointOfSaleNumber() == posNoString[0] || posNoString[0] == -1) {
                                     if (payData.get(i).getOrderKind() == 0) {
-                                        if (payData.get(i).getPayName().equals("visa"))
+                                        if (payData.get(i).getPayType().contains("v")||payData.get(i).getPayType().contains("V"))
                                             visaValue += payData.get(i).getPayValue();
-                                        else if (payData.get(i).getPayName().equals("master"))
+                                        else if (payData.get(i).getPayType().contains("m")||payData.get(i).getPayType().contains("M"))
                                             masterValue += payData.get(i).getPayValue();
 
                                     } else if (payData.get(i).getOrderKind() == 998) {
-                                        if (payData.get(i).getPayName().equals("visa"))
+                                        if (payData.get(i).getPayType().contains("v")||payData.get(i).getPayType().contains("V"))
                                             visaValue -= payData.get(i).getPayValue();
-                                        else if (payData.get(i).getPayName().equals("master"))
+                                        else if (payData.get(i).getPayType().contains("m")||payData.get(i).getPayType().contains("M"))
                                             masterValue -= payData.get(i).getPayValue();
                                     }
 
@@ -5658,7 +5670,6 @@ public class BackOfficeActivity extends AppCompatActivity {
     }
 
     public Date formatDate(String date) throws ParseException {
-
         String myFormat = "dd-MM-yyyy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
         Date d = sdf.parse(date);

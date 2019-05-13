@@ -53,6 +53,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -1808,24 +1809,14 @@ public class Main extends AppCompatActivity {
         show.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
+                refundTables.removeAllViews();
+                orderTransactions.clear();
+                textId = 0;
                 VHF_NO[0] = convertToEnglish(vhfNo.getText().toString());
-
-                for (int i = 0; i < inVoucher.size(); i++) {
-                    if (!inVoucher.get(i).equals(VHF_NO[0])) {
-                        check[0] = false;
-                    } else {
-                        check[0] = true;
-                        break;
-                    }
-                }
-                if (!check[0] && flag[0]) {
                     inVoucher.add(VHF_NO[0]);
                     orderTransactions = mDHandler.getAllRequestVoucher(VHF_NO[0], String.valueOf(Settings.POS_number));
                     ArrayList<OrderTransactions> orderTransactions1 = new ArrayList<>();
                     List<String> item_ = new ArrayList<>();
-
                     if (!orderTransactions.isEmpty()) {
                         originalDate.setText(orderTransactions.get(0).getVoucherDate());
                         originalTime.setText(orderTransactions.get(0).getTime());
@@ -1857,10 +1848,7 @@ public class Main extends AppCompatActivity {
                     } else {
                         Toast.makeText(Main.this, getResources().getString(R.string.invoice_no_not_found), Toast.LENGTH_SHORT).show();
                     }
-                } else {
-                    Toast.makeText(Main.this, getResources().getString(R.string.invoice_no_insert_bottom), Toast.LENGTH_SHORT).show();
 
-                }
                 vhfNo.setText("");
             }
         });
@@ -1889,6 +1877,7 @@ public class Main extends AppCompatActivity {
                             int q = orderTransactions.get(i).getQty();
                             rowRefund.get(index).setQty(Integer.parseInt("-" + text.getText().toString()));
                             double lDiscon = orderTransactions.get(i).getlDiscount();
+                            rowRefund.get(index).setTotal(textData * (orderTransactions.get(i).getPrice()));
                             rowRefund.get(index).setlDiscount(textData * (lDiscon / q));
                             rowRefund.get(index).setDiscount(textData * (orderTransactions.get(i).getDiscount() / q));
                             rowRefund.get(index).setTaxValue(textData * (orderTransactions.get(i).getTaxValue() / q));
@@ -2272,6 +2261,7 @@ public class Main extends AppCompatActivity {
         dialog.setCanceledOnTouchOutside(false);
 
         final boolean[] flag = {true};
+        final boolean[] ifGraterThan = {false};
 
         Button b1, b2, b3, b4, b5, b6, b7, b8, b9, b0, dot, save, exit;
         b1 = (Button) dialog.findViewById(R.id.b1);
@@ -2288,7 +2278,13 @@ public class Main extends AppCompatActivity {
         save = (Button) dialog.findViewById(R.id.save);
         exit = (Button) dialog.findViewById(R.id.exits);
 
-         nettotal = (TextView) dialog.findViewById(R.id.nettotal);
+        nettotal = (TextView) dialog.findViewById(R.id.nettotal);
+        cashValues = 0.0;
+        creditValues = 0.0;
+        chequeVales = 0.0;
+        pointValues = 0.0;
+        giftCardValues = 0.0;
+        cardValues = 0.0;
 
 //        focusedTextView = cashValue;
         TableLayout tableLayout = dialog.findViewById(R.id.re_table);
@@ -2367,9 +2363,193 @@ public class Main extends AppCompatActivity {
                 flag[0] = false;
             }
         });
+        ArrayList<PayMethod> finalAllPayType = AllPayType;
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                ifGraterThan[0]=false;
+
+                Date currentTimeAndDate = Calendar.getInstance().getTime();
+                SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+                SimpleDateFormat Tf = new SimpleDateFormat("HH:mm:ss");
+                String today = df.format(currentTimeAndDate);
+                String times = Tf.format(currentTimeAndDate);
+                for (int i = 0; i < tableLayout.getChildCount(); i++) {
+                    TableRow rowTemp = (TableRow) tableLayout.getChildAt(i);
+                    TextView isGrater_o = (TextView) rowTemp.getChildAt(2);
+
+                    if(isGrater_o.getText().toString().equals("1")){
+                        ifGraterThan[0] =true;
+                        break;
+                    }
+
+                }
+
+
+                cashValues = 0.0;
+                creditValues = 0.0;
+                chequeVales = 0.0;
+                pointValues = 0.0;
+                giftCardValues = 0.0;
+                cardValues = 0.0;
+                if (Double.parseDouble(nettotal.getText().toString()) == 0 ) {
+                    if( !ifGraterThan[0]) {
+                        for (int i = 0; i < tableLayout.getChildCount(); i++) {
+                            TableRow rowTemp = (TableRow) tableLayout.getChildAt(i);
+                            TextView name_o = (TextView) rowTemp.getChildAt(0);
+                            TextView value_o = (TextView) rowTemp.getChildAt(1);
+
+                            if (name_o.getText().toString().equals("Cash") && Double.parseDouble(value_o.getText().toString()) != 0 && !value_o.getText().toString().equals("")) {
+                                Cashier cashier = new Cashier();
+                                ArrayList<Cashier> cashiersList = new ArrayList<Cashier>();
+                                cashier.setCashierName(Settings.user_name);
+                                cashier.setCategoryName("null");
+                                cashier.setCategoryQty(-1);
+                                cashier.setCategoryValue(Double.parseDouble(value_o.getText().toString()));
+                                cashier.setCheckInDate(today);
+                                cashier.setOrderKind(1);
+
+                                cashiersList.add(cashier);
+
+                                mDHandler.addCashierInOut(cashiersList);
+                            }
+
+
+                            if (name_o.getText().toString().contains("Cheque")) {
+                                if (Double.parseDouble(value_o.getText().toString()) != 0 && !value_o.getText().toString().equals("")) {
+                                    chequeVales = Double.parseDouble(value_o.getText().toString());
+                                } else {
+                                    chequeVales = 0.0;
+                                }
+                            }
+                            Log.e("chequeVales", "-->" + chequeVales + "\n");
+
+                            if (name_o.getText().toString().contains("Cash")) {
+                                if (Double.parseDouble(value_o.getText().toString()) != 0 && !value_o.getText().toString().equals("")) {
+                                    cashValues = Double.parseDouble(value_o.getText().toString());
+                                } else {
+                                    cashValues = 0.0;
+                                }
+                                Log.e("chequeVales", "-->" + cashValues + "\n");
+                            }
+
+                            if (name_o.getText().toString().contains("Gift")) {
+                                if (Double.parseDouble(value_o.getText().toString()) != 0 && !value_o.getText().toString().equals("")) {
+                                    giftCardValues = Double.parseDouble(value_o.getText().toString());
+                                } else {
+                                    giftCardValues = 0.0;
+                                }
+                                Log.e("giftCardValues", "-->" + giftCardValues + "\n");
+                            }
+
+                            if (name_o.getText().toString().contains("Point")) {
+                                if (Double.parseDouble(value_o.getText().toString()) != 0 && !value_o.getText().toString().equals("")) {
+                                    pointValues = Double.parseDouble(value_o.getText().toString());
+                                } else {
+                                    pointValues = 0.0;
+                                }
+                                Log.e("pointValues", "-->" + pointValues + "\n");
+                            }
+
+                            if (name_o.getText().toString().contains("v") || name_o.getText().toString().contains("V") || name_o.getText().toString().contains("m") || name_o.getText().toString().contains("M")) {
+                                if (Double.parseDouble(value_o.getText().toString()) != 0 && !value_o.getText().toString().equals("")) {
+                                    creditValues += Double.parseDouble(value_o.getText().toString());
+                                }
+                                Log.e("creditValues", "-->" + creditValues + "\n");
+                            }
+
+                        }
+
+                        ArrayList<PayMethod> payObj = new ArrayList();
+
+                        int returnSerial = 1;
+                        List<OrderTransactions> temp = mDHandler.getAllOrderTransactions();
+                        for (int i = 0; i < temp.size(); i++) {
+                            if (temp.get(i).getOrderKind() == 998) {
+                                returnSerial++;
+                            }
+                        }
+
+                        double total = 0.0, lineDic = 0.0, dic = 0.0, service = 0.0, tax = 0.0, netTotal1 = 0.0;
+                        for (int p = 0; p < rowRefund.size(); p++) {
+
+                            total += rowRefund.get(p).getTotal();
+                            lineDic += rowRefund.get(p).getlDiscount();
+                            dic += rowRefund.get(p).getDiscount();
+                            service += rowRefund.get(p).getService();
+                            tax += rowRefund.get(p).getTaxValue();
+                        }
+
+
+                        if (Settings.tax_type == 0) {
+                            netTotal1 = total - (lineDic + dic);//+ service
+                            Log.e("refound ", "==>" + total + " -" + "(" + lineDic + "+" + dic + ")");
+                        } else {
+                            netTotal1 = total - (lineDic + dic + tax);//+ service
+                            Log.e("refound ", "==>" + total + " -" + "(" + lineDic + "+" + dic + "+" + service + "+" + tax + ")");
+                        }
+
+                        String waiterName = "";
+                        if (rowRefund.get(0).getOrderType() == 0) {
+                            waiterName = "No Waiter";
+                        } else {
+                            waiterName = mDHandler.getAllRequestVoucherHeader(VHF_NO, String.valueOf(Settings.POS_number));
+                        }
+
+                        OrderHeader orderHeader;
+                        orderHeader = new OrderHeader(rowRefund.get(0).getOrderType(), 998, convertToEnglish(today), Settings.POS_number, Settings.store_number,
+                                String.valueOf(returnSerial), 1, totalAdd, lineDic, dic, lineDic + dic,
+                                Settings.service_value, tax, service, netTotal1,
+                                netTotal1, 0, rowRefund.get(0).getTableNo(),
+                                rowRefund.get(0).getSectionNo(), cashValues, creditValues, chequeVales, cardValues,
+                                giftCardValues, pointValues, Settings.shift_name, Settings.shift_number, waiterName, 0, Settings.user_name, Settings.user_no, convertToEnglish(times), rowRefund.get(0).getVoucherNo(), rowRefund.get(0).getPosNo());
+                        mDHandler.addOrderHeader(orderHeader);
+                        orderHeader.setVoucherNumber(rowRefund.get(0).getVoucherNo());
+
+                        for (int i = 0; i < rowRefund.size(); i++) {
+                            OrderTransactions orderTransactions = new OrderTransactions(rowRefund.get(i).getOrderType(), 998, convertToEnglish(today), Settings.POS_number, Settings.store_number,
+                                    String.valueOf(returnSerial), i + 1, "" + rowRefund.get(i).getItemBarcode(), rowRefund.get(i).getItemName(),
+                                    rowRefund.get(i).getSecondaryName(), rowRefund.get(i).getKitchenAlias(), rowRefund.get(i).getItemCategory(),
+                                    rowRefund.get(i).getItemFamily(), rowRefund.get(i).getQty(), rowRefund.get(i).getPrice(),
+                                    -1 * rowRefund.get(i).getQty() * rowRefund.get(i).getPrice(), rowRefund.get(i).getDiscount(), rowRefund.get(i).getlDiscount(), rowRefund.get(i).getDiscount() + rowRefund.get(i).getlDiscount(), rowRefund.get(i).getTaxValue(),
+                                    rowRefund.get(i).getTaxPerc(), rowRefund.get(i).getTaxKind(), rowRefund.get(i).getService(), rowRefund.get(i).getServiceTax(),
+                                    rowRefund.get(i).getTableNo(), rowRefund.get(i).getSectionNo(), Settings.shift_number, Settings.shift_name, Settings.user_no, Settings.user_name, convertToEnglish(times), rowRefund.get(i).getVoucherNo(), rowRefund.get(i).getPosNo(), 0);
+                            mDHandler.addOrderTransaction(orderTransactions);
+                        }
+                        for (int i = 0; i < tableLayout.getChildCount(); i++) {
+                            TableRow rowTemp = (TableRow) tableLayout.getChildAt(i);
+                            TextView name_o = (TextView) rowTemp.getChildAt(0);
+                            TextView value_o = (TextView) rowTemp.getChildAt(1);
+
+                            if (!value_o.getText().toString().equals("") && Double.parseDouble(value_o.getText().toString()) != 0) {
+                                PayMethod payMethod = new PayMethod(list.get(0).getOrderType(),
+                                        998,
+                                        convertToEnglish(today),
+                                        Settings.POS_number,
+                                        Settings.store_number, String.valueOf(returnSerial), i + 1, name_o.getText().toString(),
+                                        Double.parseDouble(value_o.getText().toString()), finalAllPayType.get(i).getPayNumber(), finalAllPayType.get(i).getPayName(),
+                                        Settings.shift_name, Settings.shift_number, Settings.user_name, Settings.user_no, convertToEnglish(times),
+                                        rowRefund.get(0).getVoucherNo(), Settings.POS_number);
+                                payObj.add(payMethod);
+                                mDHandler.addAllPayMethodItem(payMethod);
+                            }
+                        }
+                        for (int i = 0; i < rowRefund.size(); i++) {
+                            mDHandler.updateOrderTrancactionReturn(rowRefund.get(i).getPosNo(), rowRefund.get(i).getItemBarcode(), rowRefund.get(i).getVoucherNo(), "0", rowRefund.get(i).getQty() + rowRefund.get(i).getReturnQty());
+                        }
+
+                        List<ItemWithScreen> itemWithScreens = mDHandler.getAllItemsWithScreen();
+                        PayMethods pay = new PayMethods();
+                        pay.sendToKitchen(Main.this, orderHeader, rowRefund, payObj, itemWithScreens);
+
+                        netTotals = 0.0;
+                        dialog.dismiss();
+
+                    }else   Toast.makeText(Main.this, "Please Change filed Has grater value than what are you pay before ..  " , Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(Main.this, getResources().getString(R.string.total_not_allow), Toast.LENGTH_SHORT).show();
+                }
 
 
             }
@@ -2394,7 +2574,7 @@ public class Main extends AppCompatActivity {
         row.setLayoutParams(lp);
 
         row.setPadding(0, 0, 0, 20);
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 3; i++) {
 
             final TextView textView = new TextView(Main.this);
             final TextView textView2 = new TextView(Main.this);
@@ -2406,8 +2586,7 @@ public class Main extends AppCompatActivity {
                     lp2.setMargins(0, 0, 4, 0);
                     textView.setTextSize(20);
                     textView.setLayoutParams(lp2);
-
-
+                    row.addView(textView);
                     break;
                 case 1:
                     textView2.setText("0.0");
@@ -2418,11 +2597,21 @@ public class Main extends AppCompatActivity {
                     textView2.setTextSize(20);
                     textView2.setTag(value);
                     textView2.setLayoutParams(lp5);
-
+                    row.addView(textView2);
                     break;
+                case 2:
+                    textView.setText("0");
+                    textView.setTextColor(ContextCompat.getColor(Main.this, R.color.text_color));
+                    textView.setGravity(Gravity.CENTER);
+                    TableRow.LayoutParams lp6 = new TableRow.LayoutParams(0, 0, 1);
+                    textView.setTextSize(20);
+                    textView.setLayoutParams(lp6);
+                    row.addView(textView);
+                    break;
+
             }
-            row.addView(textView);
-            row.addView(textView2);
+
+
             textView2.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -2439,25 +2628,29 @@ public class Main extends AppCompatActivity {
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    Toast.makeText(Main.this, "value " + textView2.getTag().toString(), Toast.LENGTH_SHORT).show();
-
+//                    Toast.makeText(Main.this, "value " + textView2.getTag().toString(), Toast.LENGTH_SHORT).show();
+                    double Total = 0.0;
                     if (!textView2.getText().toString().equals("")) {
-//                        if (Double.parseDouble(textView2.getText().toString()) != 0) {
-                        if (Double.parseDouble(textView2.getText().toString()) <= Double.parseDouble(textView2.getTag().toString())) {
-                            for (int i = 0; i < recipeTable.getChildCount(); i++) {
-                                TableRow rowTemp = (TableRow) recipeTable.getChildAt(i);
-                                TextView value_o = (TextView) rowTemp.getChildAt(1);
-                                if (!value_o.getText().toString().equals("")) {
-                                    double net_total = netTotals - Double.parseDouble(value_o.getText().toString());
-                                    Log.e("net_Total_123 ==>",""+net_total);
-                                    nettotal.setText("" +net_total);
+//                        if (Double.parseDouble(textView2.getText().toString()) <= Double.parseDouble(textView2.getTag().toString())) {
+                        for (int i = 0; i < recipeTable.getChildCount(); i++) {
+                            TableRow rowTemp = (TableRow) recipeTable.getChildAt(i);
+                            TextView value_o = (TextView) rowTemp.getChildAt(1);
+                            TextView ISGrater_o = (TextView) rowTemp.getChildAt(2);
+                            Log.e("in for ==>", "yy" + value_o.getText().toString());
+                            if (!value_o.getText().toString().equals("")) {
+                                if (Double.parseDouble(value_o.getText().toString()) <= Double.parseDouble(value_o.getTag().toString())) {
+                                    Total += Double.parseDouble(value_o.getText().toString());
+                                    double net_total = netTotals - Total;
+                                    Log.e("net_Total_123 ==>", "" + net_total);
+                                    nettotal.setText("" + net_total);
+                                    ISGrater_o.setText("0");
+                                } else {
+                                    Toast.makeText(Main.this, "Can't return value grater than  "+value_o.getTag().toString(), Toast.LENGTH_SHORT).show();
+                                    ISGrater_o.setText("1");
                                 }
                             }
-
-                        } else {
-                            Toast.makeText(Main.this, "Can't return value grater than what are you pay in sales ", Toast.LENGTH_SHORT).show();
                         }
-//                        }
+
 
                     }
 
