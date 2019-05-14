@@ -39,6 +39,7 @@ import com.tamimi.sundos.restpos.Models.FamilyCategory;
 import com.tamimi.sundos.restpos.Models.Items;
 import com.tamimi.sundos.restpos.Models.Recipes;
 import com.tamimi.sundos.restpos.R;
+import com.tamimi.sundos.restpos.Settings;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -202,14 +203,14 @@ public class MenuRegistration extends AppCompatActivity {
                                 showInMenuVariavle,
                                 itemBitmapPic);
 
-                        Toast.makeText(MenuRegistration.this, getResources().getString(R.string.save_), Toast.LENGTH_SHORT).show();
+                        new Settings().makeText(MenuRegistration.this, getResources().getString(R.string.save_));
                         clearForm();
                         itemBarcodeFound = false;
                     } else
-                        Toast.makeText(MenuRegistration.this, getResources().getString(R.string.fill_request_filed), Toast.LENGTH_SHORT).show();
+                    new Settings().makeText(MenuRegistration.this,getResources().getString(R.string.fill_request_filed) );
 
                 } else
-                    Toast.makeText(MenuRegistration.this, getResources().getString(R.string.chang_ITEM_BARCOGE), Toast.LENGTH_SHORT).show();
+                new Settings().makeText(MenuRegistration.this,getResources().getString(R.string.chang_ITEM_BARCOGE) );
                 itemBarcodeFound = false;
             }
         });
@@ -330,7 +331,7 @@ public class MenuRegistration extends AppCompatActivity {
 
 
                 } else {
-                    Toast.makeText(MenuRegistration.this,getResources().getString(R.string.input_cat_name), Toast.LENGTH_SHORT).show();
+                    new Settings().makeText(MenuRegistration.this,getResources().getString(R.string.input_cat_name) );
                 }
             }
         });
@@ -368,7 +369,8 @@ public class MenuRegistration extends AppCompatActivity {
                     dialog.dismiss();
 
                 } else {
-                    Toast.makeText(MenuRegistration.this, getResources().getString(R.string.please_input_unit_name), Toast.LENGTH_SHORT).show();
+
+                    new Settings().makeText(MenuRegistration.this,getResources().getString(R.string.please_input_unit_name) );
                 }
             }
         });
@@ -409,7 +411,7 @@ public class MenuRegistration extends AppCompatActivity {
                     dialog2.dismiss();
 
                 } else {
-                    Toast.makeText(MenuRegistration.this, getResources().getString(R.string.input_family_name), Toast.LENGTH_SHORT).show();
+                    new Settings().makeText(MenuRegistration.this,getResources().getString(R.string.input_family_name) );
                 }
             }
         });
@@ -465,14 +467,14 @@ public class MenuRegistration extends AppCompatActivity {
                         dialog.dismiss();
 
                     } else {
-                        Toast.makeText(MenuRegistration.this, getResources().getString(R.string.fill_request_filed), Toast.LENGTH_SHORT).show();
+                        new Settings().makeText(MenuRegistration.this,getResources().getString(R.string.fill_request_filed) );
                     }
                 }
             });
 
             dialog.show();
         } else {
-            Toast.makeText(MenuRegistration.this,getResources().getString( R.string.add_ready_item_first), Toast.LENGTH_SHORT).show();
+            new Settings().makeText(MenuRegistration.this,getResources().getString( R.string.add_ready_item_first) );
         }
     }
 
