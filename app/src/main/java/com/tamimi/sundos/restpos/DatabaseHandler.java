@@ -1234,25 +1234,25 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 //                + SCREEN_NAME3 + " TEXT " + ")";
 //        db.execSQL(CREATE_TABLE_ITEM_WITH_SCREEN);
 //        db.execSQL("ALTER TABLE ANNOUNCEMENT_TABLE ADD USER_NO INTEGER NOT NULL DEFAULT '-1'");
-//
-//        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS ADD ORG_NO TAXE NOT NULL DEFAULT '0'");
-//        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS ADD ORG_POS INTEGER NOT NULL DEFAULT '-1'");
-//        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS ADD RETURN_QTY INTEGER NOT NULL DEFAULT '0'");
-//
-//        db.execSQL("ALTER TABLE ORDER_HEADER ADD ORG_NO TAXE NOT NULL DEFAULT '0'");
-//        db.execSQL("ALTER TABLE ORDER_HEADER ADD ORG_POS INTEGER NOT NULL DEFAULT '-1'");
-//
-//        db.execSQL("ALTER TABLE PAY_METHOD ADD ORG_NO TAXE NOT NULL DEFAULT '0'");
-//        db.execSQL("ALTER TABLE PAY_METHOD ADD ORG_POS INTEGER NOT NULL DEFAULT '-1'");
-////++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//
-//        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS_TEMP ADD ORG_NO TAXE NOT NULL DEFAULT '0'");
-//        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS_TEMP ADD ORG_POS INTEGER NOT NULL DEFAULT '-1'");
-//        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS_TEMP ADD RETURN_QTY INTEGER NOT NULL DEFAULT '0'");
-//
-//        db.execSQL("ALTER TABLE ORDER_HEADER_TEMP ADD ORG_NO TAXE NOT NULL DEFAULT '0'");
-//        db.execSQL("ALTER TABLE ORDER_HEADER_TEMP ADD ORG_POS INTEGER NOT NULL DEFAULT '-1'");
-//        db.execSQL("ALTER TABLE KITCHEN_SCREEN_TABLE ADD KITCHEN_IP TAXE NOT NULL DEFAULT '-1'");
+
+        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS ADD ORG_NO TAXE NOT NULL DEFAULT '0'");
+        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS ADD ORG_POS INTEGER NOT NULL DEFAULT '-1'");
+        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS ADD RETURN_QTY INTEGER NOT NULL DEFAULT '0'");
+
+        db.execSQL("ALTER TABLE ORDER_HEADER ADD ORG_NO TAXE NOT NULL DEFAULT '0'");
+        db.execSQL("ALTER TABLE ORDER_HEADER ADD ORG_POS INTEGER NOT NULL DEFAULT '-1'");
+
+        db.execSQL("ALTER TABLE PAY_METHOD ADD ORG_NO TAXE NOT NULL DEFAULT '0'");
+        db.execSQL("ALTER TABLE PAY_METHOD ADD ORG_POS INTEGER NOT NULL DEFAULT '-1'");
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS_TEMP ADD ORG_NO TAXE NOT NULL DEFAULT '0'");
+        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS_TEMP ADD ORG_POS INTEGER NOT NULL DEFAULT '-1'");
+        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS_TEMP ADD RETURN_QTY INTEGER NOT NULL DEFAULT '0'");
+
+        db.execSQL("ALTER TABLE ORDER_HEADER_TEMP ADD ORG_NO TAXE NOT NULL DEFAULT '0'");
+        db.execSQL("ALTER TABLE ORDER_HEADER_TEMP ADD ORG_POS INTEGER NOT NULL DEFAULT '-1'");
+
 
     }
 
@@ -2471,6 +2471,27 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
 
         return orderTransactions;
+    }
+
+    public final String getAllRequestVoucherHeader(String Vfh_No,String POS) {
+         String waterName ="";
+//        String selectQuery = "SELECT * FROM " + ORDER_TRANSACTIONS + " where VOUCHER_NO = '" + Vfh_No + "'" + " and ORDER_KIND = '0'";
+        String selectQuery = "SELECT WAITER FROM " + ORDER_HEADER + " where VOUCHER_NO = '" + Vfh_No + "'" + " and ORDER_KIND = '0"+"'" + " and POS_NO = '"+POS+"'" ;
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                OrderHeader item = new OrderHeader();
+
+                item.setWaiter(cursor.getString(0));
+                waterName=item.getWaiter();
+
+            } while (cursor.moveToNext());
+        }
+
+        return waterName;
     }
 
     public final ArrayList<PayMethod> getAllRequestPayMethod(String Vfh_No,String pos) {
