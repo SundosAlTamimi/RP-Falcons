@@ -117,6 +117,11 @@ public class SendSocket {
                 try {
                     JSONObject obj = new JSONObject();
                     Log.e("ISUPDATE  =1","1234 ==>"+orderTransactions.get(i).getOrderKind()+"    "+orderTransactions.get(i).toString());
+
+                    String Date =orderTransactions.get(i).getVoucherDate()+" "+orderTransactions.get(i).getTime();
+                    Log.e("date "," ==>"+Date);
+
+                    obj.put("TRINDATE", Date);
                     obj.put("ITEMCODE", orderTransactions.get(i).getItemBarcode());
                     obj.put("ITEMNAME", orderTransactions.get(i).getItemName());
                     obj.put("QTY", orderTransactions.get(i).getQty());

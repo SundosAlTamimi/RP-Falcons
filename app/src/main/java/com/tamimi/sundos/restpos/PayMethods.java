@@ -58,7 +58,7 @@ public class PayMethods extends AppCompatActivity {
 
     DatabaseHandler mDHandler;
     Dialog dialog, dialog1;
-    DecimalFormat twoDForm = new DecimalFormat("#.00");
+    DecimalFormat twoDForm = new DecimalFormat("0.00");
     TextView focusedTextView;
     int flag = 0;
     int position1;
@@ -1691,6 +1691,7 @@ public class PayMethods extends AppCompatActivity {
             obj.put("Header", obj1);
 
             Log.e("socket", "J");
+
             SendSocket sendSocket = new SendSocket(context, obj1, OrderTransactionsObj);
             sendSocket.sendMessage();
 
@@ -1740,11 +1741,11 @@ public class PayMethods extends AppCompatActivity {
         final Dialog dialog = new Dialog(PayMethods.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
-        dialog.setContentView(R.layout.printer);
+        dialog.setContentView(R.layout.print);
         final Button okButton = dialog.findViewById(R.id.print_btn);
         final LinearLayout linearLayout = dialog.findViewById(R.id.linear2);
         TableLayout tabLayout = (TableLayout) dialog.findViewById(R.id.table_);
-        TextView tax_no = (TextView) findViewById(R.id.textViewtaxnoText);
+        TextView tax_no = (TextView) dialog.findViewById(R.id.textViewtaxnoText);
         TextView date = dialog.findViewById(R.id.textViewdateText);
         TextView time = dialog.findViewById(R.id.textViewtimeText);
         TextView w_date = dialog.findViewById(R.id.textViewWDAteText);

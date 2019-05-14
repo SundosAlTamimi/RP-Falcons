@@ -2178,7 +2178,7 @@ public class Main extends AppCompatActivity {
                         totalAdd = 0.0;
                         discountAdd = 0.0;
                         netTotals = 0.0;
-
+                        double taxValue=0.0;
                         for (int i = 0; i < list.size(); i++) {
                             text = dialog.findViewById(Integer.parseInt(i + "4"));
                             Log.e("i=", "" + i + "4");
@@ -2188,10 +2188,20 @@ public class Main extends AppCompatActivity {
                             String dataTest = convertToEnglish(text.getText().toString());
                             if (da.equals("0.0") || dataTest.equals("")) {
                                 discountAdd += 0.0;
+                                taxValue+=0.0;
                             } else {
                                 discountAdd += ((list.get(i).getDiscount() / list.get(i).getQty()) + (list.get(i).getlDiscount() / list.get(i).getQty())) * Integer.parseInt(dataTest);
+                                taxValue += ((list.get(i).getTaxValue() / list.get(i).getQty())) * Integer.parseInt(dataTest);
+
                             }
-                            netTotals = totalAdd - discountAdd;
+
+                            if(Settings.tax_type==0){
+                                netTotals = totalAdd - discountAdd;
+                            }else
+                            {
+                                netTotals = totalAdd - (discountAdd+taxValue);
+                            }
+
                             balance = netTotals;
                             text = dialog.findViewById(R.id.total_);
                             text.setText(String.valueOf(totalAdd));
