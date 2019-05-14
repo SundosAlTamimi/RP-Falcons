@@ -419,7 +419,7 @@ public class Main extends AppCompatActivity {
                                 cash.setOrderKind(0);
                                 cashier.add(cash);
                             } else {
-                                Toast.makeText(Main.this, getResources().getString(R.string.some_qty_not), Toast.LENGTH_SHORT).show();
+                                new Settings().makeText(Main.this,getResources().getString(R.string.some_qty_not));
                             }
                         }
                         mDHandler.addCashierInOut(cashier);
@@ -448,14 +448,14 @@ public class Main extends AppCompatActivity {
                                     cash.setOrderKind(0);
                                     cashier.add(cash);
                                 } else {
-                                    Toast.makeText(Main.this, getResources().getString(R.string.some_qty_not), Toast.LENGTH_SHORT).show();
+                                    new Settings().makeText(Main.this,getResources().getString(R.string.some_qty_not));
                                 }
                             }
                             mDHandler.addCashierInOut(cashier);
                             dialogCashierIn.dismiss();
 
                             mDHandler.addClockInClockOut(clockInClockOut);
-                            Toast.makeText(Main.this, getResources().getString(R.string.save_successful), Toast.LENGTH_SHORT).show();
+                            new Settings().makeText(Main.this,getResources().getString(R.string.save_successful));
                             clockInSuccessful(times, dates); //this for Successful clockIn
                         });
                         builderInner.setNegativeButton(getResources().getString(R.string.no), (dialog1, i) -> {
@@ -466,7 +466,7 @@ public class Main extends AppCompatActivity {
 
 
                 } else {
-                    Toast.makeText(Main.this, getResources().getString(R.string.add_money_category), Toast.LENGTH_SHORT).show();
+                    new Settings().makeText(Main.this,getResources().getString(R.string.add_money_category));
                     dialogCashierIn.dismiss();
 
                 }
@@ -763,7 +763,7 @@ public class Main extends AppCompatActivity {
                     saveCashierOutBase(categories, tranType, finalClose, changeOver, toUser, cashTotals, creditCard, cheque, giftCard,
                             credit, point, otherPaymentTotal, mainTotal, money, dialogCashierOut);
 
-                    Toast.makeText(Main.this, getResources().getString(R.string.save_successful), Toast.LENGTH_SHORT).show();
+                    new Settings().makeText(Main.this,getResources().getString(R.string.save_successful));
 
                 } else {
 
@@ -783,7 +783,7 @@ public class Main extends AppCompatActivity {
                         saveCashierOutBase(categories, tranType, finalClose, changeOver, toUser, cashTotals, creditCard, cheque, giftCard,
                                 credit, point, otherPaymentTotal, mainTotal, money, dialogCashierOut);
 
-                        Toast.makeText(Main.this, getResources().getString(R.string.save_successful), Toast.LENGTH_SHORT).show();
+                        new Settings().makeText(Main.this,getResources().getString(R.string.save_successful));
 
                     });
                     builderInner.setNegativeButton(getResources().getString(R.string.no), (dialog1, i) -> {
@@ -1118,7 +1118,7 @@ public class Main extends AppCompatActivity {
                             mDHandler.addPayInOut(new Pay(transType, Settings.POS_number, Settings.user_no, Settings.user_name, today,
                                     Double.parseDouble(value.getText().toString()), remark.getText().toString(), Settings.shift_number,
                                     Settings.shift_name, time));
-                            Toast.makeText(Main.this, getResources().getString(R.string.save_successful), Toast.LENGTH_SHORT).show();
+                            new Settings().makeText(Main.this, getResources().getString(R.string.save_successful));
                             dialog.dismiss();
                         }
 
@@ -1141,15 +1141,15 @@ public class Main extends AppCompatActivity {
                                 cash.setOrderKind(2);/// 2 --> pay in / out   1 --> trans (order - refund ) / 0 --> cashier iN
                                 cashier.add(cash);
                             } else {
-                                Toast.makeText(Main.this, getResources().getString(R.string.some_qty_not), Toast.LENGTH_SHORT).show();
+                                new Settings().makeText(Main.this,getResources().getString(R.string.some_qty_not) );
                             }
                         }
                         mDHandler.addCashierInOut(cashier);
                         dialog.dismiss();
                     } else
-                        Toast.makeText(Main.this, getResources().getString(R.string.total_from_cash_not_equal_value), Toast.LENGTH_SHORT).show();
+                    new Settings().makeText(Main.this, getResources().getString(R.string.total_from_cash_not_equal_value));
                 } else
-                    Toast.makeText(Main.this, getResources().getString(R.string.ensure_your_input), Toast.LENGTH_SHORT).show();
+                new Settings().makeText(Main.this,getResources().getString(R.string.ensure_your_input) );
             }
         });
 
@@ -1423,7 +1423,7 @@ public class Main extends AppCompatActivity {
 
             dialogCashierOut.dismiss();
         } else
-            Toast.makeText(Main.this, getResources().getString(R.string.to_user_field), Toast.LENGTH_LONG).show();
+        new Settings().makeText(Main.this,getResources().getString(R.string.to_user_field) );
 
 
         mDHandler.updateStatusInBlindShiftIn(Settings.user_name, today);
@@ -1573,11 +1573,11 @@ public class Main extends AppCompatActivity {
                                 break;
                         }
                     } else {
-                        Toast.makeText(Main.this, getResources().getString(R.string.insert_correct_password), Toast.LENGTH_SHORT).show();
+                        new Settings().makeText(Main.this,getResources().getString(R.string.insert_correct_password) );
                         focusedTextView.setText("");
                     }
                 } else {
-                    Toast.makeText(Main.this, getResources().getString(R.string.enter_your_password), Toast.LENGTH_SHORT).show();
+                    new Settings().makeText(Main.this, getResources().getString(R.string.enter_your_password));
                 }
             }
         });
@@ -1846,7 +1846,7 @@ public class Main extends AppCompatActivity {
                         }
                         flag[0] = false;
                     } else {
-                        Toast.makeText(Main.this, getResources().getString(R.string.invoice_no_not_found), Toast.LENGTH_SHORT).show();
+                        new Settings().makeText(Main.this,getResources().getString(R.string.invoice_no_not_found) );
                     }
 
                 vhfNo.setText("");
@@ -2046,10 +2046,10 @@ public class Main extends AppCompatActivity {
                         }
                         flag[0] = false;
                     } else {
-                        Toast.makeText(Main.this, getResources().getString(R.string.invoice_no_not_found), Toast.LENGTH_SHORT).show();
+                        new Settings().makeText(Main.this, getResources().getString(R.string.invoice_no_not_found));
                     }
                 } else {
-                    Toast.makeText(Main.this, getResources().getString(R.string.invoice_no_insert_bottom), Toast.LENGTH_SHORT).show();
+                    new Settings().makeText(Main.this, getResources().getString(R.string.invoice_no_insert_bottom));
 
                 }
                 vhfNo.setText("");
@@ -2556,9 +2556,11 @@ public class Main extends AppCompatActivity {
                         netTotals = 0.0;
                         dialog.dismiss();
 
-                    }else   Toast.makeText(Main.this, "Please Change filed Has grater value than what are you pay before ..  " , Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(Main.this, getResources().getString(R.string.total_not_allow), Toast.LENGTH_SHORT).show();
+                    }else
+                        new Settings().makeText(Main.this, "Please Change filed Has grater value than what are you pay before ..  ");
+                }
+                        else {
+                    new Settings().makeText(Main.this,getResources().getString(R.string.total_not_allow) );
                 }
 
 
@@ -2655,7 +2657,7 @@ public class Main extends AppCompatActivity {
                                     nettotal.setText("" + net_total);
                                     ISGrater_o.setText("0");
                                 } else {
-                                    Toast.makeText(Main.this, "Can't return value grater than  "+value_o.getTag().toString(), Toast.LENGTH_SHORT).show();
+                                    new Settings().makeText(Main.this,"Can't return value grater than  "+value_o.getTag().toString() );
                                     ISGrater_o.setText("1");
                                 }
                             }
