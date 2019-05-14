@@ -396,7 +396,7 @@ public class PayMethods extends AppCompatActivity {
                 String today = convertToEnglish(df1.format(currentTimeAndDate));
 
                 if (t1.equals(""))
-                    Toast.makeText(PayMethods.this, getResources().getString(R.string.enter_recived_value), Toast.LENGTH_SHORT).show();
+                new Settings().makeText(PayMethods.this,getResources().getString(R.string.enter_recived_value) );
                 else if ( // Double.parseDouble(t1) == Double.parseDouble(t2) &&
                         Double.parseDouble(t1) <= Double.parseDouble(t0)) {
 
@@ -426,7 +426,7 @@ public class PayMethods extends AppCompatActivity {
                     }
 
                     dialog.dismiss();
-                    Toast.makeText(PayMethods.this, getResources().getString(R.string.save), Toast.LENGTH_SHORT).show();
+                    new Settings().makeText(PayMethods.this, getResources().getString(R.string.save));
                     if (cashValue != 0) {
                         cash.setText(getResources().getString(R.string.cash) + " : " + cashValue);
                         cash.setBackgroundDrawable(getResources().getDrawable(R.drawable.clear_buttons));
@@ -434,7 +434,7 @@ public class PayMethods extends AppCompatActivity {
                         remainingBalance.setText(getResources().getString(R.string.remaining_) + mainBalance);
                     }
                 } else if (Double.parseDouble(t1) > Double.parseDouble(t0)) {
-                    Toast.makeText(PayMethods.this, getResources().getString(R.string.invaled_input), Toast.LENGTH_SHORT).show();
+                    new Settings().makeText(PayMethods.this,getResources().getString(R.string.invaled_input) );
                     double received_value = Double.parseDouble(t1) - Double.parseDouble(t0);
                     payGraterDialog(String.valueOf(received_value), today, t0);
                     cashValue += Double.parseDouble(t0);
@@ -476,7 +476,7 @@ public class PayMethods extends AppCompatActivity {
 
                 cashiersList.add(cashier);
                 mDHandler.addCashierInOut(cashiersList);
-                Toast.makeText(PayMethods.this, getResources().getString(R.string.save), Toast.LENGTH_SHORT).show();
+                new Settings().makeText(PayMethods.this,getResources().getString(R.string.save) );
                 dialog2.dismiss();
             }
         });
@@ -645,7 +645,7 @@ public class PayMethods extends AppCompatActivity {
 
                         creditCardValue += Double.parseDouble(t1);
                         dialog.dismiss();
-                        Toast.makeText(PayMethods.this, getResources().getString(R.string.save), Toast.LENGTH_SHORT).show();
+                        new Settings().makeText(PayMethods.this, getResources().getString(R.string.save));
                         if (creditCardValue != 0) {
                             creditCard.setText(getResources().getString(R.string.credit_card) + " : " + creditCardValue);
                             creditCard.setBackgroundDrawable(getResources().getDrawable(R.drawable.clear_buttons));
@@ -657,10 +657,10 @@ public class PayMethods extends AppCompatActivity {
                             cardName.add(countCridit, spinner.getSelectedItem().toString());
                         }
                     } else
-                        Toast.makeText(PayMethods.this, getResources().getString(R.string.invaled_input), Toast.LENGTH_SHORT).show();
+                    new Settings().makeText(PayMethods.this, getResources().getString(R.string.invaled_input));
 
                 } else
-                    Toast.makeText(PayMethods.this, getResources().getString(R.string.enter_recived_value_and_carfno), Toast.LENGTH_LONG).show();
+                new Settings().makeText(PayMethods.this,getResources().getString(R.string.enter_recived_value_and_carfno) );
 
             }
         });
@@ -710,7 +710,7 @@ public class PayMethods extends AppCompatActivity {
                     adapter.notifyDataSetChanged();
                     dialog1.dismiss();
                 } else
-                    Toast.makeText(PayMethods.this, getResources().getString(R.string.fill_request_filed), Toast.LENGTH_SHORT).show();
+                new Settings().makeText(PayMethods.this,getResources().getString(R.string.fill_request_filed) );
             }
         });
         dialog1.show();
@@ -876,12 +876,12 @@ public class PayMethods extends AppCompatActivity {
                 String t2 = chequeNumber.getText().toString();
 
                 if (t1.equals("") && t2.equals("") && spinner2.getSelectedItem().toString().equals(""))
-                    Toast.makeText(PayMethods.this, getResources().getString(R.string.enter_recived_value_and_carfno), Toast.LENGTH_LONG).show();
+                new Settings().makeText(PayMethods.this,getResources().getString(R.string.enter_recived_value_and_carfno) );
                 else if (Double.parseDouble(t1) <= Double.parseDouble(t0)) {
 
                     chequeValue += Double.parseDouble(t1);
                     dialog.dismiss();
-                    Toast.makeText(PayMethods.this, getResources().getString(R.string.save), Toast.LENGTH_SHORT).show();
+                    new Settings().makeText(PayMethods.this,getResources().getString(R.string.save) );
                     if (chequeValue != 0) {
                         cheque.setText(getResources().getString(R.string.cheque) + " : " + chequeValue);
                         cheque.setBackgroundDrawable(getResources().getDrawable(R.drawable.clear_buttons));
@@ -900,7 +900,7 @@ public class PayMethods extends AppCompatActivity {
                         mDHandler.addCheque(obj);
                     }
                 } else
-                    Toast.makeText(PayMethods.this, getResources().getString(R.string.invaled_input), Toast.LENGTH_SHORT).show();
+                new Settings().makeText(PayMethods.this,getResources().getString(R.string.invaled_input) );
             }
         });
         addBank.setOnClickListener(new View.OnClickListener() {
@@ -938,7 +938,7 @@ public class PayMethods extends AppCompatActivity {
                     adapter2.notifyDataSetChanged();
                     dialog1.dismiss();
                 } else
-                    Toast.makeText(PayMethods.this, getResources().getString(R.string.fill_request_filed), Toast.LENGTH_SHORT).show();
+                new Settings().makeText(PayMethods.this,getResources().getString(R.string.fill_request_filed) );
             }
         });
         dialog1.show();
@@ -1085,12 +1085,12 @@ public class PayMethods extends AppCompatActivity {
                 String t2 = cardNo.getText().toString();
 
                 if (t1.equals("") && t2.equals(""))
-                    Toast.makeText(PayMethods.this, getResources().getString(R.string.enter_recived_value_and_carfno), Toast.LENGTH_LONG).show();
+                new Settings().makeText(PayMethods.this, getResources().getString(R.string.enter_recived_value_and_carfno));
                 else if (Double.parseDouble(t1) <= Double.parseDouble(t0)) {
 
                     giftCardValue += Double.parseDouble(t1);
                     dialog.dismiss();
-                    Toast.makeText(PayMethods.this, getResources().getString(R.string.save), Toast.LENGTH_SHORT).show();
+                    new Settings().makeText(PayMethods.this,getResources().getString(R.string.save) );
                     if (giftCardValue != 0) {
                         giftCard.setText(getResources().getString(R.string.gift_card) + " : " + giftCardValue);
                         giftCard.setBackgroundDrawable(getResources().getDrawable(R.drawable.clear_buttons));
@@ -1101,7 +1101,7 @@ public class PayMethods extends AppCompatActivity {
                         giftCardNumber.add(cardNo.getText().toString());
                     }
                 } else
-                    Toast.makeText(PayMethods.this, getResources().getString(R.string.invaled_input), Toast.LENGTH_SHORT).show();
+                new Settings().makeText(PayMethods.this,getResources().getString(R.string.invaled_input) );
 
             }
         });
@@ -1113,7 +1113,7 @@ public class PayMethods extends AppCompatActivity {
                     if (true) {
                         cardInfo.setVisibility(View.VISIBLE);
                     } else {
-                        Toast.makeText(PayMethods.this, getResources().getString(R.string.invalid_card_no), Toast.LENGTH_SHORT).show();
+                        new Settings().makeText(PayMethods.this,getResources().getString(R.string.invalid_card_no) );
                     }
                 }
             }
@@ -1253,12 +1253,12 @@ public class PayMethods extends AppCompatActivity {
                 String t1 = couponNo.getText().toString();
 
                 if (t1.equals(""))
-                    Toast.makeText(PayMethods.this, getResources().getString(R.string.enter_coupon_no), Toast.LENGTH_LONG).show();
+                new Settings().makeText(PayMethods.this,getResources().getString(R.string.enter_coupon_no) );
                 else if (Double.parseDouble(t1) <= Double.parseDouble(t0)) {
 
                     creditValue += Double.parseDouble(t1);
                     dialog.dismiss();
-                    Toast.makeText(PayMethods.this, getResources().getString(R.string.save), Toast.LENGTH_SHORT).show();
+                    new Settings().makeText(PayMethods.this, getResources().getString(R.string.save));
                     if (creditValue != 0) {
                         credit.setText(getResources().getString(R.string.credit) + " : " + creditValue);
                         credit.setBackgroundDrawable(getResources().getDrawable(R.drawable.clear_buttons));
@@ -1267,7 +1267,7 @@ public class PayMethods extends AppCompatActivity {
                         couponNumber.add(countCoupon, couponNo.getText().toString());
                     }
                 } else
-                    Toast.makeText(PayMethods.this, getResources().getString(R.string.invaled_input), Toast.LENGTH_SHORT).show();
+                new Settings().makeText(PayMethods.this,getResources().getString(R.string.invaled_input) );
 
             }
         });
@@ -1279,7 +1279,7 @@ public class PayMethods extends AppCompatActivity {
                     if (true) {
                         couponInfo.setVisibility(View.VISIBLE);
                     } else {
-                        Toast.makeText(PayMethods.this, getResources().getString(R.string.invalid_coupon_no), Toast.LENGTH_SHORT).show();
+                        new Settings().makeText(PayMethods.this,getResources().getString(R.string.invalid_coupon_no) );
                     }
                 }
             }
@@ -1431,12 +1431,12 @@ public class PayMethods extends AppCompatActivity {
                 String t2 = cardNo.getText().toString();
 
                 if (t1.equals("") && t2.equals(""))
-                    Toast.makeText(PayMethods.this, getResources().getString(R.string.enter_recived_value_and_carfno), Toast.LENGTH_LONG).show();
+                new Settings().makeText(PayMethods.this, getResources().getString(R.string.enter_recived_value_and_carfno));
                 else if (Double.parseDouble(t1) <= Double.parseDouble(t0)) {
 
                     pointValue += Double.parseDouble(t1);
                     dialog.dismiss();
-                    Toast.makeText(PayMethods.this, getResources().getString(R.string.save), Toast.LENGTH_SHORT).show();
+                    new Settings().makeText(PayMethods.this,getResources().getString(R.string.save) );
                     if (pointValue != 0) {
                         point.setText(getResources().getString(R.string.point) + " : " + pointValue);
                         point.setBackgroundDrawable(getResources().getDrawable(R.drawable.clear_buttons));
@@ -1447,7 +1447,7 @@ public class PayMethods extends AppCompatActivity {
                         pointCardNumber.add(cardNo.getText().toString());
                     }
                 } else
-                    Toast.makeText(PayMethods.this, getResources().getString(R.string.invaled_input), Toast.LENGTH_SHORT).show();
+                new Settings().makeText(PayMethods.this, getResources().getString(R.string.invaled_input));
 
             }
         });
@@ -1459,7 +1459,7 @@ public class PayMethods extends AppCompatActivity {
                     if (true) {
                         cardInfo.setVisibility(View.VISIBLE);
                     } else {
-                        Toast.makeText(PayMethods.this, getResources().getString(R.string.invalid_card_no), Toast.LENGTH_SHORT).show();
+                        new Settings().makeText(PayMethods.this,getResources().getString(R.string.invalid_card_no) );
                     }
                 }
             }
@@ -1654,11 +1654,11 @@ public class PayMethods extends AppCompatActivity {
                 startActivity(intent);
             }
 
-            Toast.makeText(this, getResources().getString(R.string.save_successful), Toast.LENGTH_SHORT).show();
+            new Settings().makeText(PayMethods.this,getResources().getString(R.string.save_successful) );
             //  finish();
 //            Print(obj.getOrderTransactionObj());
         } else {
-            Toast.makeText(this, getResources().getString(R.string.remaining_not_o), Toast.LENGTH_SHORT).show();
+            new Settings().makeText(PayMethods.this,getResources().getString(R.string.remaining_not_o) );
         }
     }
 
