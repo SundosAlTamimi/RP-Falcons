@@ -167,7 +167,8 @@ public class LogIn extends AppCompatActivity {
                                 if (isExist) {
                                     dialog.dismiss();
                                 } else
-                                    Toast.makeText(LogIn.this, getResources().getString(R.string.user_not_found), Toast.LENGTH_SHORT).show();
+                                    new Settings().makeText(LogIn.this, getResources().getString(R.string.user_not_found));
+//                                    Toast.makeText(LogIn.this, getResources().getString(R.string.user_not_found), Toast.LENGTH_SHORT).show();
                             }
                             break;
                         case "another user is logged":
