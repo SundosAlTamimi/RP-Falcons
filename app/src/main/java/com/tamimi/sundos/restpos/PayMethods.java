@@ -1740,7 +1740,7 @@ public class PayMethods extends AppCompatActivity {
         final Dialog dialog = new Dialog(PayMethods.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
-        dialog.setContentView(R.layout.printer);
+        dialog.setContentView(R.layout.print);
         final Button okButton = dialog.findViewById(R.id.print_btn);
         final LinearLayout linearLayout = dialog.findViewById(R.id.linear2);
         TableLayout tabLayout = (TableLayout) dialog.findViewById(R.id.table_);

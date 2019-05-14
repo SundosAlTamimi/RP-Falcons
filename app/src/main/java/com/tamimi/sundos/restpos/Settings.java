@@ -2,15 +2,11 @@ package com.tamimi.sundos.restpos;
 
 import android.content.Context;
 import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class Settings {
-    public static boolean table_edit_authorized = false;
     public static String user_name = "no user";
     public static int password = -1;
     public static int user_no = -1;
@@ -24,7 +20,6 @@ public class Settings {
     public static int time_card = 0;
 
     public Settings(){
-
     }
 
     public void makeText(Context context , String msg){

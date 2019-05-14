@@ -6175,13 +6175,10 @@ public class BackOfficeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (!editText.getText().toString().equals("")) {
                     if (Integer.parseInt(editText.getText().toString()) == 4444) {
-                        Settings.table_edit_authorized = true;
-//                        Toast.makeText(BackOfficeActivity.this, "Your'r authorized to edit tables ", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                         Intent intent = new Intent(BackOfficeActivity.this, DineInLayout.class);
                         startActivity(intent);
                     } else {
-                        Settings.table_edit_authorized = false;
                         Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.authorization_no_incorrect), Toast.LENGTH_SHORT).show();
                     }
                 }
