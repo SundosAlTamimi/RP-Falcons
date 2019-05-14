@@ -55,8 +55,8 @@ import java.util.List;
 import static com.tamimi.sundos.restpos.Settings.shift_name;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
-    // Database Version
-    private static final int DATABASE_VERSION = 31;
+    // Database Versions
+    private static final int DATABASE_VERSION = 32;
 
     // Database Name
     private static final String DATABASE_NAME = "RestPos";
@@ -1179,61 +1179,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-        // Drop older table if existed
-//        db.execSQL("DROP TABLE IF EXISTS " + ITEMS); //1
-//        db.execSQL("DROP TABLE IF EXISTS " + RECIPES); //2
-//        db.execSQL("DROP TABLE IF EXISTS " + USED_CATEGORIES); //3
-//        db.execSQL("DROP TABLE IF EXISTS " + USED_ITEMS);  //4
-//        db.execSQL("DROP TABLE IF EXISTS " + TABLES);  //5
-//        db.execSQL("DROP TABLE IF EXISTS " + MONEY_CATEGORIES);  //6
-//        db.execSQL("DROP TABLE IF EXISTS " + CASHIER_IN_OUT);  //7
-//        db.execSQL("DROP TABLE IF EXISTS " + PAY_IN_OUT);  //8
-//        db.execSQL("DROP TABLE IF EXISTS " + CREDIT_CARDS);  //9
-//        db.execSQL("DROP TABLE IF EXISTS " + ORDER_TRANSACTIONS);  //10
-//        db.execSQL("DROP TABLE IF EXISTS " + PAY_METHOD);  //11
-//        db.execSQL("DROP TABLE IF EXISTS " + ORDER_HEADER); //12
-//        db.execSQL("DROP TABLE IF EXISTS " + FORCE_QUESTIONS); //13
-//        db.execSQL("DROP TABLE IF EXISTS " + MODIFIER); //14
-//        db.execSQL("DROP TABLE IF EXISTS " + ITEM_WITH_MODIFIER); //15
-//        db.execSQL("DROP TABLE IF EXISTS " + ITEM_WITH_FQ); //16
-//        db.execSQL("DROP TABLE IF EXISTS " + CATEGORY_WITH_MODIFIER); //17
-//        db.execSQL("DROP TABLE IF EXISTS " + CLOCK_IN_CLOCK_OUT);//18
-//        db.execSQL("DROP TABLE IF EXISTS " + JOB_GROUP_TABLE);//19
-//        db.execSQL("DROP TABLE IF EXISTS " + EMPLOYEE_REGISTRATION_TABLE);//20
-//        db.execSQL("DROP TABLE IF EXISTS " + CUSTOMER_REGISTRATION_TABLE);//21
-//        db.execSQL("DROP TABLE IF EXISTS " + ORDER_TRANSACTIONS_TEMP);  //22
-//        db.execSQL("DROP TABLE IF EXISTS " + ORDER_HEADER_TEMP); //23
-//        db.execSQL("DROP TABLE IF EXISTS " + MEMBER_SHIP_GROUP_MANAGEMENT_TABLE); //24
-//        db.execSQL("DROP TABLE IF EXISTS " + SHIFT_REGISTRATION); //25
-//        db.execSQL("DROP TABLE IF EXISTS " + BLIND_SHIFT_IN); //26
-//        db.execSQL("DROP TABLE IF EXISTS " + BLIND_CLOSE); //27
-//        db.execSQL("DROP TABLE IF EXISTS " + BLIND_CLOSE_DETAILS); //28
-//        db.execSQL("DROP TABLE IF EXISTS " + FAMILY_CATEGORY_TABLE); //29
-//
-//       //Create tables again
-//        onCreate(db);
 
-//        db.execSQL("ALTER TABLE BLIND_CLOSE ADD REASON TEXT NOT NULL DEFAULT ''");
-//        db.execSQL("ALTER TABLE BLIND_CLOSE ADD TO_USER TEXT NOT NULL DEFAULT ''");
-//        db.execSQL("ALTER TABLE ORDER_HEADER_TEMP ADD TIME TEXT NOT NULL DEFAULT '01:30'");
-//        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS_TEMP ADD TIME TEXT NOT NULL DEFAULT '01:30'");
-//        db.execSQL("ALTER TABLE PAY_METHOD ADD TIME TEXT NOT NULL DEFAULT '01:30'");
-
-//        db.execSQL("ALTER TABLE FAMILY_CATEGORY_TABLE ADD CATEGORY_PIC BLOB DEFAULT null");
-//        db.execSQL("ALTER TABLE FAMILY_CATEGORY_TABLE ADD CATEGORY_PIC BLOB DEFAULT null");
-
-//        String CREATE_TABLE_KITCHEN_SCREEN_TABLE = "CREATE TABLE " + KITCHEN_SCREEN_TABLE + "("
-//                + KITCHEN_NAME + " TEXT,"
-//                + KITCHEN_NO + " INTEGER " + ")";
-//        db.execSQL(CREATE_TABLE_KITCHEN_SCREEN_TABLE);
-
-//        String CREATE_TABLE_ITEM_WITH_SCREEN = "CREATE TABLE " + ITEM_WITH_SCREEN + "("
-//                + ITEM_CODE3 + " INTEGER ,"
-//                + ITEM_NAME3 + " TEXT,"
-//                + SCREEN_NO3 + " INTEGER,"
-//                + SCREEN_NAME3 + " TEXT " + ")";
-//        db.execSQL(CREATE_TABLE_ITEM_WITH_SCREEN);
-//        db.execSQL("ALTER TABLE ANNOUNCEMENT_TABLE ADD USER_NO INTEGER NOT NULL DEFAULT '-1'");
+        db.execSQL("ALTER TABLE ANNOUNCEMENT_TABLE ADD USER_NO INTEGER NOT NULL DEFAULT '-1'");
 
 //        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS ADD ORG_NO TAXE NOT NULL DEFAULT '0'");
 //        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS ADD ORG_POS INTEGER NOT NULL DEFAULT '-1'");

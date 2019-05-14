@@ -1691,7 +1691,6 @@ public class PayMethods extends AppCompatActivity {
             obj.put("Header", obj1);
 
             Log.e("socket", "J");
-
             SendSocket sendSocket = new SendSocket(context, obj1, OrderTransactionsObj);
             sendSocket.sendMessage();
 
