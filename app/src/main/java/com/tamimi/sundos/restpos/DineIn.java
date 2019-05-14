@@ -629,7 +629,7 @@ public class DineIn extends AppCompatActivity {
                 Log.e("here", "*****" + focusedLeft + "" + focusedRight + "" + fromSection + "" + toSection);
                 if (focusedLeft != -1 && focusedRight != -1) {
                     if (focusedLeft == focusedRight && fromSection == toSection) {
-                        Toast.makeText(DineIn.this, getResources().getString(R.string.ops_same_table), Toast.LENGTH_SHORT).show();
+                        new Settings().makeText(DineIn.this,getResources().getString(R.string.ops_same_table) );
                     } else {
                         // update on tables temp
                         mHandler.moveTablesTemp(fromSection, focusedLeft, toSection, focusedRight);
