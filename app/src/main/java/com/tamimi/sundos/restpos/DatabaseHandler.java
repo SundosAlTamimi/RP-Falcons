@@ -2423,7 +2423,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public final String getAllRequestVoucherHeader(String Vfh_No,String POS) {
          String waterName ="";
 //        String selectQuery = "SELECT * FROM " + ORDER_TRANSACTIONS + " where VOUCHER_NO = '" + Vfh_No + "'" + " and ORDER_KIND = '0'";
-        String selectQuery = "SELECT WAITER FROM " + ORDER_HEADER + " where VOUCHER_NO = '" + Vfh_No + "'" + " and ORDER_KIND = '0"+"'" + " and POS_NO = '"+POS+"'" ;
+        String selectQuery = "SELECT WAITER FROM " + ORDER_HEADER + " where VOUCHER_NUMBER = '" + Vfh_No + "'" + " and ORDER_KIND = '0"+"'" + " and POINT_OF_SALE_NUMBER = '"+POS+"'" ;
 
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -3659,7 +3659,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ArrayList<OrderTransactions> orderTransactionsArrayList = new ArrayList<>();
 
 
-        String selectQuery = "select ITEM_NAME, GROUP_CONCAT( VOUCHER_DATE), GROUP_CONCAT( TOTAL), GROUP_CONCAT(TAX_VLUE) , GROUP_CONCAT(DISCOUNT) from ORDER_TRANSACTIONS  " +
+        String selectQuery = "select ITEM_NAME, GROUP_CONCAT( VOUCHER_DATE), GROUP_CONCAT( TOTAL), GROUP_CONCAT(TAX_VLUE) , GROUP_CONCAT(TOTAL_DISCOUNT) from ORDER_TRANSACTIONS  " +
                 "where  SHIFT_NAME =" + shiftName + " and POS_NO= " + PosNo + "  GROUP BY ITEM_BARCODE1";
 
 
@@ -3692,7 +3692,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ArrayList<OrderHeader> orderHeaders = new ArrayList<>();
 
 
-        String selectQuery = "select POINT_OF_SALE_NUMBER, GROUP_CONCAT( TOTAL), GROUP_CONCAT(TOTAL_TAX),GROUP_CONCAT(AMOUNT_DUE) , GROUP_CONCAT( VOUCHER_DATE) from ORDER_HEADER  " +
+        String selectQuery = "select POINT_OF_SALE_NUMBER, GROUP_CONCAT( TOTAL), GROUP_CONCAT(TOTAL_TAX),GROUP_CONCAT(AMOUNT_DUE) , GROUP_CONCAT( VOUCHER_DATE) , GROUP_CONCAT( ALL_DISCOUNT) from ORDER_HEADER  " +
                 " GROUP BY POINT_OF_SALE_NUMBER";
 
 
@@ -3710,6 +3710,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 orderHeaderModel.setShiftName(cursor.getString(2));
                 orderHeaderModel.setUserName(cursor.getString(3));
                 orderHeaderModel.setVoucherDate(cursor.getString(4));
+                orderHeaderModel.setWaiter(cursor.getString(5));
 
                 orderHeaders.add(orderHeaderModel);
 
@@ -3723,7 +3724,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ArrayList<OrderTransactions> orderTransactionsArrayList = new ArrayList<>();
 
 
-        String selectQuery = "select TAX_PERC, GROUP_CONCAT( VOUCHER_DATE), GROUP_CONCAT(TOTAL), GROUP_CONCAT(TAX_VLUE) from ORDER_TRANSACTIONS  " +
+        String selectQuery = "select TAX_PERC, GROUP_CONCAT( VOUCHER_DATE), GROUP_CONCAT(TOTAL), GROUP_CONCAT(TAX_VLUE), GROUP_CONCAT(TOTAL_DISCOUNT) from ORDER_TRANSACTIONS  " +
                 "where  SHIFT_NAME =" + shiftName + " and POS_NO= " + PosNo + "  GROUP BY TAX_PERC";
 
         Log.e("se123", "" + selectQuery);
@@ -3739,6 +3740,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 orderTransactions.setVoucherDate(cursor.getString(1));
                 orderTransactions.setTime(cursor.getString(2));
                 orderTransactions.setShiftName(cursor.getString(3));
+                orderTransactions.setSecondaryName(cursor.getString(4));
 
 
                 orderTransactionsArrayList.add(orderTransactions);
