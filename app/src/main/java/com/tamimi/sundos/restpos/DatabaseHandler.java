@@ -55,7 +55,7 @@ import java.util.List;
 import static com.tamimi.sundos.restpos.Settings.shift_name;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
-    // Database Version
+    // Database Versions
     private static final int DATABASE_VERSION = 32;
 
     // Database Name
