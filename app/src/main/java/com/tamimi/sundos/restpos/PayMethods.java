@@ -58,7 +58,7 @@ public class PayMethods extends AppCompatActivity {
 
     DatabaseHandler mDHandler;
     Dialog dialog, dialog1;
-    DecimalFormat twoDForm = new DecimalFormat("0.00");
+    DecimalFormat twoDForm = new DecimalFormat("0.000");
     TextView focusedTextView;
     int flag = 0;
     int position1;
@@ -877,7 +877,7 @@ public class PayMethods extends AppCompatActivity {
 
                 if (t1.equals("") && t2.equals("") && spinner2.getSelectedItem().toString().equals(""))
                     Toast.makeText(PayMethods.this, getResources().getString(R.string.enter_recived_value_and_carfno), Toast.LENGTH_LONG).show();
-                else if (Double.parseDouble(t1) <= Double.parseDouble(t0)) {
+                else if ((Double.parseDouble(t1) <= Double.parseDouble(t0))&&!t1.equals("")&&!t2.equals("")) {
 
                     chequeValue += Double.parseDouble(t1);
                     dialog.dismiss();

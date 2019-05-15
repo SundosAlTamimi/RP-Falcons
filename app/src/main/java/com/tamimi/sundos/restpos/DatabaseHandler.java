@@ -1180,7 +1180,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
 
-        db.execSQL("ALTER TABLE ANNOUNCEMENT_TABLE ADD USER_NO INTEGER NOT NULL DEFAULT '-1'");
+//        db.execSQL("ALTER TABLE ANNOUNCEMENT_TABLE ADD USER_NO INTEGER NOT NULL DEFAULT '-1'");
 
 //        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS ADD ORG_NO TAXE NOT NULL DEFAULT '0'");
 //        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS ADD ORG_POS INTEGER NOT NULL DEFAULT '-1'");
@@ -3659,7 +3659,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ArrayList<OrderTransactions> orderTransactionsArrayList = new ArrayList<>();
 
 
-        String selectQuery = "select ITEM_NAME, GROUP_CONCAT( VOUCHER_DATE), GROUP_CONCAT( TOTAL), GROUP_CONCAT(TAX_VLUE) , GROUP_CONCAT(TOTAL_DISCOUNT) from ORDER_TRANSACTIONS  " +
+        String selectQuery = "select ITEM_NAME, GROUP_CONCAT( VOUCHER_DATE), GROUP_CONCAT( TOTAL), GROUP_CONCAT(TAX_VLUE) , GROUP_CONCAT(TOTAL_DISCOUNT),GROUP_CONCAT(ORDER_KIND) from ORDER_TRANSACTIONS  " +
                 "where  SHIFT_NAME =" + shiftName + " and POS_NO= " + PosNo + "  GROUP BY ITEM_BARCODE1";
 
 
@@ -3678,6 +3678,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 orderTransactions.setTime(cursor.getString(2));
                 orderTransactions.setShiftName(cursor.getString(3)); //con list of tax value
                 orderTransactions.setUserName(cursor.getString(4));
+                orderTransactions.setNote(cursor.getString(5));
 
 
                 orderTransactionsArrayList.add(orderTransactions);
@@ -3724,7 +3725,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ArrayList<OrderTransactions> orderTransactionsArrayList = new ArrayList<>();
 
 
-        String selectQuery = "select TAX_PERC, GROUP_CONCAT( VOUCHER_DATE), GROUP_CONCAT(TOTAL), GROUP_CONCAT(TAX_VLUE), GROUP_CONCAT(TOTAL_DISCOUNT) from ORDER_TRANSACTIONS  " +
+        String selectQuery = "select TAX_PERC, GROUP_CONCAT( VOUCHER_DATE), GROUP_CONCAT(TOTAL), GROUP_CONCAT(TAX_VLUE), GROUP_CONCAT(TOTAL_DISCOUNT),GROUP_CONCAT(ORDER_KIND) from ORDER_TRANSACTIONS  " +
                 "where  SHIFT_NAME =" + shiftName + " and POS_NO= " + PosNo + "  GROUP BY TAX_PERC";
 
         Log.e("se123", "" + selectQuery);
@@ -3741,7 +3742,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 orderTransactions.setTime(cursor.getString(2));
                 orderTransactions.setShiftName(cursor.getString(3));
                 orderTransactions.setSecondaryName(cursor.getString(4));
-
+                orderTransactions.setNote(cursor.getString(5));
 
                 orderTransactionsArrayList.add(orderTransactions);
 

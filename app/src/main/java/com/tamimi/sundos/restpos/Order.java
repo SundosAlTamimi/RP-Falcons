@@ -97,7 +97,7 @@ public class Order extends AppCompatActivity {
     static ArrayList<OrderTransactions> OrderTransactionsObj;
     static OrderHeader OrderHeaderObj;
 
-    int voucherSerial;
+    public static int voucherSerial;
     public static String OrderType, today, time, yearMonth, voucherNo;
 
     View v = null;
