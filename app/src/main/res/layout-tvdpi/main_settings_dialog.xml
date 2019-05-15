@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="40dp">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/layer3">
+
+            <TextView
+                android:id="@+id/main_settings_tv1"
+                android:layout_width="155dp"
+                android:layout_height="44dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:background="@drawable/text_view_style"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="@string/user_name"
+                android:textColor="@color/cardview_dark_background"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/main_settings_userName"
+                android:layout_width="220dp"
+                android:layout_height="44dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@id/main_settings_tv1"
+                android:fontFamily="serif"
+                android:nextFocusDown="@id/main_settings_password"
+                android:padding="10dp"
+                android:singleLine="true"
+                android:textColor="@color/cardview_dark_background" />
+
+            <TextView
+                android:id="@+id/main_settings_tv2"
+                android:layout_width="155dp"
+                android:layout_height="44dp"
+                android:layout_below="@+id/main_settings_tv1"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/text_view_style"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="20dp"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="@string/User_Password"
+                android:textColor="@color/cardview_dark_background"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/main_settings_password"
+                android:layout_width="220dp"
+                android:layout_height="44dp"
+                android:layout_below="@id/main_settings_userName"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@id/main_settings_tv2"
+                android:fontFamily="serif"
+                android:inputType="textPassword"
+                android:nextFocusDown="@id/main_settings_userNo"
+                android:padding="10dp"
+                android:singleLine="true"
+                android:textColor="@color/cardview_dark_background" />
+
+            <TextView
+                android:id="@+id/main_settings_tv3"
+                android:layout_width="155dp"
+                android:layout_height="44dp"
+                android:layout_below="@+id/main_settings_tv2"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/text_view_style"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="20dp"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="@string/no_user"
+                android:textColor="@color/cardview_dark_background"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/main_settings_userNo"
+                android:layout_width="220dp"
+                android:layout_height="44dp"
+                android:layout_below="@id/main_settings_password"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@id/main_settings_tv3"
+                android:fontFamily="serif"
+                android:nextFocusDown="@id/main_settings_posNo"
+                android:padding="10dp"
+                android:singleLine="true"
+                android:textColor="@color/cardview_dark_background" />
+
+            <TextView
+                android:id="@+id/main_settings_tv4"
+                android:layout_width="155dp"
+                android:layout_height="44dp"
+                android:layout_below="@+id/main_settings_tv3"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/text_view_style"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="@string/point_of_sale"
+                android:textColor="@color/cardview_dark_background"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/main_settings_posNo"
+                android:layout_width="220dp"
+                android:layout_height="44dp"
+                android:layout_below="@id/main_settings_userNo"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@id/main_settings_tv4"
+                android:fontFamily="serif"
+                android:imeOptions="actionGo"
+                android:padding="10dp"
+                android:singleLine="true"
+                android:textColor="@color/cardview_dark_background" />
+
+            <TextView
+                android:id="@+id/main_settings_tv5"
+                android:layout_width="155dp"
+                android:layout_height="44dp"
+                android:layout_below="@+id/main_settings_tv4"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/text_view_style"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="20dp"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="store no"
+                android:textColor="@color/cardview_dark_background"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/main_settings_storeNo"
+                android:layout_width="220dp"
+                android:layout_height="44dp"
+                android:layout_below="@+id/main_settings_posNo"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@id/main_settings_tv5"
+                android:fontFamily="serif"
+                android:imeOptions="actionGo"
+                android:padding="10dp"
+                android:singleLine="true"
+                android:textColor="@color/cardview_dark_background" />
+
+            <TextView
+                android:id="@+id/main_settings_tv6"
+                android:layout_width="155dp"
+                android:layout_height="44dp"
+                android:layout_below="@+id/main_settings_tv5"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/text_view_style"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="20dp"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="@string/shift_no"
+                android:textColor="@color/cardview_dark_background"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/main_settings_shiftNo"
+                android:layout_width="220dp"
+                android:layout_height="44dp"
+                android:layout_below="@+id/main_settings_storeNo"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@id/main_settings_tv6"
+                android:fontFamily="serif"
+                android:imeOptions="actionGo"
+                android:padding="10dp"
+                android:singleLine="true"
+                android:textColor="@color/cardview_dark_background" />
+
+            <TextView
+                android:id="@+id/main_settings_tv7"
+                android:layout_width="155dp"
+                android:layout_height="44dp"
+                android:layout_below="@id/main_settings_tv6"
+                android:background="@drawable/text_view_style"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="20dp"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="@string/shift_name"
+                android:textColor="@color/cardview_dark_background"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/main_settings_shiftName"
+                android:layout_width="220dp"
+                android:layout_height="44dp"
+                android:layout_below="@id/main_settings_shiftNo"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_toRightOf="@id/main_settings_tv7"
+                android:imeOptions="actionGo"
+                android:padding="10dp"
+                android:singleLine="true"
+                android:textColor="@color/cardview_dark_background" />
+
+            <TextView
+                android:id="@+id/main_settings_tv8"
+                android:layout_width="155dp"
+                android:layout_height="44dp"
+                android:layout_below="@+id/main_settings_tv7"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/text_view_style"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="@string/service_tax"
+                android:textColor="@color/cardview_dark_background"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/main_settings_serviceTax"
+                android:layout_width="220dp"
+                android:layout_height="44dp"
+                android:layout_below="@+id/main_settings_shiftName"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@id/main_settings_tv8"
+                android:imeOptions="actionGo"
+                android:padding="10dp"
+                android:singleLine="true"
+                android:textColor="@color/cardview_dark_background" />
+
+            <TextView
+                android:id="@+id/main_settings_tv9"
+                android:layout_width="155dp"
+                android:layout_height="44dp"
+                android:layout_below="@+id/main_settings_tv8"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/text_view_style"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="@string/service_value"
+                android:textColor="@color/cardview_dark_background"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/main_settings_serviceValue"
+                android:layout_width="220dp"
+                android:layout_height="44dp"
+                android:layout_below="@+id/main_settings_serviceTax"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@id/main_settings_tv9"
+                android:imeOptions="actionGo"
+                android:padding="10dp"
+                android:singleLine="true"
+                android:textColor="@color/cardview_dark_background" />
+
+            <TextView
+                android:id="@+id/main_settings_tv10"
+                android:layout_width="155dp"
+                android:layout_height="44dp"
+                android:layout_below="@+id/main_settings_tv9"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/text_view_style"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="@string/tax_type"
+                android:textColor="@color/cardview_dark_background"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/main_settings_taxType"
+                android:layout_width="220dp"
+                android:layout_height="44dp"
+                android:layout_below="@+id/main_settings_serviceValue"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@id/main_settings_tv10"
+                android:imeOptions="actionGo"
+                android:padding="10dp"
+                android:singleLine="true"
+                android:textColor="@color/cardview_dark_background" />
+
+            <TextView
+                android:id="@+id/main_settings_tv11"
+                android:layout_width="155dp"
+                android:layout_height="44dp"
+                android:layout_below="@+id/main_settings_tv10"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/text_view_style"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="@string/time_card"
+                android:textColor="@color/cardview_dark_background"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/main_settings_timeCard"
+                android:layout_width="220dp"
+                android:layout_height="44dp"
+                android:layout_below="@+id/main_settings_taxType"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@id/main_settings_tv11"
+                android:imeOptions="actionGo"
+                android:padding="10dp"
+                android:singleLine="true"
+                android:textColor="@color/cardview_dark_background" />
+
+            <Button
+                android:id="@+id/main_settings_save"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/main_settings_tv11"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginStart="60dp"
+                android:layout_marginLeft="60dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/done_buttons"
+                android:padding="10dp"
+                android:text="Save"
+                android:textAllCaps="false"
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/main_settings_cancel"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/main_settings_tv11"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="90dp"
+                android:layout_toRightOf="@id/main_settings_save"
+                android:background="@drawable/cancel_button"
+                android:padding="10dp"
+                android:text="Cancel"
+                android:textAllCaps="false"
+                android:textSize="20sp" />
+
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>
