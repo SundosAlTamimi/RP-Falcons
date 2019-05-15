@@ -41,6 +41,7 @@ import android.widget.Toast;
 import com.tamimi.sundos.restpos.DatabaseHandler;
 import com.tamimi.sundos.restpos.DineInLayout;
 import com.tamimi.sundos.restpos.ExportToPdf;
+import com.tamimi.sundos.restpos.LogIn;
 import com.tamimi.sundos.restpos.Main;
 import com.tamimi.sundos.restpos.Models.BlindClose;
 import com.tamimi.sundos.restpos.Models.BlindCloseDetails;
@@ -662,7 +663,8 @@ public class BackOfficeActivity extends AppCompatActivity {
                     textView10.setText(Settings.user_name);
 
                 } else // it will never be -_-
-                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.please_select_user), Toast.LENGTH_LONG).show();
+
+                new Settings().makeText(BackOfficeActivity.this,getResources().getString(R.string.please_select_user));
 
             }
         });
@@ -932,7 +934,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
                     objExp.RecancelReport(blindClosePdf, headerData1);
                 } else {
-                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.not_data), Toast.LENGTH_SHORT).show();
+                    new Settings().makeText(BackOfficeActivity.this,getResources().getString(R.string.not_data));
                 }
 
             }
@@ -1088,11 +1090,12 @@ public class BackOfficeActivity extends AppCompatActivity {
                     customerPayment.setShiftName(Settings.shift_name);
 
                     mDHandler.addCustomerPayment(customerPayment);
-                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.save_successful), Toast.LENGTH_SHORT).show();
+
+                    new Settings().makeText(BackOfficeActivity.this, getResources().getString(R.string.save_successful));
                     dialog.dismiss();
 
                 } else {
-                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.fill_all_information), Toast.LENGTH_SHORT).show();
+                    new Settings().makeText(BackOfficeActivity.this, getResources().getString(R.string.fill_all_information));
                 }
             }
         });
@@ -1407,7 +1410,9 @@ public class BackOfficeActivity extends AppCompatActivity {
                     ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
                     objExp.X_report(orderTransactionDataPdf, headerValue, otherValue, orderTransactionDataPdf2);
                 } else {
-                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.not_data), Toast.LENGTH_SHORT).show();
+
+                    new Settings().makeText(BackOfficeActivity.this, getResources().getString(R.string.not_data));
+
                 }
             }
         });
@@ -1719,7 +1724,8 @@ public class BackOfficeActivity extends AppCompatActivity {
                     objExp.Z_report(orderTransactionDataPdf, headerValue, otherValue, orderTransactionDataPdf2);
 
                 } else {
-                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.not_data), Toast.LENGTH_SHORT).show();
+
+                    new Settings().makeText(BackOfficeActivity.this,getResources().getString(R.string.not_data));
                 }
 
             }
@@ -1736,9 +1742,11 @@ public class BackOfficeActivity extends AppCompatActivity {
 
                     mDHandler.addZReportTable(zReport);
 
-                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.save_successful), Toast.LENGTH_SHORT).show();
+
+                    new Settings().makeText(BackOfficeActivity.this, getResources().getString(R.string.save_successful));
                 } else {
-                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.printing_before), Toast.LENGTH_SHORT).show();
+
+                    new Settings().makeText(BackOfficeActivity.this,getResources().getString(R.string.printing_before));
                 }
             }
         });
@@ -1922,7 +1930,8 @@ public class BackOfficeActivity extends AppCompatActivity {
                     objExp.userCountReport(headerDataMarket, userHeader);
 
                 } else {
-                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.not_data), Toast.LENGTH_SHORT).show();
+
+                    new Settings().makeText(BackOfficeActivity.this,getResources().getString(R.string.not_data));
                 }
 
 
@@ -2081,7 +2090,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
                     objExp.AnnouncementForTheDay(AnnounPdf, AnnounHeader);
                 } else {
-                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.not_data), Toast.LENGTH_SHORT).show();
+                    new Settings().makeText(BackOfficeActivity.this,getResources().getString(R.string.not_data));
                 }
 
 
@@ -2218,12 +2227,17 @@ public class BackOfficeActivity extends AppCompatActivity {
                         nextSerial++;
 
                         insertRowInMoneyCategory(moneyTable, m);
-                        Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.add_to_list), Toast.LENGTH_SHORT).show();
+
+                        new Settings().makeText(BackOfficeActivity.this, getResources().getString(R.string.add_to_list));
+
                     } else {
-                        Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.saved_before), Toast.LENGTH_SHORT).show();
+
+                        new Settings().makeText(BackOfficeActivity.this, getResources().getString(R.string.saved_before));
+
                     }
                 } else
-                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.ensure_your_input), Toast.LENGTH_SHORT).show();
+
+                    new Settings().makeText(BackOfficeActivity.this, getResources().getString(R.string.ensure_your_input));
 //                insertRowInMoneyCategory(moneyTable,m);
             }
 
@@ -2256,7 +2270,8 @@ public class BackOfficeActivity extends AppCompatActivity {
                     mDHandler.addMoneyCategory(finalMoneyArray);
                 }
 
-                Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.save_successful), Toast.LENGTH_SHORT).show();
+
+                new Settings().makeText(BackOfficeActivity.this, getResources().getString(R.string.save_successful));
                 dialog.dismiss();
             }
         });
@@ -2528,7 +2543,9 @@ public class BackOfficeActivity extends AppCompatActivity {
                 reasons.addView(row1);
                 reason.setText("");
             } else
-                Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.no_text_to_add), Toast.LENGTH_LONG).show();
+
+            new Settings().makeText(BackOfficeActivity.this, getResources().getString(R.string.no_text_to_add));
+
         });
 
         save.setOnClickListener(view -> {
@@ -2580,7 +2597,9 @@ public class BackOfficeActivity extends AppCompatActivity {
                     mDHandler.addModifierItem(modifier1);
                     dialog.dismiss();
                 } else
-                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.please_add_modifier), Toast.LENGTH_LONG).show();
+
+                new Settings().makeText(BackOfficeActivity.this, getResources().getString(R.string.please_add_modifier));
+
             }
         });
         dialog.show();
@@ -2640,7 +2659,8 @@ public class BackOfficeActivity extends AppCompatActivity {
                         }
                     }
                 } else
-                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.no_answers_to_add), Toast.LENGTH_LONG).show();
+
+                new Settings().makeText(BackOfficeActivity.this,  getResources().getString(R.string.no_answers_to_add));
             }
         });
         delete.setOnClickListener(new View.OnClickListener() {
@@ -2657,7 +2677,9 @@ public class BackOfficeActivity extends AppCompatActivity {
                         }
                     }
                 } else
-                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.no_select_answer), Toast.LENGTH_LONG).show();
+                    //***********************here
+
+                new Settings().makeText(BackOfficeActivity.this, getResources().getString(R.string.no_select_answer));
             }
         });
         save.setOnClickListener(new View.OnClickListener() {
@@ -2673,7 +2695,8 @@ public class BackOfficeActivity extends AppCompatActivity {
                         dialog.dismiss();
                     }
                 } else
-                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.ensure_your_input), Toast.LENGTH_LONG).show();
+
+                new Settings().makeText(BackOfficeActivity.this,  getResources().getString(R.string.ensure_your_input));
             }
         });
         exit.setOnClickListener(new View.OnClickListener() {
@@ -2825,7 +2848,8 @@ public class BackOfficeActivity extends AppCompatActivity {
                             }
                         }
                     } else
-                        Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.no_screen_to_add), Toast.LENGTH_LONG).show();
+
+                    new Settings().makeText(BackOfficeActivity.this,  getResources().getString(R.string.no_screen_to_add));
                 }
             }
         });
@@ -2924,7 +2948,8 @@ public class BackOfficeActivity extends AppCompatActivity {
                             }
                         }
                     } else
-                        Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.no_cate_to_add), Toast.LENGTH_LONG).show();
+
+                    new Settings().makeText(BackOfficeActivity.this,  getResources().getString(R.string.no_cate_to_add));
                 }
             }
         });
@@ -3030,7 +3055,8 @@ public class BackOfficeActivity extends AppCompatActivity {
                             }
                         }
                     } else
-                        Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.no_answers_to_add), Toast.LENGTH_LONG).show();
+
+                    new Settings().makeText(BackOfficeActivity.this, getResources().getString(R.string.no_answers_to_add));
                 }
             }
         });
@@ -3138,7 +3164,8 @@ public class BackOfficeActivity extends AppCompatActivity {
                             }
                         }
                     } else
-                        Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.no_answers_to_add), Toast.LENGTH_LONG).show();
+
+                    new Settings().makeText(BackOfficeActivity.this,  getResources().getString(R.string.no_answers_to_add));
                 }
             }
         });
@@ -3371,7 +3398,8 @@ public class BackOfficeActivity extends AppCompatActivity {
         printingReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(BackOfficeActivity.this, "printing", Toast.LENGTH_SHORT).show();
+
+                new Settings().makeText(BackOfficeActivity.this,"printing");
             }
         });
 
@@ -3557,7 +3585,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     objExp.cashierInOutReport(PayCashier, cashierHeader);
 
                 } else {
-                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.not_data), Toast.LENGTH_SHORT).show();
+                    new Settings().makeText(BackOfficeActivity.this,  getResources().getString(R.string.not_data));
                 }
 
             }
@@ -3791,7 +3819,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     objExp.canselOrderReport(canceledOrdersPdf, cancelHeader);
 
                 } else {
-                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.not_data), Toast.LENGTH_SHORT).show();
+                    new Settings().makeText(BackOfficeActivity.this,  getResources().getString(R.string.not_data));
                 }
 
 
@@ -4024,7 +4052,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
                     objExp.TableActionReport(actionsPdf, tableHeader);
                 } else {
-                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.not_data), Toast.LENGTH_SHORT).show();
+                    new Settings().makeText(BackOfficeActivity.this, getResources().getString(R.string.not_data));
                 }
 
 
@@ -4328,7 +4356,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     objExp.simpleSalesTotalReport(headerData, orderTotal, simpleHeader);
 
                 } else {
-                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.not_data), Toast.LENGTH_SHORT).show();
+                    new Settings().makeText(BackOfficeActivity.this,  getResources().getString(R.string.not_data));
                 }
 
 
@@ -4553,7 +4581,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
                     objExp.salesByHour(headerList, hourHeader);
                 } else {
-                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.not_data), Toast.LENGTH_SHORT).show();
+                    new Settings().makeText(BackOfficeActivity.this, getResources().getString(R.string.not_data));
                 }
 
             }
@@ -4739,7 +4767,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     objExp.salesReportByCardType(OrderPayMDataPdf, cardHeader);
 
                 } else {
-                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.not_data), Toast.LENGTH_SHORT).show();
+                    new Settings().makeText(BackOfficeActivity.this,  getResources().getString(R.string.not_data));
                 }
             }
         });
@@ -4903,7 +4931,8 @@ public class BackOfficeActivity extends AppCompatActivity {
                     objExp.MarketReport(headerData, fromDateT[0], ToDateT[0]);
 
                 } else {
-                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.not_data), Toast.LENGTH_SHORT).show();
+
+                    new Settings().makeText(BackOfficeActivity.this,  getResources().getString(R.string.not_data));
                 }
 
 
@@ -5078,7 +5107,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
                     objExp.waiterReport(headerDataMarket, WaiterHeader);
                 } else {
-                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.not_data), Toast.LENGTH_SHORT).show();
+                    new Settings().makeText(BackOfficeActivity.this, getResources().getString(R.string.not_data));
                 }
 
             }
@@ -5206,7 +5235,8 @@ public class BackOfficeActivity extends AppCompatActivity {
                     ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
                     objExp.salesVolumeByItem(orderTransactionData, VolumeHeader);
                 } else {
-                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.not_data), Toast.LENGTH_SHORT).show();
+
+                    new Settings().makeText(BackOfficeActivity.this,  getResources().getString(R.string.not_data));
                 }
 
 
@@ -5449,7 +5479,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
                     objExp.soldQtyReport(transactionsPdf, soldHeader);
                 } else {
-                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.not_data), Toast.LENGTH_SHORT).show();
+                    new Settings().makeText(BackOfficeActivity.this, getResources().getString(R.string.not_data));
                 }
             }
         });
@@ -5710,7 +5740,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
                     objExp.TopSalesItemReport(transactionsPdf, salesHeader);
                 } else {
-                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.not_data), Toast.LENGTH_SHORT).show();
+                    new Settings().makeText(BackOfficeActivity.this,  getResources().getString(R.string.not_data));
                 }
             }
         });
@@ -5800,10 +5830,10 @@ public class BackOfficeActivity extends AppCompatActivity {
 
                         mDHandler.addJobGroup(jobGroups);
                     }
-                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.save_successful), Toast.LENGTH_SHORT).show();
+                    new Settings().makeText(BackOfficeActivity.this,   getResources().getString(R.string.save_successful));
                     dialog.dismiss();
                 } else {
-                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.please_add_job_group), Toast.LENGTH_SHORT).show();
+                    new Settings().makeText(BackOfficeActivity.this, getResources().getString(R.string.please_add_job_group));
                 }
             }
         });
@@ -5822,7 +5852,8 @@ public class BackOfficeActivity extends AppCompatActivity {
                     count++;
                     jobGroupText.setText("");
                 } else {
-                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.please_enter_job_group), Toast.LENGTH_SHORT).show();
+
+                    new Settings().makeText(BackOfficeActivity.this,  getResources().getString(R.string.please_enter_job_group));
                 }
             }
         });
@@ -5952,7 +5983,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     toTime.setText("");
 
                 } else
-                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.fill_request_filed), Toast.LENGTH_SHORT).show();
+                new Settings().makeText(BackOfficeActivity.this, getResources().getString(R.string.fill_request_filed));
             }
         });
 
@@ -5970,11 +6001,12 @@ public class BackOfficeActivity extends AppCompatActivity {
                         mDHandler.addShift(new Shift(Integer.parseInt(convertToEnglish(shNo.getText().toString())), shName.getText().toString(),
                                 convertToEnglish(from.getText().toString()), convertToEnglish(to.getText().toString())));
 
-                        Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.save_), Toast.LENGTH_SHORT).show();
+
+                        new Settings().makeText(BackOfficeActivity.this,   getResources().getString(R.string.save_));
                         dialog.dismiss();
                     }
                 } else
-                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.no_shifts_to_be_save), Toast.LENGTH_SHORT).show();
+                new Settings().makeText(BackOfficeActivity.this, getResources().getString(R.string.no_shifts_to_be_save));
             }
         });
 
@@ -6084,10 +6116,11 @@ public class BackOfficeActivity extends AppCompatActivity {
 
                     mDHandler.addAnnouncement(announcemet);
 
-                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.save_successful), Toast.LENGTH_SHORT).show();
+
+                    new Settings().makeText(BackOfficeActivity.this,  getResources().getString(R.string.save_successful));
                     message.setText("");
                 } else {
-                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.add_message), Toast.LENGTH_SHORT).show();
+                    new Settings().makeText(BackOfficeActivity.this, getResources().getString(R.string.add_message));
                 }
 
             }
@@ -6136,10 +6169,12 @@ public class BackOfficeActivity extends AppCompatActivity {
                     kitchenNo.setText("");
                     kitchenIP.setText("");
 
-                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.save_successful), Toast.LENGTH_SHORT).show();
+
+                    new Settings().makeText(BackOfficeActivity.this, getResources().getString(R.string.save_successful));
 
                 } else {
-                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.please_insert_all_data), Toast.LENGTH_SHORT).show();
+
+                    new Settings().makeText(BackOfficeActivity.this, getResources().getString(R.string.please_insert_all_data));
                 }
 
             }
@@ -6200,10 +6235,12 @@ public class BackOfficeActivity extends AppCompatActivity {
 
                         mDHandler.addMemberShipGroup(memberShipGroup);
                     }
-                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.save_successful), Toast.LENGTH_SHORT).show();
+
+                    new Settings().makeText(BackOfficeActivity.this,   getResources().getString(R.string.save_successful));
                     dialog.dismiss();
                 } else {
-                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.add_member_ship_group), Toast.LENGTH_SHORT).show();
+
+                    new Settings().makeText(BackOfficeActivity.this,  getResources().getString(R.string.add_member_ship_group));
                 }
             }
         });
@@ -6223,7 +6260,8 @@ public class BackOfficeActivity extends AppCompatActivity {
                     count2++;
                     memberGroupText.setText("");
                 } else {
-                    Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.add_member_ship_group), Toast.LENGTH_SHORT).show();
+
+                    new Settings().makeText(BackOfficeActivity.this,  getResources().getString(R.string.add_member_ship_group));
                 }
 
             }
@@ -6259,7 +6297,8 @@ public class BackOfficeActivity extends AppCompatActivity {
                         Intent intent = new Intent(BackOfficeActivity.this, DineInLayout.class);
                         startActivity(intent);
                     } else {
-                        Toast.makeText(BackOfficeActivity.this, getResources().getString(R.string.authorization_no_incorrect), Toast.LENGTH_SHORT).show();
+                        
+                        new Settings().makeText(BackOfficeActivity.this,  getResources().getString(R.string.authorization_no_incorrect));
                     }
                 }
             }

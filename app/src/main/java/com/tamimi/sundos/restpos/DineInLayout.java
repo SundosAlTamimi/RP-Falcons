@@ -618,8 +618,7 @@ public class DineInLayout extends AppCompatActivity {
 
         if (list5.size() != 0)
             mHandler.addTables(list5, 5);
-
-        Toast.makeText(DineInLayout.this , getResources().getString(R.string.save) , Toast.LENGTH_LONG).show();
+        new Settings().makeText(DineInLayout.this,getResources().getString(R.string.save) );
     }
 
     public void zoomIn() {

@@ -22,6 +22,7 @@ import com.tamimi.sundos.restpos.Models.Items;
 import com.tamimi.sundos.restpos.Models.UsedCategories;
 import com.tamimi.sundos.restpos.Models.UsedItems;
 import com.tamimi.sundos.restpos.R;
+import com.tamimi.sundos.restpos.Settings;
 
 import org.askerov.dynamicgrid.DynamicGridView;
 
@@ -175,7 +176,7 @@ public class OrderLayout extends AppCompatActivity {
                 catName.setText(getResources().getString(R.string.category) + " : " + categories.get(focusedCatPosition).getCategoryName());
             }
         } else
-            Toast.makeText(OrderLayout.this, getResources().getString(R.string.select_cat), Toast.LENGTH_SHORT).show();
+            new Settings().makeText(OrderLayout.this,getResources().getString(R.string.select_cat) );
     }
 
     void showColorPickerDialog(final EditText editText) {
@@ -258,7 +259,7 @@ public class OrderLayout extends AppCompatActivity {
         LayoutItemsAdapter adapter = new LayoutItemsAdapter(OrderLayout.this, items, 2);
         itemGridView.setAdapter(adapter);
 
-        Toast.makeText(OrderLayout.this, "size " + items.size(), Toast.LENGTH_SHORT).show();
+        new Settings().makeText(OrderLayout.this, "size " + items.size());
 
         itemGridView.setOnDragListener(new DynamicGridView.OnDragListener() {
             @Override
@@ -294,7 +295,7 @@ public class OrderLayout extends AppCompatActivity {
 //                Toast.makeText(OrderLayout.this, parent.getAdapter().getItem(position).toString(),
 //                        Toast.LENGTH_SHORT).show();
 
-                Toast.makeText(OrderLayout.this, "" + position, Toast.LENGTH_SHORT).show();
+                new Settings().makeText(OrderLayout.this,"" + position );
 
                 LinearLayout linearLayout = (LinearLayout) view;
                 LinearLayout innerLinearLayout = (LinearLayout) linearLayout.getChildAt(0);
@@ -469,7 +470,7 @@ public class OrderLayout extends AppCompatActivity {
 //                Toast.makeText(OrderLayout.this, parent.getAdapter().getItem(position).toString(),
 //                        Toast.LENGTH_SHORT).show();
 
-                Toast.makeText(OrderLayout.this, "" + position, Toast.LENGTH_SHORT).show();
+                new Settings().makeText(OrderLayout.this,"" + position );
 
                 LinearLayout linearLayout = (LinearLayout) view;
                 LinearLayout innerLinearLayout = (LinearLayout) linearLayout.getChildAt(0);

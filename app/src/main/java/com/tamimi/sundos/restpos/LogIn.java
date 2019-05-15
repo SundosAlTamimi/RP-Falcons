@@ -121,7 +121,8 @@ public class LogIn extends AppCompatActivity {
 
                             logIn();
                         } else
-                            Toast.makeText(LogIn.this, getResources().getString(R.string.incorect_password), Toast.LENGTH_LONG).show();
+
+                        new Settings().makeText(LogIn.this,getResources().getString(R.string.incorect_password));
                     }
                     break;
             }
@@ -172,7 +173,8 @@ public class LogIn extends AppCompatActivity {
                             }
                             break;
                         case "another user is logged":
-                            Toast.makeText(LogIn.this,getResources().getString( R.string.other_user_log), Toast.LENGTH_SHORT).show();
+
+                            new Settings().makeText(LogIn.this,getResources().getString( R.string.other_user_log));
                             break;
                         default:
                             Settings.user_name = userText;
@@ -182,7 +184,7 @@ public class LogIn extends AppCompatActivity {
                     }
 
                 } else {
-                    Toast.makeText(LogIn.this,getResources().getString( R.string.enter_your_user_name), Toast.LENGTH_SHORT).show();
+                    new Settings().makeText(LogIn.this,getResources().getString( R.string.enter_your_user_name));
                 }
             }
         });

@@ -318,7 +318,7 @@ public class DineIn extends AppCompatActivity {
                             openSeatsNumberDialog();
                             waiterClick = false;
                         } else {
-                            Toast.makeText(DineIn.this, getResources().getString(R.string.add_waiter_befor), Toast.LENGTH_SHORT).show();
+                            new Settings().makeText(DineIn.this, getResources().getString(R.string.add_waiter_befor));
                         }
                     }
                 });
@@ -433,10 +433,10 @@ public class DineIn extends AppCompatActivity {
                         startActivity(intent);
 
                     } else {
-                        Toast.makeText(DineIn.this, getResources().getString(R.string.no_of_seats_doesn_match_no_pepole), Toast.LENGTH_SHORT).show();
+                        new Settings().makeText(DineIn.this, getResources().getString(R.string.no_of_seats_doesn_match_no_pepole));
                     }
                 } else {
-                    Toast.makeText(DineIn.this, getResources().getString(R.string.fill_request_filed), Toast.LENGTH_SHORT).show();
+                    new Settings().makeText(DineIn.this,getResources().getString(R.string.fill_request_filed) );
                 }
             }
         });
@@ -629,7 +629,7 @@ public class DineIn extends AppCompatActivity {
                 Log.e("here", "*****" + focusedLeft + "" + focusedRight + "" + fromSection + "" + toSection);
                 if (focusedLeft != -1 && focusedRight != -1) {
                     if (focusedLeft == focusedRight && fromSection == toSection) {
-                        Toast.makeText(DineIn.this, getResources().getString(R.string.ops_same_table), Toast.LENGTH_SHORT).show();
+                        new Settings().makeText(DineIn.this,getResources().getString(R.string.ops_same_table) );
                     } else {
                         // update on tables temp
                         mHandler.moveTablesTemp(fromSection, focusedLeft, toSection, focusedRight);
@@ -662,7 +662,7 @@ public class DineIn extends AppCompatActivity {
                         dialog2.show();
                     }
                 } else
-                    Toast.makeText(DineIn.this, getResources().getString(R.string.chooes_table_from_to_list), Toast.LENGTH_SHORT).show();
+                    new Settings().makeText(DineIn.this, getResources().getString(R.string.chooes_table_from_to_list));
             }
         });
         dialog.show();
@@ -830,7 +830,7 @@ public class DineIn extends AppCompatActivity {
                 Log.e("here", "*****" + focusedLeft + "" + focusedRight + "" + fromSection + "" + toSection);
                 if (focusedLeft != -1 && focusedRight != -1) {
                     if (focusedLeft == focusedRight && fromSection == toSection) {
-                        Toast.makeText(DineIn.this, getResources().getString(R.string.ops_same_table), Toast.LENGTH_SHORT).show();
+                        new Settings().makeText(DineIn.this,getResources().getString(R.string.ops_same_table) );
                     } else {
                         // update on tables temp
                         mHandler.mergeTablesTemp(fromSection, focusedLeft, toSection, focusedRight);
@@ -864,7 +864,7 @@ public class DineIn extends AppCompatActivity {
                         dialog2.show();
                     }
                 } else
-                    Toast.makeText(DineIn.this, getResources().getString(R.string.chooes_table_from_to_list), Toast.LENGTH_SHORT).show();
+                new Settings().makeText(DineIn.this,getResources().getString(R.string.chooes_table_from_to_list) );
             }
         });
         dialog.show();
@@ -918,10 +918,10 @@ public class DineIn extends AppCompatActivity {
                         intent.putExtra("tableNo", tableNo.getSelectedItem().toString());
                         startActivity(intent);
                     } else {
-                        Toast.makeText(DineIn.this, getResources().getString(R.string.this_table_no_order), Toast.LENGTH_SHORT).show();
+                        new Settings().makeText(DineIn.this,getResources().getString(R.string.this_table_no_order) );
                     }
                 } else
-                    Toast.makeText(DineIn.this,  getResources().getString(R.string.no_table_select), Toast.LENGTH_SHORT).show();
+                new Settings().makeText(DineIn.this,getResources().getString(R.string.no_table_select) );
             }
         });
 

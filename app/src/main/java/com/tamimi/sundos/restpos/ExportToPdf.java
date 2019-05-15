@@ -120,7 +120,8 @@ public class ExportToPdf  {
 
             doc.add(pdfPTableHeader);
             doc.add(pdfPTable);
-            Toast.makeText(context, context.getString(R.string.export_to_pdf), Toast.LENGTH_SHORT).show();
+          //  Toast.makeText(context,, Toast.LENGTH_SHORT).show();
+            new Settings().makeText(context,  context.getString(R.string.export_to_pdf));
 
         } catch (DocumentException e) {
             e.printStackTrace();
@@ -204,7 +205,8 @@ public class ExportToPdf  {
             doc.add(pdfPTableDetal);
             doc.add(pdfPTableTax);
 
-            Toast.makeText(context, context.getString(R.string.export_to_pdf), Toast.LENGTH_SHORT).show();
+            new Settings().makeText(context,context.getString(R.string.export_to_pdf));
+
         } catch (DocumentException e) {
             e.printStackTrace();
         }
@@ -268,7 +270,7 @@ public class ExportToPdf  {
         try {
             doc.add(pdfPTableHeader);
             doc.add(pdfPTable);
-            Toast.makeText(context, context.getString(R.string.export_to_pdf), Toast.LENGTH_SHORT).show();
+            new Settings().makeText(context,context.getString(R.string.export_to_pdf));
         } catch (DocumentException e) {
             e.printStackTrace();
         }
@@ -335,7 +337,7 @@ public class ExportToPdf  {
 
             doc.add(pdfPTableHeader);
             doc.add(pdfPTable);
-            Toast.makeText(context, context.getString(R.string.export_to_pdf), Toast.LENGTH_SHORT).show();
+            new Settings().makeText(context,context.getString(R.string.export_to_pdf));
         } catch (DocumentException e) {
             e.printStackTrace();
         }
@@ -414,7 +416,7 @@ public class ExportToPdf  {
             doc.add(pdfPTableDetal);
             doc.add(pdfPTableTax);
 
-            Toast.makeText(context, context.getString(R.string.export_to_pdf), Toast.LENGTH_SHORT).show();
+            new Settings().makeText(context,context.getString(R.string.export_to_pdf));
         } catch (DocumentException e) {
             e.printStackTrace();
         }
@@ -462,7 +464,7 @@ public class ExportToPdf  {
 
             doc.add(pdfPTableHeader);
             doc.add(pdfPTable);
-            Toast.makeText(context, context.getString(R.string.export_to_pdf), Toast.LENGTH_SHORT).show();
+            new Settings().makeText(context,context.getString(R.string.export_to_pdf));
 
         } catch (DocumentException e) {
             e.printStackTrace();
@@ -513,7 +515,7 @@ public class ExportToPdf  {
 
             doc.add(pdfPTableHeader);
             doc.add(pdfPTable);
-            Toast.makeText(context, context.getString(R.string.export_to_pdf), Toast.LENGTH_SHORT).show();
+            new Settings().makeText(context,context.getString(R.string.export_to_pdf));
 
         } catch (DocumentException e) {
             e.printStackTrace();
@@ -572,7 +574,7 @@ public class ExportToPdf  {
         try {
             doc.add(pdfPTableHeader);
             doc.add(pdfPTable);
-            Toast.makeText(context, context.getString(R.string.export_to_pdf), Toast.LENGTH_SHORT).show();
+            new Settings().makeText(context,context.getString(R.string.export_to_pdf));
 
         } catch (DocumentException e) {
             e.printStackTrace();
@@ -630,7 +632,7 @@ public class ExportToPdf  {
         try {
             doc.add(pdfPTableHeader);
             doc.add(pdfPTable);
-            Toast.makeText(context, context.getString(R.string.export_to_pdf), Toast.LENGTH_SHORT).show();
+            new Settings().makeText(context,context.getString(R.string.export_to_pdf));
 
         } catch (DocumentException e) {
             e.printStackTrace();
@@ -680,7 +682,7 @@ public class ExportToPdf  {
         try {
             doc.add(pdfPTableHeader);
             doc.add(pdfPTable);
-            Toast.makeText(context, context.getString(R.string.export_to_pdf), Toast.LENGTH_SHORT).show();
+            new Settings().makeText(context,context.getString(R.string.export_to_pdf));
 
         } catch (DocumentException e) {
             e.printStackTrace();
@@ -749,7 +751,7 @@ public class ExportToPdf  {
 
             doc.add(pdfPTableHeader);
             doc.add(pdfPTable);
-            Toast.makeText(context, context.getString(R.string.export_to_pdf), Toast.LENGTH_SHORT).show();
+            new Settings().makeText(context,context.getString(R.string.export_to_pdf));
 
         } catch (DocumentException e) {
             e.printStackTrace();
@@ -803,7 +805,7 @@ public class ExportToPdf  {
 
             doc.add(pdfPTableHeader);
             doc.add(pdfPTable);
-            Toast.makeText(context, context.getString(R.string.export_to_pdf), Toast.LENGTH_SHORT).show();
+            new Settings().makeText(context,context.getString(R.string.export_to_pdf));
 
         } catch (DocumentException e) {
             e.printStackTrace();
@@ -885,7 +887,7 @@ public class ExportToPdf  {
         try {
             doc.add(pdfPTableHeader);
             doc.add(pdfPTable);
-            Toast.makeText(context, context.getString(R.string.export_to_pdf), Toast.LENGTH_SHORT).show();
+            new Settings().makeText(context,context.getString(R.string.export_to_pdf));
 
         } catch (DocumentException e) {
             e.printStackTrace();
@@ -966,7 +968,7 @@ public class ExportToPdf  {
 
             doc.add(pdfPTableHeader);
             doc.add(pdfPTable);
-            Toast.makeText(context, context.getString(R.string.export_to_pdf), Toast.LENGTH_SHORT).show();
+            new Settings().makeText(context,context.getString(R.string.export_to_pdf));
 
         } catch (DocumentException e) {
             e.printStackTrace();
@@ -1027,7 +1029,7 @@ public class ExportToPdf  {
 
             doc.add(pdfPTableHeader);
             doc.add(pdfPTable);
-            Toast.makeText(context, context.getString(R.string.export_to_pdf), Toast.LENGTH_SHORT).show();
+            new Settings().makeText(context,context.getString(R.string.export_to_pdf));
 
         } catch (DocumentException e) {
             e.printStackTrace();
@@ -1072,7 +1074,7 @@ public class ExportToPdf  {
         try {
             doc.add(pdfPTableHeader);
             doc.add(pdfPTable);
-            Toast.makeText(context, context.getString(R.string.export_to_pdf), Toast.LENGTH_SHORT).show();
+            new Settings().makeText(context,context.getString(R.string.export_to_pdf));
 
 
         } catch (DocumentException e) {

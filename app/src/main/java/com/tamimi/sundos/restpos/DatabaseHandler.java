@@ -1199,7 +1199,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 //
 //        db.execSQL("ALTER TABLE ORDER_HEADER_TEMP ADD ORG_NO TAXE NOT NULL DEFAULT '0'");
 //        db.execSQL("ALTER TABLE ORDER_HEADER_TEMP ADD ORG_POS INTEGER NOT NULL DEFAULT '-1'");
-//
+
 
     }
 
