@@ -97,7 +97,7 @@ public class Order extends AppCompatActivity {
     static ArrayList<OrderTransactions> OrderTransactionsObj;
     static OrderHeader OrderHeaderObj;
 
-    int voucherSerial;
+    public static int voucherSerial;
     public static String OrderType, today, time, yearMonth, voucherNo;
 
     View v = null;
@@ -176,7 +176,7 @@ public class Order extends AppCompatActivity {
                             Intent intentPay = new Intent(Order.this, PayMethods.class);
                             startActivity(intentPay);
                         } else
-                            Toast.makeText(Order.this, getResources().getString(R.string.amountdue_oo), Toast.LENGTH_SHORT).show();
+                        new Settings().makeText(Order.this, getResources().getString(R.string.amountdue_oo));
                     }
                     break;
 
@@ -189,7 +189,7 @@ public class Order extends AppCompatActivity {
                             Intent intent = new Intent(Order.this, DineIn.class);
                             startActivity(intent);
                         } else
-                            Toast.makeText(Order.this, getResources().getString(R.string.amountdue_oo), Toast.LENGTH_SHORT).show();
+                        new Settings().makeText(Order.this,  getResources().getString(R.string.amountdue_oo));
                     }
                     break;
 
@@ -445,7 +445,7 @@ public class Order extends AppCompatActivity {
                                 calculateTotal();
                             }
                         } else
-                            Toast.makeText(Order.this, getResources().getString(R.string.no_item), Toast.LENGTH_SHORT).show();
+                        new Settings().makeText(Order.this, getResources().getString(R.string.no_item));
                     }
                 });
             }
@@ -739,9 +739,9 @@ public class Order extends AppCompatActivity {
 //            AlertDialog alertDialog = builder.create();
 //            alertDialog.show();
             } else
-                Toast.makeText(Order.this, getResources().getString(R.string.chooes_item_delete), Toast.LENGTH_SHORT).show();
+            new Settings().makeText(Order.this,getResources().getString(R.string.chooes_item_delete) );
         } else {
-            Toast.makeText(Order.this, getResources().getString(R.string.no_item), Toast.LENGTH_SHORT).show();
+            new Settings().makeText(Order.this, getResources().getString(R.string.no_item));
         }
     }
 
@@ -880,16 +880,16 @@ public class Order extends AppCompatActivity {
                                 dialog1.dismiss();
                                 dialog.dismiss();
                             } else
-                                Toast.makeText(Order.this, getResources().getString(R.string.select_reson_cancele), Toast.LENGTH_LONG).show();
+                            new Settings().makeText(Order.this, getResources().getString(R.string.select_reson_cancele));
                         });
 
 
                         dialog1.show();
                     } else
-                        Toast.makeText(Order.this, getResources().getString(R.string.curent_qty_less_than) + voidQty.getText().toString(), Toast.LENGTH_LONG).show();
+                    new Settings().makeText(Order.this, getResources().getString(R.string.curent_qty_less_than) + voidQty.getText().toString());
 
                 } else
-                    Toast.makeText(Order.this, getResources().getString(R.string.enter_qty), Toast.LENGTH_SHORT).show();
+                new Settings().makeText(Order.this,getResources().getString(R.string.enter_qty) );
             }
         });
         dialog.show();
@@ -987,7 +987,7 @@ public class Order extends AppCompatActivity {
                 }
                 dialog.dismiss();
             } else {
-                Toast.makeText(Order.this, getResources().getString(R.string.select_reson_cancele), Toast.LENGTH_LONG).show();
+                new Settings().makeText(Order.this, getResources().getString(R.string.select_reson_cancele));
 
             }
         });
@@ -1077,7 +1077,7 @@ public class Order extends AppCompatActivity {
                         }
                     }
                 } else
-                    Toast.makeText(Order.this, getResources().getString(R.string.selected_answer), Toast.LENGTH_SHORT).show();
+                new Settings().makeText(Order.this, getResources().getString(R.string.selected_answer));
             }
         });
         no.setOnClickListener(new View.OnClickListener() {
@@ -1104,7 +1104,7 @@ public class Order extends AppCompatActivity {
                         }
                     }
                 } else
-                    Toast.makeText(Order.this, getResources().getString(R.string.selected_answer), Toast.LENGTH_SHORT).show();
+                new Settings().makeText(Order.this,getResources().getString(R.string.selected_answer) );
             }
         });
 
@@ -1132,7 +1132,7 @@ public class Order extends AppCompatActivity {
                         }
                     }
                 } else
-                    Toast.makeText(Order.this, getResources().getString(R.string.selected_answer), Toast.LENGTH_SHORT).show();
+                new Settings().makeText(Order.this,getResources().getString(R.string.selected_answer) );
             }
         });
         half.setOnClickListener(new View.OnClickListener() {
@@ -1159,7 +1159,7 @@ public class Order extends AppCompatActivity {
                         }
                     }
                 } else
-                    Toast.makeText(Order.this, getResources().getString(R.string.selected_answer), Toast.LENGTH_SHORT).show();
+                new Settings().makeText(Order.this, getResources().getString(R.string.selected_answer));
             }
         });
         save.setOnClickListener(new View.OnClickListener() {
@@ -1185,7 +1185,7 @@ public class Order extends AppCompatActivity {
                             }
 
                         } else {
-                            Toast.makeText(Order.this, getResources().getString(R.string.select_qty), Toast.LENGTH_SHORT).show();
+                            new Settings().makeText(Order.this,getResources().getString(R.string.select_qty) );
                         }
                         Log.e("here", "******" + answersLinear.getChildCount());
                     } else {
@@ -1208,7 +1208,7 @@ public class Order extends AppCompatActivity {
                                         showForceQuestionDialog(itemBarcode, nextQu);
                                     }
                                 } else {
-                                    Toast.makeText(Order.this, getResources().getString(R.string.select_qty), Toast.LENGTH_SHORT).show();
+                                    new Settings().makeText(Order.this,getResources().getString(R.string.select_qty) );
                                 }
                                 Log.e("here", "******" + answersLinear.getChildCount());
                             }
@@ -1285,7 +1285,7 @@ public class Order extends AppCompatActivity {
                                 }
                             }
                         } else
-                            Toast.makeText(Order.this, getResources().getString(R.string.select_modifer), Toast.LENGTH_SHORT).show();
+                        new Settings().makeText(Order.this,getResources().getString(R.string.select_modifer) );
                     }
                 });
                 no.setOnClickListener(new View.OnClickListener() {
@@ -1302,7 +1302,7 @@ public class Order extends AppCompatActivity {
                                 }
                             }
                         } else
-                            Toast.makeText(Order.this, getResources().getString(R.string.select_modifer), Toast.LENGTH_SHORT).show();
+                        new Settings().makeText(Order.this, getResources().getString(R.string.select_modifer));
                     }
                 });
                 little.setOnClickListener(new View.OnClickListener() {
@@ -1319,7 +1319,7 @@ public class Order extends AppCompatActivity {
                                 }
                             }
                         } else
-                            Toast.makeText(Order.this, getResources().getString(R.string.select_modifer), Toast.LENGTH_SHORT).show();
+                        new Settings().makeText(Order.this, getResources().getString(R.string.select_modifer));
                     }
                 });
                 half.setOnClickListener(new View.OnClickListener() {
@@ -1336,7 +1336,7 @@ public class Order extends AppCompatActivity {
                                 }
                             }
                         } else
-                            Toast.makeText(Order.this, getResources().getString(R.string.select_modifer), Toast.LENGTH_SHORT).show();
+                        new Settings().makeText(Order.this,getResources().getString(R.string.select_modifer) );
                     }
                 });
                 save.setOnClickListener(new View.OnClickListener() {
@@ -1371,10 +1371,12 @@ public class Order extends AppCompatActivity {
 
                 dialog.show();
             } else {
-                Toast.makeText(Order.this, getResources().getString(R.string.chooes_item_to_modifier), Toast.LENGTH_SHORT).show();
+
+                new Settings().makeText(Order.this,getResources().getString(R.string.chooes_item_to_modifier) );
             }
         } else
-            Toast.makeText(this, getResources().getString(R.string.no_item), Toast.LENGTH_SHORT).show();
+
+        new Settings().makeText(Order.this,getResources().getString(R.string.no_item) );
 
     }
 
@@ -1400,13 +1402,13 @@ public class Order extends AppCompatActivity {
                         calculateTotal();
                         dialog.dismiss();
                     } else {
-                        Toast.makeText(Order.this, getResources().getString(R.string.enter_dekivery), Toast.LENGTH_SHORT).show();
+                        new Settings().makeText(Order.this, getResources().getString(R.string.enter_dekivery));
                     }
                 }
             });
             dialog.show();
         } else {
-            Toast.makeText(this, getResources().getString(R.string.delivary_is_not_avilable), Toast.LENGTH_SHORT).show();
+            new Settings().makeText(Order.this,getResources().getString(R.string.delivary_is_not_avilable) );
         }
     }
 
@@ -1445,15 +1447,18 @@ public class Order extends AppCompatActivity {
                                 calculateTotal();
                                 dialog.dismiss();
                             } else {
-                                Toast.makeText(Order.this, getResources().getString(R.string.enter_line_discount), Toast.LENGTH_SHORT).show();
+
+                                new Settings().makeText(Order.this, getResources().getString(R.string.enter_line_discount));
                             }
                         }
                     });
                     dialog.show();
                 } else
-                    Toast.makeText(Order.this, getResources().getString(R.string.discount_not_avilable), Toast.LENGTH_SHORT).show();
+
+                new Settings().makeText(Order.this,getResources().getString(R.string.discount_not_avilable) );
             } else
-                Toast.makeText(Order.this, getResources().getString(R.string.chooes_item_to_add_linediscount), Toast.LENGTH_SHORT).show();
+
+            new Settings().makeText(Order.this, getResources().getString(R.string.chooes_item_to_add_linediscount));
         }
     }
 
@@ -1498,13 +1503,13 @@ public class Order extends AppCompatActivity {
                         calculateTotal();
                         dialog.dismiss();
                     } else {
-                        Toast.makeText(Order.this, getResources().getString(R.string.enter_discount), Toast.LENGTH_SHORT).show();
+                        new Settings().makeText(Order.this,getResources().getString(R.string.enter_discount) );
                     }
                 }
             });
             dialog.show();
         } else
-            Toast.makeText(Order.this, getResources().getString(R.string.discount_not_avilable_for_curent_item), Toast.LENGTH_SHORT).show();
+        new Settings().makeText(Order.this,getResources().getString(R.string.discount_not_avilable_for_curent_item) );
     }
 
     void calculateTotal() {

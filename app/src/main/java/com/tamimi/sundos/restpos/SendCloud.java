@@ -106,6 +106,7 @@ public class SendCloud {
 
             if (s != null && s.contains("Voucher Saved Successfully")) {
 //                Toast.makeText(ExportJason.this , "Success" , Toast.LENGTH_SHORT).show();
+//
                 Log.e("tag", "****Success");
             } else {
 //                Toast.makeText(ExportJason.this, "Failed to export data", Toast.LENGTH_SHORT).show();

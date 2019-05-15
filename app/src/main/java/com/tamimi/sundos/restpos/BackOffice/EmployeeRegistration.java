@@ -140,11 +140,11 @@ public class EmployeeRegistration extends AppCompatActivity {
                         employeeRegistrationModle.setShiftName(Settings.shift_name);
 
                         mDHandler.addEmployeeRegistration(employeeRegistrationModle);
-                        Toast.makeText(EmployeeRegistration.this, getResources().getString(R.string.save_successful), Toast.LENGTH_SHORT).show();
+                        new Settings().makeText(EmployeeRegistration.this,getResources().getString(R.string.save_successful) );
                         finish();
                     }
                 } else {
-                    Toast.makeText(EmployeeRegistration.this, getResources().getString(R.string.not_have_any_data), Toast.LENGTH_SHORT).show();
+                    new Settings().makeText(EmployeeRegistration.this,getResources().getString(R.string.not_have_any_data) );
                 }
 
             }
@@ -188,7 +188,7 @@ public class EmployeeRegistration extends AppCompatActivity {
                                         break;
                                 }
 
-                                Toast.makeText(EmployeeRegistration.this, "OK ", Toast.LENGTH_SHORT).show();
+                                new Settings().makeText(EmployeeRegistration.this,"OK " );
                                 insertRaw3(empName.getText().toString(), serial[0], Integer.parseInt(mobileNo.getText().toString()),
                                         securityLevel.getSelectedItem().toString(), Integer.parseInt(pass), convertToEnglish(hireDate.getText().toString()), convertToEnglish(termination.getText().toString())
                                         , payBasic.getSelectedItem().toString(), payRate.getText().toString(), holidayPay.getSelectedItem().toString(), employeeType.getSelectedItem().toString(), tableEmployee);
@@ -204,16 +204,16 @@ public class EmployeeRegistration extends AppCompatActivity {
                                 empNo.setText("" + serial[0]);
 
                             } else {
-                                Toast.makeText(EmployeeRegistration.this, getResources().getString(R.string.password_length), Toast.LENGTH_SHORT).show();
+                                new Settings().makeText(EmployeeRegistration.this,getResources().getString(R.string.password_length) );
                             }
                         } else {
-                            Toast.makeText(EmployeeRegistration.this, getResources().getString(R.string.user_exist), Toast.LENGTH_SHORT).show();
+                            new Settings().makeText(EmployeeRegistration.this,getResources().getString(R.string.user_exist) );
                         }
                     } else {
-                        Toast.makeText(EmployeeRegistration.this, getResources().getString(R.string.please_insert_all_data), Toast.LENGTH_SHORT).show();
+                        new Settings().makeText(EmployeeRegistration.this,getResources().getString(R.string.please_insert_all_data) );
                     }
                 } else {
-                    Toast.makeText(EmployeeRegistration.this, getResources().getString(R.string.add_job_group_before_new_emplo), Toast.LENGTH_SHORT).show();
+                    new Settings().makeText(EmployeeRegistration.this,getResources().getString(R.string.add_job_group_before_new_emplo) );
                 }
 
             }
