@@ -56,11 +56,27 @@ import static com.tamimi.sundos.restpos.Settings.shift_name;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
     // Database Versions
-    private static final int DATABASE_VERSION = 32;
+    private static final int DATABASE_VERSION = 33;
 
     // Database Name
     private static final String DATABASE_NAME = "RestPos";
     static SQLiteDatabase db;
+
+    //___________________________________________________________________________________
+    private static final String MAIN_SETTINGS = "MAIN_SETTINGS";
+
+    private static final String MAIN_SETTINGS_USERNAME = "USERNAME";
+    private static final String MAIN_SETTINGS_PASSWORD = "PASSWORD";
+    private static final String MAIN_SETTINGS_USER_NO = "USER_NO";
+    private static final String MAIN_SETTINGS_POS_NO = "POS_NO";
+    private static final String MAIN_SETTINGS_STORE_NO = "STORE_NO";
+    private static final String MAIN_SETTINGS_SHIFT_NO = "SHIFT_NO";
+    private static final String MAIN_SETTINGS_SHIFT_NAME = "SHIFT_NAME";
+    private static final String MAIN_SETTINGS_SERVICE_TAX = "SERVICE_TAX";
+    private static final String MAIN_SETTINGS_SERVICE_VALUE = "SERVICE_VALUE";
+    private static final String MAIN_SETTINGS_TAX_TYPE = "TAX_TYPE";
+    private static final String MAIN_SETTINGS_TIME_CARD = "TIME_CARD";
+
     //___________________________________________________________________________________
     private static final String ITEMS = "ITEMS";
 
@@ -572,6 +588,22 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     void createTables(SQLiteDatabase db) {
+
+        String CREATE_TABLE_MAIN_SETTINGS = "CREATE TABLE " + MAIN_SETTINGS + "("
+                + MAIN_SETTINGS_USERNAME + " TEXT,"
+                + MAIN_SETTINGS_PASSWORD + " INTEGER,"
+                + MAIN_SETTINGS_USER_NO + " INTEGER,"
+                + MAIN_SETTINGS_POS_NO + " INTEGER,"
+                + MAIN_SETTINGS_STORE_NO + " INTEGER,"
+                + MAIN_SETTINGS_SHIFT_NO + " INTEGER,"
+                + MAIN_SETTINGS_SHIFT_NAME + " TEXT,"
+                + MAIN_SETTINGS_SERVICE_TAX + " REAL,"
+                + MAIN_SETTINGS_SERVICE_VALUE + " REAL,"
+                + MAIN_SETTINGS_TAX_TYPE + " INTEGER,"
+                + MAIN_SETTINGS_TIME_CARD + " INTEGER" + ")";
+        db.execSQL(CREATE_TABLE_MAIN_SETTINGS);
+        //___________________________________________________________________________________
+
         String CREATE_TABLE_ITEMS = "CREATE TABLE " + ITEMS + "("
                 + MENU_CATEGORY + " TEXT,"
                 + MENU_NAME + " TEXT,"
@@ -1204,6 +1236,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     //Insert values to the table Items
+
+    
+
     public void addItem(Items items) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
@@ -1366,8 +1401,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         return allCasher;
             }
-
-
 
     public void addBlindClose(BlindClose obj) {
         db = this.getReadableDatabase();

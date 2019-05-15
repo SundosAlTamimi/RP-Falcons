@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
@@ -117,7 +118,7 @@ public class BackOfficeActivity extends AppCompatActivity {
     LinearLayout membershipGroup, membership, customerRegistration;
     LinearLayout jobGroup, employeeRegistration, employeeSchedule, payroll, vacation, editTables;
     LinearLayout menuCategory, menuRegistration, modifier, forceQuestion, voiding_reasons, menuLayout;
-    LinearLayout store, storeOperation, users, moneyCategory, kitchenScreen;
+    LinearLayout store, storeOperation, users, moneyCategory, kitchenScreen, mainSettings;
     LinearLayout salesTotal, cashierInOut, canceledOrderHistory, x_report, z_report, market_report_,
             salesReportForDay, salesByHours, salesVolumeByItem, topSalesItemReport, topGroupSalesReport, topFamilySalesReport,
             salesReportByCustomer, salesReportByCardType, waiterSalesReport, tableActionReport, profitLossReport, detailSalesReport,
@@ -284,6 +285,9 @@ public class BackOfficeActivity extends AppCompatActivity {
                 case R.id.kitchen_screen:
                     showKitchenScreenDialog();
                     break;
+                case R.id.management_main_settings:
+                    showPasswordDialog();
+                    break;
                 case R.id.sales_total:
                     salesTotalReportDialog();
                     break;
@@ -348,6 +352,74 @@ public class BackOfficeActivity extends AppCompatActivity {
             }
         }
     };
+
+    private void showPasswordDialog() {
+        dialog = new Dialog(BackOfficeActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.settings_password_dialog);
+        dialog.setCanceledOnTouchOutside(true);
+
+        EditText passwordEditText = (EditText) dialog.findViewById(R.id.setting_admin_password);
+        Button passwordConfirm = (Button) dialog.findViewById(R.id.setting_password_enter);
+
+        passwordConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!TextUtils.isEmpty(passwordEditText.getText().toString())) {
+                    if (passwordEditText.getText().toString().equals("master")) {//Settings.user_name
+                        showMainSettingsDialog();
+                    } else {
+                        Toast.makeText(BackOfficeActivity.this, "Wrong Password!", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(BackOfficeActivity.this, "Not authorized!", Toast.LENGTH_SHORT).show();
+                }
+                passwordEditText.setText("");
+
+            }
+        });
+        dialog.show();
+
+    }
+
+    private void showMainSettingsDialog() {
+        dialog = new Dialog(BackOfficeActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.main_settings_dialog);
+        dialog.setCanceledOnTouchOutside(true);
+
+        EditText userName = (EditText) dialog.findViewById(R.id.main_settings_userName);
+        EditText userPassword = (EditText) dialog.findViewById(R.id.main_settings_password);
+        EditText userNo = (EditText) dialog.findViewById(R.id.main_settings_userNo);
+        EditText posNo = (EditText) dialog.findViewById(R.id.main_settings_posNo);
+        EditText storeNo = (EditText) dialog.findViewById(R.id.main_settings_storeNo);
+        EditText shiftNo = (EditText) dialog.findViewById(R.id.main_settings_shiftNo);
+        EditText shiftName = (EditText) dialog.findViewById(R.id.main_settings_shiftName);
+        EditText serviceTax = (EditText) dialog.findViewById(R.id.main_settings_serviceTax);
+        EditText serviceValue = (EditText) dialog.findViewById(R.id.main_settings_serviceValue);
+        EditText taxType = (EditText) dialog.findViewById(R.id.main_settings_taxType);
+        EditText timeCard = (EditText) dialog.findViewById(R.id.main_settings_timeCard);
+        Button saveSettings = dialog.findViewById(R.id.main_settings_save);
+        Button cancel = dialog.findViewById(R.id.main_settings_cancel);
+
+        saveSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
 
     void showReCancellationSupervisor() {
         dialog = new Dialog(BackOfficeActivity.this);
@@ -1322,7 +1394,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                 totalBeforTax.setText("" + totalText);
                 tax.setText("" + tatText);
                 totalAfterTax.setText("" + netText);
-                services.setText("" +0.0);
+                services.setText("" + 0.0);
                 servicesTax.setText("" + 0.0);
                 totalTax.setText("" + totalText);
                 net.setText("" + netText);
@@ -3199,8 +3271,6 @@ public class BackOfficeActivity extends AppCompatActivity {
         posNo.setAdapter(adapterPosNo);
 
 
-
-
         fromDate.setOnClickListener(v -> new DatePickerDialog(BackOfficeActivity.this, dateListener(fromDate), myCalendar
                 .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                 myCalendar.get(Calendar.DAY_OF_MONTH)).show());
@@ -3270,15 +3340,15 @@ public class BackOfficeActivity extends AppCompatActivity {
                             if (payData.get(i).getUserName().equals(userString[0]) || userString[0].equals(getResources().getString(R.string.all))) {
                                 if (payData.get(i).getPointOfSaleNumber() == posNoString[0] || posNoString[0] == -1) {
                                     if (payData.get(i).getOrderKind() == 0) {
-                                        if (payData.get(i).getPayType().contains("v")||payData.get(i).getPayType().contains("V"))
+                                        if (payData.get(i).getPayType().contains("v") || payData.get(i).getPayType().contains("V"))
                                             visaValue += payData.get(i).getPayValue();
-                                        else if (payData.get(i).getPayType().contains("m")||payData.get(i).getPayType().contains("M"))
+                                        else if (payData.get(i).getPayType().contains("m") || payData.get(i).getPayType().contains("M"))
                                             masterValue += payData.get(i).getPayValue();
 
                                     } else if (payData.get(i).getOrderKind() == 998) {
-                                        if (payData.get(i).getPayType().contains("v")||payData.get(i).getPayType().contains("V"))
+                                        if (payData.get(i).getPayType().contains("v") || payData.get(i).getPayType().contains("V"))
                                             visaValue -= payData.get(i).getPayValue();
-                                        else if (payData.get(i).getPayType().contains("m")||payData.get(i).getPayType().contains("M"))
+                                        else if (payData.get(i).getPayType().contains("m") || payData.get(i).getPayType().contains("M"))
                                             masterValue -= payData.get(i).getPayValue();
                                     }
 
@@ -6707,6 +6777,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         users = (LinearLayout) findViewById(R.id.users);
         moneyCategory = (LinearLayout) findViewById(R.id.money_category);
         kitchenScreen = (LinearLayout) findViewById(R.id.kitchen_screen);
+        mainSettings = (LinearLayout) findViewById(R.id.management_main_settings);
         salesTotal = (LinearLayout) findViewById(R.id.sales_total);
         cashierInOut = (LinearLayout) findViewById(R.id.cashier_in_out);
         canceledOrderHistory = (LinearLayout) findViewById(R.id.canceled_order_history);
@@ -6762,6 +6833,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         users.setOnClickListener(onClickListener2);
         moneyCategory.setOnClickListener(onClickListener2);
         kitchenScreen.setOnClickListener(onClickListener2);
+        mainSettings.setOnClickListener(onClickListener2);
         salesTotal.setOnClickListener(onClickListener2);
         cashierInOut.setOnClickListener(onClickListener2);
         canceledOrderHistory.setOnClickListener(onClickListener2);
