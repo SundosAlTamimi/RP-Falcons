@@ -1237,7 +1237,24 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     //Insert values to the table Items
 
-    
+    public void addMainSettings(){
+//        db = this.getWritableDatabase();
+//        ContentValues values = new ContentValues();
+//
+//        values.put(MAIN_SETTINGS_USERNAME, Settings.user_name);
+//        values.put(MAIN_SETTINGS_PASSWORD, Settings.user_name);
+//        values.put(MAIN_SETTINGS_USER_NO, Settings.user_name);
+//        values.put(MAIN_SETTINGS_USERNAME, Settings.user_name);
+//        values.put(MAIN_SETTINGS_USERNAME, Settings.user_name);
+//        values.put(MAIN_SETTINGS_USERNAME, Settings.user_name);
+//        values.put(MAIN_SETTINGS_USERNAME, Settings.user_name);
+//        values.put(MAIN_SETTINGS_USERNAME, Settings.user_name);
+//        values.put(MAIN_SETTINGS_USERNAME, Settings.user_name);
+//        values.put(MAIN_SETTINGS_USERNAME, Settings.user_name);
+//        values.put(MAIN_SETTINGS_USERNAME, Settings.user_name);
+
+
+    }
 
     public void addItem(Items items) {
         db = this.getReadableDatabase();
