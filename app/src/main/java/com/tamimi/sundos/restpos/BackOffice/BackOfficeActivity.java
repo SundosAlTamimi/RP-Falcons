@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
@@ -386,6 +387,11 @@ public class BackOfficeActivity extends AppCompatActivity {
         EditText timeCard = (EditText) dialog.findViewById(R.id.main_settings_timeCard);
         Button saveSettings = dialog.findViewById(R.id.main_settings_save);
         Button cancel = dialog.findViewById(R.id.main_settings_cancel);
+
+        mDHandler.getMainSettings();
+        if (!Settings.user_name.equals("")){
+
+        }
 
         saveSettings.setOnClickListener(new View.OnClickListener() {
             @Override

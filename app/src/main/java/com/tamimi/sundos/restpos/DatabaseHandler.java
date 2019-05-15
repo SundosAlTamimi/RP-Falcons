@@ -1238,22 +1238,23 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     //Insert values to the table Items
 
     public void addMainSettings(){
-//        db = this.getWritableDatabase();
-//        ContentValues values = new ContentValues();
-//
-//        values.put(MAIN_SETTINGS_USERNAME, Settings.user_name);
-//        values.put(MAIN_SETTINGS_PASSWORD, Settings.user_name);
-//        values.put(MAIN_SETTINGS_USER_NO, Settings.user_name);
-//        values.put(MAIN_SETTINGS_USERNAME, Settings.user_name);
-//        values.put(MAIN_SETTINGS_USERNAME, Settings.user_name);
-//        values.put(MAIN_SETTINGS_USERNAME, Settings.user_name);
-//        values.put(MAIN_SETTINGS_USERNAME, Settings.user_name);
-//        values.put(MAIN_SETTINGS_USERNAME, Settings.user_name);
-//        values.put(MAIN_SETTINGS_USERNAME, Settings.user_name);
-//        values.put(MAIN_SETTINGS_USERNAME, Settings.user_name);
-//        values.put(MAIN_SETTINGS_USERNAME, Settings.user_name);
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
 
+        values.put(MAIN_SETTINGS_USERNAME, Settings.user_name);
+        values.put(MAIN_SETTINGS_PASSWORD, Settings.password);
+        values.put(MAIN_SETTINGS_USER_NO, Settings.user_no);
+        values.put(MAIN_SETTINGS_POS_NO, Settings.POS_number);
+        values.put(MAIN_SETTINGS_STORE_NO, Settings.store_number);
+        values.put(MAIN_SETTINGS_SHIFT_NO, Settings.shift_number);
+        values.put(MAIN_SETTINGS_SHIFT_NAME, shift_name);
+        values.put(MAIN_SETTINGS_SERVICE_TAX, Settings.service_tax);
+        values.put(MAIN_SETTINGS_SERVICE_VALUE, Settings.service_value);
+        values.put(MAIN_SETTINGS_TAX_TYPE, Settings.tax_type);
+        values.put(MAIN_SETTINGS_TIME_CARD, Settings.time_card);
 
+        db.insert(MAIN_SETTINGS, null , values);
+        db.close();
     }
 
     public void addItem(Items items) {
@@ -2094,6 +2095,27 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.insert(VOID_REASONS, null, values);
 
         db.close();
+    }
+
+    public void getMainSettings(){
+        String selectQuery = "SELECT  * FROM " + MAIN_SETTINGS;
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()){
+            Settings.user_name = cursor.getString(0);
+            Settings.password = cursor.getInt(1);
+            Settings.user_no = cursor.getInt(2);
+            Settings.POS_number = cursor.getInt(3);
+            Settings.store_number = cursor.getInt(4);
+            Settings.shift_number = cursor.getInt(5);
+            shift_name = cursor.getString(6);
+            Settings.service_tax= cursor.getDouble(7);
+            Settings.service_value = cursor.getDouble(8);
+            Settings.tax_type = cursor.getInt(9);
+            Settings.time_card = cursor.getInt(10);
+
+        }
     }
 
     public ArrayList<ClockInClockOut> getAllExistingClockInClockOut() {
