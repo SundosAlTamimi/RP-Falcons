@@ -1,6 +1,10 @@
 package com.tamimi.sundos.restpos.Models;
 
 import android.graphics.Bitmap;
+import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class FamilyCategory {
 
@@ -50,5 +54,19 @@ public class FamilyCategory {
 
     public void setCatPic(Bitmap catPic) {
         this.catPic = catPic;
+    }
+
+    public JSONObject getJSONObject() {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("SERIAL", serial);
+            obj.put("TYPE", type);
+            obj.put("NAME_CATEGORY_FAMILY", name);
+            obj.put("CATEGORY_PIC", catPic);
+
+        } catch (JSONException e) {
+            Log.e("Tag", "JSONException");
+        }
+        return obj;
     }
 }

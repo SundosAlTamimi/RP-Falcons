@@ -3503,10 +3503,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 familyCategory.setType(Integer.parseInt(cursor.getString(1)));
                 familyCategory.setName(cursor.getString(2));
 
-                if (cursor.getBlob(3).length == 0)
-                    familyCategory.setCatPic(null);
-                else
-                    familyCategory.setCatPic(BitmapFactory.decodeByteArray(cursor.getBlob(3), 0, cursor.getBlob(3).length));
+//                if (cursor.getBlob(3).length == 0)
+//                    familyCategory.setCatPic(null);
+//                else
+//                    familyCategory.setCatPic(BitmapFactory.decodeByteArray(cursor.getBlob(3), 0, cursor.getBlob(3).length));
 
 
                 familyCategoryArrayList.add(familyCategory);
@@ -4071,6 +4071,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void deleteAllTables() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from " + TABLES);
+        db.close();
+    }
+
+    public void deleteAllFamilyCategory() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + FAMILY_CATEGORY_TABLE);
         db.close();
     }
 

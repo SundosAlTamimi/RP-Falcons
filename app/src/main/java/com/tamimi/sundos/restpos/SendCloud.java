@@ -32,6 +32,9 @@ public class SendCloud {
 
         if (flag.equals("Server"))
             new JSONTaskServer().execute();
+
+        if (flag.equals("FamilyCategory"))
+            new JSONTaskServer().execute();
     }
 
     private class JSONTaskKitchen extends AsyncTask<String, String, String> {

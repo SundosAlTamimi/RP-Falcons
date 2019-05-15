@@ -84,6 +84,7 @@ import com.tamimi.sundos.restpos.Models.VoidResons;
 import com.tamimi.sundos.restpos.Models.ZReport;
 import com.tamimi.sundos.restpos.R;
 import com.tamimi.sundos.restpos.Settings;
+import com.tamimi.sundos.restpos.SyncWithCloud;
 
 //import java.io.File;
 //import java.io.FileNotFoundException;
@@ -244,6 +245,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     startActivity(intentEmployeeRegistration);
                     break;
                 case R.id.employee_schedule:
+                    showSynkDialog();
                     break;
                 case R.id.payroll:
                     break;
@@ -4514,6 +4516,13 @@ public class BackOfficeActivity extends AppCompatActivity {
         exit.setOnClickListener(v -> dialog.dismiss());
 
         dialog.show();
+
+    }
+
+    void showSynkDialog(){
+
+        SyncWithCloud obj = new SyncWithCloud(BackOfficeActivity.this);
+        obj.startSyncing("");
 
     }
 
