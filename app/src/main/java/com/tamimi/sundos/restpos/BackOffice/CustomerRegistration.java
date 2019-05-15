@@ -125,11 +125,12 @@ public class CustomerRegistration extends AppCompatActivity {
                         customerRegistrationModel.setShiftName(Settings.shift_name);
 
                         mDHandler.addCustomerRegistration(customerRegistrationModel);
-                        Toast.makeText(CustomerRegistration.this, getResources().getString(R.string.save_successful), Toast.LENGTH_SHORT).show();
+
+                        new Settings().makeText(CustomerRegistration.this,getResources().getString(R.string.save_successful) );
                         finish();
                     }
                 } else {
-                    Toast.makeText(CustomerRegistration.this, getResources().getString(R.string.not_have_any_data), Toast.LENGTH_SHORT).show();
+                    new Settings().makeText(CustomerRegistration.this, getResources().getString(R.string.not_have_any_data) );
                 }
 
             }
@@ -215,7 +216,7 @@ public class CustomerRegistration extends AppCompatActivity {
 //                    redeemedPointList.add(Integer.parseInt(redeemedPoint.getText().toString()));
 //                    remainingPointList.add(Integer.parseInt(remaining.getText().toString()));
 
-                        Toast.makeText(CustomerRegistration.this, "OK", Toast.LENGTH_SHORT).show();
+                        new Settings().makeText(CustomerRegistration.this, "OK");
 
                         customerName.setText("");
                         customerCode.setText("");
@@ -234,10 +235,10 @@ public class CustomerRegistration extends AppCompatActivity {
                         remaining.setText("");
                         remark.setText("");
                     } else {
-                        Toast.makeText(CustomerRegistration.this, getResources().getString(R.string.please_insert_all_data), Toast.LENGTH_SHORT).show();
+                        new Settings().makeText(CustomerRegistration.this,getResources().getString(R.string.please_insert_all_data) );
                     }
                 } else {
-                    Toast.makeText(CustomerRegistration.this, getResources().getString(R.string.add_member_ship_group), Toast.LENGTH_SHORT).show();
+                    new Settings().makeText(CustomerRegistration.this,getResources().getString(R.string.add_member_ship_group) );
                 }
 
 

@@ -16,6 +16,11 @@
     <string name="clear">clear</string>
     <string name="enter_password">Enter Your Password :</string>
 
+    <string name="password">Password</string>
+    <string name="user_no">User No</string>
+    <string name="store_no">Store No</string>
+    <string name="service_value">Service Value</string>
+
     <string name="order_by">Order By</string>
     <string name="canceled">Canceled</string>
     <string name="menu">Menu</string>
@@ -152,7 +157,8 @@
 
     <string name="order_layout">Order Layout</string>
     <string name="add_category">+ Add Category</string>
-    <string name="setting">Setting</string>
+    <string name="setting">Settings</string>
+    <string name="main_settings">Main Settings</string>
     <string name="categories_setting">Categories Setting</string>
     <string name="background">Background</string>
     <string name="text_color">Text Color</string>

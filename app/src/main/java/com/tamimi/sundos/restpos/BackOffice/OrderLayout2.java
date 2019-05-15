@@ -24,6 +24,7 @@ import com.tamimi.sundos.restpos.Models.Items;
 import com.tamimi.sundos.restpos.Models.UsedCategories;
 import com.tamimi.sundos.restpos.Models.UsedItems;
 import com.tamimi.sundos.restpos.R;
+import com.tamimi.sundos.restpos.Settings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -213,14 +214,15 @@ public class OrderLayout2 extends AppCompatActivity {
     void addItem() {
 
         if (itemPosition.getText().toString().equals(""))
-            Toast.makeText(OrderLayout2.this, "Please set position", Toast.LENGTH_SHORT).show();
+            new Settings().makeText(OrderLayout2.this,"Please set position" );
         else {
             int item_position = Integer.parseInt(itemPosition.getText().toString());
             int tag = Integer.parseInt(focused.getTag().toString());
 
             if (item_position > tag - 1)
-                Toast.makeText(OrderLayout2.this, "Position is greater than the number of items in category " +
-                        focused.getText().toString(), Toast.LENGTH_LONG).show();
+            new Settings().makeText(OrderLayout2.this,"Position is greater than the number of items in category " +
+                    focused.getText().toString());
+
             else {
                 if (position != -1) { // position of setting itemList
                     int backColor = itemBackgroundColor.getText().toString().equals("") ? getResources().getColor(R.color.layer2) : Integer.parseInt(itemBackgroundColor.getText().toString());
@@ -236,7 +238,7 @@ public class OrderLayout2 extends AppCompatActivity {
                     storeItems();
 
                 } else {
-                    Toast.makeText(OrderLayout2.this, "Please choose item", Toast.LENGTH_SHORT).show();
+                    new Settings().makeText(OrderLayout2.this,"Please choose item");
                 }
             }
         }
@@ -281,7 +283,7 @@ public class OrderLayout2 extends AppCompatActivity {
                         categoriesAdapter.notifyDataSetChanged();
                     }
                 } else {
-                    Toast.makeText(OrderLayout2.this, "Please enter number of items", Toast.LENGTH_SHORT).show();
+                    new Settings().makeText(OrderLayout2.this,"Please enter number of items");
                 }
             } else { // button with text
                 if (!numOfItems.getText().toString().equals("")) {
@@ -323,7 +325,7 @@ public class OrderLayout2 extends AppCompatActivity {
                     builderInner.show();
 
                 } else {
-                    Toast.makeText(OrderLayout2.this, "Please enter number of items", Toast.LENGTH_SHORT).show();
+                    new Settings().makeText(OrderLayout2.this,"Please enter number of items");
                 }
             }
         } else { // change will be on items no
@@ -349,11 +351,11 @@ public class OrderLayout2 extends AppCompatActivity {
                     fillGridView2();
 
                 } else if (Integer.parseInt(button.getTag().toString()) > Integer.parseInt(numOfItems.getText().toString())) {
-                    Toast.makeText(OrderLayout2.this, "Please enter size greater than " + Integer.parseInt(button.getTag().toString()), Toast.LENGTH_SHORT).show();
+                    new Settings().makeText(OrderLayout2.this,"Please enter size greater than " + Integer.parseInt(button.getTag().toString()));
 
                 }
             } else {
-                Toast.makeText(OrderLayout2.this, "Please enter number of items", Toast.LENGTH_SHORT).show();
+                new Settings().makeText(OrderLayout2.this,"Please enter number of items");
             }
         }
     }
@@ -402,7 +404,7 @@ public class OrderLayout2 extends AppCompatActivity {
                     backColor, textColor, i));
         }
 
-        Toast.makeText(OrderLayout2.this, "Menu Saved", Toast.LENGTH_LONG).show();
+        new Settings().makeText(OrderLayout2.this,"Menu Saved");
 
     }
 
@@ -416,7 +418,7 @@ public class OrderLayout2 extends AppCompatActivity {
         if (subList.size() != 0) {
             gv.setAdapter(null);
             adapter = new LayoutFoodAdapter(OrderLayout2.this, subList, 1);
-            Toast.makeText(OrderLayout2.this, "tag " + focused.getText().toString(), Toast.LENGTH_SHORT).show();
+            new Settings().makeText(OrderLayout2.this,"tag " + focused.getText().toString());
             gv.setAdapter(adapter);
         }
     }

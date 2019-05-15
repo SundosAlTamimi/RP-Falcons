@@ -55,12 +55,28 @@ import java.util.List;
 import static com.tamimi.sundos.restpos.Settings.shift_name;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
-    // Database Version
-    private static final int DATABASE_VERSION = 32;
+    // Database Versions
+    private static final int DATABASE_VERSION = 33;
 
     // Database Name
     private static final String DATABASE_NAME = "RestPos";
     static SQLiteDatabase db;
+
+    //___________________________________________________________________________________
+    private static final String MAIN_SETTINGS = "MAIN_SETTINGS";
+
+    private static final String MAIN_SETTINGS_USERNAME = "USERNAME";
+    private static final String MAIN_SETTINGS_PASSWORD = "PASSWORD";
+    private static final String MAIN_SETTINGS_USER_NO = "USER_NO";
+    private static final String MAIN_SETTINGS_POS_NO = "POS_NO";
+    private static final String MAIN_SETTINGS_STORE_NO = "STORE_NO";
+    private static final String MAIN_SETTINGS_SHIFT_NO = "SHIFT_NO";
+    private static final String MAIN_SETTINGS_SHIFT_NAME = "SHIFT_NAME";
+    private static final String MAIN_SETTINGS_SERVICE_TAX = "SERVICE_TAX";
+    private static final String MAIN_SETTINGS_SERVICE_VALUE = "SERVICE_VALUE";
+    private static final String MAIN_SETTINGS_TAX_TYPE = "TAX_TYPE";
+    private static final String MAIN_SETTINGS_TIME_CARD = "TIME_CARD";
+
     //___________________________________________________________________________________
     private static final String ITEMS = "ITEMS";
 
@@ -572,6 +588,22 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     void createTables(SQLiteDatabase db) {
+
+        String CREATE_TABLE_MAIN_SETTINGS = "CREATE TABLE " + MAIN_SETTINGS + "("
+                + MAIN_SETTINGS_USERNAME + " TEXT,"
+                + MAIN_SETTINGS_PASSWORD + " INTEGER,"
+                + MAIN_SETTINGS_USER_NO + " INTEGER,"
+                + MAIN_SETTINGS_POS_NO + " INTEGER,"
+                + MAIN_SETTINGS_STORE_NO + " INTEGER,"
+                + MAIN_SETTINGS_SHIFT_NO + " INTEGER,"
+                + MAIN_SETTINGS_SHIFT_NAME + " TEXT,"
+                + MAIN_SETTINGS_SERVICE_TAX + " REAL,"
+                + MAIN_SETTINGS_SERVICE_VALUE + " REAL,"
+                + MAIN_SETTINGS_TAX_TYPE + " INTEGER,"
+                + MAIN_SETTINGS_TIME_CARD + " INTEGER" + ")";
+        db.execSQL(CREATE_TABLE_MAIN_SETTINGS);
+        //___________________________________________________________________________________
+
         String CREATE_TABLE_ITEMS = "CREATE TABLE " + ITEMS + "("
                 + MENU_CATEGORY + " TEXT,"
                 + MENU_NAME + " TEXT,"
@@ -1180,30 +1212,33 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
 
-        db.execSQL("ALTER TABLE ANNOUNCEMENT_TABLE ADD USER_NO INTEGER NOT NULL DEFAULT '-1'");
+//        db.execSQL("ALTER TABLE ANNOUNCEMENT_TABLE ADD USER_NO INTEGER NOT NULL DEFAULT '-1'");
 
-        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS ADD ORG_NO TAXE NOT NULL DEFAULT '0'");
-        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS ADD ORG_POS INTEGER NOT NULL DEFAULT '-1'");
-        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS ADD RETURN_QTY INTEGER NOT NULL DEFAULT '0'");
-
-        db.execSQL("ALTER TABLE ORDER_HEADER ADD ORG_NO TAXE NOT NULL DEFAULT '0'");
-        db.execSQL("ALTER TABLE ORDER_HEADER ADD ORG_POS INTEGER NOT NULL DEFAULT '-1'");
-
-        db.execSQL("ALTER TABLE PAY_METHOD ADD ORG_NO TAXE NOT NULL DEFAULT '0'");
-        db.execSQL("ALTER TABLE PAY_METHOD ADD ORG_POS INTEGER NOT NULL DEFAULT '-1'");
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS_TEMP ADD ORG_NO TAXE NOT NULL DEFAULT '0'");
-        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS_TEMP ADD ORG_POS INTEGER NOT NULL DEFAULT '-1'");
-        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS_TEMP ADD RETURN_QTY INTEGER NOT NULL DEFAULT '0'");
-
-        db.execSQL("ALTER TABLE ORDER_HEADER_TEMP ADD ORG_NO TAXE NOT NULL DEFAULT '0'");
-        db.execSQL("ALTER TABLE ORDER_HEADER_TEMP ADD ORG_POS INTEGER NOT NULL DEFAULT '-1'");
+//        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS ADD ORG_NO TAXE NOT NULL DEFAULT '0'");
+//        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS ADD ORG_POS INTEGER NOT NULL DEFAULT '-1'");
+//        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS ADD RETURN_QTY INTEGER NOT NULL DEFAULT '0'");
+//
+//        db.execSQL("ALTER TABLE ORDER_HEADER ADD ORG_NO TAXE NOT NULL DEFAULT '0'");
+//        db.execSQL("ALTER TABLE ORDER_HEADER ADD ORG_POS INTEGER NOT NULL DEFAULT '-1'");
+//
+//        db.execSQL("ALTER TABLE PAY_METHOD ADD ORG_NO TAXE NOT NULL DEFAULT '0'");
+//        db.execSQL("ALTER TABLE PAY_METHOD ADD ORG_POS INTEGER NOT NULL DEFAULT '-1'");
+////++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//
+//        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS_TEMP ADD ORG_NO TAXE NOT NULL DEFAULT '0'");
+//        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS_TEMP ADD ORG_POS INTEGER NOT NULL DEFAULT '-1'");
+//        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS_TEMP ADD RETURN_QTY INTEGER NOT NULL DEFAULT '0'");
+//
+//        db.execSQL("ALTER TABLE ORDER_HEADER_TEMP ADD ORG_NO TAXE NOT NULL DEFAULT '0'");
+//        db.execSQL("ALTER TABLE ORDER_HEADER_TEMP ADD ORG_POS INTEGER NOT NULL DEFAULT '-1'");
 
 
     }
 
     //Insert values to the table Items
+
+    
+
     public void addItem(Items items) {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
@@ -1366,8 +1401,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         return allCasher;
             }
-
-
 
     public void addBlindClose(BlindClose obj) {
         db = this.getReadableDatabase();
@@ -2423,7 +2456,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public final String getAllRequestVoucherHeader(String Vfh_No,String POS) {
          String waterName ="";
 //        String selectQuery = "SELECT * FROM " + ORDER_TRANSACTIONS + " where VOUCHER_NO = '" + Vfh_No + "'" + " and ORDER_KIND = '0'";
-        String selectQuery = "SELECT WAITER FROM " + ORDER_HEADER + " where VOUCHER_NO = '" + Vfh_No + "'" + " and ORDER_KIND = '0"+"'" + " and POS_NO = '"+POS+"'" ;
+        String selectQuery = "SELECT WAITER FROM " + ORDER_HEADER + " where VOUCHER_NUMBER = '" + Vfh_No + "'" + " and ORDER_KIND = '0"+"'" + " and POINT_OF_SALE_NUMBER = '"+POS+"'" ;
 
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -3659,7 +3692,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ArrayList<OrderTransactions> orderTransactionsArrayList = new ArrayList<>();
 
 
-        String selectQuery = "select ITEM_NAME, GROUP_CONCAT( VOUCHER_DATE), GROUP_CONCAT( TOTAL), GROUP_CONCAT(TAX_VLUE) , GROUP_CONCAT(DISCOUNT) from ORDER_TRANSACTIONS  " +
+        String selectQuery = "select ITEM_NAME, GROUP_CONCAT( VOUCHER_DATE), GROUP_CONCAT( TOTAL), GROUP_CONCAT(TAX_VLUE) , GROUP_CONCAT(TOTAL_DISCOUNT),GROUP_CONCAT(ORDER_KIND) from ORDER_TRANSACTIONS  " +
                 "where  SHIFT_NAME =" + shiftName + " and POS_NO= " + PosNo + "  GROUP BY ITEM_BARCODE1";
 
 
@@ -3678,6 +3711,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 orderTransactions.setTime(cursor.getString(2));
                 orderTransactions.setShiftName(cursor.getString(3)); //con list of tax value
                 orderTransactions.setUserName(cursor.getString(4));
+                orderTransactions.setNote(cursor.getString(5));
 
 
                 orderTransactionsArrayList.add(orderTransactions);
@@ -3692,7 +3726,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ArrayList<OrderHeader> orderHeaders = new ArrayList<>();
 
 
-        String selectQuery = "select POINT_OF_SALE_NUMBER, GROUP_CONCAT( TOTAL), GROUP_CONCAT(TOTAL_TAX),GROUP_CONCAT(AMOUNT_DUE) , GROUP_CONCAT( VOUCHER_DATE) from ORDER_HEADER  " +
+        String selectQuery = "select POINT_OF_SALE_NUMBER, GROUP_CONCAT( TOTAL), GROUP_CONCAT(TOTAL_TAX),GROUP_CONCAT(AMOUNT_DUE) , GROUP_CONCAT( VOUCHER_DATE) , GROUP_CONCAT( ALL_DISCOUNT) from ORDER_HEADER  " +
                 " GROUP BY POINT_OF_SALE_NUMBER";
 
 
@@ -3710,6 +3744,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 orderHeaderModel.setShiftName(cursor.getString(2));
                 orderHeaderModel.setUserName(cursor.getString(3));
                 orderHeaderModel.setVoucherDate(cursor.getString(4));
+                orderHeaderModel.setWaiter(cursor.getString(5));
 
                 orderHeaders.add(orderHeaderModel);
 
@@ -3723,7 +3758,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ArrayList<OrderTransactions> orderTransactionsArrayList = new ArrayList<>();
 
 
-        String selectQuery = "select TAX_PERC, GROUP_CONCAT( VOUCHER_DATE), GROUP_CONCAT(TOTAL), GROUP_CONCAT(TAX_VLUE) from ORDER_TRANSACTIONS  " +
+        String selectQuery = "select TAX_PERC, GROUP_CONCAT( VOUCHER_DATE), GROUP_CONCAT(TOTAL), GROUP_CONCAT(TAX_VLUE), GROUP_CONCAT(TOTAL_DISCOUNT),GROUP_CONCAT(ORDER_KIND) from ORDER_TRANSACTIONS  " +
                 "where  SHIFT_NAME =" + shiftName + " and POS_NO= " + PosNo + "  GROUP BY TAX_PERC";
 
         Log.e("se123", "" + selectQuery);
@@ -3739,7 +3774,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 orderTransactions.setVoucherDate(cursor.getString(1));
                 orderTransactions.setTime(cursor.getString(2));
                 orderTransactions.setShiftName(cursor.getString(3));
-
+                orderTransactions.setSecondaryName(cursor.getString(4));
+                orderTransactions.setNote(cursor.getString(5));
 
                 orderTransactionsArrayList.add(orderTransactions);
 

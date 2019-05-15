@@ -16,6 +16,11 @@
     <string name="clear">مسح</string>
     <string name="enter_password">ادخل كلمة السر</string>
 
+    <string name="password">كلمة السر</string>
+    <string name="user_no">اسم المستخدم</string>
+    <string name="store_no">رقم المتجر</string>
+    <string name="service_value">قيمة الخدمة</string>
+
     <string name="order_by">ترتيب حسب</string>
     <string name="canceled">ملغي</string>
     <string name="menu">القائمة</string>
@@ -153,6 +158,7 @@
     <string name="order_layout">بناء شاشة الطلب</string>
     <string name="add_category"> اضافة فئة</string>
     <string name="setting">الاعدادات</string>
+    <string name="main_settings">الاعدادات الرئيسية</string>
     <string name="categories_setting">اعدادات الفئات</string>
     <string name="background">الخلفية</string>
     <string name="text_color">لون الخط</string>
