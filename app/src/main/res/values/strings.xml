@@ -193,6 +193,7 @@
     <string name="payroll">Payroll</string>
     <string name="vacation">Vacation</string>
     <string name="dine_in_layout">Dine In Layout</string>
+    <string name="sync_with_cloud">Sync With Cloud</string>
     <string name="sales_total">Sales Total</string>
     <string name="cashier_in_out">Cashier In Out</string>
     <string name="canceled_order_history">Canceled Order History</string>
