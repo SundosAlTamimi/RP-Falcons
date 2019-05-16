@@ -193,6 +193,7 @@
     <string name="payroll">كشف الرواتب</string>
     <string name="vacation">العطل</string>
     <string name="dine_in_layout">بناء شاشة الزوار</string>
+    <string name="sync_with_cloud">مزامنة</string>
     <string name="sales_total">مجموع المبيعات</string>
     <string name="cashier_in_out">مدخلات و مخرجات الكاش</string>
     <string name="canceled_order_history">تاريخ الطلبات المحذوفة</string>

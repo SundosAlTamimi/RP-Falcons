@@ -71,6 +71,7 @@ import com.tamimi.sundos.restpos.Models.VoidResons;
 import com.tamimi.sundos.restpos.Models.ZReport;
 import com.tamimi.sundos.restpos.R;
 import com.tamimi.sundos.restpos.Settings;
+import com.tamimi.sundos.restpos.SyncWithCloud;
 
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -101,7 +102,7 @@ public class BackOfficeActivity extends AppCompatActivity {
     LinearLayout membershipGroup, membership, customerRegistration;
     LinearLayout jobGroup, employeeRegistration, employeeSchedule, payroll, vacation, editTables;
     LinearLayout menuCategory, menuRegistration, modifier, forceQuestion, voiding_reasons, menuLayout;
-    LinearLayout store, storeOperation, users, moneyCategory, kitchenScreen, mainSettings;
+    LinearLayout store, storeOperation, users, moneyCategory, kitchenScreen, mainSettings, syncWithCloud;
     LinearLayout salesTotal, cashierInOut, canceledOrderHistory, x_report, z_report, market_report_,
             salesReportForDay, salesByHours, salesVolumeByItem, topSalesItemReport, topGroupSalesReport, topFamilySalesReport,
             salesReportByCustomer, salesReportByCardType, waiterSalesReport, tableActionReport, profitLossReport, detailSalesReport,
@@ -271,6 +272,9 @@ public class BackOfficeActivity extends AppCompatActivity {
                     break;
                 case R.id.management_main_settings:
                     showMainSettingsPasswordDialog();
+                    break;
+                case R.id.sync_with_cloud:
+                    showSyncWithCloudDialog();
                     break;
                 case R.id.sales_total:
                     salesTotalReportDialog();
@@ -1183,6 +1187,12 @@ public class BackOfficeActivity extends AppCompatActivity {
             }
         });
         dialog.show();
+    }
+
+    void showSyncWithCloudDialog(){
+
+        SyncWithCloud obj = new SyncWithCloud(BackOfficeActivity.this);
+        obj.startSyncing("menuRegistration");
     }
 
     void X_ReportDialog() {
@@ -6903,6 +6913,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         moneyCategory = (LinearLayout) findViewById(R.id.money_category);
         kitchenScreen = (LinearLayout) findViewById(R.id.kitchen_screen);
         mainSettings = (LinearLayout) findViewById(R.id.management_main_settings);
+        syncWithCloud = (LinearLayout) findViewById(R.id.sync_with_cloud);
         salesTotal = (LinearLayout) findViewById(R.id.sales_total);
         cashierInOut = (LinearLayout) findViewById(R.id.cashier_in_out);
         canceledOrderHistory = (LinearLayout) findViewById(R.id.canceled_order_history);
@@ -6959,6 +6970,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         moneyCategory.setOnClickListener(onClickListener2);
         kitchenScreen.setOnClickListener(onClickListener2);
         mainSettings.setOnClickListener(onClickListener2);
+        syncWithCloud.setOnClickListener(onClickListener2);
         salesTotal.setOnClickListener(onClickListener2);
         cashierInOut.setOnClickListener(onClickListener2);
         canceledOrderHistory.setOnClickListener(onClickListener2);
