@@ -311,24 +311,25 @@ public class Order extends AppCompatActivity {
         SimpleDateFormat df2 = new SimpleDateFormat("yyyyMM");
         yearMonth = convertToEnglish(df2.format(currentTimeAndDate));
 
-        List<OrderHeader> transactions = mDbHandler.getAllOrderHeader();
-        List<OrderHeader> transactionsTemp = mDbHandler.getAllOrderHeaderTemp();
+        int transactionsSize = mDbHandler.getMaxSerial("ORDER_HEADER","0")+1;
+        int transactionsTempSize =  mDbHandler.getMaxSerial("ORDER_HEADER_TEMP","0")+1;
 
-        int transactionsSize = 0, transactionsTempSize = 0;
+//        int transactionsSize = 0, transactionsTempSize = 0;
 
-        if (transactions.size() != 0)
-            transactionsSize = transactions.get(transactions.size() - 1).getVoucherSerial();
-
-        if (transactionsTemp.size() != 0)
-            transactionsTempSize = transactionsTemp.get(transactionsTemp.size() - 1).getVoucherSerial();
+//        if (transactions.size() != 0)
+//            transactionsSize = transactions.get(transactions.size() - 1).getVoucherSerial();
+//
+//        if (transactionsTemp.size() != 0)
+//            transactionsTempSize = transactionsTemp.get(transactionsTemp.size() - 1).getVoucherSerial();
 
         if (transactionsSize > transactionsTempSize) {
-            voucherSerial = transactionsSize + 1;
+            voucherSerial = transactionsSize ;
         } else {
-            voucherSerial = transactionsTempSize + 1;
+            voucherSerial = transactionsTempSize;
         }
         date.setText(today);
         voucherNo = ""+ voucherSerial;
+
     }
 
     void fillCategories() {
