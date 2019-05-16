@@ -2333,11 +2333,11 @@ public class Main extends AppCompatActivity {
 
                         OrderHeader orderHeader;
                         orderHeader = new OrderHeader(rowRefund.get(0).getOrderType(), 998, convertToEnglish(today), Settings.POS_number, Settings.store_number,
-                                String.valueOf(transactionsSize), 1, totalAdd, lineDic, dic, lineDic + dic,
-                                service, tax, serviceTax, subTotalValue,
-                                netTotal1, 0, rowRefund.get(0).getTableNo(),
-                                rowRefund.get(0).getSectionNo(), cashValues, creditValues, chequeVales, cardValues,
-                                giftCardValues, pointValues, Settings.shift_name, Settings.shift_number, waiterName, 0, Settings.user_name, Settings.user_no, convertToEnglish(times), rowRefund.get(0).getVoucherNo(), rowRefund.get(0).getPosNo());
+                                String.valueOf(transactionsSize), 1, -1*totalAdd, -1*lineDic, -1*dic, -1*(lineDic + dic),
+                                -1*service, -1*tax, -1*serviceTax, -1*subTotalValue,
+                                -1*netTotal1, 0, rowRefund.get(0).getTableNo(),
+                                rowRefund.get(0).getSectionNo(), -1*cashValues, -1*creditValues, -1*chequeVales, -1*cardValues,
+                                -1*giftCardValues, -1*pointValues, Settings.shift_name, Settings.shift_number, waiterName, 0, Settings.user_name, Settings.user_no, convertToEnglish(times), rowRefund.get(0).getVoucherNo(), rowRefund.get(0).getPosNo());
                         mDHandler.addOrderHeader(orderHeader);
                         orderHeader.setVoucherNumber(rowRefund.get(0).getVoucherNo());
 
@@ -2346,8 +2346,8 @@ public class Main extends AppCompatActivity {
                                     String.valueOf(transactionsSize), i + 1, "" + rowRefund.get(i).getItemBarcode(), rowRefund.get(i).getItemName(),
                                     rowRefund.get(i).getSecondaryName(), rowRefund.get(i).getKitchenAlias(), rowRefund.get(i).getItemCategory(),
                                     rowRefund.get(i).getItemFamily(), rowRefund.get(i).getQty(), rowRefund.get(i).getPrice(),
-                                    -1 * rowRefund.get(i).getQty() * rowRefund.get(i).getPrice(), rowRefund.get(i).getDiscount(), rowRefund.get(i).getlDiscount(), rowRefund.get(i).getDiscount() + rowRefund.get(i).getlDiscount(), rowRefund.get(i).getTaxValue(),
-                                    rowRefund.get(i).getTaxPerc(), rowRefund.get(i).getTaxKind(), rowRefund.get(i).getService(), rowRefund.get(i).getServiceTax(),
+                                     rowRefund.get(i).getQty() * rowRefund.get(i).getPrice(), -1*rowRefund.get(i).getDiscount(), -1*rowRefund.get(i).getlDiscount(), -1*(rowRefund.get(i).getDiscount() + rowRefund.get(i).getlDiscount()), -1*rowRefund.get(i).getTaxValue(),
+                                    rowRefund.get(i).getTaxPerc(), rowRefund.get(i).getTaxKind(),-1* rowRefund.get(i).getService(),-1* rowRefund.get(i).getServiceTax(),
                                     rowRefund.get(i).getTableNo(), rowRefund.get(i).getSectionNo(), Settings.shift_number, Settings.shift_name, Settings.user_no, Settings.user_name, convertToEnglish(times), rowRefund.get(i).getVoucherNo(), rowRefund.get(i).getPosNo(), 0);
                             mDHandler.addOrderTransaction(orderTransactions);
                         }
@@ -2362,7 +2362,7 @@ public class Main extends AppCompatActivity {
                                         convertToEnglish(today),
                                         Settings.POS_number,
                                         Settings.store_number, String.valueOf(transactionsSize), i + 1, name_o.getText().toString(),
-                                        Double.parseDouble(value_o.getText().toString()), finalAllPayType.get(i).getPayNumber(), finalAllPayType.get(i).getPayName(),
+                                        -1* Double.parseDouble(value_o.getText().toString()), finalAllPayType.get(i).getPayNumber(), finalAllPayType.get(i).getPayName(),
                                         Settings.shift_name, Settings.shift_number, Settings.user_name, Settings.user_no, convertToEnglish(times),
                                         rowRefund.get(0).getVoucherNo(), Settings.POS_number);
                                 payObj.add(payMethod);

@@ -1,13 +1,10 @@
 package com.tamimi.sundos.restpos;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
-import android.view.Window;
-import android.widget.Toast;
 
 
 import com.itextpdf.text.BaseColor;
@@ -35,6 +32,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.List;
 
 import static com.itextpdf.text.Element.ALIGN_CENTER;
@@ -49,6 +47,7 @@ public class ExportToPdf  {
     File pdfFileName;
 //    PDFView pdfView;
     BaseFont base;
+    DecimalFormat threeDForm = new DecimalFormat("0.000");
 
     {
         try {
@@ -781,12 +780,12 @@ public class ExportToPdf  {
 
         for (int i = 0; i < headerDataMarket.size(); i++) {
             insertCell(pdfPTable, String.valueOf(headerDataMarket.get(i).getWaiter()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-            insertCell(pdfPTable, String.valueOf(headerDataMarket.get(i).getTotal()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-            insertCell(pdfPTable, String.valueOf(headerDataMarket.get(i).getTotalDiscount()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-            insertCell(pdfPTable, String.valueOf(headerDataMarket.get(i).getTotalTax()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-            insertCell(pdfPTable, String.valueOf(headerDataMarket.get(i).getAmountDue()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-            insertCell(pdfPTable, String.valueOf(headerDataMarket.get(i).getTotalService()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-            insertCell(pdfPTable, String.valueOf(headerDataMarket.get(i).getTotalServiceTax()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+            insertCell(pdfPTable, String.valueOf(threeDForm.format(headerDataMarket.get(i).getTotal())), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+            insertCell(pdfPTable, String.valueOf(threeDForm.format(headerDataMarket.get(i).getAllDiscount())), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+            insertCell(pdfPTable, String.valueOf(threeDForm.format(headerDataMarket.get(i).getTotalTax())), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+            insertCell(pdfPTable, String.valueOf(threeDForm.format(headerDataMarket.get(i).getAmountDue())), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+            insertCell(pdfPTable, String.valueOf(threeDForm.format(headerDataMarket.get(i).getTotalService())), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+            insertCell(pdfPTable, String.valueOf(threeDForm.format(headerDataMarket.get(i).getTotalServiceTax())), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         }
 
         insertCell(pdfPTableHeader, "Falcon Soft ", Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
@@ -929,10 +928,10 @@ public class ExportToPdf  {
             insertCell(pdfPTable, String.valueOf(headerData.get(i).getVoucherDate()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
             insertCell(pdfPTable, String.valueOf(headerData.get(i).getPointOfSaleNumber()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
             insertCell(pdfPTable, String.valueOf(headerData.get(i).getVoucherNumber()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-            insertCell(pdfPTable, String.valueOf(headerData.get(i).getTotal()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-            insertCell(pdfPTable, String.valueOf(headerData.get(i).getAllDiscount()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-            insertCell(pdfPTable, String.valueOf(headerData.get(i).getTotalTax()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-            insertCell(pdfPTable, String.valueOf(headerData.get(i).getAmountDue()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+            insertCell(pdfPTable, String.valueOf(threeDForm.format(headerData.get(i).getTotal())), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+            insertCell(pdfPTable, String.valueOf(threeDForm.format(headerData.get(i).getAllDiscount())), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+            insertCell(pdfPTable, String.valueOf(threeDForm.format(headerData.get(i).getTotalTax())), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+            insertCell(pdfPTable, String.valueOf(threeDForm.format(headerData.get(i).getAmountDue())), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
             insertCell(pdfPTable, String.valueOf(headerData.get(i).getTime()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         }
         insertCell(pdfPTable, context.getString(R.string.total), Element.ALIGN_LEFT, 3, arabicFont, BaseColor.BLACK);
@@ -1002,12 +1001,12 @@ public class ExportToPdf  {
             insertCell(pdfPTable, String.valueOf(transactionsPdf.get(i).getItemCategory()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
             insertCell(pdfPTable, String.valueOf(transactionsPdf.get(i).getItemBarcode()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
             insertCell(pdfPTable, String.valueOf(transactionsPdf.get(i).getItemName()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-            insertCell(pdfPTable, String.valueOf(transactionsPdf.get(i).getQty()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-            insertCell(pdfPTable, String.valueOf(transactionsPdf.get(i).getPrice()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-            insertCell(pdfPTable, String.valueOf(transactionsPdf.get(i).getQty() * (transactionsPdf.get(i).getPrice())), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-            insertCell(pdfPTable, String.valueOf(transactionsPdf.get(i).getDiscount()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-            insertCell(pdfPTable, String.valueOf(transactionsPdf.get(i).getTaxValue()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-            insertCell(pdfPTable, String.valueOf(transactionsPdf.get(i).getTotal()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+            insertCell(pdfPTable, String.valueOf(threeDForm.format(transactionsPdf.get(i).getQty())), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+            insertCell(pdfPTable, String.valueOf(threeDForm.format(transactionsPdf.get(i).getPrice())), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+            insertCell(pdfPTable, String.valueOf(threeDForm.format(transactionsPdf.get(i).getTotal())), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+            insertCell(pdfPTable, String.valueOf(threeDForm.format(transactionsPdf.get(i).getTotalDiscount())), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+            insertCell(pdfPTable, String.valueOf(threeDForm.format(transactionsPdf.get(i).getTaxValue())), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+            insertCell(pdfPTable, String.valueOf(transactionsPdf.get(i).getTime()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
 
         }
 

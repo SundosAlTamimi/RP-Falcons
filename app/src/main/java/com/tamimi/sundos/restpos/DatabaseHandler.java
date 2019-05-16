@@ -3831,7 +3831,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public ArrayList<OrderHeader> getUserNameReport(String userName, String PosNo) {
         ArrayList<OrderHeader> orderHeaderArrayList = new ArrayList<>();
 
-        String selectQuery = "select USER_NAME , GROUP_CONCAT( VOUCHER_DATE), GROUP_CONCAT( AMOUNT_DUE) from ORDER_HEADER  " +
+        String selectQuery = "select USER_NAME , GROUP_CONCAT( VOUCHER_DATE), GROUP_CONCAT( AMOUNT_DUE), GROUP_CONCAT( ORDER_KIND) from ORDER_HEADER  " +
                 "WHERE USER_NO = " + userName + " and POINT_OF_SALE_NUMBER= " + PosNo + " GROUP BY USER_NAME";
 
         Log.e("se123", "" + selectQuery);
@@ -3846,6 +3846,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 orderHeader.setUserName(cursor.getString(0));
                 orderHeader.setVoucherDate(cursor.getString(1));
                 orderHeader.setShiftName(cursor.getString(2));
+                orderHeader.setWaiter(cursor.getString(3));
 
                 orderHeaderArrayList.add(orderHeader);
 
