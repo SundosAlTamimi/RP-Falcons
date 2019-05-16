@@ -2886,10 +2886,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
-    public int getMaxSerial(String ColumeName, String TableName) {
+    public int getMaxSerial( String TableName,String orderKind) {
         ArrayList<Integer> moneys = new ArrayList<>();
         int max;
-        String selectQuery = "SELECT " + ColumeName + " FROM " + TableName;
+        String selectQuery = "SELECT " + VOUCHER_NUMBER2 + " FROM " + TableName+" WHERE ORDER_KIND = '"+orderKind+"'";
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
@@ -2902,6 +2902,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             max = 0;
         else
             max = Collections.max(moneys);
+
+        Log.e("max ="," "+max);
         return max;
     }
 
