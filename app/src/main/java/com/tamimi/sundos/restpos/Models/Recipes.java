@@ -1,5 +1,10 @@
 package com.tamimi.sundos.restpos.Models;
 
+import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class Recipes {
 
     private int itemBarcode;
@@ -64,5 +69,22 @@ public class Recipes {
 
     public void setCost(double cost) {
         this.cost = cost;
+    }
+
+    public JSONObject getJSONObject() {
+        JSONObject obj = new JSONObject();
+        try {
+
+            obj.put("ITEM_BARCODE", itemBarcode);
+            obj.put("BARCODE", barcode);
+            obj.put("ITEM", item);
+            obj.put("SUNIT", unit);
+            obj.put("QTY", qty);
+            obj.put("COST", cost);
+
+        } catch (JSONException e) {
+            Log.e("Tag" , "JSONException");
+        }
+        return obj;
     }
 }

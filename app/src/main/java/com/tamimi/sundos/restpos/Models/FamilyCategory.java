@@ -60,9 +60,9 @@ public class FamilyCategory {
         JSONObject obj = new JSONObject();
         try {
             obj.put("SERIAL", serial);
-            obj.put("TYPE", type);
+            obj.put("ITYPE", type);
             obj.put("NAME_CATEGORY_FAMILY", name);
-            obj.put("CATEGORY_PIC", catPic);
+//            obj.put("CATEGORY_PIC", catPic);
 
         } catch (JSONException e) {
             Log.e("Tag", "JSONException");

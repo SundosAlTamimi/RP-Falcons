@@ -1720,7 +1720,7 @@ public class PayMethods extends AppCompatActivity {
             obj.put("PAYMETHOD", obj3);
 
             SendCloud sendCloud = new SendCloud(PayMethods.this, obj);
-            sendCloud.startSending("Server");
+            sendCloud.startSending("Order");
 
 
         } catch (JSONException e) {
