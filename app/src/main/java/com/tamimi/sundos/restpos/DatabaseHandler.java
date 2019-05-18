@@ -1212,7 +1212,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
 
-//        db.execSQL("ALTER TABLE ANNOUNCEMENT_TABLE ADD USER_NO INTEGER NOT NULL DEFAULT '-1'");
+        db.execSQL("ALTER TABLE ANNOUNCEMENT_TABLE ADD USER_NO INTEGER NOT NULL DEFAULT '-1'");
 
 //        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS ADD ORG_NO TAXE NOT NULL DEFAULT '0'");
 //        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS ADD ORG_POS INTEGER NOT NULL DEFAULT '-1'");
@@ -2888,10 +2888,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
-    public int getMaxSerial(String ColumeName, String TableName) {
+    public int getMaxSerial( String TableName,String orderKind) {
         ArrayList<Integer> moneys = new ArrayList<>();
         int max;
-        String selectQuery = "SELECT " + ColumeName + " FROM " + TableName;
+        String selectQuery = "SELECT " + VOUCHER_NUMBER2 + " FROM " + TableName+" WHERE ORDER_KIND = '"+orderKind+"'";
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
@@ -2904,6 +2904,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             max = 0;
         else
             max = Collections.max(moneys);
+
+        Log.e("max ="," "+max);
         return max;
     }
 
@@ -3831,7 +3833,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public ArrayList<OrderHeader> getUserNameReport(String userName, String PosNo) {
         ArrayList<OrderHeader> orderHeaderArrayList = new ArrayList<>();
 
-        String selectQuery = "select USER_NAME , GROUP_CONCAT( VOUCHER_DATE), GROUP_CONCAT( AMOUNT_DUE) from ORDER_HEADER  " +
+        String selectQuery = "select USER_NAME , GROUP_CONCAT( VOUCHER_DATE), GROUP_CONCAT( AMOUNT_DUE), GROUP_CONCAT( ORDER_KIND) from ORDER_HEADER  " +
                 "WHERE USER_NO = " + userName + " and POINT_OF_SALE_NUMBER= " + PosNo + " GROUP BY USER_NAME";
 
         Log.e("se123", "" + selectQuery);
@@ -3846,6 +3848,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 orderHeader.setUserName(cursor.getString(0));
                 orderHeader.setVoucherDate(cursor.getString(1));
                 orderHeader.setShiftName(cursor.getString(2));
+                orderHeader.setWaiter(cursor.getString(3));
 
                 orderHeaderArrayList.add(orderHeader);
 
