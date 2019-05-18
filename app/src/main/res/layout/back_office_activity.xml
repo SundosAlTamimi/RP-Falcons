@@ -672,7 +672,7 @@
                         android:layout_height="match_parent"
                         android:layout_margin="18dp"
                         android:layout_weight="1"
-                        android:gravity="left"
+                        android:gravity="center"
                         android:orientation="vertical">
 
                         <ImageView
@@ -693,6 +693,16 @@
                             android:textColor="@color/text_color"
                             android:textSize="18sp" />
                     </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_margin="18dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+                    </LinearLayout>
+
                 </LinearLayout>
 
                 </LinearLayout>
