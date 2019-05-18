@@ -203,7 +203,7 @@ public class MenuRegistration extends AppCompatActivity {
                                 showInMenuVariavle,
                                 itemBitmapPic);
 
-                        new Settings().makeText(MenuRegistration.this, getResources().getString(R.string.save_));
+                        new Settings().makeText(MenuRegistration.this, getResources().getString(R.string.save_successful));
                         clearForm();
                         itemBarcodeFound = false;
                     } else
@@ -434,18 +434,23 @@ public class MenuRegistration extends AppCompatActivity {
             Button buttonDone = (Button) dialog.findViewById(R.id.b_done);
 
             items = mDbHandler.getAllItems();
-            List<String> categoryName = new ArrayList<>();
+            List<String> itemName = new ArrayList<>();
             for (int i = 0; i < items.size(); i++) {
-                categoryName.add(items.get(i).getMenuName());
+                itemName.add(items.get(i).getMenuName());
             }
 
-            menuNameAdapter = new ArrayAdapter<>(MenuRegistration.this, R.layout.spinner_style, categoryName);
+            final int[] barcode = {-1};
+            if(items.size() != 0 )
+                barcode[0] = items.get(0).getItemBarcode();
+
+            menuNameAdapter = new ArrayAdapter<>(MenuRegistration.this, R.layout.spinner_style, itemName);
             recipeSpinner.setAdapter(menuNameAdapter);
 
             recipeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                     unit.setText(items.get(i).getInventoryUnit());
+                    barcode[0] = items.get(i).getItemBarcode();
                 }
 
                 @Override
@@ -460,8 +465,8 @@ public class MenuRegistration extends AppCompatActivity {
                     if (!qty.getText().toString().equals("") && recipeSpinner.getCount() != 0) {
 
                         int position = recipeSpinner.getSelectedItemPosition();
-                        insertRow(Integer.parseInt(convertToEnglish(itemBarcodeEditText.getText().toString())), items.get(position).getMenuName(),
-                                items.get(position).getInventoryUnit(), Integer.parseInt(qty.getText().toString()),
+                        insertRow(Integer.parseInt(convertToEnglish(itemBarcodeEditText.getText().toString())), barcode[0], items.get(position).getMenuName(),
+                                items.get(position).getInventoryUnit(), Double.parseDouble(qty.getText().toString()),
                                 items.get(position).getPrice());
 
                         dialog.dismiss();
@@ -640,14 +645,19 @@ public class MenuRegistration extends AppCompatActivity {
             TextView textView3 = (TextView) tableRow.getChildAt(2);
             TextView textView4 = (TextView) tableRow.getChildAt(3);
             TextView textView5 = (TextView) tableRow.getChildAt(4);
+            TextView textView6 = (TextView) tableRow.getChildAt(5);
 
-            mDbHandler.addRecipe(new Recipes(itemBarcode, convertToEnglish(textView2.getText().toString()),
-                    convertToEnglish(textView3.getText().toString()), Integer.parseInt(textView4.getText().toString()),
-                    Double.parseDouble(textView5.getText().toString())));
+            mDbHandler.addRecipe(new Recipes(
+                    Integer.parseInt(convertToEnglish(textView6.getText().toString())),
+                    Integer.parseInt(convertToEnglish(textView1.getText().toString())),
+                    convertToEnglish(textView2.getText().toString()),
+                    convertToEnglish(textView3.getText().toString()),
+                    Double.parseDouble(convertToEnglish(textView4.getText().toString())),
+                    Double.parseDouble(convertToEnglish(textView5.getText().toString()))));
         }
     }
 
-    void insertRow(int barCode, String item, String unit, int qty, double price) {
+    void insertRow(int itemBarCode, int barcode, String item, String unit, double qty, double price) {
 
         if (check()) {
             final TableRow row = new TableRow(MenuRegistration.this);
@@ -655,12 +665,12 @@ public class MenuRegistration extends AppCompatActivity {
             TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
             row.setLayoutParams(lp);
 
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < 6; i++) {
                 TextView textView = new TextView(MenuRegistration.this);
 
                 switch (i) {
                     case 0:
-                        textView.setText("" + barCode);
+                        textView.setText("" + barcode);
                         break;
                     case 1:
                         textView.setText(item);
@@ -674,13 +684,22 @@ public class MenuRegistration extends AppCompatActivity {
                     case 4:
                         textView.setText("" + qty * price);
                         break;
+
+                    case 5:
+                        textView.setText("" + itemBarCode);
+                        break;
                 }
 
                 textView.setTextColor(ContextCompat.getColor(MenuRegistration.this, R.color.text_color));
                 textView.setGravity(Gravity.CENTER);
 
-                TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
-                textView.setLayoutParams(lp2);
+                if(i == 5){
+                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, 30, 0.0001f);
+                    textView.setLayoutParams(lp2);
+                } else {
+                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, 30, 1.0f);
+                    textView.setLayoutParams(lp2);
+                }
 
                 row.addView(textView);
 

@@ -2,13 +2,15 @@ package com.tamimi.sundos.restpos.Models;
 
 public class Recipes {
 
+    private int itemBarcode;
     private int barcode;
     private String item;
     private String unit;
-    private int qty;
+    private double qty;
     private double cost;
 
-    public Recipes(int barcode, String item, String unit, int qty, double cost) {
+    public Recipes(int itemBarcode, int barcode, String item, String unit, double qty, double cost) {
+        this.itemBarcode = itemBarcode;
         this.barcode = barcode;
         this.item = item;
         this.unit = unit;
@@ -18,6 +20,14 @@ public class Recipes {
 
     public int getBarcode() {
         return barcode;
+    }
+
+    public int getItemBarcode() {
+        return itemBarcode;
+    }
+
+    public void setItemBarcode(int itemBarcode) {
+        this.itemBarcode = itemBarcode;
     }
 
     public void setBarcode(int barcode) {
@@ -40,11 +50,11 @@ public class Recipes {
         this.unit = unit;
     }
 
-    public int getQty() {
+    public double getQty() {
         return qty;
     }
 
-    public void setQty(int qty) {
+    public void setQty(double qty) {
         this.qty = qty;
     }
 

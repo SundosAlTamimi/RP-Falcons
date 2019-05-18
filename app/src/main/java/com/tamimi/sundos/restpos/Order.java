@@ -486,10 +486,10 @@ public class Order extends AppCompatActivity {
             textView.setGravity(Gravity.CENTER);
 
             if (i != 4) {
-                TableRow.LayoutParams lp1 = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+                TableRow.LayoutParams lp1 = new TableRow.LayoutParams(0, 30, 1.0f);
                 textView.setLayoutParams(lp1);
             } else {
-                TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 0.00001f);
+                TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, 30, 0.00001f);
                 textView.setLayoutParams(lp2);
             }
 
@@ -1838,10 +1838,10 @@ public class Order extends AppCompatActivity {
                 }
 
                 if (i != 4) {
-                    TableRow.LayoutParams lp1 = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+                    TableRow.LayoutParams lp1 = new TableRow.LayoutParams(0, 30, 1.0f);
                     textView.setLayoutParams(lp1);
                 } else {
-                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 0.00001f);
+                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, 30, 0.00001f);
                     textView.setLayoutParams(lp2);
                 }
 
