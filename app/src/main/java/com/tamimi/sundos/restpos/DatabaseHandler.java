@@ -56,7 +56,7 @@ import static com.tamimi.sundos.restpos.Settings.shift_name;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
     // Database Versions
-    private static final int DATABASE_VERSION = 35;
+    private static final int DATABASE_VERSION = 36;
 
     // Database Name
     private static final String DATABASE_NAME = "RestPos";
@@ -2110,6 +2110,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    //////////////////////////////////////////////////////////GET METHODS//////////////////////////////////////////////////////////////////
+
     public void getMainSettings(){
         String selectQuery = "SELECT  * FROM " + MAIN_SETTINGS;
         db = this.getWritableDatabase();
@@ -3844,7 +3846,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public ArrayList<OrderHeader> getUserNameReport(String userName, String PosNo) {
         ArrayList<OrderHeader> orderHeaderArrayList = new ArrayList<>();
 
-        String selectQuery = "select USER_NAME , GROUP_CONCAT( VOUCHER_DATE), GROUP_CONCAT( AMOUNT_DUE) from ORDER_HEADER  " +
+        String selectQuery = "select USER_NAME , GROUP_CONCAT( VOUCHER_DATE), GROUP_CONCAT( AMOUNT_DUE), GROUP_CONCAT( ORDER_KIND) from ORDER_HEADER  " +
                 "WHERE USER_NO = " + userName + " and POINT_OF_SALE_NUMBER= " + PosNo + " GROUP BY USER_NAME";
 
         Log.e("se123", "" + selectQuery);
@@ -3859,6 +3861,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 orderHeader.setUserName(cursor.getString(0));
                 orderHeader.setVoucherDate(cursor.getString(1));
                 orderHeader.setShiftName(cursor.getString(2));
+                orderHeader.setWaiter(cursor.getString(3));
 
                 orderHeaderArrayList.add(orderHeader);
 
@@ -4108,12 +4111,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 " where " + SECTION_NUMBER2 + " = '" + oldSectionNo + "' and " + TABLE_NUMBER2 + " = '" + oldTableNo + "'");
     }
 
+    //////////////////////////////////////////////////////////DELETE METHODS//////////////////////////////////////////////////////////////////
+
+    public void deleteCurrentMainSettings(){
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        sqLiteDatabase.execSQL("delete from " + MAIN_SETTINGS);
+        sqLiteDatabase.close();
+
+    }
+
     public void deleteAllUsedCategories() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from " + USED_CATEGORIES);
         db.close();
     }
-
 
     public void deleteAllMoneyCategory() {
         SQLiteDatabase db = this.getWritableDatabase();
