@@ -486,10 +486,10 @@ public class Order extends AppCompatActivity {
             textView.setGravity(Gravity.CENTER);
 
             if (i != 4) {
-                TableRow.LayoutParams lp1 = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+                TableRow.LayoutParams lp1 = new TableRow.LayoutParams(0, 30, 1.0f);
                 textView.setLayoutParams(lp1);
             } else {
-                TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 0.00001f);
+                TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, 30, 0.00001f);
                 textView.setLayoutParams(lp2);
             }
 
@@ -1640,10 +1640,10 @@ public class Order extends AppCompatActivity {
             double taxValue = 0;
             if (wantedItems.get(k).getTaxType() == 0) {
                 if (Settings.tax_type != 0) {
-                    taxValue = (totalLine - discount) * wantedItems.get(k).getTax() / 100;
+                    taxValue = (totalLine - lineDiscount_ - discount) * wantedItems.get(k).getTax() / 100;
                     Log.e("tax__1" , "(("+ totalLine + "-" + discount +")*" +wantedItems.get(k).getTax() + "/100)");
                 } else {
-                    taxValue = ((totalLine - discount) * wantedItems.get(k).getTax() / 100) / (1 + (wantedItems.get(k).getTax() / 100));
+                    taxValue = ((totalLine - lineDiscount_ - discount) * wantedItems.get(k).getTax() / 100) / (1 + (wantedItems.get(k).getTax() / 100));
 
                     Log.e("tax__2" , "(("+ totalLine + "-" + discount +")*" +  wantedItems.get(k).getTax() + "/100)/(1+" + wantedItems.get(k).getTax() + "/100)" );
                 }
@@ -1838,10 +1838,10 @@ public class Order extends AppCompatActivity {
                 }
 
                 if (i != 4) {
-                    TableRow.LayoutParams lp1 = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+                    TableRow.LayoutParams lp1 = new TableRow.LayoutParams(0, 30, 1.0f);
                     textView.setLayoutParams(lp1);
                 } else {
-                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 0.00001f);
+                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, 30, 0.00001f);
                     textView.setLayoutParams(lp2);
                 }
 

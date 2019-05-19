@@ -105,6 +105,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     //___________________________________________________________________________________
     private static final String RECIPES = "RECIPES";
 
+    private static final String ITEM_BARCOD = "ITEM_BARCODE";
     private static final String BARCODE = "BARCODE";
     private static final String ITEM = "ITEM";
     private static final String UNIT = "UNIT";
@@ -630,6 +631,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         //___________________________________________________________________________________
 
         String CREATE_TABLE_RECIPES = "CREATE TABLE " + RECIPES + "("
+                + ITEM_BARCOD + " INTEGER,"
                 + BARCODE + " INTEGER,"
                 + ITEM + " TEXT,"
                 + UNIT + " TEXT,"
@@ -1211,8 +1213,19 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
+        db.execSQL("DROP TABLE RECIPES");
 
-        db.execSQL("ALTER TABLE ANNOUNCEMENT_TABLE ADD USER_NO INTEGER NOT NULL DEFAULT '-1'");
+//        db.execSQL("ALTER TABLE ANNOUNCEMENT_TABLE ADD USER_NO INTEGER NOT NULL DEFAULT '-1'");
+        String CREATE_TABLE_RECIPES = "CREATE TABLE " + RECIPES + "("
+                + ITEM_BARCOD + " INTEGER,"
+                + BARCODE + " INTEGER,"
+                + ITEM + " TEXT,"
+                + UNIT + " TEXT,"
+                + QTY + " INTEGER,"
+                + COST + " INTEGER" + ")";
+        db.execSQL(CREATE_TABLE_RECIPES);
+
+//        db.execSQL("ALTER TABLE ANNOUNCEMENT_TABLE ADD USER_NO INTEGER NOT NULL DEFAULT '-1'");
 
 //        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS ADD ORG_NO TAXE NOT NULL DEFAULT '0'");
 //        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS ADD ORG_POS INTEGER NOT NULL DEFAULT '-1'");
@@ -1297,6 +1310,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
+        values.put(ITEM_BARCOD, recipe.getItemBarcode());
         values.put(BARCODE, recipe.getBarcode());
         values.put(ITEM, recipe.getItem());
         values.put(UNIT, recipe.getUnit());
