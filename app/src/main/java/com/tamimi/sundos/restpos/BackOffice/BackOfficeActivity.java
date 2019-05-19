@@ -1371,6 +1371,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                 List<Double> Total_ = new ArrayList<>();
                 List<Double> Tax_ = new ArrayList<>();
                 List<Double> Dis_ = new ArrayList<>();
+                List<Boolean> inFilter = new ArrayList<>();
 
 
                 String posNoString = "POS_NO";
@@ -1394,6 +1395,7 @@ public class BackOfficeActivity extends AppCompatActivity {
 
                 for (int i = 0; i < orderTransactionData.size(); i++) {
                     double total_ = 0.0, tax_x_ = 0.0, dis_ = 0.0;
+                    boolean isIn =false;
                     String cou_date = orderTransactionData.get(i).getVoucherDate();
                     String cou_total = orderTransactionData.get(i).getTime();
                     String cou_tax = orderTransactionData.get(i).getShiftName();
@@ -1415,6 +1417,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                             total_ += Double.parseDouble(arrayTotal[q]);
                             tax_x_ += Double.parseDouble(arrayTax[q]);
                             dis_ += Double.parseDouble(arrayDis[q]);
+                            isIn=true; //this for i need to know if any item not in range of date
 //
                         }
 
@@ -1422,6 +1425,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     Total_.add((total_));
                     Tax_.add((tax_x_));
                     Dis_.add(dis_);
+                    inFilter.add(isIn);
                     Log.e("arrayTotal", "" + total_ + " ///" + tax_x_);
 
                 }
@@ -1434,6 +1438,7 @@ public class BackOfficeActivity extends AppCompatActivity {
 
                 double totalByTax = 0.0;
                 for (int i = 0; i < orderTransactionData.size(); i++) {
+                    if((inFilter.get(i))){
                     if (Settings.tax_type == 0) {
                         NetTotal = Double.parseDouble(convertToEnglish(threeDForm.format(convertToEnglish("" + (Total_.get(i) - Dis_.get(i))))));
 //                        totalByTax = Double.parseDouble( threeDForm.format((Total_.get(i) - Tax_.get(i))));
@@ -1447,15 +1452,15 @@ public class BackOfficeActivity extends AppCompatActivity {
 
                     insertRowForReport(tableXreport, orderTransactionData.get(i).getItemName(), convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(""+Tax_.get(i))))),
                             "", convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(""+totalByTax))))
-                            , "", "", convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(""+NetTotal)))), 4);
+                            , "", "", convertToEnglish(threeDForm.format(NetTotal)), 4);
                     OrderTransactions orderTransactions = new OrderTransactions();
-                    orderTransactions.setTaxValue(Double.parseDouble(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish("" + Tax_.get(i)))))));
-                    orderTransactions.setTotal(Double.parseDouble(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish("" + totalByTax))))));
-                    orderTransactions.setTime(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish("" + NetTotal)))));
+                    orderTransactions.setTaxValue(Double.parseDouble(convertToEnglish(threeDForm.format( Tax_.get(i)))));
+                    orderTransactions.setTotal(Double.parseDouble(convertToEnglish(threeDForm.format( totalByTax))));
+                    orderTransactions.setTime(convertToEnglish(threeDForm.format( NetTotal)));
                     orderTransactions.setItemName(orderTransactionData.get(i).getItemName());
 
                     orderTransactionDataPdf.add(orderTransactions);
-                }
+                }}
 
                 for (int a = 0; a < tableXreport.getChildCount(); a++) {
 
@@ -1470,31 +1475,33 @@ public class BackOfficeActivity extends AppCompatActivity {
 
                 }
 
-                totalBeforTax.setText(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish("" + totalText)))));
-                tax.setText(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish("" + tatText)))));
-                totalAfterTax.setText(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish("" + netText)))));
-                services.setText(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish("" + 0.0)))));
-                servicesTax.setText(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish("" + 0.0)))));
-                totalTax.setText(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish("" + tatText)))));
-                net.setText(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish("" + netText)))));
+                totalBeforTax.setText(convertToEnglish(threeDForm.format( totalText)));
+                tax.setText(convertToEnglish(threeDForm.format( tatText)));
+                totalAfterTax.setText(convertToEnglish(threeDForm.format( netText)));
+                services.setText(convertToEnglish(threeDForm.format( 0.0)));
+                servicesTax.setText(convertToEnglish(threeDForm.format( 0.0)));
+                totalTax.setText(convertToEnglish(threeDForm.format( tatText)));
+                net.setText(convertToEnglish(threeDForm.format( netText)));
 
-                otherValue.add("" + convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish("" + totalText)))));
-                otherValue.add("" + convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish("" + tatText)))));
-                otherValue.add("" + convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish("" + netText)))));
-                otherValue.add("" + convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish("" + 0.0)))));
-                otherValue.add("" + convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish("" + 0.0)))));
-                otherValue.add("" + convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish("" + tatText)))));
-                otherValue.add("" + convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish("" + netText)))));
+                otherValue.add("" + convertToEnglish(threeDForm.format( totalText)));
+                otherValue.add("" + convertToEnglish(threeDForm.format( tatText)));
+                otherValue.add("" + convertToEnglish(threeDForm.format( netText)));
+                otherValue.add("" + convertToEnglish(threeDForm.format( 0.0)));
+                otherValue.add("" + convertToEnglish(threeDForm.format( 0.0)));
+                otherValue.add("" + convertToEnglish(threeDForm.format( tatText)));
+                otherValue.add("" + convertToEnglish(threeDForm.format( netText)));
 
                 orderTransactionData.clear();
                 Total_.clear();
                 Tax_.clear();
                 Dis_.clear();
+                inFilter.clear();
                 orderTransactionData = mDHandler.getXReportPercent(ShiftNa, posNoString, fromDat[0], toDat[0]);
 
 
                 for (int i = 0; i < orderTransactionData.size(); i++) {
                     double total_ = 0.0, tax_x_ = 0.0, dic_ = 0.0;
+                    boolean isIN=false;
                     String cou_date = orderTransactionData.get(i).getVoucherDate();
                     String cou_total = orderTransactionData.get(i).getTime();
                     String cou_tax = orderTransactionData.get(i).getShiftName();
@@ -1515,6 +1522,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                             total_ += Double.parseDouble(arrayTotal[q]);
                             tax_x_ += Double.parseDouble(arrayTax[q]);
                             dic_ += Double.parseDouble(arrayDic[q]);
+                            isIN=true;
                             Log.e("sale1" + q, "" + total_ + " ///" + tax_x_ + "_____" + arrayKind[q]);
                         }
 
@@ -1522,12 +1530,14 @@ public class BackOfficeActivity extends AppCompatActivity {
                     Total_.add(total_);
                     Tax_.add(tax_x_);
                     Dis_.add(dic_);
+                    inFilter.add(isIN);
                     Log.e("arrayTotal", "" + total_ + " ///" + tax_x_);
 
                 }
 
 
                 for (int i = 0; i < orderTransactionData.size(); i++) {
+                    if(inFilter.get(i)){
                     if (Settings.tax_type == 0) {
                         totalByTax = Double.parseDouble(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish("" + (Total_.get(i) - Tax_.get(i) - Dis_.get(i)))))));
                     } else {
@@ -1539,13 +1549,13 @@ public class BackOfficeActivity extends AppCompatActivity {
                             convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(""+totalByTax)))), "", "", "", 3);
 
                     OrderTransactions orderTransactions = new OrderTransactions();
-                    orderTransactions.setTaxValue(Double.parseDouble(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(""+Tax_.get(i)))))));
-                    orderTransactions.setTotal(Double.parseDouble(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(""+totalByTax))))));
+                    orderTransactions.setTaxValue(Double.parseDouble(convertToEnglish(threeDForm.format(Tax_.get(i)))));
+                    orderTransactions.setTotal(Double.parseDouble(convertToEnglish(threeDForm.format(totalByTax))));
                     orderTransactions.setTaxPerc(orderTransactionData.get(i).getTaxPerc());
 
 
                     orderTransactionDataPdf2.add(orderTransactions);
-                }
+                }}
             }
         });
 
@@ -1665,6 +1675,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                 List<Double> Total_ = new ArrayList<>();
                 List<Double> Tax_ = new ArrayList<>();
                 List<Double> Dic_ = new ArrayList<>();
+                List<Boolean> isFilter_ = new ArrayList<>();
 
                 fromDat[0] = fromDate.getText().toString();
                 double totalText = 0.0, tatText = 0.0, netText = 0.0;
@@ -1686,6 +1697,7 @@ public class BackOfficeActivity extends AppCompatActivity {
 
                 for (int i = 0; i < orderTransactionData.size(); i++) {
                     double total_ = 0.0, tax_x_ = 0.0, dis_ = 0.0;
+                    boolean isIn=false;
                     String cou_date = orderTransactionData.get(i).getVoucherDate();
                     String cou_total = orderTransactionData.get(i).getTime();
                     String cou_tax = orderTransactionData.get(i).getShiftName();
@@ -1706,6 +1718,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                             total_ += Double.parseDouble(arrayTotal[q]);
                             tax_x_ += Double.parseDouble(arrayTax[q]);
                             dis_ += Double.parseDouble(arrayDis[q]);
+                            isIn=true;
 //
                         }
 
@@ -1713,6 +1726,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     Total_.add(total_);
                     Tax_.add(tax_x_);
                     Dic_.add(dis_);
+                    isFilter_.add(isIn);
                     Log.e("arrayTotal", "" + total_ + " ///" + tax_x_);
 
                 }
@@ -1724,7 +1738,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                 headerValue.add(PosNo.getText().toString());
 
                 for (int i = 0; i < orderTransactionData.size(); i++) {
-
+                    if (isFilter_.get(i)) {
                     if (Settings.tax_type == 0) {
                         NetTotal = Double.parseDouble(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish("" + (Total_.get(i) - Dic_.get(i)))))));
 //                        totalByTax = Double.parseDouble( threeDForm.format((Total_.get(i) - Tax_.get(i))));
@@ -1736,18 +1750,18 @@ public class BackOfficeActivity extends AppCompatActivity {
                         totalByTax = Double.parseDouble(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish("" + (Total_.get(i) - Dic_.get(i)))))));
                     }
 
-                    insertRowForReport(tableXreport, orderTransactionData.get(i).getItemName(),convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(""+Tax_.get(i))))),
-                            "", convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(""+totalByTax))))
-                            , "", "", convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(""+NetTotal)))), 4);
+                    insertRowForReport(tableXreport, orderTransactionData.get(i).getItemName(), convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish("" + Tax_.get(i))))),
+                            "", convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish("" + totalByTax))))
+                            , "", "", convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish("" + NetTotal)))), 4);
 
                     OrderTransactions orderTransactions = new OrderTransactions();
-                    orderTransactions.setTaxValue(Double.parseDouble(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(""+Tax_.get(i)))))));
-                    orderTransactions.setTotal(Double.parseDouble(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(""+totalByTax))))));
-                    orderTransactions.setTime(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(""+NetTotal)))));
+                    orderTransactions.setTaxValue(Double.parseDouble(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish("" + Tax_.get(i)))))));
+                    orderTransactions.setTotal(Double.parseDouble(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish("" + totalByTax))))));
+                    orderTransactions.setTime(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish("" + NetTotal)))));
                     orderTransactions.setItemName(orderTransactionData.get(i).getItemName());
 
                     orderTransactionDataPdf.add(orderTransactions);
-                }
+                } }
 
                 for (int a = 0; a < tableXreport.getChildCount(); a++) {
 
@@ -1783,11 +1797,13 @@ public class BackOfficeActivity extends AppCompatActivity {
                 Total_.clear();
                 Tax_.clear();
                 Dic_.clear();
+                isFilter_.clear();
 
                 orderTransactionData = mDHandler.getXReportPercent("SHIFT_NAME", posNoString, fromDat[0], fromDat[0]);
 
                 for (int i = 0; i < orderTransactionData.size(); i++) {
                     double total_ = 0.0, tax_x_ = 0.0, dic_ = 0.0;
+                    boolean isIn =false;
                     String cou_date = orderTransactionData.get(i).getVoucherDate();
                     String cou_total = orderTransactionData.get(i).getTime();
                     String cou_tax = orderTransactionData.get(i).getShiftName();
@@ -1809,6 +1825,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                             total_ += Double.parseDouble(arrayTotal[q]);
                             tax_x_ +=Double.parseDouble(arrayTax[q]);
                             dic_ += Double.parseDouble(arrayDic[q]);
+                            isIn=true;
                             Log.e("sale2" + q, "" + total_ + " ///" + tax_x_ + "_____" + arrayKind[q]);
 //
                         }
@@ -1817,13 +1834,14 @@ public class BackOfficeActivity extends AppCompatActivity {
                     Total_.add(total_);
                     Tax_.add(tax_x_);
                     Dic_.add(dic_);
+                    isFilter_.add(isIn);
                     Log.e("arrayTotal", "" + total_ + " ///" + tax_x_);
 
                 }
 
 
                 for (int i = 0; i < orderTransactionData.size(); i++) {
-
+                    if (isFilter_.get(i)) {
                     if (Settings.tax_type == 0) {
 //                        totalByTax = Double.parseDouble(threeDForm.format((Total_.get(i) - Tax_.get(i))));
                         totalByTax = Double.parseDouble(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(""+(Total_.get(i) - Tax_.get(i) - Dic_.get(i)))))));
@@ -1845,7 +1863,7 @@ public class BackOfficeActivity extends AppCompatActivity {
 
 
                     orderTransactionDataPdf2.add(orderTransactions);
-                }
+                }}
 
 
             }
@@ -4627,6 +4645,8 @@ public class BackOfficeActivity extends AppCompatActivity {
                 int totalGusts = 0;
                 int numOfTrans = 0;
                 double totalSales = 0;
+                double avaregSales = 0;
+                double avaregGusts = 0;
 
                 for (int s = 0; s < filteredList.size(); s++) {
                     if (filteredList.get(s).getOrderType() == 0)
@@ -4660,18 +4680,22 @@ public class BackOfficeActivity extends AppCompatActivity {
                             break;
                         case 4:
                             if(numOfTrans!=0) {
-                            textView.setText(convertToEnglish(threeDForm.format((totalSales / numOfTrans))));
+                                avaregSales=Double.parseDouble(convertToEnglish(threeDForm.format((totalSales / numOfTrans))));
                             }else{
-                                textView.setText("0");
+                                avaregSales=0.0;
                             }
+                            textView.setText(""+avaregSales);
+
                             break;
                         case 5:
                             if(totalGusts!=0) {
-                                textView.setText(convertToEnglish(threeDForm.format(totalSales / totalGusts)));
+                                avaregGusts=Double.parseDouble(convertToEnglish(threeDForm.format(totalSales / totalGusts)));
+
                             }else{
-                                textView.setText("0");
+                                avaregGusts=0.0;
 
                             }
+                            textView.setText(""+avaregGusts);
                             break;
                     }
 
@@ -4692,11 +4716,11 @@ public class BackOfficeActivity extends AppCompatActivity {
                 OrderHeader orderHeader = new OrderHeader();
 
                 orderHeader.setTime(("" + i + ":00 - " + (i + 1) + ":00"));
-                orderHeader.setTotalTax(totalGusts);
-                orderHeader.setTotalDiscount(numOfTrans);
-                orderHeader.setTotal(totalSales);
-                orderHeader.setAmountDue((totalSales / numOfTrans));
-                orderHeader.setAllDiscount((totalSales / totalGusts));
+                orderHeader.setTotalTax(Double.parseDouble(convertToEnglish(threeDForm.format(totalGusts))));
+                orderHeader.setTotalDiscount(Double.parseDouble(convertToEnglish(threeDForm.format(numOfTrans))));
+                orderHeader.setTotal(Double.parseDouble(convertToEnglish(threeDForm.format(totalSales))));
+                orderHeader.setAmountDue(Double.parseDouble(convertToEnglish(threeDForm.format(avaregSales))));
+                orderHeader.setAllDiscount(Double.parseDouble(convertToEnglish(threeDForm.format(avaregGusts))));
 
                 headerList.add(orderHeader);
             }
