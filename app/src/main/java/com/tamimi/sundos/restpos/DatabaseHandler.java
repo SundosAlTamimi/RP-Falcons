@@ -1212,7 +1212,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
 
-        db.execSQL("ALTER TABLE ANNOUNCEMENT_TABLE ADD USER_NO INTEGER NOT NULL DEFAULT '-1'");
+//        db.execSQL("ALTER TABLE ANNOUNCEMENT_TABLE ADD USER_NO INTEGER NOT NULL DEFAULT '-1'");
 
 //        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS ADD ORG_NO TAXE NOT NULL DEFAULT '0'");
 //        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS ADD ORG_POS INTEGER NOT NULL DEFAULT '-1'");

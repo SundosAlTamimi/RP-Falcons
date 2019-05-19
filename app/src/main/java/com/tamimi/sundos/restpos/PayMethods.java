@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,7 +12,6 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,7 +21,6 @@ import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.tamimi.sundos.restpos.Models.Cashier;
 import com.tamimi.sundos.restpos.Models.Cheque;
@@ -58,7 +55,7 @@ public class PayMethods extends AppCompatActivity {
 
     DatabaseHandler mDHandler;
     Dialog dialog, dialog1;
-    DecimalFormat twoDForm = new DecimalFormat("0.000");
+    DecimalFormat threeDForm = new DecimalFormat("0.000");
     TextView focusedTextView;
     int flag = 0;
     int position1;
@@ -68,7 +65,6 @@ public class PayMethods extends AppCompatActivity {
     ArrayList<String> bankName, cardNumbers, chequeNambers, cardName, giftCardNumber, couponNumber, pointCardNumber,
             resiveCredit, resivePoint, resiveGift, resiveCheque;
     int position, countCridit = 0, countCheque = 0, countGift = 0, countCoupon = 0, countPoint = 0;
-
     Order obj;
     String orderType = "TakeAway";
 
@@ -130,8 +126,8 @@ public class PayMethods extends AppCompatActivity {
             amountDue.setText(orderHeaderTemp.get(0).getAmountDue() + "");
             deliveryCharge.setText(orderHeaderTemp.get(0).getDeliveryCharge() + "");
 
-            mainBalance = balance.getText().toString();
-            remainingBalance.setText(getResources().getString(R.string.remaining_) + balance.getText().toString());
+            mainBalance = convertToEnglish(balance.getText().toString());
+            remainingBalance.setText(getResources().getString(R.string.remaining_) + Double.parseDouble( convertToEnglish(balance.getText().toString())));
             check.setText(check.getText().toString() + " " + orderHeaderTemp.get(0).getSectionNO());
             tableNumber.setText(tableNumber.getText().toString() + " " + orderHeaderTemp.get(0).getTableNO());
             orderType = "Dine In";
@@ -150,7 +146,7 @@ public class PayMethods extends AppCompatActivity {
 
 
             mainBalance = convertToEnglish(balance.getText().toString());
-            remainingBalance.setText(getResources().getString(R.string.remaining_) + balance.getText().toString());
+            remainingBalance.setText(getResources().getString(R.string.remaining_) +Double.parseDouble( convertToEnglish(balance.getText().toString())));
             check.setText(check.getText().toString() + " -");
             tableNumber.setText(tableNumber.getText().toString() + " -");
         }
@@ -228,7 +224,7 @@ public class PayMethods extends AppCompatActivity {
         final TableLayout tableLayout = (TableLayout) dialog.findViewById(R.id.money_categories);
 
 
-        balance.setText(mainBalance);
+        balance.setText(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(mainBalance)))));
         final ArrayList<Money> moneyList;
         moneyList = mDHandler.getAllMoneyCategory();
 
@@ -288,9 +284,9 @@ public class PayMethods extends AppCompatActivity {
             row.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    cashMoney.setText("" + (Double.parseDouble(cashMoney.getText().toString()) + catValue));
+                    cashMoney.setText("" + convertToEnglish(String.valueOf(Double.parseDouble(cashMoney.getText().toString()) + catValue)));
                     TextView t1 = (TextView) row.getChildAt(2);
-                    textView1.setText("" + (Integer.parseInt(t1.getText().toString()) + 1));
+                    textView1.setText("" + convertToEnglish(String.valueOf(Integer.parseInt(""+(Integer.parseInt(t1.getText().toString()) + 1)))));
 
                     Log.e("111", "11" + t1.getText().toString() + "*********");
                 }
@@ -386,9 +382,9 @@ public class PayMethods extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String t0 = balance.getText().toString();
-                String t1 = received.getText().toString();
-                String t2 = cashMoney.getText().toString();
+                String t0 =convertToEnglish( balance.getText().toString());
+                String t1 = convertToEnglish(received.getText().toString());
+                String t2 = convertToEnglish(cashMoney.getText().toString());
                 cashValue=0.0;
                 Date currentTimeAndDate = Calendar.getInstance().getTime();
                 SimpleDateFormat df1 = new SimpleDateFormat("dd-MM-yyyy");
@@ -400,7 +396,7 @@ public class PayMethods extends AppCompatActivity {
                 else if ( // Double.parseDouble(t1) == Double.parseDouble(t2) &&
                         Double.parseDouble(t1) <= Double.parseDouble(t0)) {
 
-                    cashValue += Double.parseDouble(t1);
+                    cashValue += Double.parseDouble(convertToEnglish(t1));
 
                     if (!t2.equals("")) {
                         for (int i = 0; i < moneyList.size(); i++) {
@@ -428,21 +424,21 @@ public class PayMethods extends AppCompatActivity {
                     dialog.dismiss();
                     new Settings().makeText(PayMethods.this, getResources().getString(R.string.save));
                     if (cashValue != 0) {
-                        cash.setText(getResources().getString(R.string.cash) + " : " + cashValue);
+                        cash.setText(getResources().getString(R.string.cash) + " : " + convertToEnglish(""+cashValue));
                         cash.setBackgroundDrawable(getResources().getDrawable(R.drawable.clear_buttons));
-                        mainBalance = "" + (Double.parseDouble(mainBalance) - Double.parseDouble(t1));
-                        remainingBalance.setText(getResources().getString(R.string.remaining_) + mainBalance);
+                        mainBalance = "" + threeDForm.format(Double.parseDouble(convertToEnglish(mainBalance)) - Double.parseDouble(convertToEnglish(t1)));
+                        remainingBalance.setText(getResources().getString(R.string.remaining_) + Double.parseDouble(convertToEnglish(mainBalance)));
                     }
                 } else if (Double.parseDouble(t1) > Double.parseDouble(t0)) {
-                    new Settings().makeText(PayMethods.this,getResources().getString(R.string.invaled_input) );
+//                    new Settings().makeText(PayMethods.this,getResources().getString(R.string.invaled_input) );
                     double received_value = Double.parseDouble(t1) - Double.parseDouble(t0);
                     payGraterDialog(String.valueOf(received_value), today, t0);
-                    cashValue += Double.parseDouble(t0);
+                    cashValue += Double.parseDouble(convertToEnglish(t0));
                     if (cashValue != 0) {
-                        cash.setText(getResources().getString(R.string.cash) + " : " + cashValue);
+                        cash.setText(getResources().getString(R.string.cash) + " : " +convertToEnglish( String.valueOf(cashValue)));
                         cash.setBackgroundDrawable(getResources().getDrawable(R.drawable.clear_buttons));
-                        mainBalance = "" + (Double.parseDouble(mainBalance) - Double.parseDouble(t0));
-                        remainingBalance.setText(getResources().getString(R.string.remaining_) + mainBalance);
+                        mainBalance = "" + threeDForm.format((Double.parseDouble(convertToEnglish(mainBalance)) - Double.parseDouble(convertToEnglish(t0))));
+                        remainingBalance.setText(getResources().getString(R.string.remaining_) + threeDForm.format(Double.parseDouble(convertToEnglish(mainBalance))));
                     }
                     dialog.dismiss();
                 }
@@ -481,7 +477,7 @@ public class PayMethods extends AppCompatActivity {
             }
         });
 
-        mess.setText(twoDForm.format(Double.parseDouble(convertToEnglish(message))));
+        mess.setText(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(message)))));
 
         dialog2.show();
     }
@@ -524,7 +520,7 @@ public class PayMethods extends AppCompatActivity {
         });
 
         flag = 0;
-        balance.setText(mainBalance);
+        balance.setText(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(mainBalance)))));
         Button b1, b2, b3, b4, b5, b6, b7, b8, b9, b0, dot, save;
         b1 = (Button) dialog.findViewById(R.id.b1);
         b2 = (Button) dialog.findViewById(R.id.b2);
@@ -635,24 +631,24 @@ public class PayMethods extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String t0 = balance.getText().toString();
-                String t1 = received.getText().toString();
+                String t0 = String.valueOf(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(balance.getText().toString())))));
+                String t1 = String.valueOf(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(received.getText().toString())))));
                 String t2 = cardNo.getText().toString();
                 //&& spinner.getSelectedItem().toString().equals("")
                 if (!t1.equals("") && !t2.equals("") && creditCardsName.size() != 0) {
 
                     if (Double.parseDouble(t1) <= Double.parseDouble(t0)) {
 
-                        creditCardValue += Double.parseDouble(t1);
+                        creditCardValue += Double.parseDouble(convertToEnglish(t1));
                         dialog.dismiss();
                         new Settings().makeText(PayMethods.this, getResources().getString(R.string.save));
                         if (creditCardValue != 0) {
-                            creditCard.setText(getResources().getString(R.string.credit_card) + " : " + creditCardValue);
+                            creditCard.setText(getResources().getString(R.string.credit_card) + " : " + convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(""+creditCardValue)))));
                             creditCard.setBackgroundDrawable(getResources().getDrawable(R.drawable.clear_buttons));
-                            mainBalance = "" + (Double.parseDouble(mainBalance) - Double.parseDouble(t1));
-                            remainingBalance.setText(getResources().getString(R.string.remaining_) + mainBalance);
+                            mainBalance = "" + threeDForm.format(Double.parseDouble( convertToEnglish(mainBalance)) - Double.parseDouble(convertToEnglish(t1)));
+                            remainingBalance.setText(getResources().getString(R.string.remaining_) +convertToEnglish(threeDForm.format((Double.parseDouble(convertToEnglish(mainBalance))))));
 
-                            resiveCredit.add(countCridit, received.getText().toString());
+                            resiveCredit.add(countCridit, String.valueOf(Double.parseDouble(convertToEnglish(received.getText().toString()))));
                             cardNumbers.add(countCridit, cardNo.getText().toString());
                             cardName.add(countCridit, spinner.getSelectedItem().toString());
                         }
@@ -733,7 +729,7 @@ public class PayMethods extends AppCompatActivity {
         final Button addBank = (Button) dialog.findViewById(R.id.add_bank);
         final Spinner spinner2 = (Spinner) dialog.findViewById(R.id.bank_name_spinner);
 
-        balance.setText(mainBalance);
+        balance.setText(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(mainBalance)))));
         flag = 0;
         Button b1, b2, b3, b4, b5, b6, b7, b8, b9, b0, dot, save;
         b1 = (Button) dialog.findViewById(R.id.b1);
@@ -871,23 +867,23 @@ public class PayMethods extends AppCompatActivity {
             public void onClick(View view) {
 
 
-                String t0 = balance.getText().toString();
-                String t1 = received.getText().toString();
+                String t0 =convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(balance.getText().toString()))));
+                String t1 = convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish( received.getText().toString()))));
                 String t2 = chequeNumber.getText().toString();
 
                 if (t1.equals("") && t2.equals("") && spinner2.getSelectedItem().toString().equals(""))
                 new Settings().makeText(PayMethods.this,getResources().getString(R.string.enter_recived_value_and_carfno) );
                 else if ((Double.parseDouble(t1) <= Double.parseDouble(t0))&&!t1.equals("")&&!t2.equals("")) {
-                    chequeValue += Double.parseDouble(t1);
+                    chequeValue += Double.parseDouble(convertToEnglish( t1));
                     dialog.dismiss();
                     new Settings().makeText(PayMethods.this,getResources().getString(R.string.save) );
                     if (chequeValue != 0) {
-                        cheque.setText(getResources().getString(R.string.cheque) + " : " + chequeValue);
+                        cheque.setText(getResources().getString(R.string.cheque) + " : " + convertToEnglish(threeDForm.format(chequeValue)));
                         cheque.setBackgroundDrawable(getResources().getDrawable(R.drawable.clear_buttons));
-                        mainBalance = "" + (Double.parseDouble(mainBalance) - Double.parseDouble(t1));
-                        remainingBalance.setText(getResources().getString(R.string.remaining_) + mainBalance);
+                        mainBalance = "" + threeDForm.format((Double.parseDouble(convertToEnglish(mainBalance)) - Double.parseDouble(convertToEnglish(t1))));
+                        remainingBalance.setText(getResources().getString(R.string.remaining_) + convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(mainBalance)))));
 
-                        resiveCheque.add(received.getText().toString());
+                        resiveCheque.add(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(received.getText().toString())))));
                         chequeNambers.add(chequeNumber.getText().toString());
                         bankName.add(countCheque, spinner2.getSelectedItem().toString());
 
@@ -895,7 +891,7 @@ public class PayMethods extends AppCompatActivity {
                         obj.setSerialCheque(serial);
                         obj.setBankName(spinner2.getSelectedItem().toString());
                         obj.setChequeNumber(Integer.parseInt(chequeNumber.getText().toString()));
-                        obj.setReceived(Double.parseDouble(received.getText().toString())); ///very important must change to double
+                        obj.setReceived(Double.parseDouble(convertToEnglish(received.getText().toString()))); ///very important must change to double
                         mDHandler.addCheque(obj);
                     }
                 } else
@@ -962,7 +958,7 @@ public class PayMethods extends AppCompatActivity {
         final TextView cardNo = (TextView) dialog.findViewById(R.id.card_number);
         final TableLayout cardInfo = (TableLayout) dialog.findViewById(R.id.card_info);
 
-        balance.setText(mainBalance);
+        balance.setText(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(mainBalance)))));
         received.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -1079,8 +1075,8 @@ public class PayMethods extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String t0 = balance.getText().toString();
-                String t1 = received.getText().toString();
+                String t0 =convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish( balance.getText().toString()))));
+                String t1 = convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(received.getText().toString()))));
                 String t2 = cardNo.getText().toString();
 
                 if (t1.equals("") && t2.equals(""))
@@ -1091,12 +1087,12 @@ public class PayMethods extends AppCompatActivity {
                     dialog.dismiss();
                     new Settings().makeText(PayMethods.this,getResources().getString(R.string.save) );
                     if (giftCardValue != 0) {
-                        giftCard.setText(getResources().getString(R.string.gift_card) + " : " + giftCardValue);
+                        giftCard.setText(getResources().getString(R.string.gift_card) + " : " + convertToEnglish(threeDForm.format(giftCardValue)));
                         giftCard.setBackgroundDrawable(getResources().getDrawable(R.drawable.clear_buttons));
-                        mainBalance = "" + (Double.parseDouble(mainBalance) - Double.parseDouble(t1));
-                        remainingBalance.setText(getResources().getString(R.string.remaining_) + mainBalance);
+                        mainBalance = "" + threeDForm.format((Double.parseDouble(convertToEnglish(mainBalance)) - Double.parseDouble(convertToEnglish(t1))));
+                        remainingBalance.setText(getResources().getString(R.string.remaining_) + convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(mainBalance)))));
 
-                        resiveGift.add(received.getText().toString());
+                        resiveGift.add(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(received.getText().toString())))));
                         giftCardNumber.add(cardNo.getText().toString());
                     }
                 } else
@@ -1140,7 +1136,7 @@ public class PayMethods extends AppCompatActivity {
         final TextView couponNo = (TextView) dialog.findViewById(R.id.coupon_number);
         final TableLayout couponInfo = (TableLayout) dialog.findViewById(R.id.coupon_info);
 
-        balance.setText(mainBalance);
+        balance.setText(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(mainBalance)))));
         Button b1, b2, b3, b4, b5, b6, b7, b8, b9, b0, dot, save;
         b1 = (Button) dialog.findViewById(R.id.b1);
         b2 = (Button) dialog.findViewById(R.id.b2);
@@ -1259,10 +1255,10 @@ public class PayMethods extends AppCompatActivity {
                     dialog.dismiss();
                     new Settings().makeText(PayMethods.this, getResources().getString(R.string.save));
                     if (creditValue != 0) {
-                        credit.setText(getResources().getString(R.string.credit) + " : " + creditValue);
+                        credit.setText(getResources().getString(R.string.credit) + " : " + convertToEnglish(threeDForm.format(creditValue)));
                         credit.setBackgroundDrawable(getResources().getDrawable(R.drawable.clear_buttons));
-                        mainBalance = "" + (Double.parseDouble(mainBalance) - Double.parseDouble(t1));
-                        remainingBalance.setText(getResources().getString(R.string.remaining_) + mainBalance);
+                        mainBalance = "" + (Double.parseDouble(convertToEnglish(mainBalance)) - Double.parseDouble(convertToEnglish(t1)));
+                        remainingBalance.setText(getResources().getString(R.string.remaining_) + convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(mainBalance)))));
                         couponNumber.add(countCoupon, couponNo.getText().toString());
                     }
                 } else
@@ -1307,7 +1303,7 @@ public class PayMethods extends AppCompatActivity {
         final TextView cardNo = (TextView) dialog.findViewById(R.id.card_number);
         final TableLayout cardInfo = (TableLayout) dialog.findViewById(R.id.card_info);
 
-        balance.setText(mainBalance);
+        balance.setText(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(mainBalance)))));
         received.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -1425,8 +1421,8 @@ public class PayMethods extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String t0 = balance.getText().toString();
-                String t1 = received.getText().toString();
+                String t0 =convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish( balance.getText().toString()))));
+                String t1 = convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(received.getText().toString()))));
                 String t2 = cardNo.getText().toString();
 
                 if (t1.equals("") && t2.equals(""))
@@ -1437,12 +1433,12 @@ public class PayMethods extends AppCompatActivity {
                     dialog.dismiss();
                     new Settings().makeText(PayMethods.this,getResources().getString(R.string.save) );
                     if (pointValue != 0) {
-                        point.setText(getResources().getString(R.string.point) + " : " + pointValue);
+                        point.setText(getResources().getString(R.string.point) + " : " + convertToEnglish(threeDForm.format(pointValue)));
                         point.setBackgroundDrawable(getResources().getDrawable(R.drawable.clear_buttons));
-                        mainBalance = "" + (Double.parseDouble(mainBalance) - Double.parseDouble(t1));
-                        remainingBalance.setText(getResources().getString(R.string.remaining_) + mainBalance);
+                        mainBalance = "" + threeDForm.format((Double.parseDouble(convertToEnglish(mainBalance)) - Double.parseDouble(convertToEnglish(t1))));
+                        remainingBalance.setText(getResources().getString(R.string.remaining_) +convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish((mainBalance))))));
 
-                        resivePoint.add(received.getText().toString());
+                        resivePoint.add(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish((received.getText().toString()))))));
                         pointCardNumber.add(cardNo.getText().toString());
                     }
                 } else
@@ -1472,8 +1468,7 @@ public class PayMethods extends AppCompatActivity {
     public void saveInDataBase() {
 
         String balanceTest = remainingBalance.getText().toString().substring(remainingBalance.getText().toString().indexOf(":") + 1);
-        Log.e("test ...", "balanceTest--->   " + Double.parseDouble(balanceTest));
-        if (Double.parseDouble(balanceTest) == 0.00) {
+        if (Double.parseDouble(convertToEnglish(balanceTest)) == 0.00) {
             Date currentTimeAndDate = Calendar.getInstance().getTime();
             SimpleDateFormat df1 = new SimpleDateFormat("dd-MM-yyyy");
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM");
@@ -1482,9 +1477,9 @@ public class PayMethods extends AppCompatActivity {
             String times = convertToEnglish(Tf.format(currentTimeAndDate));
             int serial; //= mDHandler.getMaxSerial("VOUCHER_SERIAL", "PAY_METHOD");
             if (orderHeaderTemp == null) {
-                serial = obj.getOrderHeaderObj().getVoucherSerial();
+                serial = Integer.parseInt(obj.getOrderHeaderObj().getVoucherNumber());
             } else {
-                serial = orderHeaderTemp.get(0).getVoucherSerial();
+                serial =  Integer.parseInt(orderHeaderTemp.get(0).getVoucherNumber());
             }
             String vhfSerial = convertToEnglish(df.format(currentTimeAndDate));// + "-" + (serial);
             String newString = convertToEnglish(vhfSerial.replace("-", "") + "-" + (serial));
@@ -1510,7 +1505,7 @@ public class PayMethods extends AppCompatActivity {
 
             if (cashValue != 0.00) {
                 payMethod.setPayType("Cash");
-                payMethod.setPayValue(cashValue);
+                payMethod.setPayValue(Double.parseDouble(convertToEnglish(""+cashValue)));
                 payMethod.setPayNumber("0");
                 payMethod.setPayName("null");
                 mDHandler.addAllPayMethodItem(payMethod);
@@ -1729,7 +1724,7 @@ public class PayMethods extends AppCompatActivity {
     }
 
     public String convertToEnglish(String value) {
-        String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0"));
+        String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0").replaceAll("٫","."));
         return newValue;
     }
 
