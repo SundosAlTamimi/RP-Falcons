@@ -140,7 +140,6 @@ public class BackOfficeActivity extends AppCompatActivity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.back_office_activity);
 
-
         myCalendar = Calendar.getInstance();
 
         Date currentTimeAndDate = Calendar.getInstance().getTime();
