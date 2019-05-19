@@ -110,7 +110,7 @@ public class BackOfficeActivity extends AppCompatActivity {
             simpleSalesTotalReport, SoldQtyReport, userOrderCountReport, reCancellationReport, reCancellationSupervisorReport;
 
     int count, count2, nextSerial;
-    Dialog dialog;
+    Dialog dialog, dialog1;
     String today;
     DatabaseHandler mDHandler;
     Bitmap imageBitmap = null;
@@ -343,14 +343,14 @@ public class BackOfficeActivity extends AppCompatActivity {
     };
 
     private void showMainSettingsPasswordDialog() {
-        dialog = new Dialog(BackOfficeActivity.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(true);
-        dialog.setContentView(R.layout.settings_password_dialog);
-        dialog.setCanceledOnTouchOutside(true);
+        dialog1 = new Dialog(BackOfficeActivity.this);
+        dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog1.setCancelable(true);
+        dialog1.setContentView(R.layout.settings_password_dialog);
+        dialog1.setCanceledOnTouchOutside(true);
 
-        EditText passwordEditText = (EditText) dialog.findViewById(R.id.setting_admin_password);
-        Button passwordConfirm = (Button) dialog.findViewById(R.id.setting_password_enter);
+        EditText passwordEditText = (EditText) dialog1.findViewById(R.id.setting_admin_password);
+        Button passwordConfirm = (Button) dialog1.findViewById(R.id.setting_password_enter);
 
         passwordConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -368,7 +368,7 @@ public class BackOfficeActivity extends AppCompatActivity {
 
             }
         });
-        dialog.show();
+        dialog1.show();
 
     }
 
@@ -395,13 +395,82 @@ public class BackOfficeActivity extends AppCompatActivity {
 
         mDHandler.getMainSettings();
         if (!Settings.user_name.equals("")) {
-
+            userName.setText(Settings.user_name);
+            userPassword.setText("" + Settings.password);
+            userNo.setText("" + Settings.user_no);
+            posNo.setText("" + Settings.POS_number);
+            storeNo.setText("" + Settings.store_number);
+            shiftNo.setText("" + Settings.shift_number);
+            shiftName.setText(Settings.shift_name);
+            serviceTax.setText("" + Settings.service_tax);
+            serviceValue.setText("" + Settings.service_value);
+            taxType.setText("" + Settings.tax_type);
+            timeCard.setText("" + Settings.time_card);
         }
 
         saveSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!TextUtils.isEmpty(userName.getText().toString())) {
+                    if (!TextUtils.isEmpty(userPassword.getText().toString())) {
+                        if (!TextUtils.isEmpty(userNo.getText().toString())) {
+                            if (!TextUtils.isEmpty(posNo.getText().toString())) {
+                                if (!TextUtils.isEmpty(storeNo.getText().toString())) {
+                                    if (!TextUtils.isEmpty(shiftNo.getText().toString())) {
+                                        if (!TextUtils.isEmpty(shiftName.getText().toString())) {
+                                            if (!TextUtils.isEmpty(serviceTax.getText().toString())) {
+                                                if (!TextUtils.isEmpty(serviceValue.getText().toString())) {
+                                                    if (!TextUtils.isEmpty(taxType.getText().toString())) {
+                                                        if (!TextUtils.isEmpty(timeCard.getText().toString())) {
+                                                            mDHandler.deleteCurrentMainSettings();
+                                                            Settings.user_name = userName.getText().toString();
+                                                            Settings.password = Integer.parseInt(userPassword.getText().toString());
+                                                            Settings.user_no = Integer.parseInt(userNo.getText().toString());
+                                                            Settings.POS_number = Integer.parseInt(posNo.getText().toString());
+                                                            Settings.store_number = Integer.parseInt(storeNo.getText().toString());
+                                                            Settings.shift_number = Integer.parseInt(shiftNo.getText().toString());
+                                                            Settings.shift_name = shiftName.getText().toString();
+                                                            Settings.service_tax = Double.parseDouble(serviceTax.getText().toString());
+                                                            Settings.service_value = Double.parseDouble(serviceValue.getText().toString());
+                                                            Settings.tax_type = Integer.parseInt(taxType.getText().toString());
+                                                            Settings.time_card = Integer.parseInt(timeCard.getText().toString());
+                                                            mDHandler.addMainSettings();
+                                                            dialog.dismiss();
+                                                            dialog1.dismiss();
 
+                                                        } else {
+                                                            timeCard.setError("Required field!");
+                                                        }
+                                                    } else {
+                                                        taxType.setError("Required field!");
+                                                    }
+                                                } else {
+                                                    serviceValue.setError("Required field!");
+                                                }
+                                            } else {
+                                                serviceTax.setError("Required field!");
+                                            }
+                                        } else {
+                                            shiftName.setError("Required field!");
+                                        }
+                                    } else {
+                                        shiftNo.setError("Required field!");
+                                    }
+                                } else {
+                                    storeNo.setError("Required field!");
+                                }
+                            } else {
+                                posNo.setError("Required field!");
+                            }
+                        } else {
+                            userNo.setError("Required field!");
+                        }
+                    } else {
+                        userPassword.setError("Required field!");
+                    }
+                } else {
+                    userName.setError("Required field!");
+                }
             }
         });
 
@@ -409,6 +478,7 @@ public class BackOfficeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
+                dialog1.dismiss();
             }
         });
 

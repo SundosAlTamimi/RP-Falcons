@@ -56,7 +56,7 @@ import static com.tamimi.sundos.restpos.Settings.shift_name;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
     // Database Versions
-    private static final int DATABASE_VERSION = 34;
+    private static final int DATABASE_VERSION = 36;
 
     // Database Name
     private static final String DATABASE_NAME = "RestPos";
@@ -105,6 +105,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     //___________________________________________________________________________________
     private static final String RECIPES = "RECIPES";
 
+    private static final String ITEM_BARCOD = "ITEM_BARCODE";
     private static final String BARCODE = "BARCODE";
     private static final String ITEM = "ITEM";
     private static final String UNIT = "UNIT";
@@ -630,6 +631,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         //___________________________________________________________________________________
 
         String CREATE_TABLE_RECIPES = "CREATE TABLE " + RECIPES + "("
+                + ITEM_BARCOD + " INTEGER,"
                 + BARCODE + " INTEGER,"
                 + ITEM + " TEXT,"
                 + UNIT + " TEXT,"
@@ -1211,6 +1213,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
+        db.execSQL("DROP TABLE RECIPES");
+
+//        db.execSQL("ALTER TABLE ANNOUNCEMENT_TABLE ADD USER_NO INTEGER NOT NULL DEFAULT '-1'");
+        String CREATE_TABLE_RECIPES = "CREATE TABLE " + RECIPES + "("
+                + ITEM_BARCOD + " INTEGER,"
+                + BARCODE + " INTEGER,"
+                + ITEM + " TEXT,"
+                + UNIT + " TEXT,"
+                + QTY + " INTEGER,"
+                + COST + " INTEGER" + ")";
+        db.execSQL(CREATE_TABLE_RECIPES);
 
 //        db.execSQL("ALTER TABLE ANNOUNCEMENT_TABLE ADD USER_NO INTEGER NOT NULL DEFAULT '-1'");
 
@@ -1297,6 +1310,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
+        values.put(ITEM_BARCOD, recipe.getItemBarcode());
         values.put(BARCODE, recipe.getBarcode());
         values.put(ITEM, recipe.getItem());
         values.put(UNIT, recipe.getUnit());
@@ -2096,6 +2110,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         db.close();
     }
+
+    //////////////////////////////////////////////////////////GET METHODS//////////////////////////////////////////////////////////////////
 
     public void getMainSettings(){
         String selectQuery = "SELECT  * FROM " + MAIN_SETTINGS;
@@ -4096,12 +4112,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 " where " + SECTION_NUMBER2 + " = '" + oldSectionNo + "' and " + TABLE_NUMBER2 + " = '" + oldTableNo + "'");
     }
 
+    //////////////////////////////////////////////////////////DELETE METHODS//////////////////////////////////////////////////////////////////
+
+    public void deleteCurrentMainSettings(){
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        sqLiteDatabase.execSQL("delete from " + MAIN_SETTINGS);
+        sqLiteDatabase.close();
+
+    }
+
     public void deleteAllUsedCategories() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from " + USED_CATEGORIES);
         db.close();
     }
-
 
     public void deleteAllMoneyCategory() {
         SQLiteDatabase db = this.getWritableDatabase();

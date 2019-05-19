@@ -315,24 +315,24 @@ public class Items {
             obj.put("MENU_CATEGORY", menuCategory);
             obj.put("MENU_NAME", menuName);
             obj.put("FAMILY_NAME", familyName);
-            obj.put("TAX_PERCENT", tax);
+            obj.put("PRICE", price);
             obj.put("TAX_TYPE", taxType);
+            obj.put("TAX_PERCENT", tax);
             obj.put("SECONDARY_NAME", secondaryName);
             obj.put("KITCHEN_NAME", kitchenAlias);
             obj.put("ITEM_BARCODE", itemBarcode);
             obj.put("STATUS", status);
             obj.put("ITEM_TYPE", itemType);
+            obj.put("DESCRIPTION", description);
             obj.put("INVENTORY_UNIT", inventoryUnit);
             obj.put("WASTAGE_PERCENT", wastagePercent);
             obj.put("DISCOUNT_AVAILABLE", discountAvailable);
             obj.put("POINT_AVAILABLE", pointAvailable);
             obj.put("OPEN_PRICE", openPrice);
             obj.put("KITCHEN_PRINTER_TO_USE", kitchenPrinter);
-            obj.put("KITCHEN_PRINTER_TO_USE", description);
-            obj.put("PRICE", price);
             obj.put("USED", used);
             obj.put("SHOW_IN_MENU", showInMenu);
-            obj.put("ITEM_PICTURE", pic);
+//            obj.put("ITEM_PICTURE", pic);
 
         } catch (JSONException e) {
             Log.e("Tag" , "JSONException");

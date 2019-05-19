@@ -38,8 +38,14 @@ import com.tamimi.sundos.restpos.DatabaseHandler;
 import com.tamimi.sundos.restpos.Models.FamilyCategory;
 import com.tamimi.sundos.restpos.Models.Items;
 import com.tamimi.sundos.restpos.Models.Recipes;
+import com.tamimi.sundos.restpos.PayMethods;
 import com.tamimi.sundos.restpos.R;
+import com.tamimi.sundos.restpos.SendCloud;
 import com.tamimi.sundos.restpos.Settings;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -203,14 +209,14 @@ public class MenuRegistration extends AppCompatActivity {
                                 showInMenuVariavle,
                                 itemBitmapPic);
 
-                        new Settings().makeText(MenuRegistration.this, getResources().getString(R.string.save_));
+                        new Settings().makeText(MenuRegistration.this, getResources().getString(R.string.save_successful));
                         clearForm();
                         itemBarcodeFound = false;
                     } else
-                    new Settings().makeText(MenuRegistration.this,getResources().getString(R.string.fill_request_filed) );
+                        new Settings().makeText(MenuRegistration.this, getResources().getString(R.string.fill_request_filed));
 
                 } else
-                new Settings().makeText(MenuRegistration.this,getResources().getString(R.string.chang_ITEM_BARCOGE) );
+                    new Settings().makeText(MenuRegistration.this, getResources().getString(R.string.chang_ITEM_BARCOGE));
                 itemBarcodeFound = false;
             }
         });
@@ -329,9 +335,11 @@ public class MenuRegistration extends AppCompatActivity {
 
                     mDbHandler.addFamilyCategory(familyCategory);
 
+                    SendCloud sendCloud = new SendCloud(MenuRegistration.this, familyCategory.getJSONObject());
+                    sendCloud.startSending("FamilyCategory");
 
                 } else {
-                    new Settings().makeText(MenuRegistration.this,getResources().getString(R.string.input_cat_name) );
+                    new Settings().makeText(MenuRegistration.this, getResources().getString(R.string.input_cat_name));
                 }
             }
         });
@@ -370,7 +378,7 @@ public class MenuRegistration extends AppCompatActivity {
 
                 } else {
 
-                    new Settings().makeText(MenuRegistration.this,getResources().getString(R.string.please_input_unit_name) );
+                    new Settings().makeText(MenuRegistration.this, getResources().getString(R.string.please_input_unit_name));
                 }
             }
         });
@@ -408,10 +416,13 @@ public class MenuRegistration extends AppCompatActivity {
 
                     mDbHandler.addFamilyCategory(familyCategory);
 
+                    SendCloud sendCloud = new SendCloud(MenuRegistration.this, familyCategory.getJSONObject());
+                    sendCloud.startSending("FamilyCategory");
+
                     dialog2.dismiss();
 
                 } else {
-                    new Settings().makeText(MenuRegistration.this,getResources().getString(R.string.input_family_name) );
+                    new Settings().makeText(MenuRegistration.this, getResources().getString(R.string.input_family_name));
                 }
             }
         });
@@ -434,18 +445,23 @@ public class MenuRegistration extends AppCompatActivity {
             Button buttonDone = (Button) dialog.findViewById(R.id.b_done);
 
             items = mDbHandler.getAllItems();
-            List<String> categoryName = new ArrayList<>();
+            List<String> itemName = new ArrayList<>();
             for (int i = 0; i < items.size(); i++) {
-                categoryName.add(items.get(i).getMenuName());
+                itemName.add(items.get(i).getMenuName());
             }
 
-            menuNameAdapter = new ArrayAdapter<>(MenuRegistration.this, R.layout.spinner_style, categoryName);
+            final int[] barcode = {-1};
+            if (items.size() != 0)
+                barcode[0] = items.get(0).getItemBarcode();
+
+            menuNameAdapter = new ArrayAdapter<>(MenuRegistration.this, R.layout.spinner_style, itemName);
             recipeSpinner.setAdapter(menuNameAdapter);
 
             recipeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                     unit.setText(items.get(i).getInventoryUnit());
+                    barcode[0] = items.get(i).getItemBarcode();
                 }
 
                 @Override
@@ -460,21 +476,21 @@ public class MenuRegistration extends AppCompatActivity {
                     if (!qty.getText().toString().equals("") && recipeSpinner.getCount() != 0) {
 
                         int position = recipeSpinner.getSelectedItemPosition();
-                        insertRow(Integer.parseInt(convertToEnglish(itemBarcodeEditText.getText().toString())), items.get(position).getMenuName(),
-                                items.get(position).getInventoryUnit(), Integer.parseInt(qty.getText().toString()),
+                        insertRow(Integer.parseInt(convertToEnglish(itemBarcodeEditText.getText().toString())), barcode[0], items.get(position).getMenuName(),
+                                items.get(position).getInventoryUnit(), Double.parseDouble(qty.getText().toString()),
                                 items.get(position).getPrice());
 
                         dialog.dismiss();
 
                     } else {
-                        new Settings().makeText(MenuRegistration.this,getResources().getString(R.string.fill_request_filed) );
+                        new Settings().makeText(MenuRegistration.this, getResources().getString(R.string.fill_request_filed));
                     }
                 }
             });
 
             dialog.show();
         } else {
-            new Settings().makeText(MenuRegistration.this,getResources().getString( R.string.add_ready_item_first) );
+            new Settings().makeText(MenuRegistration.this, getResources().getString(R.string.add_ready_item_first));
         }
     }
 
@@ -628,10 +644,13 @@ public class MenuRegistration extends AppCompatActivity {
                          double wastagePercent, int discountAvailable, int pointAvailable, int openPrice, String printer,
                          String description, double price, int used, int showInMenu, Bitmap img) {
 
-        mDbHandler.addItem(new Items(
+        Items items = new Items(
                 categoryName, menuName, familyName, taxPercent, taxType, secondaryName, kitchenAlias, itemBarcode, status, itemType,
-                inventoryUnit, wastagePercent, discountAvailable, pointAvailable, openPrice, printer, description, price, used, showInMenu, img));
+                inventoryUnit, wastagePercent, discountAvailable, pointAvailable, openPrice, printer, description, price, used, showInMenu, img);
 
+        mDbHandler.addItem(items);
+
+        List<Recipes> recipes = new ArrayList<>();
         for (int i = 0; i < recipeTable.getChildCount(); i++) {
             TableRow tableRow = (TableRow) recipeTable.getChildAt(i);
 
@@ -640,14 +659,44 @@ public class MenuRegistration extends AppCompatActivity {
             TextView textView3 = (TextView) tableRow.getChildAt(2);
             TextView textView4 = (TextView) tableRow.getChildAt(3);
             TextView textView5 = (TextView) tableRow.getChildAt(4);
+            TextView textView6 = (TextView) tableRow.getChildAt(5);
 
-            mDbHandler.addRecipe(new Recipes(itemBarcode, convertToEnglish(textView2.getText().toString()),
-                    convertToEnglish(textView3.getText().toString()), Integer.parseInt(textView4.getText().toString()),
-                    Double.parseDouble(textView5.getText().toString())));
+            Recipes recipe = new Recipes(
+                    Integer.parseInt(convertToEnglish(textView6.getText().toString())),
+                    Integer.parseInt(convertToEnglish(textView1.getText().toString())),
+                    convertToEnglish(textView2.getText().toString()),
+                    convertToEnglish(textView3.getText().toString()),
+                    Double.parseDouble(convertToEnglish(textView4.getText().toString())),
+                    Double.parseDouble(convertToEnglish(textView5.getText().toString())));
+
+            mDbHandler.addRecipe(recipe);
+            recipes.add(recipe);
+        }
+
+        sendToServer(items, recipes);
+    }
+
+    void sendToServer(Items items, List<Recipes> recipes) {
+        try {
+            JSONObject obj1 = items.getJSONObject();
+
+            JSONArray obj2 = new JSONArray();
+            for (int i = 0; i < recipes.size(); i++)
+                obj2.put(i, recipes.get(i).getJSONObject());
+
+            JSONObject obj = new JSONObject();
+            obj.put("ITEMS", obj1);
+            obj.put("RECIPES", obj2);
+
+            SendCloud sendCloud = new SendCloud(MenuRegistration.this, obj);
+            sendCloud.startSending("MenuRegistration");
+
+        } catch (JSONException e) {
+            Log.e("Tag", "JSONException");
         }
     }
 
-    void insertRow(int barCode, String item, String unit, int qty, double price) {
+    void insertRow(int itemBarCode, int barcode, String item, String unit, double qty, double price) {
 
         if (check()) {
             final TableRow row = new TableRow(MenuRegistration.this);
@@ -655,12 +704,12 @@ public class MenuRegistration extends AppCompatActivity {
             TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
             row.setLayoutParams(lp);
 
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < 6; i++) {
                 TextView textView = new TextView(MenuRegistration.this);
 
                 switch (i) {
                     case 0:
-                        textView.setText("" + barCode);
+                        textView.setText("" + barcode);
                         break;
                     case 1:
                         textView.setText(item);
@@ -674,13 +723,22 @@ public class MenuRegistration extends AppCompatActivity {
                     case 4:
                         textView.setText("" + qty * price);
                         break;
+
+                    case 5:
+                        textView.setText("" + itemBarCode);
+                        break;
                 }
 
                 textView.setTextColor(ContextCompat.getColor(MenuRegistration.this, R.color.text_color));
                 textView.setGravity(Gravity.CENTER);
 
-                TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
-                textView.setLayoutParams(lp2);
+                if (i == 5) {
+                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, 30, 0.0001f);
+                    textView.setLayoutParams(lp2);
+                } else {
+                    TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, 30, 1.0f);
+                    textView.setLayoutParams(lp2);
+                }
 
                 row.addView(textView);
 

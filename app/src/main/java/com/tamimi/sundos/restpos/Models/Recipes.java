@@ -1,14 +1,21 @@
 package com.tamimi.sundos.restpos.Models;
 
+import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class Recipes {
 
+    private int itemBarcode;
     private int barcode;
     private String item;
     private String unit;
-    private int qty;
+    private double qty;
     private double cost;
 
-    public Recipes(int barcode, String item, String unit, int qty, double cost) {
+    public Recipes(int itemBarcode, int barcode, String item, String unit, double qty, double cost) {
+        this.itemBarcode = itemBarcode;
         this.barcode = barcode;
         this.item = item;
         this.unit = unit;
@@ -18,6 +25,14 @@ public class Recipes {
 
     public int getBarcode() {
         return barcode;
+    }
+
+    public int getItemBarcode() {
+        return itemBarcode;
+    }
+
+    public void setItemBarcode(int itemBarcode) {
+        this.itemBarcode = itemBarcode;
     }
 
     public void setBarcode(int barcode) {
@@ -40,11 +55,11 @@ public class Recipes {
         this.unit = unit;
     }
 
-    public int getQty() {
+    public double getQty() {
         return qty;
     }
 
-    public void setQty(int qty) {
+    public void setQty(double qty) {
         this.qty = qty;
     }
 
@@ -54,5 +69,22 @@ public class Recipes {
 
     public void setCost(double cost) {
         this.cost = cost;
+    }
+
+    public JSONObject getJSONObject() {
+        JSONObject obj = new JSONObject();
+        try {
+
+            obj.put("ITEM_BARCODE", itemBarcode);
+            obj.put("BARCODE", barcode);
+            obj.put("ITEM", item);
+            obj.put("SUNIT", unit);
+            obj.put("QTY", qty);
+            obj.put("COST", cost);
+
+        } catch (JSONException e) {
+            Log.e("Tag" , "JSONException");
+        }
+        return obj;
     }
 }
