@@ -1215,6 +1215,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         db.execSQL("DROP TABLE RECIPES");
 
+//        db.execSQL("ALTER TABLE ANNOUNCEMENT_TABLE ADD USER_NO INTEGER NOT NULL DEFAULT '-1'");
         String CREATE_TABLE_RECIPES = "CREATE TABLE " + RECIPES + "("
                 + ITEM_BARCOD + " INTEGER,"
                 + BARCODE + " INTEGER,"

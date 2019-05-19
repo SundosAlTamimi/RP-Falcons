@@ -1768,7 +1768,7 @@ public class Main extends AppCompatActivity {
     }
 
     public String convertToEnglish(String value) {
-        String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0"));
+        String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0").replaceAll("٫","."));
         return newValue;
     }
 
@@ -1877,7 +1877,7 @@ public class Main extends AppCompatActivity {
                 }
 
                 Log.e("out 000", " " + CheckTrue + "  netTotals" + netTotals);
-                if (Double.parseDouble(total.getText().toString()) != 0.0 && CheckTrue) {
+                if (Double.parseDouble(convertToEnglish(twoDForm.format(Double.parseDouble(convertToEnglish(""+netTotals))))) != 0.0 && CheckTrue) {
                     Log.e("in  000", " " + CheckTrue);
                     int index = 0;
                     for (int i = 0; i < orderTransactions.size(); i++) {
@@ -1985,14 +1985,14 @@ public class Main extends AppCompatActivity {
                                     rows = row;
                                     rows.setBackgroundColor(getResources().getColor(R.color.layer3));
                                     rTotal[0] = ((Integer.parseInt(rQty.getText().toString())) * list.get(i).getPrice());
-                                    rTotals.setText(String.valueOf(rTotal[0]));
+                                    rTotals.setText(convertToEnglish(twoDForm.format(Double.parseDouble(convertToEnglish(""+rTotal[0])))));
                                     isGrater.setText("0");
                                     CheckTrue = true;
 
                                     Log.e("in 22", "list.get(i).getQty() =" + list.get(i).getQty() + "\n list.get(i).getDiscount()" + list.get(i).getDiscount() + "\n list.get(i).getlDiscount()" + list.get(i).getlDiscount());
 
-                                    totalAdd += Double.parseDouble(twoDForm.format(Double.parseDouble(rTotals.getText().toString())));
-                                    if (Double.parseDouble(rTotals.getText().toString()) != 0.0 && !rQty.getText().toString().equals("")) {
+                                    totalAdd += Double.parseDouble(convertToEnglish(twoDForm.format(Double.parseDouble(convertToEnglish(rTotals.getText().toString())))));
+                                    if (Double.parseDouble(convertToEnglish(twoDForm.format(Double.parseDouble(convertToEnglish(rTotals.getText().toString()))))) != 0.0 && !convertToEnglish(twoDForm.format(Double.parseDouble(convertToEnglish(rQty.getText().toString())))).equals("")) {
                                         discountAdd += ((list.get(i).getDiscount() / list.get(i).getQty()) + (list.get(i).getlDiscount() / list.get(i).getQty())) * Integer.parseInt(rQty.getText().toString());
                                         taxValue += ((list.get(i).getTaxValue() / list.get(i).getQty())) * Integer.parseInt(rQty.getText().toString());
 
@@ -2002,19 +2002,19 @@ public class Main extends AppCompatActivity {
                                     }
 
                                     if (Settings.tax_type == 0) {
-                                        netTotals = Double.parseDouble(twoDForm.format(totalAdd - discountAdd));
+                                        netTotals = Double.parseDouble(convertToEnglish(twoDForm.format(Double.parseDouble(convertToEnglish(""+(totalAdd - discountAdd))))));
                                     } else {
-                                        netTotals = Double.parseDouble(twoDForm.format(totalAdd - (discountAdd + taxValue)));
+                                        netTotals =Double.parseDouble(convertToEnglish(twoDForm.format(Double.parseDouble(convertToEnglish(""+(totalAdd+ taxValue - (discountAdd )))))));
                                     }
 
                                     Log.e("in 33", "netTotals = " + netTotals + "\n taxValue =" + taxValue + "\n discountAdd= " + discountAdd);
 
                                     balance = netTotals;
-                                    totalText.setText(twoDForm.format(totalAdd));
+                                    totalText.setText(convertToEnglish(twoDForm.format(Double.parseDouble(convertToEnglish(""+totalAdd)))));
 
-                                    DiscountText.setText(twoDForm.format(discountAdd));
+                                    DiscountText.setText(convertToEnglish(twoDForm.format(Double.parseDouble(convertToEnglish(""+discountAdd)))));
 
-                                    nettotalText.setText(twoDForm.format(netTotals));
+                                    nettotalText.setText(convertToEnglish(twoDForm.format(Double.parseDouble(convertToEnglish(""+netTotals)))));
 
                                 } else {
                                     notCorrectValueDialog(getResources().getString(R.string.this_value_not_correct));
@@ -2228,7 +2228,7 @@ public class Main extends AppCompatActivity {
                 pointValues = 0.0;
                 giftCardValues = 0.0;
                 cardValues = 0.0;
-                if (Double.parseDouble(nettotal.getText().toString()) == 0) {
+                if (Double.parseDouble(convertToEnglish(twoDForm.format(Double.parseDouble(convertToEnglish(nettotal.getText().toString()))))) == 0) {
                     if (!ifGraterThan[0]) {
                         for (int i = 0; i < tableLayout.getChildCount(); i++) {
                             TableRow rowTemp = (TableRow) tableLayout.getChildAt(i);
@@ -2317,7 +2317,7 @@ public class Main extends AppCompatActivity {
                             netTotal1 = total - (lineDic + dic) + service + serviceTax;//+ service
                             Log.e("refound ", "==>" + total + " -" + "(" + lineDic + "+" + dic + "+" + service + "+" + serviceTax + ")");
                         } else {
-                            netTotal1 = total - (lineDic + dic + tax + service + serviceTax);//+ service
+                            netTotal1 = total+ tax  - (lineDic + dic) + service + serviceTax;//+ service
                             Log.e("refound ", "==>" + total + " -" + "(" + lineDic + "+" + dic + "+" + service + "+" + tax + ")");
                         }
 

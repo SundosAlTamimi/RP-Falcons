@@ -16,7 +16,7 @@ public class Settings {
     public static String shift_name = "no shift";
     public static double service_tax = 0.0;
     public static double service_value = 0.0;
-    public static int tax_type = 0;
+    public static int tax_type = 1;
     public static int time_card = 0;
 
     public Settings(){

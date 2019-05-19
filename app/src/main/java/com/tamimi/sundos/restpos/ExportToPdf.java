@@ -546,9 +546,9 @@ public class ExportToPdf  {
             insertCell(pdfPTable, headerList.get(i).getTime(), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
             insertCell(pdfPTable, String.valueOf(headerList.get(i).getTotalTax()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
             insertCell(pdfPTable, String.valueOf(headerList.get(i).getTotalDiscount()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-            insertCell(pdfPTable, String.valueOf(headerList.get(i).getTotal()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-            insertCell(pdfPTable, String.valueOf(headerList.get(i).getAmountDue()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-            insertCell(pdfPTable, String.valueOf(headerList.get(i).getAllDiscount()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+            insertCell(pdfPTable, String.valueOf(threeDForm.format(headerList.get(i).getTotal())), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+            insertCell(pdfPTable, String.valueOf(threeDForm.format(headerList.get(i).getAmountDue())), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+            insertCell(pdfPTable, String.valueOf(threeDForm.format(headerList.get(i).getAllDiscount())), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
         }
 
         insertCell(pdfPTableHeader, "Falcon Soft ", Element.ALIGN_CENTER, 4, arabicFontHeader, BaseColor.WHITE);
@@ -730,7 +730,7 @@ public class ExportToPdf  {
             insertCell(pdfPTable, String.valueOf(OrderPayMDataPdf.get(i).getTime()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
             insertCell(pdfPTable, String.valueOf(OrderPayMDataPdf.get(i).getPointOfSaleNumber()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
             insertCell(pdfPTable, String.valueOf(OrderPayMDataPdf.get(i).getVoucherNumber()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
-            insertCell(pdfPTable, String.valueOf(OrderPayMDataPdf.get(i).getPayValue()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
+            insertCell(pdfPTable, String.valueOf(threeDForm.format(OrderPayMDataPdf.get(i).getPayValue())), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
             insertCell(pdfPTable, String.valueOf(OrderPayMDataPdf.get(i).getUserName()), Element.ALIGN_CENTER, 1, arabicFont, BaseColor.BLACK);
 
         }
