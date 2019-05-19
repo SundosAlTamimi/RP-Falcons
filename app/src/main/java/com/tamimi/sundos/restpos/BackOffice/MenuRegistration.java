@@ -5,12 +5,8 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -32,14 +28,13 @@ import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.tamimi.sundos.restpos.DatabaseHandler;
 import com.tamimi.sundos.restpos.Models.FamilyCategory;
 import com.tamimi.sundos.restpos.Models.Items;
 import com.tamimi.sundos.restpos.Models.Recipes;
-import com.tamimi.sundos.restpos.PayMethods;
 import com.tamimi.sundos.restpos.R;
+import com.tamimi.sundos.restpos.ReceiveCloud;
 import com.tamimi.sundos.restpos.SendCloud;
 import com.tamimi.sundos.restpos.Settings;
 
@@ -47,7 +42,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,6 +60,8 @@ public class MenuRegistration extends AppCompatActivity {
     Button newButton, saveButton, exitButton, addMenuCategory, addInventoryUnit, addRecipe, deleteCat;
     ImageView itemPic;
     ImageView catPic;
+
+    static EditText catName , familyEditText;
 
     String familyName = "Baverage";
     int showInMenuVariavle = 0;
@@ -281,7 +277,7 @@ public class MenuRegistration extends AppCompatActivity {
         dialog.setContentView(R.layout.add_new_category_dialog);
         dialog.setCanceledOnTouchOutside(true);
 
-        final EditText catName = (EditText) dialog.findViewById(R.id.cat_name);
+        catName = (EditText) dialog.findViewById(R.id.cat_name);
         final Spinner familyNameSpinner = (Spinner) dialog.findViewById(R.id.family_name);
         Button buttonAdd = (Button) dialog.findViewById(R.id.addFamily);
         Button exit = (Button) dialog.findViewById(R.id.exit);
@@ -321,22 +317,12 @@ public class MenuRegistration extends AppCompatActivity {
             public void onClick(View view) {
                 if (!catName.getText().toString().equals("") && familyNameSpinner.getCount() != 0) {
 
-                    FamilyCategory familyCategory = new FamilyCategory();
-
                     categories.add(0, catName.getText().toString());
                     categoriesAdapter.notifyDataSetChanged();
                     familyName = familyNameSpinner.getSelectedItem().toString();
-                    int serial = mDbHandler.getAllFamilyCategory().size() + 1;
-                    familyCategory.setSerial(serial);
-                    familyCategory.setType(2);
-                    // 1--> family type // 2--> category type
-                    familyCategory.setName(catName.getText().toString());
-                    familyCategory.setCatPic(categoryPic);
 
-                    mDbHandler.addFamilyCategory(familyCategory);
-
-                    SendCloud sendCloud = new SendCloud(MenuRegistration.this, familyCategory.getJSONObject());
-                    sendCloud.startSending("FamilyCategory");
+                    ReceiveCloud obj = new ReceiveCloud(MenuRegistration.this, 2);
+                    obj.startReceiving("MaxGroupSerial");
 
                 } else {
                     new Settings().makeText(MenuRegistration.this, getResources().getString(R.string.input_cat_name));
@@ -353,6 +339,54 @@ public class MenuRegistration extends AppCompatActivity {
         });
 
         dialog.show();
+    }
+
+    public void storeCategory(int maxGroupSerial) {
+
+        FamilyCategory familyCategory = new FamilyCategory();
+
+        if (maxGroupSerial == 0) { // -1 + 1 = 0
+            int serial = (mDbHandler.getAllFamilyCategory().get(mDbHandler.getAllFamilyCategory().size()-1).getSerial()+1);
+            familyCategory.setSerial(serial);
+        } else {
+            familyCategory.setSerial(maxGroupSerial);
+        }
+
+        familyCategory.setType(2);
+        // 1--> family type // 2--> category type
+        familyCategory.setName(catName.getText().toString());
+        familyCategory.setCatPic(categoryPic);
+
+        mDbHandler.addFamilyCategory(familyCategory);
+
+        SendCloud sendCloud = new SendCloud(MenuRegistration.this, familyCategory.getJSONObject());
+        sendCloud.startSending("FamilyCategory");
+
+        catName.setText("");
+        catPic.setImageBitmap(null);
+
+    }
+
+    public void storeFamily(int maxGroupSerial) {
+
+        FamilyCategory familyCategory = new FamilyCategory();
+
+        if (maxGroupSerial == 0) { // -1 + 1 = 0
+            int serial = (mDbHandler.getAllFamilyCategory().get(mDbHandler.getAllFamilyCategory().size()-1).getSerial()+1);
+            familyCategory.setSerial(serial);
+        } else {
+            familyCategory.setSerial(maxGroupSerial);
+        }
+
+        familyCategory.setType(1);
+        // 1--> family type // 2--> category type
+        familyCategory.setName(familyEditText.getText().toString());
+
+        mDbHandler.addFamilyCategory(familyCategory);
+
+        SendCloud sendCloud = new SendCloud(MenuRegistration.this, familyCategory.getJSONObject());
+        sendCloud.startSending("FamilyCategory");
+
     }
 
     void showAddUnitDialog() {
@@ -394,7 +428,7 @@ public class MenuRegistration extends AppCompatActivity {
         dialog2.setContentView(R.layout.add_new_family_dialog);
         dialog2.setCanceledOnTouchOutside(true);
 
-        final EditText familyEditText = (EditText) dialog2.findViewById(R.id.family);
+        familyEditText = (EditText) dialog2.findViewById(R.id.family);
         Button buttonDone = (Button) dialog2.findViewById(R.id.b_done);
 
 
@@ -403,21 +437,11 @@ public class MenuRegistration extends AppCompatActivity {
             public void onClick(View view) {
                 if (!familyEditText.getText().toString().equals("")) {
 
-                    FamilyCategory familyCategory = new FamilyCategory();
-
                     families.add(0, familyEditText.getText().toString());
                     familiesAdapter.notifyDataSetChanged();
 
-                    int serial = mDbHandler.getAllFamilyCategory().size() + 1;
-                    familyCategory.setSerial(serial);
-                    familyCategory.setType(1);
-                    // 1--> family type // 2--> category type
-                    familyCategory.setName(familyEditText.getText().toString());
-
-                    mDbHandler.addFamilyCategory(familyCategory);
-
-                    SendCloud sendCloud = new SendCloud(MenuRegistration.this, familyCategory.getJSONObject());
-                    sendCloud.startSending("FamilyCategory");
+                    ReceiveCloud obj = new ReceiveCloud(MenuRegistration.this, 1);
+                    obj.startReceiving("MaxGroupSerial");
 
                     dialog2.dismiss();
 
