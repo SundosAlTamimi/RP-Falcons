@@ -190,7 +190,7 @@
     <string name="menu_layout">بناء شاشة الطلبات</string>
     <string name="job_group">مجموعات العمل</string>
     <string name="employee_registration">تسجيل الموظفين</string>
-    <string name="employee_schedule">جدول الوظفين</string>
+    <string name="employee_schedule">جدول الموظفين</string>
     <string name="payroll">كشف الرواتب</string>
     <string name="vacation">العطل</string>
     <string name="dine_in_layout">بناء شاشة الزوار</string>

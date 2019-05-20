@@ -119,7 +119,6 @@ public class DineInLayout extends AppCompatActivity {
         }
 
         fillMainFloor(); // when open the activity the main floor is active by default
-
     }
 
 
@@ -135,17 +134,14 @@ public class DineInLayout extends AppCompatActivity {
                     else
                         slideRight(add);
                     break;
-
                 case R.id.add_squared_table:
                     dialog = new Dialog(DineInLayout.this);
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     dialog.setCancelable(false);
                     dialog.setContentView(R.layout.add_squared_table_dialog);
                     dialog.setCanceledOnTouchOutside(true);
-
 //                    Window window = dialog.getWindow();
 //                    window.setLayout(900, 350);
-
                     ImageView eightC = (ImageView) dialog.findViewById(R.id.eight_c);
                     ImageView sixC = (ImageView) dialog.findViewById(R.id.six_c);
                     ImageView fourC = (ImageView) dialog.findViewById(R.id.four_c);
@@ -156,20 +152,16 @@ public class DineInLayout extends AppCompatActivity {
                     fourC.setOnClickListener(onClickListener);
                     twoC.setOnClickListener(onClickListener);
 
-
                     dialog.show();
                     break;
-
                 case R.id.add_circled_table:
                     dialog = new Dialog(DineInLayout.this);
                     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     dialog.setCancelable(false);
                     dialog.setContentView(R.layout.add_cyrcled_table_dialog);
                     dialog.setCanceledOnTouchOutside(true);
-
 //                    Window window1 = dialog.getWindow();
 //                    window1.setLayout(900, 350);
-
                     ImageView eightC1 = (ImageView) dialog.findViewById(R.id.eight_c);
                     ImageView sixC1 = (ImageView) dialog.findViewById(R.id.six_c);
                     ImageView fourC1 = (ImageView) dialog.findViewById(R.id.four_c);
@@ -180,14 +172,10 @@ public class DineInLayout extends AppCompatActivity {
                     fourC1.setOnClickListener(onClickListener2);
                     twoC1.setOnClickListener(onClickListener2);
 
-
                     dialog.show();
                     break;
-
             }
-
         }
-
     };
 
     OnClickListener onFloorClickListener = new OnClickListener() {
@@ -197,9 +185,7 @@ public class DineInLayout extends AppCompatActivity {
             freeze();
             unfocusFloors();
             removeTables();
-
             switch (view.getId()) {
-
                 case R.id.main:
                     current = 0;
                     currentList = list0;
@@ -264,11 +250,8 @@ public class DineInLayout extends AppCompatActivity {
                 linearLayout.setY(currentList.get(i).getMarginTop());
                 linearLayout.setLayoutParams(params);
                 land.addView(linearLayout);
-
             }
-
         }
-
     };
 
     private final class onTouchListener implements OnTouchListener {
@@ -334,16 +317,13 @@ public class DineInLayout extends AppCompatActivity {
         }
     }
 
-
     OnClickListener onClickListener = new OnClickListener() {
         @SuppressLint("ClickableViewAccessibility")
         @Override
         public void onClick(View view) {
-
             RelativeLayout.LayoutParams imageParams = new RelativeLayout.LayoutParams(150, 110);
             ImageView newTable = new ImageView(DineInLayout.this);
             newTable.setLayoutParams(imageParams);
-
 
             RelativeLayout.LayoutParams linearParams = new RelativeLayout.LayoutParams(170, 110);
             linearParams.leftMargin = 300;
@@ -402,7 +382,6 @@ public class DineInLayout extends AppCompatActivity {
             slideRight(add);
             dialog.dismiss();
         }
-
     };
 
     OnClickListener onClickListener2 = new OnClickListener() {
@@ -475,7 +454,6 @@ public class DineInLayout extends AppCompatActivity {
 
     };
 
-
     public void freeze() {
         currentList.clear();
         for (int i = 0; i < land.getChildCount(); i++) {
@@ -497,13 +475,11 @@ public class DineInLayout extends AppCompatActivity {
         setList();
     }
 
-
     public void removeTables() {
         land.removeAllViews();
     }
 
     public void setList() {
-
         switch (current) {
             case 0:
                 list0 = currentList;
@@ -534,7 +510,6 @@ public class DineInLayout extends AppCompatActivity {
         fourthF.setBackgroundColor(getResources().getColor(R.color.gray));
         fifthF.setBackgroundColor(getResources().getColor(R.color.gray));
     }
-
 
     public void showEditTableScreen() {
         rightBorder.removeAllViews();
@@ -685,6 +660,7 @@ public class DineInLayout extends AppCompatActivity {
 
     public void slideRight(View view) {
         visibleAdd = 0;
+        view.setVisibility(View.INVISIBLE);
         TranslateAnimation animate = new TranslateAnimation(
                 0,                 // fromXDelta
                 view.getWidth(),                 // toXDelta
