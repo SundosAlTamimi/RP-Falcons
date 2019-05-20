@@ -362,8 +362,8 @@ public class MenuRegistration extends AppCompatActivity {
         SendCloud sendCloud = new SendCloud(MenuRegistration.this, familyCategory.getJSONObject());
         sendCloud.startSending("FamilyCategory");
 
-        catName.setText("");
-        catPic.setImageBitmap(null);
+//        catName.setText("");
+//        catPic.setImageBitmap(null);
 
     }
 
