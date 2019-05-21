@@ -370,12 +370,12 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/b_clear"
+                    android:id="@+id/dot"
                     android:layout_width="120dp"
                     android:layout_height="60dp"
                     android:layout_margin="3dp"
-                    android:background="@drawable/clear_buttons"
-                    android:text="@string/clear"
+                    android:background="@drawable/numbers_buttons"
+                    android:text="."
                     android:textColor="@color/text_color"
                     android:textSize="20sp" />
 

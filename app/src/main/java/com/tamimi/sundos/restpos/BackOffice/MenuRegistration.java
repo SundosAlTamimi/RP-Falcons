@@ -371,9 +371,13 @@ public class MenuRegistration extends AppCompatActivity {
 
         FamilyCategory familyCategory = new FamilyCategory();
 
-        if (maxGroupSerial == 0) { // -1 + 1 = 0
-            int serial = (mDbHandler.getAllFamilyCategory().get(mDbHandler.getAllFamilyCategory().size()-1).getSerial()+1);
-            familyCategory.setSerial(serial);
+        if (maxGroupSerial == 0) {// -1 + 1 = 0
+            if(mDbHandler.getAllFamilyCategory().size()!=0) {
+                int serial = (mDbHandler.getAllFamilyCategory().get(mDbHandler.getAllFamilyCategory().size() - 1).getSerial() + 1);
+                familyCategory.setSerial(serial);
+            }else {
+                familyCategory.setSerial(1);
+            }
         } else {
             familyCategory.setSerial(maxGroupSerial);
         }
