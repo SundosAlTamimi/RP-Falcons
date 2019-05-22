@@ -217,7 +217,7 @@ public class DineIn extends AppCompatActivity {
                 ImageView imageView = new ImageView(DineIn.this);
                 TextView textView = new TextView(DineIn.this);
 
-                imageView.setBackgroundResource(currentList.get(i).getImageResource());
+                imageView.setBackgroundResource(getImage(currentList.get(i).getImageResource()));
                 imageView.setTag(currentList.get(i).getImageResource());
                 linearLayout.setOrientation(LinearLayout.HORIZONTAL);
 
@@ -948,7 +948,7 @@ public class DineIn extends AppCompatActivity {
             int height = linearLayout.getWidth();
             float left = linearLayout.getX();
             float top = linearLayout.getY();
-            int resource = (int) imageView1.getTag();
+            String resource = (String) imageView1.getTag();
             int tableNumber = Integer.parseInt(textView1.getText().toString());
 
             Tables table = new Tables(height, width, resource, left, top, tableNumber);
@@ -1004,7 +1004,7 @@ public class DineIn extends AppCompatActivity {
             ImageView imageView = new ImageView(DineIn.this);
             TextView textView = new TextView(DineIn.this);
 
-            imageView.setBackgroundResource(currentList.get(i).getImageResource());
+            imageView.setBackgroundResource(getImage(currentList.get(i).getImageResource()));
             imageView.setTag(currentList.get(i).getImageResource());
             linearLayout.setOrientation(LinearLayout.HORIZONTAL);
 
@@ -1070,6 +1070,13 @@ public class DineIn extends AppCompatActivity {
     public String convertToEnglish(String value) {
         String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0"));
         return newValue;
+    }
+
+    public int getImage(String imageName) {
+
+        int drawableResourceId =DineIn.this.getResources().getIdentifier(imageName, "drawable", DineIn.this.getPackageName());
+
+        return drawableResourceId;
     }
 
     void initialize() {

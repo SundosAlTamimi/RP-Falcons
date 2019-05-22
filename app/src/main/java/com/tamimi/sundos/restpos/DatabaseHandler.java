@@ -664,7 +664,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String CREATE_TABLE_TABLES = "CREATE TABLE " + TABLES + "("
                 + HEIGHT + " INTEGER,"
                 + WIDTH + " INTEGER,"
-                + IMAGE_RESOURCE + " INTEGER,"
+                + IMAGE_RESOURCE + " TEXT,"
                 + MARGIN_LEFT + " INTEGER,"
                 + MARGIN_TOP + " INTEGER,"
                 + FLOOR + " INTEGER,"
@@ -2399,7 +2399,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
                 table.setHeight(Integer.parseInt(cursor.getString(0)));
                 table.setWidth(Integer.parseInt(cursor.getString(1)));
-                table.setImageResource(Integer.parseInt(cursor.getString(2)));
+                table.setImageResource(cursor.getString(2));
                 table.setMarginLeft(Float.parseFloat(cursor.getString(3)));
                 table.setMarginTop(Float.parseFloat(cursor.getString(4)));
                 table.setTableNumber(Integer.parseInt(cursor.getString(6)));
