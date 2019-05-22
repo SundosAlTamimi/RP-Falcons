@@ -61,11 +61,11 @@ public class MenuRegistration extends AppCompatActivity {
     ImageView itemPic;
     ImageView catPic;
 
-    static EditText catName , familyEditText;
+    static EditText catName, familyEditText;
 
     String familyName = "Baverage";
     int showInMenuVariavle = 0;
-    Bitmap itemBitmapPic, categoryPic;
+    static Bitmap itemBitmapPic, categoryPic;
     int picFlag;
 
     Dialog dialog, dialog2;
@@ -346,8 +346,12 @@ public class MenuRegistration extends AppCompatActivity {
         FamilyCategory familyCategory = new FamilyCategory();
 
         if (maxGroupSerial == 0) { // -1 + 1 = 0
-            int serial = (mDbHandler.getAllFamilyCategory().get(mDbHandler.getAllFamilyCategory().size()-1).getSerial()+1);
-            familyCategory.setSerial(serial);
+            if (mDbHandler.getAllFamilyCategory().size() != 0) {
+                int serial = (mDbHandler.getAllFamilyCategory().get(mDbHandler.getAllFamilyCategory().size() - 1).getSerial() + 1);
+                familyCategory.setSerial(serial);
+            } else {
+                familyCategory.setSerial(1);
+            }
         } else {
             familyCategory.setSerial(maxGroupSerial);
         }
@@ -355,6 +359,7 @@ public class MenuRegistration extends AppCompatActivity {
         familyCategory.setType(2);
         // 1--> family type // 2--> category type
         familyCategory.setName(catName.getText().toString());
+        Log.e("pic _ in cat", "" + categoryPic);
         familyCategory.setCatPic(categoryPic);
 
         mDbHandler.addFamilyCategory(familyCategory);
@@ -372,10 +377,10 @@ public class MenuRegistration extends AppCompatActivity {
         FamilyCategory familyCategory = new FamilyCategory();
 
         if (maxGroupSerial == 0) {// -1 + 1 = 0
-            if(mDbHandler.getAllFamilyCategory().size()!=0) {
+            if (mDbHandler.getAllFamilyCategory().size() != 0) {
                 int serial = (mDbHandler.getAllFamilyCategory().get(mDbHandler.getAllFamilyCategory().size() - 1).getSerial() + 1);
                 familyCategory.setSerial(serial);
-            }else {
+            } else {
                 familyCategory.setSerial(1);
             }
         } else {

@@ -2202,6 +2202,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     item.setPic(BitmapFactory.decodeByteArray(cursor.getBlob(20), 0, cursor.getBlob(20).length));
 
                 // Adding transaction to list
+
+                Log.e ("image from data ", cursor.getString(8)+"   \npic len --> "+cursor.getBlob(20).length+"\nDetial ==>"+cursor.getBlob(20).toString());
+
                 items.add(item);
             } while (cursor.moveToNext());
         }
@@ -3593,10 +3596,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 familyCategory.setType(Integer.parseInt(cursor.getString(1)));
                 familyCategory.setName(cursor.getString(2));
 
-//                if (cursor.getBlob(3).length == 0)
-//                    familyCategory.setCatPic(null);
-//                else
-//                    familyCategory.setCatPic(BitmapFactory.decodeByteArray(cursor.getBlob(3), 0, cursor.getBlob(3).length));
+                if (cursor.getBlob(3).length == 0)
+                    familyCategory.setCatPic(null);
+                else
+                    familyCategory.setCatPic(BitmapFactory.decodeByteArray(cursor.getBlob(3), 0, cursor.getBlob(3).length));
 
 
                 familyCategoryArrayList.add(familyCategory);
