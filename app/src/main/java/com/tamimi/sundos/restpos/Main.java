@@ -10,6 +10,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -28,6 +29,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -54,6 +56,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -65,6 +68,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -91,7 +95,7 @@ public class Main extends AppCompatActivity {
     boolean CheckTrue = true;
     double netTotals = 0.0;
     double balance = 0.0;
-    boolean flag = true;
+    boolean flag = true,flag2 = true;
     int textId = 0;
     double totalAdd = 0.0;
     double cashValues, creditValues, chequeVales, pointValues, giftCardValues, cardValues;
@@ -99,6 +103,7 @@ public class Main extends AppCompatActivity {
     TableRow rows;
     DecimalFormat twoDForm = new DecimalFormat("0.000");
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,8 +126,16 @@ public class Main extends AppCompatActivity {
 
         showAnnouncement();
 
+//        takeAway.setBackgroundDrawable(getResources().getDrawable(getImage("cancel")));
+
 
     }
+//    public int getImage(String imageName) {
+//
+//        int drawableResourceId = Main.this.getResources().getIdentifier(imageName, "drawable", Main.this.getPackageName());
+//
+//        return drawableResourceId;
+//    }
 
     OnClickListener onClickListener = new OnClickListener() {
         @Override
@@ -994,9 +1007,9 @@ public class Main extends AppCompatActivity {
 
         categories = (TableLayout) dialog.findViewById(R.id.money_categories);
         final TextView mainTotal = (TextView) dialog.findViewById(R.id.mainTotal);
-
+        final boolean[] flag = {true};
         value.setText("0");
-        Button b1, b2, b3, b4, b5, b6, b7, b8, b9, b0, clear;
+        Button b1, b2, b3, b4, b5, b6, b7, b8, b9, b0, clear,dot;
         b1 = (Button) dialog.findViewById(R.id.b1);
         b2 = (Button) dialog.findViewById(R.id.b2);
         b3 = (Button) dialog.findViewById(R.id.b3);
@@ -1007,8 +1020,8 @@ public class Main extends AppCompatActivity {
         b8 = (Button) dialog.findViewById(R.id.b8);
         b9 = (Button) dialog.findViewById(R.id.b9);
         b0 = (Button) dialog.findViewById(R.id.b0);
-        clear = (Button) dialog.findViewById(R.id.b_clear);
-
+//        clear = (Button) dialog.findViewById(R.id.b_clear);
+       dot= (Button) dialog.findViewById(R.id.dot);
 
         b1.setOnClickListener(new OnClickListener() {
             @Override
@@ -1083,7 +1096,7 @@ public class Main extends AppCompatActivity {
         value.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                flag2 =true;
 
                 focusedTextView = value;
                 focusedTextView.setText("");
@@ -1091,19 +1104,29 @@ public class Main extends AppCompatActivity {
 
             }
         });
-        clear.setOnClickListener(new OnClickListener() {
-            @Override
+//        clear.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                for (int i = 0; i < money.size(); i++) {
+//                    TableRow tableRow = (TableRow) categories.getChildAt(i);
+//                    TextView text1 = (TextView) tableRow.getChildAt(1);
+//                    TextView text2 = (TextView) tableRow.getChildAt(2);
+//                    text1.setText("0");
+//                    text2.setText("0");
+//                    mainTotal.setText("0.00");
+//                }
+//                value.setText("0");
+//            }
+//        });
+
+
+        dot.setOnClickListener(new OnClickListener() {
+                        @Override
             public void onClick(View view) {
-                for (int i = 0; i < money.size(); i++) {
-                    TableRow tableRow = (TableRow) categories.getChildAt(i);
-                    TextView text1 = (TextView) tableRow.getChildAt(1);
-                    TextView text2 = (TextView) tableRow.getChildAt(2);
-                    text1.setText("0");
-                    text2.setText("0");
-                    mainTotal.setText("0.00");
-                }
-                value.setText("0");
-            }
+                            if ( flag2)
+                                focusedTextView.setText(focusedTextView.getText().toString() + ".");
+                            flag2 =false;
+                        }
         });
         String finalSignal = signal;
         save.setOnClickListener(new OnClickListener() {
@@ -1181,9 +1204,10 @@ public class Main extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     if (focusedTextView != null && focusedTextView.getText().toString().equals("")) {
+
                         focusedTextView.setText("0");
                     }
-
+                    flag2 =true;
                     focusedTextView = textView1;
                     focusedTextView.setTag("" + position);
                     focusedTextView.setText("");
@@ -1195,7 +1219,7 @@ public class Main extends AppCompatActivity {
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     if (focusedTextView != null) {
-                        if (!focusedTextView.getText().toString().equals("") && !focusedTextView.getTag().toString().equals("*")) {
+                        if (!focusedTextView.getText().toString().equals("") && !focusedTextView.getTag().toString().equals("*")&&!focusedTextView.getText().toString().equals(".")) {
 
                             TableRow tableRow = (TableRow) categories.getChildAt(Integer.parseInt(focusedTextView.getTag().toString()));
                             TextView text = (TextView) tableRow.getChildAt(0);

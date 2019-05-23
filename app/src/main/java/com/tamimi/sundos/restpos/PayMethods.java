@@ -385,7 +385,6 @@ public class PayMethods extends AppCompatActivity {
                 String t0 =convertToEnglish( balance.getText().toString());
                 String t1 = convertToEnglish(received.getText().toString());
                 String t2 = convertToEnglish(cashMoney.getText().toString());
-                cashValue=0.0;
                 Date currentTimeAndDate = Calendar.getInstance().getTime();
                 SimpleDateFormat df1 = new SimpleDateFormat("dd-MM-yyyy");
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM");
@@ -1733,7 +1732,7 @@ public class PayMethods extends AppCompatActivity {
         Log.e("OrdedTr ", "" + OrderTransactionsObj.get(0).getTaxValue() + " date\n " + OrderTransactionsObj.get(0).getVoucherDate() + " \t no  " + OrderTransactionsObj.get(0).getVoucherNo());
         final Dialog dialog = new Dialog(PayMethods.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(true);
+        dialog.setCancelable(false);
         dialog.setContentView(R.layout.print);
         final Button okButton = dialog.findViewById(R.id.print_btn);
         final LinearLayout linearLayout = dialog.findViewById(R.id.linear2);
@@ -1849,7 +1848,9 @@ public class PayMethods extends AppCompatActivity {
                 linearLayout.setDrawingCacheEnabled(true);
                 Bitmap bitmap = linearLayout.getDrawingCache();
                 photoPrinter.printBitmap("invoice2.jpg", bitmap);
-
+                dialog.dismiss();
+            Intent intentToOrder =new Intent(PayMethods.this,Order.class);
+            startActivity(intentToOrder);
             }
         });
         dialog.show();

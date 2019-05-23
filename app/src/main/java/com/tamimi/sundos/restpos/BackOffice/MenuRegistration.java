@@ -61,11 +61,11 @@ public class MenuRegistration extends AppCompatActivity {
     ImageView itemPic;
     ImageView catPic;
 
-    static EditText catName , familyEditText;
+    static EditText catName, familyEditText;
 
     String familyName = "";
     int showInMenuVariavle = 0;
-    Bitmap itemBitmapPic, categoryPic;
+    static Bitmap itemBitmapPic, categoryPic;
     int picFlag;
 
     Dialog dialog, dialog2;
@@ -365,8 +365,12 @@ public class MenuRegistration extends AppCompatActivity {
         FamilyCategory familyCategory = new FamilyCategory();
 
         if (maxGroupSerial == 0) { // -1 + 1 = 0
-            int serial = (mDbHandler.getAllFamilyCategory().get(mDbHandler.getAllFamilyCategory().size()-1).getSerial()+1);
-            familyCategory.setSerial(serial);
+            if (mDbHandler.getAllFamilyCategory().size() != 0) {
+                int serial = (mDbHandler.getAllFamilyCategory().get(mDbHandler.getAllFamilyCategory().size() - 1).getSerial() + 1);
+                familyCategory.setSerial(serial);
+            } else {
+                familyCategory.setSerial(1);
+            }
         } else {
             familyCategory.setSerial(maxGroupSerial);
         }
@@ -381,7 +385,8 @@ public class MenuRegistration extends AppCompatActivity {
         SendCloud sendCloud = new SendCloud(MenuRegistration.this, familyCategory.getJSONObject());
         sendCloud.startSending("FamilyCategory");
 
-
+//        catName.setText("");
+//        catPic.setImageBitmap(null);
 
     }
 
@@ -389,9 +394,13 @@ public class MenuRegistration extends AppCompatActivity {
 
         FamilyCategory familyCategory = new FamilyCategory();
 
-        if (maxGroupSerial == 0) { // -1 + 1 = 0
-            int serial = (mDbHandler.getAllFamilyCategory().get(mDbHandler.getAllFamilyCategory().size()-1).getSerial()+1);
-            familyCategory.setSerial(serial);
+        if (maxGroupSerial == 0) {// -1 + 1 = 0
+            if (mDbHandler.getAllFamilyCategory().size() != 0) {
+                int serial = (mDbHandler.getAllFamilyCategory().get(mDbHandler.getAllFamilyCategory().size() - 1).getSerial() + 1);
+                familyCategory.setSerial(serial);
+            } else {
+                familyCategory.setSerial(1);
+            }
         } else {
             familyCategory.setSerial(maxGroupSerial);
         }

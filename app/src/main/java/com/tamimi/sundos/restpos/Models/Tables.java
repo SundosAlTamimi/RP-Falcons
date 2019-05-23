@@ -4,7 +4,7 @@ public class Tables {
 
     private int height;
     private int width;
-    private int imageResource;
+    private String imageResource;
     private float marginLeft;
     private float marginTop;
     private int tableNumber;
@@ -13,7 +13,7 @@ public class Tables {
 
     }
 
-    public Tables(int height, int width, int imageResource, float marginLeft, float marginTop , int tableNumber) {
+    public Tables(int height, int width, String imageResource, float marginLeft, float marginTop , int tableNumber) {
         this.height = height;
         this.width = width;
         this.imageResource = imageResource;
@@ -38,11 +38,11 @@ public class Tables {
         this.width = width;
     }
 
-    public int getImageResource() {
+    public String getImageResource() {
         return imageResource;
     }
 
-    public void setImageResource(int imageResource) {
+    public void setImageResource(String imageResource) {
         this.imageResource = imageResource;
     }
 

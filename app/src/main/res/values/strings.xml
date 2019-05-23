@@ -11,6 +11,7 @@
     <string name="eight">8</string>
     <string name="nine">9</string>
     <string name="zero">0</string>
+    <string name="A_E">E</string>
 
     <string name="log_in">log in</string>
     <string name="clear">clear</string>

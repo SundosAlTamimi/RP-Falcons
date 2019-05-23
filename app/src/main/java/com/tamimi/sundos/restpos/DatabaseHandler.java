@@ -664,7 +664,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String CREATE_TABLE_TABLES = "CREATE TABLE " + TABLES + "("
                 + HEIGHT + " INTEGER,"
                 + WIDTH + " INTEGER,"
-                + IMAGE_RESOURCE + " INTEGER,"
+                + IMAGE_RESOURCE + " TEXT,"
                 + MARGIN_LEFT + " INTEGER,"
                 + MARGIN_TOP + " INTEGER,"
                 + FLOOR + " INTEGER,"
@@ -2202,6 +2202,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     item.setPic(BitmapFactory.decodeByteArray(cursor.getBlob(20), 0, cursor.getBlob(20).length));
 
                 // Adding transaction to list
+
+                Log.e ("image from data ", cursor.getString(8)+"   \npic len --> "+cursor.getBlob(20).length+"\nDetial ==>"+cursor.getBlob(20).toString());
+
                 items.add(item);
             } while (cursor.moveToNext());
         }
@@ -2399,7 +2402,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
                 table.setHeight(Integer.parseInt(cursor.getString(0)));
                 table.setWidth(Integer.parseInt(cursor.getString(1)));
-                table.setImageResource(Integer.parseInt(cursor.getString(2)));
+                table.setImageResource(cursor.getString(2));
                 table.setMarginLeft(Float.parseFloat(cursor.getString(3)));
                 table.setMarginTop(Float.parseFloat(cursor.getString(4)));
                 table.setTableNumber(Integer.parseInt(cursor.getString(6)));
@@ -3593,10 +3596,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 familyCategory.setType(Integer.parseInt(cursor.getString(1)));
                 familyCategory.setName(cursor.getString(2));
 
-//                if (cursor.getBlob(3).length == 0)
-//                    familyCategory.setCatPic(null);
-//                else
-//                    familyCategory.setCatPic(BitmapFactory.decodeByteArray(cursor.getBlob(3), 0, cursor.getBlob(3).length));
+                if (cursor.getBlob(3).length == 0)
+                    familyCategory.setCatPic(null);
+                else
+                    familyCategory.setCatPic(BitmapFactory.decodeByteArray(cursor.getBlob(3), 0, cursor.getBlob(3).length));
 
 
                 familyCategoryArrayList.add(familyCategory);
