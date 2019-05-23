@@ -493,6 +493,11 @@ public class Order extends AppCompatActivity {
                 textView.setLayoutParams(lp2);
             }
 
+            if (i == 1) {
+                TableRow.LayoutParams lp1 = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+                textView.setLayoutParams(lp1);
+            }
+
             row.addView(textView);
             row.setTag(tableLayoutPosition);
 

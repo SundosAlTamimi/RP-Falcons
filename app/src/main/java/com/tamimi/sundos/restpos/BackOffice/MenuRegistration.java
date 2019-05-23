@@ -63,7 +63,7 @@ public class MenuRegistration extends AppCompatActivity {
 
     static EditText catName , familyEditText;
 
-    String familyName = "Baverage";
+    String familyName = "";
     int showInMenuVariavle = 0;
     Bitmap itemBitmapPic, categoryPic;
     int picFlag;
@@ -104,7 +104,26 @@ public class MenuRegistration extends AppCompatActivity {
         categoryPic = null;
 
         mDbHandler = new DatabaseHandler(MenuRegistration.this);
+        items = mDbHandler.getAllItems();
+
         fillSpinners();
+
+        categoriesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                for (int j = 0 ; j<items.size() ; j++){
+                    if(categoriesSpinner.getSelectedItem().toString().equals(items.get(j).getMenuCategory())){
+                        familyName = items.get(j).getFamilyName();
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
         taxTypRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -144,7 +163,7 @@ public class MenuRegistration extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                items = mDbHandler.getAllItems();
+
                 String itemBarcode = convertToEnglish(itemBarcodeEditText.getText().toString());
                 for (int i = 0; i < items.size(); i++) {
                     if (!itemBarcode.equals("") && itemBarcode.equals(String.valueOf(items.get(i).getItemBarcode()))) {
@@ -362,8 +381,7 @@ public class MenuRegistration extends AppCompatActivity {
         SendCloud sendCloud = new SendCloud(MenuRegistration.this, familyCategory.getJSONObject());
         sendCloud.startSending("FamilyCategory");
 
-        catName.setText("");
-        catPic.setImageBitmap(null);
+
 
     }
 
