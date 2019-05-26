@@ -2497,7 +2497,8 @@ public class Main extends AppCompatActivity {
                             TextView value_o = (TextView) rowTemp.getChildAt(1);
                             TextView ISGrater_o = (TextView) rowTemp.getChildAt(2);
                             Log.e("in for ==>", "yy" + value_o.getText().toString());
-                            if (!value_o.getText().toString().equals("") && !value_o.getText().toString().equals(".")) {
+                            if (!value_o.getText().toString().equals("") ){
+                            if(!value_o.getText().toString().equals(".")) {
                                 if (Double.parseDouble(value_o.getText().toString()) <= Double.parseDouble(value_o.getTag().toString())) {
                                     Total += Double.parseDouble(value_o.getText().toString());
                                     double net_total = netTotals - Total;
@@ -2508,6 +2509,8 @@ public class Main extends AppCompatActivity {
                                     new Settings().makeText(Main.this, "Can't return value grater than  " + value_o.getTag().toString());
                                     ISGrater_o.setText("1");
                                 }
+                            }}else {
+                                value_o.setText("0");
                             }
                         }
 
