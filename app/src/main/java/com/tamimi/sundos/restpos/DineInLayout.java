@@ -719,7 +719,7 @@ public class DineInLayout extends AppCompatActivity {
         animate.setDuration(500);
         animate.setFillAfter(true);
         view.startAnimation(animate);
-
+ 
     }
 
     public void fillMainFloor() {
