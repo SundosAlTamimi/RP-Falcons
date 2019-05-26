@@ -231,19 +231,15 @@ public class MenuRegistration extends AppCompatActivity {
         public void onClick(View view) {
 
             switch (view.getId()) {
-
                 case R.id.addMenuCategory:
                     showAddCategoryDialog();
                     break;
-
                 case R.id.addInventoryUnit:
                     showAddUnitDialog();
                     break;
-
                 case R.id.addRecipe:
                     showAddRecipeDialog();
                     break;
-
                 case R.id.itemPicture:
                     showAddPictureDialog();
                     break;
@@ -261,11 +257,8 @@ public class MenuRegistration extends AppCompatActivity {
                         noOpen = false;
                     }
                     break;
-
             }
-
         }
-
     };
 
 
@@ -362,8 +355,8 @@ public class MenuRegistration extends AppCompatActivity {
         SendCloud sendCloud = new SendCloud(MenuRegistration.this, familyCategory.getJSONObject());
         sendCloud.startSending("FamilyCategory");
 
-        catName.setText("");
-        catPic.setImageBitmap(null);
+//        catName.setText("");
+//        catPic.setImageBitmap(null);
 
     }
 
@@ -372,7 +365,7 @@ public class MenuRegistration extends AppCompatActivity {
         FamilyCategory familyCategory = new FamilyCategory();
 
         if (maxGroupSerial == 0) { // -1 + 1 = 0
-            int serial = (mDbHandler.getAllFamilyCategory().get(mDbHandler.getAllFamilyCategory().size()-1).getSerial()+1);
+            int serial = (mDbHandler.getAllFamilyCategory().get(mDbHandler.getAllFamilyCategory().size() - 1).getSerial() + 1);
             familyCategory.setSerial(serial);
         } else {
             familyCategory.setSerial(maxGroupSerial);
