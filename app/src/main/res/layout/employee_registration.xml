@@ -230,8 +230,9 @@
 
                     <TextView
                         android:id="@+id/textView34"
-                        android:layout_width="wrap_content"
+                        android:layout_width="126dp"
                         android:layout_height="match_parent"
+                        android:layout_marginHorizontal="10dp"
                         android:text="@string/Employee_NO"
                         android:textColor="@color/text_color"
                         android:textSize="18sp" />
@@ -240,6 +241,7 @@
                         android:id="@+id/empNo"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
+                        android:layout_marginHorizontal="10dp"
                         android:ems="10"
                         android:gravity="center"
                         android:textColor="@color/text_color"
@@ -254,8 +256,9 @@
 
                     <TextView
                         android:id="@+id/textView35"
-                        android:layout_width="172dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
                         android:text="@string/Employee_Name"
                         android:textColor="@color/text_color"
                         android:textSize="18sp" />
@@ -264,6 +267,7 @@
                         android:id="@+id/empName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
                         android:background="@color/layer1"
                         android:ems="10"
                         android:inputType="textPersonName"
@@ -280,8 +284,9 @@
 
                     <TextView
                         android:id="@+id/textView36"
-                        android:layout_width="wrap_content"
+                        android:layout_width="111dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
                         android:text="@string/mobile"
                         android:textColor="@color/text_color"
                         android:textSize="18sp" />
@@ -290,8 +295,10 @@
                         android:id="@+id/mobileNo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
                         android:background="@color/layer1"
                         android:ems="10"
+                        android:maxLength="10"
                         android:inputType="numberDecimal"
                         android:paddingHorizontal="5dp"
                         android:textColor="@color/text_color"
@@ -306,8 +313,9 @@
 
                     <TextView
                         android:id="@+id/textView38"
-                        android:layout_width="wrap_content"
+                        android:layout_width="147dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
                         android:text="@string/User_Password"
                         android:textColor="@color/text_color"
                         android:textSize="18sp" />
@@ -316,6 +324,7 @@
                         android:id="@+id/user_password8"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
                         android:background="@color/layer1"
                         android:inputType="numberDecimal"
                         android:paddingHorizontal="5dp"
@@ -333,6 +342,7 @@
                         android:id="@+id/textView37"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
                         android:text="@string/Security_level"
                         android:textColor="@color/text_color"
                         android:textSize="18sp" />
@@ -340,7 +350,8 @@
                     <Spinner
                         android:id="@+id/spinner_security"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp" />
 
                 </TableRow>
 
@@ -354,6 +365,7 @@
                         android:id="@+id/textView311"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
                         android:text="@string/Employee_type"
                         android:textColor="@color/text_color"
                         android:textSize="18sp" />
@@ -361,11 +373,18 @@
                     <Spinner
                         android:id="@+id/spinner_employee_type"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp" />
 
                 </TableRow>
 
             </TableLayout>
+
+            <TextView
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/layer4"
+                android:layout_marginHorizontal="20dp"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -375,7 +394,7 @@
                 <TableLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="50dp"
+
                     android:padding="5dp">
 
                     <TableRow
@@ -386,8 +405,9 @@
 
                         <TextView
                             android:id="@+id/textView39"
-                            android:layout_width="wrap_content"
+                            android:layout_width="116dp"
                             android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="10dp"
                             android:text="@string/Hire_Date"
                             android:textColor="@color/text_color"
                             android:textSize="18sp" />
@@ -399,7 +419,8 @@
                             android:background="@color/layer1"
                             android:gravity="center"
                             android:textColor="@color/text_color"
-                            android:textSize="18sp" />
+                            android:textSize="18sp"
+                            android:layout_marginHorizontal="10dp"/>
                     </TableRow>
 
                     <TableRow
@@ -410,8 +431,9 @@
 
                         <TextView
                             android:id="@+id/textView40"
-                            android:layout_width="197dp"
+                            android:layout_width="151dp"
                             android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="10dp"
                             android:text="@string/Termination_Date"
                             android:textColor="@color/text_color"
                             android:textSize="18sp" />
@@ -423,7 +445,8 @@
                             android:background="@color/layer1"
                             android:gravity="center"
                             android:textColor="@color/text_color"
-                            android:textSize="18sp" />
+                            android:textSize="18sp"
+                            android:layout_marginHorizontal="10dp"/>
                     </TableRow>
 
                     <TableRow
@@ -438,7 +461,8 @@
                             android:layout_height="wrap_content"
                             android:text="@string/Pay_Rate"
                             android:textColor="@color/text_color"
-                            android:textSize="18sp" />
+                            android:textSize="18sp"
+                            android:layout_marginHorizontal="10dp"/>
 
                         <EditText
                             android:id="@+id/pay_rate"
@@ -449,7 +473,8 @@
                             android:inputType="textPersonName"
                             android:paddingHorizontal="5dp"
                             android:textColor="@color/text_color"
-                            android:textSize="18sp" />
+                            android:textSize="18sp"
+                            android:layout_marginHorizontal="10dp"/>
                     </TableRow>
 
                     <TableRow
@@ -464,12 +489,14 @@
                             android:layout_height="wrap_content"
                             android:text="@string/Pay_Basic"
                             android:textColor="@color/text_color"
-                            android:textSize="18sp" />
+                            android:textSize="18sp"
+                            android:layout_marginHorizontal="10dp"/>
 
                         <Spinner
                             android:id="@+id/pay_basic"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="10dp"/>
 
                     </TableRow>
 
@@ -485,12 +512,14 @@
                             android:layout_height="wrap_content"
                             android:text="@string/Holiday_Pay"
                             android:textColor="@color/text_color"
-                            android:textSize="18sp" />
+                            android:textSize="18sp"
+                            android:layout_marginHorizontal="10dp"/>
 
                         <Spinner
                             android:id="@+id/holiday_pay"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="10dp"/>
 
                     </TableRow>
 

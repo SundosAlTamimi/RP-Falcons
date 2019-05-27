@@ -6738,12 +6738,15 @@ public class BackOfficeActivity extends AppCompatActivity {
                     ImageView imageView = new ImageView(BackOfficeActivity.this);
                     TableRow.LayoutParams lp3 = new TableRow.LayoutParams(100, 50, 1.0f);
                     imageView.setLayoutParams(lp3);
-                    imageView.setTag(imageBitmap);
+                    imageView.setTag(moneyCategory.getPicture());
+
+                    Log.e("image Bi",""+moneyCategory.getPicture());
+
                     if (moneyCategory.getPicture() != null)
                         imageView.setImageBitmap(moneyCategory.getPicture());
 
-                    else
-                        imageView.setBackground(getResources().getDrawable(R.drawable.focused_table));
+//                    else
+//                        imageView.setBackground(getResources().getDrawable(R.drawable.focused_table));
                     row.addView(imageView);
                     break;
 
