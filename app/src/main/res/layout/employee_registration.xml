@@ -328,6 +328,7 @@
                         android:background="@color/layer1"
                         android:inputType="numberDecimal"
                         android:paddingHorizontal="5dp"
+                        android:maxLength="4"
                         android:textColor="@color/text_color"
                         android:textSize="18sp" />
                 </TableRow>
