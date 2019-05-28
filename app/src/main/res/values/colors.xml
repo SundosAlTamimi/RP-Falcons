@@ -8,12 +8,12 @@
     <color name="layer1">#F0FFFF</color>
     <color name="layer2">#f0f8ff</color>
     <color name="layer3">#e5e4e2</color>
-    <color name="layer4">#b6b6b4</color>
-    <color name="text_color">#25383c</color>
+    <color name="layer4">#B6B6B4</color>
+    <color name="text_color">#25383C</color>
     <color name="exit">#c24641</color>
     <color name="exit_hover">#e77471</color>
     <color name="light_blue_over">#E0FFFF</color>
-    <color name="light_blue">#c2dfff</color>
+    <color name="light_blue">#C2DFFF</color>
     <color name="dark_blue">#89cbee</color>
     <color name="blue_ice">#368BC1</color>
     <color name="jeans_blue">#a0cfec</color>

@@ -75,6 +75,7 @@ import com.tamimi.sundos.restpos.SyncWithCloud;
 
 import java.sql.Blob;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -134,7 +135,8 @@ public class BackOfficeActivity extends AppCompatActivity {
     ArrayList<ItemWithModifier> itemWithModifiersList;
     ArrayList<CategoryWithModifier> categoryWithModifiersList;
     ArrayList<ItemWithScreen> itemWithScreensList;
-    DecimalFormat threeDForm = new DecimalFormat("0.000");
+    DecimalFormatSymbols de =new DecimalFormatSymbols(Locale.ENGLISH);
+    DecimalFormat threeDForm = new DecimalFormat("0.000",de);
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -1439,9 +1441,9 @@ public class BackOfficeActivity extends AppCompatActivity {
                 for (int i = 0; i < orderTransactionData.size(); i++) {
                     if((inFilter.get(i))){
                     if (Settings.tax_type == 0) {
-                        NetTotal = Double.parseDouble(convertToEnglish(threeDForm.format(convertToEnglish("" + (Total_.get(i) - Dis_.get(i))))));
+                        NetTotal = Double.parseDouble(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish("" + (Total_.get(i) - Dis_.get(i)))))));
 //                        totalByTax = Double.parseDouble( threeDForm.format((Total_.get(i) - Tax_.get(i))));
-                        totalByTax = Double.parseDouble(convertToEnglish(threeDForm.format(convertToEnglish("" + (Total_.get(i) - Tax_.get(i) - Dis_.get(i))))));
+                        totalByTax = Double.parseDouble(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish("" + (Total_.get(i) - Tax_.get(i) - Dis_.get(i)))))));
                     } else {
                         NetTotal = Double.parseDouble(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish("" + (Total_.get(i) + Tax_.get(i) - Dis_.get(i)))))));
 //                        totalByTax = Double.parseDouble( threeDForm.format(Total_.get(i)));
@@ -1507,14 +1509,14 @@ public class BackOfficeActivity extends AppCompatActivity {
                     String cou_dic = orderTransactionData.get(i).getSecondaryName();
                     String order_Kind = orderTransactionData.get(i).getNote();
 
-                    Log.e("tt", "" + cou_date);
+
 
                     String[] arrayString = cou_date.split(",");
                     String[] arrayTotal = cou_total.split(",");
                     String[] arrayTax = cou_tax.split(",");
                     String[] arrayDic = cou_dic.split(",");
                     String[] arrayKind = order_Kind.split(",");
-                    Log.e("arrayString1", "" + arrayString.length);
+
 
                     for (int q = 0; q < arrayString.length; q++) {
                         if (filters(fromDat[0], toDat[0], arrayString[q])) {
@@ -1522,7 +1524,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                             tax_x_ += Double.parseDouble(arrayTax[q]);
                             dic_ += Double.parseDouble(arrayDic[q]);
                             isIN=true;
-                            Log.e("sale1" + q, "" + total_ + " ///" + tax_x_ + "_____" + arrayKind[q]);
+
                         }
 
                     }
@@ -1530,7 +1532,6 @@ public class BackOfficeActivity extends AppCompatActivity {
                     Tax_.add(tax_x_);
                     Dis_.add(dic_);
                     inFilter.add(isIN);
-                    Log.e("arrayTotal", "" + total_ + " ///" + tax_x_);
 
                 }
 
@@ -1690,7 +1691,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                 int serials = mDHandler.getMaxZReportSerial(posNoString) + 1;
 
                 serial.setText("" + serials);
-                Log.e("testSerial", "" + mDHandler.getMaxZReportSerial(posNoString));
+
 
                 orderTransactionData = mDHandler.getXReport("SHIFT_NAME", posNoString, fromDat[0], fromDat[0]);
 
@@ -1702,14 +1703,14 @@ public class BackOfficeActivity extends AppCompatActivity {
                     String cou_tax = orderTransactionData.get(i).getShiftName();
                     String cou_dis = orderTransactionData.get(i).getUserName();
                     String order_Kind = orderTransactionData.get(i).getNote();
-                    Log.e("tt", "" + cou_date);
+
 
                     String[] arrayString = cou_date.split(",");
                     String[] arrayTotal = cou_total.split(",");
                     String[] arrayTax = cou_tax.split(",");
                     String[] arrayDis = cou_dis.split(",");
                     String[] arrayKind = order_Kind.split(",");
-                    Log.e("arrayString1", "" + arrayString.length);
+
 
                     for (int q = 0; q < arrayString.length; q++) {
                         if (filters(fromDat[0], fromDat[0], arrayString[q])) {
@@ -1726,7 +1727,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     Tax_.add(tax_x_);
                     Dic_.add(dis_);
                     isFilter_.add(isIn);
-                    Log.e("arrayTotal", "" + total_ + " ///" + tax_x_);
+
 
                 }
 
@@ -1742,7 +1743,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                         NetTotal = Double.parseDouble(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish("" + (Total_.get(i) - Dic_.get(i)))))));
 //                        totalByTax = Double.parseDouble( threeDForm.format((Total_.get(i) - Tax_.get(i))));
                         totalByTax = Double.parseDouble(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish("" + (Total_.get(i) - Tax_.get(i) - Dic_.get(i)))))));
-//                        Log.e("net_to", "" + NetTotal + " " + Total_.get(i) + "  /" + Dic_.get(i));
+//
                     } else {
                         NetTotal = Double.parseDouble(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish("" + (Total_.get(i) + Tax_.get(i) - Dic_.get(i)))))));
 //                        totalByTax = Double.parseDouble( threeDForm.format(Total_.get(i)));
@@ -1808,7 +1809,6 @@ public class BackOfficeActivity extends AppCompatActivity {
                     String cou_tax = orderTransactionData.get(i).getShiftName();
                     String cou_dic = orderTransactionData.get(i).getSecondaryName();
                     String order_Kind = orderTransactionData.get(i).getNote();
-                    Log.e("tt", "" + cou_date);
 
                     String[] arrayString = cou_date.split(",");
                     String[] arrayTotal = cou_total.split(",");
@@ -1816,7 +1816,6 @@ public class BackOfficeActivity extends AppCompatActivity {
                     String[] arrayDic = cou_dic.split(",");
                     String[] arrayKind = order_Kind.split(",");
 
-                    Log.e("arrayString1", "" + arrayString.length);
 
                     for (int q = 0; q < arrayString.length; q++) {
                         if (filters(fromDat[0], fromDat[0], arrayString[q])) {
@@ -1825,8 +1824,6 @@ public class BackOfficeActivity extends AppCompatActivity {
                             tax_x_ +=Double.parseDouble(arrayTax[q]);
                             dic_ += Double.parseDouble(arrayDic[q]);
                             isIn=true;
-                            Log.e("sale2" + q, "" + total_ + " ///" + tax_x_ + "_____" + arrayKind[q]);
-//
                         }
 
                     }
@@ -1834,7 +1831,6 @@ public class BackOfficeActivity extends AppCompatActivity {
                     Tax_.add(tax_x_);
                     Dic_.add(dic_);
                     isFilter_.add(isIn);
-                    Log.e("arrayTotal", "" + total_ + " ///" + tax_x_);
 
                 }
 
@@ -2329,7 +2325,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     boolean isFound = false;
 
                     finalMoneyArray.clear();
-                    Log.e("**yy", "" + moneyTable.getChildCount());
+
                     for (int i = 0; i < moneyTable.getChildCount(); i++) {
                         TableRow row = (TableRow) moneyTable.getChildAt(i);
                         TextView serial = (TextView) row.getChildAt(0);
@@ -2788,7 +2784,7 @@ public class BackOfficeActivity extends AppCompatActivity {
             serialText.setText("0");
 
         ArrayList<Modifier> modifiers = mDHandler.getAllModifiers();
-        Log.e("fff", "" + modifiers.size());
+
 
         for (int i = 0; i < modifiers.size(); i++) {
             CheckBox checkBox = new CheckBox(BackOfficeActivity.this);
@@ -3658,7 +3654,6 @@ public class BackOfficeActivity extends AppCompatActivity {
                 else {
                     int No = cashierNo.getSelectedItemPosition() - 1;
                     CashierNo = userNo.get(No);
-                    Log.e("tesst --> ", "" + cashierNo.getSelectedItemPosition() + "--> " + CashierNo + " ==> " + cashierNo.getSelectedItem().toString());
 
                 }
 
@@ -3718,7 +3713,6 @@ public class BackOfficeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (openPdf[0] && (cashierHeader.size() != 0) && (PayCashier.size() != 0)) {
                     ExportToPdf objExp = new ExportToPdf(BackOfficeActivity.this);
-                    Log.e("1testsize", "" + cashierHeader.size());
                     objExp.cashierInOutReport(PayCashier, cashierHeader);
 
                 } else {
@@ -3842,10 +3836,8 @@ public class BackOfficeActivity extends AppCompatActivity {
             else {
                 int No = cashierNo.getSelectedItemPosition() - 1;
                 CashierNo = userNo.get(No);
-                Log.e("tesst --> ", "" + cashierNo.getSelectedItemPosition() + "--> " + CashierNo + " ==> " + cashierNo.getSelectedItem().toString());
 
             }
-            Log.e("cashier ==>", "" + CashierNo);
 
             String ShiftName = shiftName.getSelectedItem().toString();
 
@@ -4074,7 +4066,6 @@ public class BackOfficeActivity extends AppCompatActivity {
             else {
                 int No = cashierNo.getSelectedItemPosition() - 1;
                 CashierNo = userNo.get(No);
-                Log.e("tesst --> ", "" + cashierNo.getSelectedItemPosition() + "--> " + CashierNo + " ==> " + cashierNo.getSelectedItem().toString());
 
             }
 
@@ -4313,7 +4304,6 @@ public class BackOfficeActivity extends AppCompatActivity {
             else {
                 int No = cashierNo.getSelectedItemPosition() - 1;
                 CashierNo = userNo.get(No);
-                Log.e("tesst --> ", "" + cashierNo.getSelectedItemPosition() + "--> " + CashierNo + " ==> " + cashierNo.getSelectedItem().toString());
 
             }
 
@@ -4617,7 +4607,6 @@ public class BackOfficeActivity extends AppCompatActivity {
             else {
                 int No = cashierNo.getSelectedItemPosition() - 1;
                 CashierNo = userNo.get(No);
-                Log.e("tesst --> ", "" + cashierNo.getSelectedItemPosition() + "--> " + CashierNo + " ==> " + cashierNo.getSelectedItem().toString());
 
             }
 
@@ -5513,7 +5502,6 @@ public class BackOfficeActivity extends AppCompatActivity {
             else {
                 int No = cashierNo.getSelectedItemPosition() - 1;
                 CashierNo = userNo.get(No);
-                Log.e("tesst --> ", "" + cashierNo.getSelectedItemPosition() + "--> " + CashierNo + " ==> " + cashierNo.getSelectedItem().toString());
 
             }
 
@@ -5767,13 +5755,11 @@ public class BackOfficeActivity extends AppCompatActivity {
             else {
                 int No = cashierNo.getSelectedItemPosition() - 1;
                 CashierNo = "'" + String.valueOf(userNo.get(No)) + "'";
-                Log.e("tesst --> ", "" + cashierNo.getSelectedItemPosition() + "--> " + CashierNo + " ==> " + cashierNo.getSelectedItem().toString());
 
             }
 
             transactions = mDHandler.getTopSalesItemsByQty(ShiftNa, posNoString, String.valueOf(CashierNo));
 
-            Log.e("transactions", "-->" + transactions.size());
 
 
 //            String ShiftName = shiftName.getSelectedItem().toString();
@@ -6535,7 +6521,6 @@ public class BackOfficeActivity extends AppCompatActivity {
         else {
             int No = cashierNo.getSelectedItemPosition() - 1;
             CashierNo = userNo.get(No);
-            Log.e("tesst --> ", "" + cashierNo.getSelectedItemPosition() + "--> " + CashierNo + " ==> " + cashierNo.getSelectedItem().toString());
 
         }
         String ShiftName = shiftName.getSelectedItem().toString();
@@ -6738,12 +6723,14 @@ public class BackOfficeActivity extends AppCompatActivity {
                     ImageView imageView = new ImageView(BackOfficeActivity.this);
                     TableRow.LayoutParams lp3 = new TableRow.LayoutParams(100, 50, 1.0f);
                     imageView.setLayoutParams(lp3);
-                    imageView.setTag(imageBitmap);
+                    imageView.setTag(moneyCategory.getPicture());
+
+
                     if (moneyCategory.getPicture() != null)
                         imageView.setImageBitmap(moneyCategory.getPicture());
 
-                    else
-                        imageView.setBackground(getResources().getDrawable(R.drawable.focused_table));
+//                    else
+//                        imageView.setBackground(getResources().getDrawable(R.drawable.focused_table));
                     row.addView(imageView);
                     break;
 

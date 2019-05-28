@@ -1,11 +1,15 @@
 package com.tamimi.sundos.restpos;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.Toast;
 
+
+import androidx.core.content.FileProvider;
 
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
@@ -33,7 +37,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.List;
+import java.util.Locale;
 
 import static com.itextpdf.text.Element.ALIGN_CENTER;
 
@@ -47,8 +53,8 @@ public class ExportToPdf  {
     File pdfFileName;
 //    PDFView pdfView;
     BaseFont base;
-    DecimalFormat threeDForm = new DecimalFormat("0.000");
-
+    DecimalFormatSymbols de =new DecimalFormatSymbols(Locale.ENGLISH);
+    DecimalFormat threeDForm = new DecimalFormat("0.000",de);
     {
         try {
             base = BaseFont.createFont("/assets/arialuni.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);

@@ -61,11 +61,11 @@ public class MenuRegistration extends AppCompatActivity {
     ImageView itemPic;
     ImageView catPic;
 
-    static EditText catName , familyEditText;
+    static EditText catName, familyEditText;
 
-    String familyName = "Baverage";
+    String familyName = "";
     int showInMenuVariavle = 0;
-    Bitmap itemBitmapPic, categoryPic;
+    static Bitmap itemBitmapPic, categoryPic;
     int picFlag;
 
     Dialog dialog, dialog2;
@@ -104,7 +104,26 @@ public class MenuRegistration extends AppCompatActivity {
         categoryPic = null;
 
         mDbHandler = new DatabaseHandler(MenuRegistration.this);
+        items = mDbHandler.getAllItems();
+
         fillSpinners();
+
+        categoriesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                for (int j = 0 ; j<items.size() ; j++){
+                    if(categoriesSpinner.getSelectedItem().toString().equals(items.get(j).getMenuCategory())){
+                        familyName = items.get(j).getFamilyName();
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
         taxTypRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -144,7 +163,7 @@ public class MenuRegistration extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                items = mDbHandler.getAllItems();
+
                 String itemBarcode = convertToEnglish(itemBarcodeEditText.getText().toString());
                 for (int i = 0; i < items.size(); i++) {
                     if (!itemBarcode.equals("") && itemBarcode.equals(String.valueOf(items.get(i).getItemBarcode()))) {
@@ -346,8 +365,12 @@ public class MenuRegistration extends AppCompatActivity {
         FamilyCategory familyCategory = new FamilyCategory();
 
         if (maxGroupSerial == 0) { // -1 + 1 = 0
-            int serial = (mDbHandler.getAllFamilyCategory().get(mDbHandler.getAllFamilyCategory().size()-1).getSerial()+1);
-            familyCategory.setSerial(serial);
+            if (mDbHandler.getAllFamilyCategory().size() != 0) {
+                int serial = (mDbHandler.getAllFamilyCategory().get(mDbHandler.getAllFamilyCategory().size() - 1).getSerial() + 1);
+                familyCategory.setSerial(serial);
+            } else {
+                familyCategory.setSerial(1);
+            }
         } else {
             familyCategory.setSerial(maxGroupSerial);
         }
@@ -362,8 +385,8 @@ public class MenuRegistration extends AppCompatActivity {
         SendCloud sendCloud = new SendCloud(MenuRegistration.this, familyCategory.getJSONObject());
         sendCloud.startSending("FamilyCategory");
 
-        catName.setText("");
-        catPic.setImageBitmap(null);
+//        catName.setText("");
+//        catPic.setImageBitmap(null);
 
     }
 
@@ -371,9 +394,13 @@ public class MenuRegistration extends AppCompatActivity {
 
         FamilyCategory familyCategory = new FamilyCategory();
 
-        if (maxGroupSerial == 0) { // -1 + 1 = 0
-            int serial = (mDbHandler.getAllFamilyCategory().get(mDbHandler.getAllFamilyCategory().size()-1).getSerial()+1);
-            familyCategory.setSerial(serial);
+        if (maxGroupSerial == 0) {// -1 + 1 = 0
+            if (mDbHandler.getAllFamilyCategory().size() != 0) {
+                int serial = (mDbHandler.getAllFamilyCategory().get(mDbHandler.getAllFamilyCategory().size() - 1).getSerial() + 1);
+                familyCategory.setSerial(serial);
+            } else {
+                familyCategory.setSerial(1);
+            }
         } else {
             familyCategory.setSerial(maxGroupSerial);
         }
@@ -896,9 +923,11 @@ public class MenuRegistration extends AppCompatActivity {
     void fillSpinners() {
 
 //        categories = mDbHandler.getAllExistingCategories();
-        for (int i = 0; i < mDbHandler.getAllFamilyCategory().size(); i++) {
-            if (mDbHandler.getAllFamilyCategory().get(i).getType() == 2) {
-                categories.add(mDbHandler.getAllFamilyCategory().get(i).getName());
+  ArrayList<FamilyCategory> familyCategories=mDbHandler.getAllFamilyCategory();
+
+        for (int i = 0; i < familyCategories.size(); i++) {
+            if (familyCategories.get(i).getType() == 2) {
+                categories.add(familyCategories.get(i).getName());
             }
         }
         unit = mDbHandler.getAllExistingUnits();
