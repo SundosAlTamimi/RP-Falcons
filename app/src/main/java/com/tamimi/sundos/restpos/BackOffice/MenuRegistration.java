@@ -923,9 +923,11 @@ public class MenuRegistration extends AppCompatActivity {
     void fillSpinners() {
 
 //        categories = mDbHandler.getAllExistingCategories();
-        for (int i = 0; i < mDbHandler.getAllFamilyCategory().size(); i++) {
-            if (mDbHandler.getAllFamilyCategory().get(i).getType() == 2) {
-                categories.add(mDbHandler.getAllFamilyCategory().get(i).getName());
+  ArrayList<FamilyCategory> familyCategories=mDbHandler.getAllFamilyCategory();
+
+        for (int i = 0; i < familyCategories.size(); i++) {
+            if (familyCategories.get(i).getType() == 2) {
+                categories.add(familyCategories.get(i).getName());
             }
         }
         unit = mDbHandler.getAllExistingUnits();
