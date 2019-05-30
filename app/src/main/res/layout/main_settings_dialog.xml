@@ -1,370 +1,410 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="950dp"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="horizontal">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        <LinearLayout
             android:background="@color/layer3"
-            android:padding="20dp">
 
-            <TextView
-                android:id="@+id/main_settings_tv1"
-                android:layout_width="180dp"
-                android:layout_height="44dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="20dp"
-                android:gravity="center"
-                android:text="@string/user_name"
-                android:textColor="@color/text_color"
-                android:textSize="18sp" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/main_settings_userName"
-                android:layout_width="220dp"
-                android:layout_height="44dp"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_toRightOf="@id/main_settings_tv1"
-                android:nextFocusDown="@id/main_settings_password"
-                android:padding="10dp"
-                android:singleLine="true"
-                android:textColor="@color/cardview_dark_background" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
 
-            <TextView
-                android:id="@+id/main_settings_tv2"
-                android:layout_width="180dp"
-                android:layout_height="44dp"
-                android:layout_below="@+id/main_settings_tv1"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="5dp"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="@string/User_Password"
-                android:textColor="@color/text_color"
-                android:textSize="18sp" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/main_settings_password"
-                android:layout_width="220dp"
-                android:layout_height="44dp"
-                android:layout_below="@id/main_settings_userName"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="20dp"
-                android:layout_toRightOf="@id/main_settings_tv2"
-                android:inputType="textPassword"
-                android:nextFocusDown="@id/main_settings_userNo"
-                android:padding="10dp"
-                android:singleLine="true"
-                android:textColor="@color/cardview_dark_background" />
+                    <TextView
+                        android:id="@+id/main_settings_tv1"
+                        android:layout_width="180dp"
+                        android:layout_height="44dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="20dp"
+                        android:gravity="center"
+                        android:text="@string/user_name"
+                        android:textColor="@color/text_color"
+                        android:textSize="18sp" />
 
-            <TextView
-                android:id="@+id/main_settings_tv3"
-                android:layout_width="180dp"
-                android:layout_height="44dp"
-                android:layout_below="@+id/main_settings_tv2"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="5dp"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="@string/user_no"
-                android:textColor="@color/text_color"
-                android:textSize="18sp" />
+                    <EditText
+                        android:id="@+id/main_settings_userName"
+                        android:layout_width="220dp"
+                        android:layout_height="44dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginRight="20dp"
+                        android:nextFocusDown="@id/main_settings_password"
+                        android:padding="10dp"
+                        android:singleLine="true"
+                        android:textColor="@color/cardview_dark_background" />
 
-            <EditText
-                android:id="@+id/main_settings_userNo"
-                android:layout_width="220dp"
-                android:layout_height="44dp"
-                android:layout_below="@id/main_settings_password"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="20dp"
-                android:layout_toRightOf="@id/main_settings_tv3"
-                android:nextFocusDown="@id/main_settings_posNo"
-                android:padding="10dp"
-                android:singleLine="true"
-                android:textColor="@color/cardview_dark_background" />
+                </LinearLayout>
 
-            <TextView
-                android:id="@+id/main_settings_tv4"
-                android:layout_width="180dp"
-                android:layout_height="44dp"
-                android:layout_below="@+id/main_settings_tv3"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="5dp"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="@string/point_of_sale"
-                android:textColor="@color/text_color"
-                android:textSize="18sp" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/main_settings_posNo"
-                android:layout_width="220dp"
-                android:layout_height="44dp"
-                android:layout_below="@id/main_settings_userNo"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="20dp"
-                android:layout_toRightOf="@id/main_settings_tv4"
-                android:imeOptions="actionGo"
-                android:padding="10dp"
-                android:singleLine="true"
-                android:textColor="@color/cardview_dark_background" />
+                    <TextView
+                        android:id="@+id/main_settings_tv2"
+                        android:layout_width="180dp"
+                        android:layout_height="44dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="@string/User_Password"
+                        android:textColor="@color/text_color"
+                        android:textSize="18sp" />
 
-            <TextView
-                android:id="@+id/main_settings_tv5"
-                android:layout_width="180dp"
-                android:layout_height="44dp"
-                android:layout_below="@+id/main_settings_tv4"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="5dp"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="@string/store_no"
-                android:textColor="@color/text_color"
-                android:textSize="18sp" />
+                    <EditText
+                        android:id="@+id/main_settings_password"
+                        android:layout_width="220dp"
+                        android:layout_height="44dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="20dp"
+                        android:inputType="textPassword"
+                        android:nextFocusDown="@id/main_settings_userNo"
+                        android:padding="10dp"
+                        android:singleLine="true"
+                        android:textColor="@color/cardview_dark_background" />
 
-            <EditText
-                android:id="@+id/main_settings_storeNo"
-                android:layout_width="220dp"
-                android:layout_height="44dp"
-                android:layout_below="@+id/main_settings_posNo"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="20dp"
-                android:layout_toRightOf="@id/main_settings_tv5"
-                android:imeOptions="actionGo"
-                android:padding="10dp"
-                android:singleLine="true"
-                android:textColor="@color/cardview_dark_background" />
 
-            <TextView
-                android:id="@+id/main_settings_tv6"
-                android:layout_width="180dp"
-                android:layout_height="44dp"
-                android:layout_below="@+id/main_settings_tv5"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="5dp"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="@string/shift_no"
-                android:textColor="@color/text_color"
-                android:textSize="18sp" />
+                </LinearLayout>
 
-            <EditText
-                android:id="@+id/main_settings_shiftNo"
-                android:layout_width="220dp"
-                android:layout_height="44dp"
-                android:layout_below="@+id/main_settings_storeNo"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="20dp"
-                android:layout_toRightOf="@id/main_settings_tv6"
-                android:imeOptions="actionGo"
-                android:padding="10dp"
-                android:singleLine="true"
-                android:textColor="@color/cardview_dark_background" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/main_settings_tv3"
+                        android:layout_width="180dp"
+                        android:layout_height="44dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="@string/user_no"
+                        android:textColor="@color/text_color"
+                        android:textSize="18sp" />
+
+                    <EditText
+                        android:id="@+id/main_settings_userNo"
+                        android:layout_width="220dp"
+                        android:layout_height="44dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="20dp"
+                        android:nextFocusDown="@id/main_settings_posNo"
+                        android:padding="10dp"
+                        android:singleLine="true"
+                        android:textColor="@color/cardview_dark_background" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/main_settings_tv4"
+                        android:layout_width="180dp"
+                        android:layout_height="44dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="@string/point_of_sale"
+                        android:textColor="@color/text_color"
+                        android:textSize="18sp" />
+
+                    <EditText
+                        android:id="@+id/main_settings_posNo"
+                        android:layout_width="220dp"
+                        android:layout_height="44dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="20dp"
+                        android:nextFocusDown="@string/store_no"
+                        android:imeOptions="actionGo"
+                        android:padding="10dp"
+                        android:singleLine="true"
+                        android:textColor="@color/cardview_dark_background" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/main_settings_tv5"
+                        android:layout_width="180dp"
+                        android:layout_height="44dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="@string/store_no"
+                        android:textColor="@color/text_color"
+                        android:textSize="18sp" />
+
+                    <EditText
+                        android:id="@+id/main_settings_storeNo"
+                        android:layout_width="220dp"
+                        android:layout_height="44dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="20dp"
+                        android:imeOptions="actionGo"
+                        android:padding="10dp"
+                        android:nextFocusDown="@string/shift_no"
+                        android:singleLine="true"
+                        android:textColor="@color/cardview_dark_background" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/main_settings_tv6"
+                        android:layout_width="180dp"
+                        android:layout_height="44dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="@string/shift_no"
+                        android:textColor="@color/text_color"
+                        android:textSize="18sp" />
+
+                    <EditText
+                        android:id="@+id/main_settings_shiftNo"
+                        android:layout_width="220dp"
+                        android:layout_height="44dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="20dp"
+                        android:imeOptions="actionGo"
+                        android:padding="10dp"
+                        android:nextFocusDown="@string/shift_name"
+                        android:singleLine="true"
+                        android:textColor="@color/cardview_dark_background" />
+
+                </LinearLayout>
+
+            </LinearLayout>
 
             <View
                 android:id="@+id/vertical_line"
-                android:layout_width="3dp"
-                android:layout_height="320dp"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="5dp"
-                android:layout_toRightOf="@+id/main_settings_userName"
+                android:layout_width="1dp"
+                android:layout_height="315dp"
+                android:layout_marginTop="15dp"
                 android:background="@color/layer4" />
 
-            <TextView
-                android:id="@+id/main_settings_tv7"
-                android:layout_width="180dp"
-                android:layout_height="44dp"
-                android:layout_marginLeft="15dp"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="20dp"
-                android:layout_toRightOf="@id/vertical_line"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="@string/shift_name"
-                android:textColor="@color/text_color"
-                android:textSize="18sp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/main_settings_shiftName"
-                android:layout_width="220dp"
-                android:layout_height="44dp"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="20dp"                android:layout_marginRight="20dp"
-                android:layout_toRightOf="@id/main_settings_tv7"
-                android:imeOptions="actionGo"
-                android:padding="10dp"
-                android:singleLine="true"
-                android:textColor="@color/cardview_dark_background" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/main_settings_tv8"
-                android:layout_width="180dp"
-                android:layout_height="44dp"
-                android:layout_below="@+id/main_settings_tv7"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="5dp"
-                android:layout_toRightOf="@id/vertical_line"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="@string/service_tax"
-                android:textColor="@color/text_color"
-                android:textSize="18sp" />
+                    <TextView
+                        android:id="@+id/main_settings_tv7"
+                        android:layout_width="180dp"
+                        android:layout_height="44dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="20dp"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="@string/shift_name"
+                        android:textColor="@color/text_color"
+                        android:textSize="18sp" />
 
-            <EditText
-                android:id="@+id/main_settings_serviceTax"
-                android:layout_width="220dp"
-                android:layout_height="44dp"
-                android:layout_below="@+id/main_settings_shiftName"
-                android:layout_alignParentRight="true"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="20dp"
-                android:layout_toRightOf="@id/main_settings_tv8"
-                android:imeOptions="actionGo"
-                android:padding="10dp"
-                android:singleLine="true"
-                android:textColor="@color/cardview_dark_background" />
+                    <EditText
+                        android:id="@+id/main_settings_shiftName"
+                        android:layout_width="220dp"
+                        android:layout_height="44dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginRight="20dp"
+                        android:imeOptions="actionGo"
+                        android:nextFocusDown="@string/service_tax"
+                        android:padding="10dp"
+                        android:singleLine="true"
+                        android:textColor="@color/cardview_dark_background" />
 
-            <TextView
-                android:id="@+id/main_settings_tv9"
-                android:layout_width="180dp"
-                android:layout_height="44dp"
-                android:layout_below="@+id/main_settings_tv8"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="5dp"
-                android:layout_toRightOf="@id/vertical_line"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="@string/service_value"
-                android:textColor="@color/text_color"
-                android:textSize="18sp" />
+                </LinearLayout>
 
-            <EditText
-                android:id="@+id/main_settings_serviceValue"
-                android:layout_width="220dp"
-                android:layout_height="44dp"
-                android:layout_below="@+id/main_settings_serviceTax"
-                android:layout_alignParentRight="true"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="20dp"
-                android:layout_toRightOf="@id/main_settings_tv9"
-                android:imeOptions="actionGo"
-                android:padding="10dp"
-                android:singleLine="true"
-                android:textColor="@color/cardview_dark_background" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/main_settings_tv8"
+                        android:layout_width="180dp"
+                        android:layout_height="44dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="@string/service_tax"
+                        android:textColor="@color/text_color"
+                        android:textSize="18sp" />
 
-            <TextView
-                android:id="@+id/main_settings_tv10"
-                android:layout_width="180dp"
-                android:layout_height="44dp"
-                android:layout_below="@+id/main_settings_tv9"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="5dp"
-                android:layout_toRightOf="@id/vertical_line"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="@string/tax_type"
-                android:textColor="@color/text_color"
-                android:textSize="18sp" />
+                    <EditText
+                        android:id="@+id/main_settings_serviceTax"
+                        android:layout_width="220dp"
+                        android:layout_height="44dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="20dp"
+                        android:imeOptions="actionGo"
+                        android:padding="10dp"
+                        android:singleLine="true"
+                        android:nextFocusDown="@string/service_value"
+                        android:textColor="@color/cardview_dark_background" />
+                </LinearLayout>
 
-            <EditText
-                android:id="@+id/main_settings_taxType"
-                android:layout_width="220dp"
-                android:layout_height="44dp"
-                android:layout_below="@+id/main_settings_serviceValue"
-                android:layout_alignParentRight="true"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="20dp"
-                android:layout_toRightOf="@id/main_settings_tv10"
-                android:imeOptions="actionGo"
-                android:padding="10dp"
-                android:singleLine="true"
-                android:textColor="@color/cardview_dark_background" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/main_settings_tv9"
+                        android:layout_width="180dp"
+                        android:layout_height="44dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="@string/service_value"
+                        android:textColor="@color/text_color"
+                        android:textSize="18sp" />
 
-            <TextView
-                android:id="@+id/main_settings_tv11"
-                android:layout_width="180dp"
-                android:layout_height="44dp"
-                android:layout_below="@+id/main_settings_tv10"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="5dp"
-                android:layout_toRightOf="@id/vertical_line"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="@string/time_card"
-                android:textColor="@color/text_color"
-                android:textSize="18sp" />
+                    <EditText
+                        android:id="@+id/main_settings_serviceValue"
+                        android:layout_width="220dp"
+                        android:layout_height="44dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="20dp"
+                        android:imeOptions="actionGo"
+                        android:padding="10dp"
+                        android:nextFocusDown="@string/tax_type"
+                        android:singleLine="true"
+                        android:textColor="@color/cardview_dark_background" />
+                </LinearLayout>
 
-            <EditText
-                android:id="@+id/main_settings_timeCard"
-                android:layout_width="220dp"
-                android:layout_height="44dp"
-                android:layout_below="@+id/main_settings_taxType"
-                android:layout_alignParentRight="true"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="20dp"
-                android:layout_toRightOf="@id/main_settings_tv11"
-                android:imeOptions="actionGo"
-                android:padding="10dp"
-                android:singleLine="true"
-                android:textColor="@color/cardview_dark_background" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/main_settings_tv10"
+                        android:layout_width="180dp"
+                        android:layout_height="44dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="@string/tax_type"
+                        android:textColor="@color/text_color"
+                        android:textSize="18sp" />
 
-            <Button
-                android:id="@+id/main_settings_save"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/main_settings_tv11"
-                android:layout_marginStart="100dp"
-                android:layout_marginLeft="100dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                android:layout_toRightOf="@id/vertical_line"
-                android:background="@drawable/done_buttons"
-                android:padding="10dp"
-                android:text="Save"
-                android:textAllCaps="false"
-                android:textSize="20sp" />
+                    <EditText
+                        android:id="@+id/main_settings_taxType"
+                        android:layout_width="220dp"
+                        android:layout_height="44dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="20dp"
+                        android:imeOptions="actionGo"
+                        android:padding="10dp"
+                        android:singleLine="true"
+                        android:nextFocusDown="@string/time_card"
+                        android:textColor="@color/cardview_dark_background" />
+                </LinearLayout>
 
-            <Button
-                android:id="@+id/main_settings_cancel"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/main_settings_tv11"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginRight="80dp"
-                android:layout_toRightOf="@id/main_settings_save"
-                android:background="@drawable/cancel_button"
-                android:padding="10dp"
-                android:text="Cancel"
-                android:textAllCaps="false"
-                android:textSize="20sp" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/main_settings_tv11"
+                        android:layout_width="180dp"
+                        android:layout_height="44dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="@string/time_card"
+                        android:textColor="@color/text_color"
+                        android:textSize="18sp" />
 
-        </RelativeLayout>
+                    <EditText
+                        android:id="@+id/main_settings_timeCard"
+                        android:layout_width="220dp"
+                        android:layout_height="44dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="20dp"
+                        android:imeOptions="actionGo"
+                        android:padding="10dp"
+                        android:singleLine="true"
+                        android:textColor="@color/cardview_dark_background" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/main_settings_save"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="70dp"
+                        android:layout_marginLeft="70dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="20dp"
+                        android:background="@drawable/done_buttons"
+                        android:padding="10dp"
+                        android:text="@string/save"
+                        android:textAllCaps="false"
+                        android:textSize="20sp" />
+
+                    <Button
+                        android:id="@+id/main_settings_cancel"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginRight="40dp"
+                        android:layout_marginEnd="40dp"
+                        android:background="@drawable/cancel_button"
+                        android:padding="10dp"
+                        android:text="@string/cancel"
+                        android:textAllCaps="false"
+                        android:textSize="20sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
 
     </ScrollView>
 
-</RelativeLayout>
+</LinearLayout>
+
+
