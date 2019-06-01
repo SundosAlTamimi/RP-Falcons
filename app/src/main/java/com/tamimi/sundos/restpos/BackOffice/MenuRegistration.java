@@ -202,6 +202,8 @@ public class MenuRegistration extends AppCompatActivity {
                                 break;
                         }
 
+                        itemBitmapPic = getResizedBitmap(itemBitmapPic , 100, 100);
+
                         storeInDatabase(
                                 categoriesSpinner.getSelectedItem().toString(),
                                 menuNameEditText.getText().toString(),
@@ -379,7 +381,7 @@ public class MenuRegistration extends AppCompatActivity {
         familyCategory.setType(2);
         // 1--> family type // 2--> category type
         familyCategory.setName(catName.getText().toString());
-        categoryPic = getResizedBitmap(categoryPic , 150, 150);
+        categoryPic = getResizedBitmap(categoryPic , 100, 100);
         familyCategory.setCatPic(categoryPic);
 
         Log.e("size " , ""+categoryPic.getWidth());
@@ -591,6 +593,7 @@ public class MenuRegistration extends AppCompatActivity {
                 newPic.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        itemPic.setBackgroundDrawable(null);
                         itemPic.setImageDrawable(new BitmapDrawable(getResources(), pic));
                         itemBitmapPic = pic;
                         dialog.dismiss();
@@ -651,6 +654,7 @@ public class MenuRegistration extends AppCompatActivity {
                 newPic.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        catPic.setBackgroundDrawable(null);
                         catPic.setImageDrawable(new BitmapDrawable(getResources(), pic));
                         categoryPic = pic;
                         dialog.dismiss();
