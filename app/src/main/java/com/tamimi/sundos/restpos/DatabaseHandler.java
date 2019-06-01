@@ -2203,8 +2203,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
                 // Adding transaction to list
 
-                Log.e ("image from data ", cursor.getString(8)+"   \npic len --> "+cursor.getBlob(20).length+"\nDetial ==>"+cursor.getBlob(20).toString());
-
                 items.add(item);
             } while (cursor.moveToNext());
         }

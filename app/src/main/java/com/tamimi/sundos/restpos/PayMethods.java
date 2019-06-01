@@ -36,11 +36,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -55,7 +57,8 @@ public class PayMethods extends AppCompatActivity {
 
     DatabaseHandler mDHandler;
     Dialog dialog, dialog1;
-    DecimalFormat threeDForm = new DecimalFormat("0.000");
+    DecimalFormatSymbols de =new DecimalFormatSymbols(Locale.ENGLISH);
+    DecimalFormat threeDForm = new DecimalFormat("0.000",de);
     TextView focusedTextView;
     int flag = 0;
     int position1;

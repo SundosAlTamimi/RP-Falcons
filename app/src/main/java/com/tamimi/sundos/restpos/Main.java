@@ -8,9 +8,7 @@ import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -29,15 +27,12 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextClock;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.tamimi.sundos.restpos.BackOffice.BackOfficeActivity;
 import com.tamimi.sundos.restpos.Models.Announcemet;
@@ -52,21 +47,14 @@ import com.tamimi.sundos.restpos.Models.OrderTransactions;
 import com.tamimi.sundos.restpos.Models.Pay;
 import com.tamimi.sundos.restpos.Models.PayMethod;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.InputStream;
 import java.text.DecimalFormat;
-import java.text.ParseException;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.Locale;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -101,7 +89,8 @@ public class Main extends AppCompatActivity {
     double cashValues, creditValues, chequeVales, pointValues, giftCardValues, cardValues;
     double discountAdd = 0.0;
     TableRow rows;
-    DecimalFormat twoDForm = new DecimalFormat("0.000");
+    DecimalFormatSymbols de =new DecimalFormatSymbols(Locale.ENGLISH);
+    DecimalFormat threeDForm = new DecimalFormat("0.000",de);
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @SuppressLint("ClickableViewAccessibility")
@@ -1901,7 +1890,7 @@ public class Main extends AppCompatActivity {
                 }
 
                 Log.e("out 000", " " + CheckTrue + "  netTotals" + netTotals);
-                if (Double.parseDouble(convertToEnglish(twoDForm.format(Double.parseDouble(convertToEnglish(""+netTotals))))) != 0.0 && CheckTrue) {
+                if (Double.parseDouble(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(""+netTotals))))) != 0.0 && CheckTrue) {
                     Log.e("in  000", " " + CheckTrue);
                     int index = 0;
                     for (int i = 0; i < orderTransactions.size(); i++) {
@@ -2009,14 +1998,14 @@ public class Main extends AppCompatActivity {
                                     rows = row;
                                     rows.setBackgroundColor(getResources().getColor(R.color.layer3));
                                     rTotal[0] = ((Integer.parseInt(rQty.getText().toString())) * list.get(i).getPrice());
-                                    rTotals.setText(convertToEnglish(twoDForm.format(Double.parseDouble(convertToEnglish(""+rTotal[0])))));
+                                    rTotals.setText(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(""+rTotal[0])))));
                                     isGrater.setText("0");
                                     CheckTrue = true;
 
                                     Log.e("in 22", "list.get(i).getQty() =" + list.get(i).getQty() + "\n list.get(i).getDiscount()" + list.get(i).getDiscount() + "\n list.get(i).getlDiscount()" + list.get(i).getlDiscount());
 
-                                    totalAdd += Double.parseDouble(convertToEnglish(twoDForm.format(Double.parseDouble(convertToEnglish(rTotals.getText().toString())))));
-                                    if (Double.parseDouble(convertToEnglish(twoDForm.format(Double.parseDouble(convertToEnglish(rTotals.getText().toString()))))) != 0.0 && !convertToEnglish(twoDForm.format(Double.parseDouble(convertToEnglish(rQty.getText().toString())))).equals("")) {
+                                    totalAdd += Double.parseDouble(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(rTotals.getText().toString())))));
+                                    if (Double.parseDouble(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(rTotals.getText().toString()))))) != 0.0 && !convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(rQty.getText().toString())))).equals("")) {
                                         discountAdd += ((list.get(i).getDiscount() / list.get(i).getQty()) + (list.get(i).getlDiscount() / list.get(i).getQty())) * Integer.parseInt(rQty.getText().toString());
                                         taxValue += ((list.get(i).getTaxValue() / list.get(i).getQty())) * Integer.parseInt(rQty.getText().toString());
 
@@ -2026,19 +2015,19 @@ public class Main extends AppCompatActivity {
                                     }
 
                                     if (Settings.tax_type == 0) {
-                                        netTotals = Double.parseDouble(convertToEnglish(twoDForm.format(Double.parseDouble(convertToEnglish(""+(totalAdd - discountAdd))))));
+                                        netTotals = Double.parseDouble(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(""+(totalAdd - discountAdd))))));
                                     } else {
-                                        netTotals =Double.parseDouble(convertToEnglish(twoDForm.format(Double.parseDouble(convertToEnglish(""+(totalAdd+ taxValue - (discountAdd )))))));
+                                        netTotals =Double.parseDouble(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(""+(totalAdd+ taxValue - (discountAdd )))))));
                                     }
 
                                     Log.e("in 33", "netTotals = " + netTotals + "\n taxValue =" + taxValue + "\n discountAdd= " + discountAdd);
 
                                     balance = netTotals;
-                                    totalText.setText(convertToEnglish(twoDForm.format(Double.parseDouble(convertToEnglish(""+totalAdd)))));
+                                    totalText.setText(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(""+totalAdd)))));
 
-                                    DiscountText.setText(convertToEnglish(twoDForm.format(Double.parseDouble(convertToEnglish(""+discountAdd)))));
+                                    DiscountText.setText(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(""+discountAdd)))));
 
-                                    nettotalText.setText(convertToEnglish(twoDForm.format(Double.parseDouble(convertToEnglish(""+netTotals)))));
+                                    nettotalText.setText(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(""+netTotals)))));
 
                                 } else {
                                     notCorrectValueDialog(getResources().getString(R.string.this_value_not_correct));
@@ -2252,7 +2241,7 @@ public class Main extends AppCompatActivity {
                 pointValues = 0.0;
                 giftCardValues = 0.0;
                 cardValues = 0.0;
-                if (Double.parseDouble(convertToEnglish(twoDForm.format(Double.parseDouble(convertToEnglish(nettotal.getText().toString()))))) == 0) {
+                if (Double.parseDouble(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(nettotal.getText().toString()))))) == 0) {
                     if (!ifGraterThan[0]) {
                         for (int i = 0; i < tableLayout.getChildCount(); i++) {
                             TableRow rowTemp = (TableRow) tableLayout.getChildAt(i);
@@ -2422,7 +2411,7 @@ public class Main extends AppCompatActivity {
             }
         });
 
-        nettotal.setText("" + twoDForm.format(netTotals));
+        nettotal.setText("" + threeDForm.format(netTotals));
 
         PayRefund.show();
     }
@@ -2503,7 +2492,7 @@ public class Main extends AppCompatActivity {
                                     Total += Double.parseDouble(value_o.getText().toString());
                                     double net_total = netTotals - Total;
                                     Log.e("net_Total_123 ==>", "" + net_total);
-                                    nettotal.setText(twoDForm.format(net_total));
+                                    nettotal.setText(threeDForm.format(net_total));
                                     ISGrater_o.setText("0");
                                 } else {
                                     new Settings().makeText(Main.this, "Can't return value grater than  " + value_o.getTag().toString());
