@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -378,7 +379,10 @@ public class MenuRegistration extends AppCompatActivity {
         familyCategory.setType(2);
         // 1--> family type // 2--> category type
         familyCategory.setName(catName.getText().toString());
+        categoryPic = getResizedBitmap(categoryPic , 150, 150);
         familyCategory.setCatPic(categoryPic);
+
+        Log.e("size " , ""+categoryPic.getWidth());
 
         mDbHandler.addFamilyCategory(familyCategory);
 
@@ -388,6 +392,22 @@ public class MenuRegistration extends AppCompatActivity {
 //        catName.setText("");
 //        catPic.setImageBitmap(null);
 
+    }
+
+    public Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight) {
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+        // CREATE A MATRIX FOR THE MANIPULATION
+        Matrix matrix = new Matrix();
+        // RESIZE THE BIT MAP
+        matrix.postScale(scaleWidth, scaleHeight);
+
+        // "RECREATE" THE NEW BITMAP
+        Bitmap resizedBitmap = Bitmap.createBitmap(
+                bm, 0, 0, width, height, matrix, false);
+        return resizedBitmap;
     }
 
     public void storeFamily(int maxGroupSerial) {
