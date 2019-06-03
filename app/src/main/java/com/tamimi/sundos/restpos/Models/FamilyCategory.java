@@ -11,13 +11,13 @@ public class FamilyCategory {
     public int serial;
     public int type;
     public String name;
-    public Bitmap catPic;
+    public String catPic;
 
     public FamilyCategory() {
 
     }
 
-    public FamilyCategory(int serial, int type, String name, Bitmap catPic) {
+    public FamilyCategory(int serial, int type, String name, String catPic) {
         this.serial = serial;
         this.type = type;
         this.name = name;
@@ -48,11 +48,11 @@ public class FamilyCategory {
         this.name = name;
     }
 
-    public Bitmap getCatPic() {
+    public String getCatPic() {
         return catPic;
     }
 
-    public void setCatPic(Bitmap catPic) {
+    public void setCatPic(String catPic) {
         this.catPic = catPic;
     }
 

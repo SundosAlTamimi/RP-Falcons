@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 
@@ -626,7 +627,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KITCHEN_PRINTER_TO_USE + " TEXT,"
                 + USED + " INTEGER,"
                 + SHOW_IN_MENU + " INTEGER,"
-                + ITEM_PICTURE + " BLOB" + ")";
+                + ITEM_PICTURE + " TEXT" + ")";
         db.execSQL(CREATE_TABLE_ITEMS);
         //___________________________________________________________________________________
 
@@ -1120,7 +1121,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + SERIAL2 + " INTEGER ,"
                 + TYPE2 + " INTEGER ,"
                 + NAME_CATEGORY_FAMILY2 + " TEXT ,"
-                + CATEGORY_PIC2 + " BLOB " + ")";
+                + CATEGORY_PIC2 + " TEXT " + ")";
         db.execSQL(CREATE_TABLE_FAMILY_CATEGORY_TABLE);
 
         //___________________________________________________________________________________
@@ -1274,12 +1275,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
-        byte[] byteImage = {};
-        if (items.getPic() != null) {
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            items.getPic().compress(Bitmap.CompressFormat.PNG, 0, stream);
-            byteImage = stream.toByteArray();
-        }
+//        byte[] byteImage = {};
+//        if (items.getPic() != null) {
+//            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//            items.getPic().compress(Bitmap.CompressFormat.PNG, 0, stream);
+//            byteImage = stream.toByteArray();
+//        }
         values.put(MENU_CATEGORY, items.getMenuCategory());
         values.put(MENU_NAME, items.getMenuName());
         values.put(FAMILY_NAME, items.getFamilyName());
@@ -1300,7 +1301,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KITCHEN_PRINTER_TO_USE, items.getKitchenPrinter());
         values.put(USED, items.getUsed());
         values.put(SHOW_IN_MENU, items.getShowInMenu());
-        values.put(ITEM_PICTURE, byteImage);
+        values.put(ITEM_PICTURE, items.getPic());
 
         db.insert(ITEMS, null, values);
         db.close();
@@ -1980,17 +1981,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
 
-        byte[] byteImage = {};
-        if (familyCategory.getCatPic() != null) {
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            familyCategory.getCatPic().compress(Bitmap.CompressFormat.PNG, 0, stream);
-            byteImage = stream.toByteArray();
-        }
+//        byte[] byteImage = {};
+//        if (familyCategory.getCatPic() != null) {
+//            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//            familyCategory.getCatPic().compress(Bitmap.CompressFormat.PNG, 0, stream);
+//            byteImage = stream.toByteArray();
+//        }
 
         values.put(SERIAL2, familyCategory.getSerial());
         values.put(TYPE2, familyCategory.getType());
         values.put(NAME_CATEGORY_FAMILY2, familyCategory.getName());
-        values.put(CATEGORY_PIC2, byteImage);
+        values.put(CATEGORY_PIC2,  familyCategory.getCatPic());
 
         db.insert(FAMILY_CATEGORY_TABLE, null, values);
 
@@ -2195,11 +2196,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 item.setKitchenPrinter(cursor.getString(17));
                 item.setUsed(Integer.parseInt(cursor.getString(18)));
                 item.setShowInMenu(Integer.parseInt(cursor.getString(19)));
-
-                if (cursor.getBlob(20).length == 0)
-                    item.setPic(null);
-                else
-                    item.setPic(BitmapFactory.decodeByteArray(cursor.getBlob(20), 0, cursor.getBlob(20).length));
+                try {
+                    item.setPic(cursor.getString(20));
+                }catch (OutOfMemoryError e) {
+                    e.getMessage();
+                    Log.e("have error ..","1==out of memory ");
+                    item.setPic("");
+                }
+//                if (cursor.getBlob(20).length == 0)
+//                    item.setPic(null);
+//                else
+//                    item.setPic(BitmapFactory.decodeByteArray(cursor.getBlob(20), 0, cursor.getBlob(20).length));
 
                 // Adding transaction to list
 
@@ -3593,12 +3600,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 familyCategory.setSerial(Integer.parseInt(cursor.getString(0)));
                 familyCategory.setType(Integer.parseInt(cursor.getString(1)));
                 familyCategory.setName(cursor.getString(2));
-
-                if (cursor.getBlob(3).length == 0)
-                    familyCategory.setCatPic(null);
-                else
-                    familyCategory.setCatPic(BitmapFactory.decodeByteArray(cursor.getBlob(3), 0, cursor.getBlob(3).length));
-
+                familyCategory.setCatPic(cursor.getString(3));
+//                if (cursor.getBlob(3).length == 0)
+//                    familyCategory.setCatPic(null);
+//                else
+//                    familyCategory.setCatPic(BitmapFactory.decodeByteArray(cursor.getBlob(3), 0, cursor.getBlob(3).length));
+//
 
                 familyCategoryArrayList.add(familyCategory);
 
