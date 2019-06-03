@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -204,6 +205,8 @@ public class MenuRegistration extends AppCompatActivity {
                                 break;
                         }
 
+                        itemBitmapPic = getResizedBitmap(itemBitmapPic , 100, 100);
+
                         storeInDatabase(
                                 categoriesSpinner.getSelectedItem().toString(),
                                 menuNameEditText.getText().toString(),
@@ -381,8 +384,11 @@ public class MenuRegistration extends AppCompatActivity {
         familyCategory.setType(2);
         // 1--> family type // 2--> category type
         familyCategory.setName(catName.getText().toString());
+        categoryPic = getResizedBitmap(categoryPic , 100, 100);
        String old =BitMapToString(categoryPic);
         familyCategory.setCatPic(old);
+
+        Log.e("size " , ""+categoryPic.getWidth());
 
         mDbHandler.addFamilyCategory(familyCategory);
 
@@ -392,6 +398,22 @@ Log.e("save ","suc");
 //        catName.setText("");
 //        catPic.setImageBitmap(null);
 
+    }
+
+    public Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight) {
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+        // CREATE A MATRIX FOR THE MANIPULATION
+        Matrix matrix = new Matrix();
+        // RESIZE THE BIT MAP
+        matrix.postScale(scaleWidth, scaleHeight);
+
+        // "RECREATE" THE NEW BITMAP
+        Bitmap resizedBitmap = Bitmap.createBitmap(
+                bm, 0, 0, width, height, matrix, false);
+        return resizedBitmap;
     }
 
     public void storeFamily(int maxGroupSerial) {
@@ -575,6 +597,7 @@ Log.e("save ","suc");
                 newPic.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        itemPic.setBackgroundDrawable(null);
                         itemPic.setImageDrawable(new BitmapDrawable(getResources(), pic));
                         itemBitmapPic = pic;
                         dialog.dismiss();
@@ -635,6 +658,7 @@ Log.e("save ","suc");
                 newPic.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        catPic.setBackgroundDrawable(null);
                         catPic.setImageDrawable(new BitmapDrawable(getResources(), pic));
                         categoryPic = pic;
                         dialog.dismiss();
