@@ -1,7 +1,9 @@
 package com.tamimi.sundos.restpos.BackOffice;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -26,6 +28,7 @@ import com.tamimi.sundos.restpos.Settings;
 
 import org.askerov.dynamicgrid.DynamicGridView;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -231,7 +234,7 @@ public class OrderLayout extends AppCompatActivity {
                 for (int k = 0; k < allItems.size(); k++)
                     if (categories.get(focusedCatPosition).getCategoryName().equals(allItems.get(k).getMenuCategory()) &&
                             itemsNamelist.get(i).equals(allItems.get(k).getMenuName()))
-                        img = allItems.get(k).getPic();
+                        img = StringToBitMap(allItems.get(k).getPic());
 
                 items.add(new UsedItems(categories.get(focusedCatPosition).getCategoryName(), itemsNamelist.get(i),
                         getResources().getColor(R.color.layer2), getResources().getColor(R.color.text_color), items.size(), img));
@@ -251,7 +254,7 @@ public class OrderLayout extends AppCompatActivity {
             for (int k = 0; k < allItems.size(); k++) {
                 if (items.get(i).getCategoryName().equals(allItems.get(k).getMenuCategory()) &&
                         items.get(i).getitemName().equals(allItems.get(k).getMenuName())) {
-                    items.get(i).setItemPic(allItems.get(k).getPic());
+                    items.get(i).setItemPic(StringToBitMap(allItems.get(k).getPic()));
                 }
             }
         }
@@ -402,7 +405,7 @@ public class OrderLayout extends AppCompatActivity {
                 Bitmap img = null;
                 for (int k = 0; k < allCats.size(); k++) {
                     if (categoriesArraylist.get(i).equals(allCats.get(k).getName())) {
-                        img = allCats.get(k).getCatPic();
+                        img = StringToBitMap(allCats.get(k).getCatPic());
                     }
                 }
 
@@ -429,7 +432,7 @@ public class OrderLayout extends AppCompatActivity {
         for (int i = 0; i < categories.size(); i++) {
             for (int k = 0; k < allCats.size(); k++) {
                 if (categories.get(i).getCategoryName().equals(allCats.get(k).getName())) {
-                    categories.get(i).setCatPic(allCats.get(k).getCatPic());
+                    categories.get(i).setCatPic(StringToBitMap(allCats.get(k).getCatPic()));
                 }
             }
         }
@@ -598,4 +601,28 @@ public class OrderLayout extends AppCompatActivity {
         emptySquare2.setOnClickListener(onClickListener);
         catSettings.setOnClickListener(onClickListener);
     }
+
+
+
+    public String BitMapToString(Bitmap bitmap){
+        ByteArrayOutputStream baos=new  ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG,100, baos);
+        byte [] arr=baos.toByteArray();
+        String result= Base64.encodeToString(arr, Base64.DEFAULT);
+        return result;
+    }
+
+
+
+    public Bitmap StringToBitMap(String image){
+        try{
+            byte [] encodeByte=Base64.decode(image,Base64.DEFAULT);
+            Bitmap bitmap= BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        }catch(Exception e){
+            e.getMessage();
+            return null;
+        }
+    }
+
 }

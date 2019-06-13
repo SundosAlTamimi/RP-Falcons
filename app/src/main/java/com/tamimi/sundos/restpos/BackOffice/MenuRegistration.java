@@ -6,11 +6,13 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -43,6 +45,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,7 +71,7 @@ public class MenuRegistration extends AppCompatActivity {
     int showInMenuVariavle = 0;
     static Bitmap itemBitmapPic, categoryPic;
     int picFlag;
-
+    static String nameInData;
     Dialog dialog, dialog2;
     static final int SELECTED_PICTURE = 1;
     boolean itemBarcodeFound = false;
@@ -225,7 +228,7 @@ public class MenuRegistration extends AppCompatActivity {
                                 ifEmptyDouble(convertToEnglish(priceEditText.getText().toString())),
                                 notUsedCheckBox.isChecked() ? 1 : 0,
                                 showInMenuVariavle,
-                                itemBitmapPic);
+                                BitMapToString(itemBitmapPic));
 
                         new Settings().makeText(MenuRegistration.this, getResources().getString(R.string.save_successful));
                         clearForm();
@@ -382,7 +385,8 @@ public class MenuRegistration extends AppCompatActivity {
         // 1--> family type // 2--> category type
         familyCategory.setName(catName.getText().toString());
         categoryPic = getResizedBitmap(categoryPic , 100, 100);
-        familyCategory.setCatPic(categoryPic);
+       String old =BitMapToString(categoryPic);
+        familyCategory.setCatPic(old);
 
         Log.e("size " , ""+categoryPic.getWidth());
 
@@ -390,7 +394,7 @@ public class MenuRegistration extends AppCompatActivity {
 
         SendCloud sendCloud = new SendCloud(MenuRegistration.this, familyCategory.getJSONObject());
         sendCloud.startSending("FamilyCategory");
-
+Log.e("save ","suc");
 //        catName.setText("");
 //        catPic.setImageBitmap(null);
 
@@ -581,7 +585,7 @@ public class MenuRegistration extends AppCompatActivity {
 
         for (int i = items.size() - 1; i >= 0; i--) {
 
-            final Bitmap pic = items.get(i).getPic();
+            final Bitmap pic = StringToBitMap(items.get(i).getPic());
             if (pic != null) {
                 RelativeLayout.LayoutParams imageParams = new RelativeLayout.LayoutParams(150, 150);
                 imageParams.setMargins(5, 0, 5, 0);
@@ -642,7 +646,7 @@ public class MenuRegistration extends AppCompatActivity {
 
         for (int i = familyCategories.size() - 1; i >= 0; i--) {
 
-            final Bitmap pic = familyCategories.get(i).getCatPic();
+            final Bitmap pic = StringToBitMap(familyCategories.get(i).getCatPic());
             if (pic != null) {
                 RelativeLayout.LayoutParams imageParams = new RelativeLayout.LayoutParams(150, 150);
                 imageParams.setMargins(5, 0, 5, 0);
@@ -717,7 +721,7 @@ public class MenuRegistration extends AppCompatActivity {
     void storeInDatabase(String categoryName, String menuName, String familyName, double taxPercent, int taxType, String secondaryName,
                          String kitchenAlias, int itemBarcode, int status, int itemType, String inventoryUnit,
                          double wastagePercent, int discountAvailable, int pointAvailable, int openPrice, String printer,
-                         String description, double price, int used, int showInMenu, Bitmap img) {
+                         String description, double price, int used, int showInMenu, String img) {
 
         Items items = new Items(
                 categoryName, menuName, familyName, taxPercent, taxType, secondaryName, kitchenAlias, itemBarcode, status, itemType,
@@ -1036,4 +1040,33 @@ public class MenuRegistration extends AppCompatActivity {
         addRecipe = (Button) findViewById(R.id.addRecipe);
         deleteCat = (Button) findViewById(R.id.deletC);
     }
+
+
+
+
+
+    public String BitMapToString(Bitmap bitmap){
+        if(bitmap!=null){
+        ByteArrayOutputStream baos=new  ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG,100, baos);
+        byte [] arr=baos.toByteArray();
+        String result= Base64.encodeToString(arr, Base64.DEFAULT);
+        return result;}
+
+        return "";
+    }
+
+
+
+    public Bitmap StringToBitMap(String image){
+        try{
+            byte [] encodeByte=Base64.decode(image,Base64.DEFAULT);
+            Bitmap bitmap= BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        }catch(Exception e){
+            e.getMessage();
+            return null;
+        }
+    }
+
 }
