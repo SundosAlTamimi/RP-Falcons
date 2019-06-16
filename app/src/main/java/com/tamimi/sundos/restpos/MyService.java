@@ -37,8 +37,9 @@ import java.util.TimerTask;
 
 public class MyService extends Service {
     //creating a mediaplayer object
-DatabaseHandler db=new DatabaseHandler(MyService.this);
+    DatabaseHandler db = new DatabaseHandler(MyService.this);
     Timer T;
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -48,30 +49,32 @@ DatabaseHandler db=new DatabaseHandler(MyService.this);
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-T=new Timer();
+        T = new Timer();
 
         T.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                List<OrderHeader> OrderHeaderObj=new ArrayList<>();
-                List<OrderTransactions> OrderTransactionsObj=new ArrayList<>();
-                List<PayMethod> PayMethodObj=new ArrayList<>();
+                List<OrderHeader> OrderHeaderObj = new ArrayList<>();
+                List<OrderTransactions> OrderTransactionsObj = new ArrayList<>();
+                List<PayMethod> PayMethodObj = new ArrayList<>();
 
-         OrderHeaderObj=db.getAllOrderHeader();
-         OrderTransactionsObj=db.getAllOrderTransactions();
-         PayMethodObj=db.getAllExistingPay();
+                OrderHeaderObj = db.getAllOrderHeader();
+                OrderTransactionsObj = db.getAllOrderTransactions();
+                PayMethodObj = db.getAllExistingPay();
 
-         for(int i=0;i<OrderHeaderObj.size();i++) {
-             sendToServer(OrderHeaderObj.get(i), OrderTransactionsObj, PayMethodObj);
-         }
+                for (int i = 0; i < OrderHeaderObj.size(); i++) {
+                    if(OrderHeaderObj.get(i).getIsPost()!=1){
+                    sendToServer(OrderHeaderObj.get(i), OrderTransactionsObj, PayMethodObj);
+                    }
+                }
 //                message();
 
             }
-        }, 100000, 30000);
+        }, 10000, 3000);
 
-         //START_REDELIVER_INTENT
+        //START_REDELIVER_INTENT
 
-        return  START_STICKY;
+        return START_STICKY;
     }
 
 
@@ -87,24 +90,24 @@ T=new Timer();
         try {
             JSONArray obj2 = new JSONArray();
             for (int i = 0; i < OrderTransactionsObj.size(); i++) {
-             if(OrderHeaderObj.getVoucherNumber().equals(OrderTransactionsObj.get(i).getVoucherNo()))
-                obj2.put( OrderTransactionsObj.get(i).getJSONObject2());
+                if (OrderHeaderObj.getVoucherNumber().equals(OrderTransactionsObj.get(i).getVoucherNo()))
+                    obj2.put(OrderTransactionsObj.get(i).getJSONObject2());
             }
             JSONObject obj1 = OrderHeaderObj.getJSONObject2();
 
             JSONArray obj3 = new JSONArray();
             for (int i = 0; i < PayMethodObj.size(); i++) {
-                if (OrderHeaderObj.getVoucherNumber().equals( PayMethodObj.get(i).getVoucherNumber()))
-                    obj3.put( PayMethodObj.get(i).getJSONObject2());
+                if (OrderHeaderObj.getVoucherNumber().equals(PayMethodObj.get(i).getVoucherNumber()))
+                    obj3.put(PayMethodObj.get(i).getJSONObject2());
             }
             JSONObject obj = new JSONObject();
             obj.put("ORDERHEADER", obj1);
             obj.put("ORDERTRANSACTIONS", obj2);
             obj.put("PAYMETHOD", obj3);
 
-            Log.e("log trans =",obj2.toString());
+            Log.e("log trans =", obj2.toString());
 
-            Log.e("save successful =",obj.toString());
+            Log.e("save successful =", obj.toString());
 
             SendCloud sendCloud = new SendCloud(MyService.this, obj);
             sendCloud.startSending("Order");
@@ -114,11 +117,10 @@ T=new Timer();
         }
     }
 
-public void message()
-{
-    Toast.makeText(MyService.this, "is send succ", Toast.LENGTH_SHORT).show();
+    public void message() {
+        Toast.makeText(MyService.this, "is send succ", Toast.LENGTH_SHORT).show();
 
-}
+    }
 
 
 }
