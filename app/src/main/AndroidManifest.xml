@@ -131,6 +131,9 @@
         </activity>
 
 
+        <!-- defining the service class here -->
+        <service android:name=".MyService" />
+
     </application>
 
 </manifest>

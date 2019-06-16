@@ -387,9 +387,6 @@ public class MenuRegistration extends AppCompatActivity {
         categoryPic = getResizedBitmap(categoryPic , 100, 100);
        String old =BitMapToString(categoryPic);
         familyCategory.setCatPic(old);
-
-        Log.e("size " , ""+categoryPic.getWidth());
-
         mDbHandler.addFamilyCategory(familyCategory);
 
         SendCloud sendCloud = new SendCloud(MenuRegistration.this, familyCategory.getJSONObject());
@@ -401,7 +398,8 @@ Log.e("save ","suc");
     }
 
     public Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight) {
-        int width = bm.getWidth();
+        if (bm != null){
+            int width = bm.getWidth();
         int height = bm.getHeight();
         float scaleWidth = ((float) newWidth) / width;
         float scaleHeight = ((float) newHeight) / height;
@@ -414,6 +412,8 @@ Log.e("save ","suc");
         Bitmap resizedBitmap = Bitmap.createBitmap(
                 bm, 0, 0, width, height, matrix, false);
         return resizedBitmap;
+    }
+        return null;
     }
 
     public void storeFamily(int maxGroupSerial) {

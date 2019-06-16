@@ -131,12 +131,12 @@ public class SendCloud {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog = new ProgressDialog(context);
-            progressDialog.setCancelable(false);
-            progressDialog.setMessage("Loading...");
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            progressDialog.setProgress(0);
-            progressDialog.show();
+//            progressDialog = new ProgressDialog(context);
+//            progressDialog.setCancelable(false);
+//            progressDialog.setMessage("Loading...");
+//            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//            progressDialog.setProgress(0);
+//            progressDialog.show();
         }
 
         @Override
@@ -144,12 +144,12 @@ public class SendCloud {
             try {
                 String link = "http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/RestSaveOrder?";
 
-                String data = "compno=" + URLEncoder.encode("302", "UTF-8") + "&" +
-                        "compyear=" + URLEncoder.encode("2018", "UTF-8") + "&" +
+                String data = "compno=" + URLEncoder.encode("736", "UTF-8") + "&" +
+                        "compyear=" + URLEncoder.encode("2019", "UTF-8") + "&" +
                         "voucher=" + URLEncoder.encode(obj.toString().trim(), "UTF-8");
 
                 URL url = new URL(link + data);
-
+                Log.e("url con ", "" + url.toString());
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setDoOutput(true);
                 httpURLConnection.setDoInput(true);
@@ -200,7 +200,7 @@ public class SendCloud {
 //                Toast.makeText(ExportJason.this, "Failed to export data", Toast.LENGTH_SHORT).show();
                 Log.e("tag", "****Failed to export data");
             }
-            progressDialog.dismiss();
+//            progressDialog.dismiss();
         }
     }
 
