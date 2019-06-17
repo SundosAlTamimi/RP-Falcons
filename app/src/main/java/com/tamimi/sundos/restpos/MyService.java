@@ -39,6 +39,9 @@ public class MyService extends Service {
     //creating a mediaplayer object
     DatabaseHandler db = new DatabaseHandler(MyService.this);
     Timer T;
+    List<OrderHeader> OrderHeaderObj;
+    List<OrderTransactions> OrderTransactionsObj;
+    List<PayMethod> PayMethodObj;
 
     @Nullable
     @Override
@@ -48,23 +51,26 @@ public class MyService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
+        OrderHeaderObj = new ArrayList<>();
+        OrderTransactionsObj = new ArrayList<>();
+        PayMethodObj = new ArrayList<>();
         T = new Timer();
 
         T.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                List<OrderHeader> OrderHeaderObj = new ArrayList<>();
-                List<OrderTransactions> OrderTransactionsObj = new ArrayList<>();
-                List<PayMethod> PayMethodObj = new ArrayList<>();
+
+                OrderHeaderObj.clear();
+                OrderTransactionsObj.clear();
+                PayMethodObj.clear();
 
                 OrderHeaderObj = db.getAllOrderHeader();
                 OrderTransactionsObj = db.getAllOrderTransactions();
                 PayMethodObj = db.getAllExistingPay();
 
                 for (int i = 0; i < OrderHeaderObj.size(); i++) {
-                    if(OrderHeaderObj.get(i).getIsPost()!=1){
-                    sendToServer(OrderHeaderObj.get(i), OrderTransactionsObj, PayMethodObj);
+                    if (OrderHeaderObj.get(i).getIsPost() != 1) {
+                        sendToServer(OrderHeaderObj.get(i), OrderTransactionsObj, PayMethodObj);
                     }
                 }
 //                message();

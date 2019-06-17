@@ -1715,6 +1715,7 @@ public class PayMethods extends AppCompatActivity {
             obj.put("ORDERHEADER", obj1);
             obj.put("ORDERTRANSACTIONS", obj2);
             obj.put("PAYMETHOD", obj3);
+Log.e("order jeson"," = "+obj.toString());
 
             SendCloud sendCloud = new SendCloud(PayMethods.this, obj);
             sendCloud.startSending("Order");

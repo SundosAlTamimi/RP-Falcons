@@ -9,12 +9,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+
+import static java.net.Proxy.Type.HTTP;
 
 public class SendCloud {
 
@@ -63,21 +66,29 @@ public class SendCloud {
         @Override
         protected String doInBackground(String... params) {
             try {
-                String link = "http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/RestSaveKitchenScreen?";
+                String link = "http://Falconssoft.net/RestService/FSAppServiceDLL.dll/RestSaveKitchenScreen?";
 
-                String data = "compno=" + URLEncoder.encode("302", "UTF-8") + "&" +
-                        "compyear=" + URLEncoder.encode("2018", "UTF-8") + "&" +
-                        "voucher=" + URLEncoder.encode(obj.toString().trim(), "UTF-8");
+                String data = "compno=" + URLEncoder.encode("736", "UTF-8") + "&" +
+                        "compyear=" + URLEncoder.encode("2019", "UTF-8") ;
+//                        "voucher=" + URLEncoder.encode(obj.toString().trim(), "UTF-8");
 
                 URL url = new URL(link + data);
+//                new SendDeviceDetails().execute("http://52.88.194.67:8080/IOTProjectServer/registerDevice", postData.toString());
 
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setDoOutput(true);
                 httpURLConnection.setDoInput(true);
                 httpURLConnection.setRequestMethod("POST");
 
+
+
                 InputStream inputStream = httpURLConnection.getInputStream();
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+                DataOutputStream wr = new DataOutputStream(httpURLConnection.getOutputStream());
+                wr.writeBytes(obj.toString());
+                wr.flush();
+                wr.close();
 
                 StringBuffer stringBuffer = new StringBuffer();
 
@@ -89,7 +100,7 @@ public class SendCloud {
                 inputStream.close();
                 httpURLConnection.disconnect();
 
-                Log.e("tag", "" + stringBuffer.toString());
+                Log.e("tag KITCHEN", "" + stringBuffer.toString());
 
                 return stringBuffer.toString();
 
@@ -146,11 +157,11 @@ public class SendCloud {
         @Override
         protected String doInBackground(String... params) {
             try {
-                String link = "http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/RestSaveOrder?";
-
+           String link = "http://Falconssoft.net/RestService/FSAppServiceDLL.dll/RestSaveOrder?";
+              // String link = "http://10.0.0.16:8081/RestSaveOrder?";
                 String data = "compno=" + URLEncoder.encode("736", "UTF-8") + "&" +
-                        "compyear=" + URLEncoder.encode("2019", "UTF-8") + "&" +
-                        "voucher=" + URLEncoder.encode(obj.toString().trim(), "UTF-8");
+                        "compyear=" + URLEncoder.encode("2019", "UTF-8") ;
+                       // "VOUCHER=" + URLEncoder.encode(obj.toString().trim(), "UTF-8");
 
                 try {
                     JSONObject jo = obj.getJSONObject("ORDERHEADER");
@@ -161,10 +172,20 @@ public class SendCloud {
                 }
                 URL url = new URL(link + data);
                 Log.e("url con ", "" + url.toString());
+
+
+
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setDoOutput(true);
                 httpURLConnection.setDoInput(true);
                 httpURLConnection.setRequestMethod("POST");
+
+                DataOutputStream wr = new DataOutputStream(httpURLConnection.getOutputStream());
+                wr.writeBytes(obj.toString());
+                wr.flush();
+                wr.close();
+
+
 
                 InputStream inputStream = httpURLConnection.getInputStream();
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
@@ -179,7 +200,7 @@ public class SendCloud {
                 inputStream.close();
                 httpURLConnection.disconnect();
 
-                Log.e("tag", "" + stringBuffer.toString());
+                Log.e("tag order", "" + stringBuffer.toString());
 
                 return stringBuffer.toString();
 
@@ -213,7 +234,14 @@ public class SendCloud {
                   dbHandler.updateOrderTablesIsPost2(vhfNo,POSNO);
                   dbHandler.updateOrderTablesIsPost3(vhfNo,POSNO);
 
-            } else {
+//            } else if (s != null && s.contains("voucher saved unsuccessfully,")) {
+//
+//                dbHandler.updateOrderTablesIsPost(vhfNo,POSNO);
+//                dbHandler.updateOrderTablesIsPost2(vhfNo,POSNO);
+//                dbHandler.updateOrderTablesIsPost3(vhfNo,POSNO);
+
+            }else
+             {
 //                Toast.makeText(ExportJason.this, "Failed to export data", Toast.LENGTH_SHORT).show();
                 Log.e("tag", "****Failed to export data");
                 Log.e("vhf failed ___2", "= " + vhfNo + "POSNO = " + POSNO);
