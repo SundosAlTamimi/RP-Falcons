@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -20,10 +21,12 @@ public class SendCloud {
     private Context context;
     private ProgressDialog progressDialog;
     private JSONObject obj;
+    DatabaseHandler dbHandler;
 
     public SendCloud(Context context, JSONObject obj) {
         this.obj = obj;
         this.context = context;
+        dbHandler = new DatabaseHandler(context);
     }
 
     public void startSending(String flag) {
@@ -145,16 +148,17 @@ public class SendCloud {
         private String JsonResponse = null;
         private HttpURLConnection urlConnection = null;
         private BufferedReader reader = null;
+        String vhfNo, POSNO;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog = new ProgressDialog(context);
-            progressDialog.setCancelable(false);
-            progressDialog.setMessage("Loading...");
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            progressDialog.setProgress(0);
-            progressDialog.show();
+//            progressDialog = new ProgressDialog(context);
+//            progressDialog.setCancelable(false);
+//            progressDialog.setMessage("Loading...");
+//            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//            progressDialog.setProgress(0);
+//            progressDialog.show();
         }
 
         @Override
@@ -162,12 +166,19 @@ public class SendCloud {
             try {
                 String link = "http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/RestSaveOrder?";
 
-                String data = "compno=" + URLEncoder.encode("302", "UTF-8") + "&" +
-                        "compyear=" + URLEncoder.encode("2018", "UTF-8") + "&" +
+                String data = "compno=" + URLEncoder.encode("736", "UTF-8") + "&" +
+                        "compyear=" + URLEncoder.encode("2019", "UTF-8") + "&" +
                         "voucher=" + URLEncoder.encode(obj.toString().trim(), "UTF-8");
 
+                try {
+                    JSONObject jo = obj.getJSONObject("ORDERHEADER");
+                    vhfNo = jo.getString("VHFNO");
+                    POSNO = jo.getString("POSNO");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 URL url = new URL(link + data);
-
+                Log.e("url con ", "" + url.toString());
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setDoOutput(true);
                 httpURLConnection.setDoInput(true);
@@ -214,11 +225,18 @@ public class SendCloud {
             if (s != null && s.contains("Voucher Saved Successfully")) {
 //                Toast.makeText(ExportJason.this , "Success" , Toast.LENGTH_SHORT).show();
                 Log.e("tag", "****Success");
+                Log.e("vhf Success___", "= " + vhfNo);
+
+                  dbHandler.updateOrderTablesIsPost(vhfNo,POSNO);
+                  dbHandler.updateOrderTablesIsPost2(vhfNo,POSNO);
+                  dbHandler.updateOrderTablesIsPost3(vhfNo,POSNO);
+
             } else {
 //                Toast.makeText(ExportJason.this, "Failed to export data", Toast.LENGTH_SHORT).show();
                 Log.e("tag", "****Failed to export data");
+                Log.e("vhf failed ___2", "= " + vhfNo + "POSNO = " + POSNO);
             }
-            progressDialog.dismiss();
+//            progressDialog.dismiss();
         }
     }
 

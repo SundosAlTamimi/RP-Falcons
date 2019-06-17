@@ -213,6 +213,7 @@ public class LogIn extends AppCompatActivity {
                 final Intent mainIntent = new Intent(LogIn.this, Main.class);
                 startActivity(mainIntent);
                 finish();
+                startService(new Intent(LogIn.this, MyService.class));
             }
         }, 500);
     }

@@ -205,6 +205,8 @@ public class MenuRegistration extends AppCompatActivity {
                                 break;
                         }
 
+                        itemBitmapPic = getResizedBitmap(itemBitmapPic , 100, 100);
+
                         storeInDatabase(
                                 categoriesSpinner.getSelectedItem().toString(),
                                 menuNameEditText.getText().toString(),
@@ -382,9 +384,9 @@ public class MenuRegistration extends AppCompatActivity {
         familyCategory.setType(2);
         // 1--> family type // 2--> category type
         familyCategory.setName(catName.getText().toString());
+        categoryPic = getResizedBitmap(categoryPic , 100, 100);
        String old =BitMapToString(categoryPic);
         familyCategory.setCatPic(old);
-
         mDbHandler.addFamilyCategory(familyCategory);
 
         SendCloud sendCloud = new SendCloud(MenuRegistration.this, familyCategory.getJSONObject());
@@ -396,7 +398,8 @@ Log.e("save ","suc");
     }
 
     public Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight) {
-        int width = bm.getWidth();
+        if (bm != null){
+            int width = bm.getWidth();
         int height = bm.getHeight();
         float scaleWidth = ((float) newWidth) / width;
         float scaleHeight = ((float) newHeight) / height;
@@ -409,6 +412,8 @@ Log.e("save ","suc");
         Bitmap resizedBitmap = Bitmap.createBitmap(
                 bm, 0, 0, width, height, matrix, false);
         return resizedBitmap;
+    }
+        return null;
     }
 
     public void storeFamily(int maxGroupSerial) {

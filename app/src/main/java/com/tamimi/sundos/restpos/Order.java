@@ -179,6 +179,7 @@ public class Order extends AppCompatActivity {
 
                             Intent intentPay = new Intent(Order.this, PayMethods.class);
                             startActivity(intentPay);
+//                            finish();
                         } else
                         new Settings().makeText(Order.this, getResources().getString(R.string.amountdue_oo));
                     }
