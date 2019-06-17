@@ -1,5 +1,10 @@
 package com.tamimi.sundos.restpos.Models;
 
+import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class Announcemet {
 
     private String shiftName;
@@ -79,5 +84,21 @@ public class Announcemet {
 
     public void setUserNo(int userNo) {
         this.userNo = userNo;
+    }
+
+    public JSONObject getJSONObject() { // for kitchen
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("SHIFT_NAME", shiftName);
+            obj.put("USER_NAME", userName);
+            obj.put("POS_NO", posNo);
+            obj.put("MESSAGE", message);
+            obj.put("IS_SHOW", isShow);
+            obj.put("ANNOUNC_DATE", AnnouncementDate);
+
+        } catch (JSONException e) {
+            Log.e("Tag", "JSONException");
+        }
+        return obj;
     }
 }

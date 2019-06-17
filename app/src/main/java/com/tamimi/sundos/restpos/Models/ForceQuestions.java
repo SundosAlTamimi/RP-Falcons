@@ -1,5 +1,10 @@
 package com.tamimi.sundos.restpos.Models;
 
+import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class ForceQuestions {
     private int questionNo;
     private String questionText;
@@ -47,5 +52,19 @@ public class ForceQuestions {
 
     public void setAnswer(String answer) {
         this.answer = answer;
+    }
+
+    public JSONObject getJSONObject() { // for kitchen
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("QUESTION_NO", questionNo);
+            obj.put("QUESTION_TEXT", questionText);
+            obj.put("MULTIPLE_ANSWER", multipleAnswer);
+            obj.put("ANSWER", answer);
+
+        } catch (JSONException e) {
+            Log.e("Tag", "JSONException");
+        }
+        return obj;
     }
 }

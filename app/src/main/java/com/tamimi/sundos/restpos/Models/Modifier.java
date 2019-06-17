@@ -1,5 +1,10 @@
 package com.tamimi.sundos.restpos.Models;
 
+import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class Modifier {
     private String modifierName;
     private int modifierNumber;
@@ -38,5 +43,18 @@ public class Modifier {
 
     public int getModifierActive() {
         return modifierActive;
+    }
+
+    public JSONObject getJSONObject() { // for kitchen
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("MODIFIER_NO", modifierNumber);
+            obj.put("MODIFIER_NAME", modifierName);
+            obj.put("ACTIVE", modifierActive);
+
+        } catch (JSONException e) {
+            Log.e("Tag", "JSONException");
+        }
+        return obj;
     }
 }

@@ -205,8 +205,6 @@ public class MenuRegistration extends AppCompatActivity {
                                 break;
                         }
 
-                        itemBitmapPic = getResizedBitmap(itemBitmapPic , 100, 100);
-
                         storeInDatabase(
                                 categoriesSpinner.getSelectedItem().toString(),
                                 menuNameEditText.getText().toString(),
@@ -384,11 +382,8 @@ public class MenuRegistration extends AppCompatActivity {
         familyCategory.setType(2);
         // 1--> family type // 2--> category type
         familyCategory.setName(catName.getText().toString());
-        categoryPic = getResizedBitmap(categoryPic , 100, 100);
        String old =BitMapToString(categoryPic);
         familyCategory.setCatPic(old);
-
-        Log.e("size " , ""+categoryPic.getWidth());
 
         mDbHandler.addFamilyCategory(familyCategory);
 
