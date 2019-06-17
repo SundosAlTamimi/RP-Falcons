@@ -36,11 +36,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -55,7 +57,8 @@ public class PayMethods extends AppCompatActivity {
 
     DatabaseHandler mDHandler;
     Dialog dialog, dialog1;
-    DecimalFormat threeDForm = new DecimalFormat("0.000");
+    DecimalFormatSymbols de =new DecimalFormatSymbols(Locale.ENGLISH);
+    DecimalFormat threeDForm = new DecimalFormat("0.000",de);
     TextView focusedTextView;
     int flag = 0;
     int position1;
@@ -385,7 +388,6 @@ public class PayMethods extends AppCompatActivity {
                 String t0 =convertToEnglish( balance.getText().toString());
                 String t1 = convertToEnglish(received.getText().toString());
                 String t2 = convertToEnglish(cashMoney.getText().toString());
-                cashValue=0.0;
                 Date currentTimeAndDate = Calendar.getInstance().getTime();
                 SimpleDateFormat df1 = new SimpleDateFormat("dd-MM-yyyy");
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM");
@@ -1733,7 +1735,7 @@ public class PayMethods extends AppCompatActivity {
         Log.e("OrdedTr ", "" + OrderTransactionsObj.get(0).getTaxValue() + " date\n " + OrderTransactionsObj.get(0).getVoucherDate() + " \t no  " + OrderTransactionsObj.get(0).getVoucherNo());
         final Dialog dialog = new Dialog(PayMethods.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(true);
+        dialog.setCancelable(false);
         dialog.setContentView(R.layout.print);
         final Button okButton = dialog.findViewById(R.id.print_btn);
         final LinearLayout linearLayout = dialog.findViewById(R.id.linear2);
@@ -1849,7 +1851,9 @@ public class PayMethods extends AppCompatActivity {
                 linearLayout.setDrawingCacheEnabled(true);
                 Bitmap bitmap = linearLayout.getDrawingCache();
                 photoPrinter.printBitmap("invoice2.jpg", bitmap);
-
+                dialog.dismiss();
+            Intent intentToOrder =new Intent(PayMethods.this,Order.class);
+            startActivity(intentToOrder);
             }
         });
         dialog.show();

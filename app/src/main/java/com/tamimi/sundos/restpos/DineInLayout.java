@@ -229,7 +229,7 @@ public class DineInLayout extends AppCompatActivity {
                 ImageView imageView = new ImageView(DineInLayout.this);
                 TextView textView = new TextView(DineInLayout.this);
 
-                imageView.setBackgroundResource(currentList.get(i).getImageResource());
+                imageView.setBackgroundResource(getImage(currentList.get(i).getImageResource()));
                 imageView.setTag(currentList.get(i).getImageResource());
                 linearLayout.setOrientation(LinearLayout.HORIZONTAL);
 
@@ -339,31 +339,31 @@ public class DineInLayout extends AppCompatActivity {
             textView.setTextColor(getResources().getColor(R.color.text_color));
             textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f);
 
-            int imageResource = R.drawable.table_with_8;
+          String imageResource = "table_with_8";
             switch (view.getId()) {
 
                 case R.id.eight_c:
                     newTable.setBackgroundResource(R.drawable.table_with_8);
-                    newTable.setTag(R.drawable.table_with_8);
-                    imageResource = R.drawable.table_with_8;
+                    newTable.setTag("table_with_8");
+                    imageResource = "table_with_8";
                     break;
 
                 case R.id.six_c:
                     newTable.setBackgroundResource(R.drawable.table_with_6);
-                    newTable.setTag(R.drawable.table_with_6);
-                    imageResource = R.drawable.table_with_6;
+                    newTable.setTag("table_with_6");
+                    imageResource = "table_with_6";
                     break;
 
                 case R.id.four_c:
                     newTable.setBackgroundResource(R.drawable.table_with_4);
-                    newTable.setTag(R.drawable.table_with_4);
-                    imageResource = R.drawable.table_with_4;
+                    newTable.setTag("table_with_4");
+                    imageResource = "table_with_4";
                     break;
 
                 case R.id.two_c:
                     newTable.setBackgroundResource(R.drawable.table_with_2);
-                    newTable.setTag(R.drawable.table_with_2);
-                    imageResource = R.drawable.table_with_2;
+                    newTable.setTag("table_with_2");
+                    imageResource = "table_with_2";
                     break;
 
             }
@@ -408,31 +408,31 @@ public class DineInLayout extends AppCompatActivity {
             textView.setTextColor(getResources().getColor(R.color.text_color));
             textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f);
 
-            int imageResource = R.drawable.table_with_8;
+            String imageResource = "table_with_8";
             switch (view.getId()) {
 
                 case R.id.eight_c:
                     newTable.setBackgroundResource(R.drawable.circled_table_with_8);
-                    newTable.setTag(R.drawable.circled_table_with_8);
-                    imageResource = R.drawable.circled_table_with_8;
+                    newTable.setTag("circled_table_with_8");
+                    imageResource = "circled_table_with_8";
                     break;
 
                 case R.id.six_c:
                     newTable.setBackgroundResource(R.drawable.circled_table_with_6);
-                    newTable.setTag(R.drawable.circled_table_with_6);
-                    imageResource = R.drawable.circled_table_with_6;
+                    newTable.setTag("circled_table_with_6");
+                    imageResource = "circled_table_with_6";
                     break;
 
                 case R.id.four_c:
                     newTable.setBackgroundResource(R.drawable.circled_table_with_4);
-                    newTable.setTag(R.drawable.circled_table_with_4);
-                    imageResource = R.drawable.circled_table_with_4;
+                    newTable.setTag("circled_table_with_4");
+                    imageResource = "circled_table_with_4";
                     break;
 
                 case R.id.two_c:
                     newTable.setBackgroundResource(R.drawable.circled_table_with_2);
-                    newTable.setTag(R.drawable.circled_table_with_2);
-                    imageResource = R.drawable.circled_table_with_2;
+                    newTable.setTag("circled_table_with_2");
+                    imageResource ="circled_table_with_2";
                     break;
 
             }
@@ -466,7 +466,7 @@ public class DineInLayout extends AppCompatActivity {
             int height = linearLayout.getWidth();
             float left = linearLayout.getX();
             float top = linearLayout.getY();
-            int resource = (int) imageView1.getTag();
+            String resource = (String) imageView1.getTag();
             int tableNumber = i;
 
             Tables table = new Tables(height, width, resource, left, top, tableNumber);
@@ -695,7 +695,7 @@ public class DineInLayout extends AppCompatActivity {
         animate.setDuration(500);
         animate.setFillAfter(true);
         view.startAnimation(animate);
-
+ 
     }
 
     public void fillMainFloor() {
@@ -708,7 +708,7 @@ public class DineInLayout extends AppCompatActivity {
             ImageView imageView = new ImageView(DineInLayout.this);
             TextView textView = new TextView(DineInLayout.this);
 
-            imageView.setBackgroundResource(currentList.get(i).getImageResource());
+            imageView.setBackgroundResource(getImage(currentList.get(i).getImageResource()));
             imageView.setTag(currentList.get(i).getImageResource());
             linearLayout.setOrientation(LinearLayout.HORIZONTAL);
 
@@ -731,6 +731,14 @@ public class DineInLayout extends AppCompatActivity {
             land.addView(linearLayout);
 
         }
+    }
+
+
+    public int getImage(String imageName) {
+
+        int drawableResourceId = DineInLayout.this.getResources().getIdentifier(imageName, "drawable", DineInLayout.this.getPackageName());
+
+        return drawableResourceId;
     }
 
     private class SingleTapConfirm extends GestureDetector.SimpleOnGestureListener {
