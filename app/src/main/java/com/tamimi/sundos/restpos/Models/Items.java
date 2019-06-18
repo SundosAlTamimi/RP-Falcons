@@ -26,7 +26,7 @@ public class Items {
     public String kitchenPrinter;
     public int used;
     public int showInMenu;
-    public Bitmap pic;
+    public String pic;
 
     private int background ;
     private int textColor ;
@@ -51,7 +51,7 @@ public class Items {
     public Items(String menuCategory, String menuName, String familyName ,double tax, int taxType, String secondaryName,
                  String kitchenAlias, int itemBarcode, int status, int itemType, String inventoryUnit,
                  double wastagePercent, int discountAvailable, int pointAvailable, int openPrice, String kitchenPrinter,
-                  String description, double price , int used , int showInMenu , Bitmap pic) {
+                  String description, double price , int used , int showInMenu , String pic) {
 
         this.menuCategory = menuCategory;
         this.menuName = menuName;
@@ -79,7 +79,7 @@ public class Items {
     public Items(String menuCategory, String menuName, String familyName ,double tax, int taxType, String secondaryName,
                  String kitchenAlias, int itemBarcode, int status, int itemType, String inventoryUnit,
                  double wastagePercent, int discountAvailable, int pointAvailable, int openPrice, String kitchenPrinter,
-                 String description, double price , int used , int showInMenu , Bitmap pic , int background ,
+                 String description, double price , int used , int showInMenu , String  pic , int background ,
                  int textColor , int position ) {
 
         this.menuCategory = menuCategory;
@@ -276,11 +276,11 @@ public class Items {
         this.showInMenu = showInMenu;
     }
 
-    public Bitmap getPic() {
+    public String getPic() {
         return pic;
     }
 
-    public void setPic(Bitmap pic) {
+    public void setPic(String pic) {
         this.pic = pic;
     }
 

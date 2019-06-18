@@ -6,7 +6,10 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -52,6 +55,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -175,6 +179,7 @@ public class Order extends AppCompatActivity {
 
                             Intent intentPay = new Intent(Order.this, PayMethods.class);
                             startActivity(intentPay);
+//                            finish();
                         } else
                         new Settings().makeText(Order.this, getResources().getString(R.string.amountdue_oo));
                     }
@@ -188,6 +193,8 @@ public class Order extends AppCompatActivity {
 
                             Intent intent = new Intent(Order.this, DineIn.class);
                             startActivity(intent);
+                            finish();
+
                         } else
                         new Settings().makeText(Order.this,  getResources().getString(R.string.amountdue_oo));
                     }
@@ -343,7 +350,7 @@ public class Order extends AppCompatActivity {
         for (int i = 0; i < categories.size(); i++) {
             for (int k = 0; k < allCats.size(); k++) {
                 if (categories.get(i).getCategoryName().equals(allCats.get(k).getName())) {
-                    categories.get(i).setCatPic(allCats.get(k).getCatPic());
+                    categories.get(i).setCatPic(StringToBitMap(allCats.get(k).getCatPic()));
                 }
             }
         }
@@ -1966,4 +1973,28 @@ public class Order extends AppCompatActivity {
         back.setOnClickListener(onClickListener);
 
     }
+
+
+    public String BitMapToString(Bitmap bitmap){
+        ByteArrayOutputStream baos=new  ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG,100, baos);
+        byte [] arr=baos.toByteArray();
+        String result= Base64.encodeToString(arr, Base64.DEFAULT);
+        return result;
+    }
+
+
+
+    public Bitmap StringToBitMap(String image){
+        try{
+            byte [] encodeByte=Base64.decode(image,Base64.DEFAULT);
+            Bitmap bitmap= BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        }catch(Exception e){
+            e.getMessage();
+            return null;
+        }
+    }
+
+
 }

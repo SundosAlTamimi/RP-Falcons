@@ -43,6 +43,7 @@ public class OrderTransactions {
     private  String orgNo ;
     private  int orgPos ;
     private int returnQty;
+    private int isPost;
 
 
     public OrderTransactions() {
@@ -377,6 +378,14 @@ public class OrderTransactions {
 
     public void setReturnQty(int returnQty) {
         this.returnQty = returnQty;
+    }
+
+    public int getIsPost() {
+        return isPost;
+    }
+
+    public void setIsPost(int isPost) {
+        this.isPost = isPost;
     }
 
     public JSONObject getJSONObject() { // for kitchen

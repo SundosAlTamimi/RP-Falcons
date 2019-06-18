@@ -1,7 +1,10 @@
 package com.tamimi.sundos.restpos;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +15,7 @@ import android.widget.TextView;
 
 import com.tamimi.sundos.restpos.Models.Items;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 public class FoodAdapter1 extends BaseAdapter {
@@ -52,7 +56,7 @@ public class FoodAdapter1 extends BaseAdapter {
 
         name.setText(items.get(position).getMenuName());
         description.setText(items.get(position).getDescription());
-        img.setImageDrawable(new BitmapDrawable(context.getResources(), items.get(position).getPic()));
+        img.setImageDrawable(new BitmapDrawable(context.getResources(), StringToBitMap(items.get(position).getPic())));
         if (items.get(position).getPrice() != 0)
             price.setText("$" + items.get(position).getPrice());
 
@@ -62,5 +66,30 @@ public class FoodAdapter1 extends BaseAdapter {
 
         return view1;
     }
+
+    public String BitMapToString(Bitmap bitmap){
+        ByteArrayOutputStream baos=new  ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG,100, baos);
+        byte [] arr=baos.toByteArray();
+        String result= Base64.encodeToString(arr, Base64.DEFAULT);
+        return result;
+    }
+
+
+
+    public Bitmap StringToBitMap(String image){
+        if(image!="") {
+            try {
+                byte[] encodeByte = Base64.decode(image, Base64.DEFAULT);
+                Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+                return bitmap;
+            } catch (Exception e) {
+                e.getMessage();
+                return null;
+            }
+        }
+        return null;
+    }
+
 
 }

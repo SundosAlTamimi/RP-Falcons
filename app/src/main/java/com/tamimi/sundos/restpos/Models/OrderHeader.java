@@ -41,6 +41,7 @@ public class OrderHeader {
     private String time;
     private  String orgNo ;
     private  int orgPos ;
+    private  int isPost ;
 
 
     public OrderHeader() {
@@ -360,6 +361,14 @@ public class OrderHeader {
 
     public void setOrgPos(int orgPos) {
         this.orgPos = orgPos;
+    }
+
+    public int getIsPost() {
+        return isPost;
+    }
+
+    public void setIsPost(int isPost) {
+        this.isPost = isPost;
     }
 
     public JSONObject getJSONObject() { // for kitchen

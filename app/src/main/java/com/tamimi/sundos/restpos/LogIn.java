@@ -3,10 +3,13 @@ package com.tamimi.sundos.restpos;
 import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,8 +24,10 @@ import com.tamimi.sundos.restpos.BackOffice.EmployeeRegistration;
 import com.tamimi.sundos.restpos.Models.BlindClose;
 import com.tamimi.sundos.restpos.Models.BlindShift;
 import com.tamimi.sundos.restpos.Models.EmployeeRegistrationModle;
+import com.tamimi.sundos.restpos.Models.Items;
 import com.tamimi.sundos.restpos.Models.Shift;
 
+import java.io.ByteArrayOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
@@ -64,9 +69,7 @@ public class LogIn extends AppCompatActivity {
         initialize();
         setShift();
         arrayOfText = new TextView[]{t1, t2, t3, t4};
-
         showUserNameDialog();
-
     }
 
     OnClickListener onClickListener = new OnClickListener() {
@@ -210,6 +213,7 @@ public class LogIn extends AppCompatActivity {
                 final Intent mainIntent = new Intent(LogIn.this, Main.class);
                 startActivity(mainIntent);
                 finish();
+//                startService(new Intent(LogIn.this, MyService.class));
             }
         }, 500);
     }

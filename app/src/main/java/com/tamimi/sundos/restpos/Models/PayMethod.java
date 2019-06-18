@@ -25,6 +25,7 @@ public class PayMethod {
     private String time;
     private  String orgNo ;
     private  int orgPos ;
+    private  int isPost ;
 
 
     public PayMethod() {
@@ -197,6 +198,14 @@ public class PayMethod {
 
     public void setOrgPos(int orgPos) {
         this.orgPos = orgPos;
+    }
+
+    public int getIsPost() {
+        return isPost;
+    }
+
+    public void setIsPost(int isPost) {
+        this.isPost = isPost;
     }
 
     public JSONObject getJSONObject2() { // for server
