@@ -84,6 +84,7 @@ public class SendCloud {
         @Override
         protected String doInBackground(String... params) {
             try {
+//                String link = "http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/RestSaveKitchenScreen";
                 String link = "http://Falconssoft.net/RestService/FSAppServiceDLL.dll/RestSaveKitchenScreen";
 //                String link = "http://10.0.0.16:8081/RestSaveKitchenScreen";
                 String data = "compno=" + URLEncoder.encode("736", "UTF-8") + "&" +
@@ -174,8 +175,10 @@ public class SendCloud {
         @Override
         protected String doInBackground(String... params) {
             try {
-           String link = "http://Falconssoft.net/RestService/FSAppServiceDLL.dll/RestSaveOrder";
-              // String link = "http://10.0.0.16:8081/RestSaveOrder";
+//                String link = "http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/RestSaveOrder";
+
+                String link = "http://Falconssoft.net/RestService/FSAppServiceDLL.dll/RestSaveOrder";
+//               String link = "http://10.0.0.16:8081/RestSaveOrder";
                 String data = "compno=" + URLEncoder.encode("736", "UTF-8") + "&" +
                         "compyear=" + URLEncoder.encode("2019", "UTF-8") +"&"+
                         "VOUCHER=" + URLEncoder.encode(obj.toString().trim(), "UTF-8");
@@ -259,7 +262,7 @@ public class SendCloud {
             }else
              {
 //                Toast.makeText(ExportJason.this, "Failed to export data", Toast.LENGTH_SHORT).show();
-                Log.e("tag", "****Failed to export data");
+                Log.e("tag ORDER", "****Failed to export data");
                 Log.e("vhf failed ___2", "= " + vhfNo + "POSNO = " + POSNO);
             }
 //            progressDialog.dismiss();
@@ -285,7 +288,7 @@ public class SendCloud {
         @Override
         protected String doInBackground(String... params) {
             try {
-                //String link = "http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/SaveGroup";
+//                String link = "http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/SaveGroup";
                 String link = "http://Falconssoft.net/RestService/FSAppServiceDLL.dll/SaveGroup";
 
                 String data = "Compno=" + URLEncoder.encode("736", "UTF-8") + "&" +
@@ -376,7 +379,7 @@ public class SendCloud {
         @Override
         protected String doInBackground(String... params) {
             try {
-                //String link = "http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/SaveItemCard";
+//                String link = "http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/SaveItemCard";
             String link = "http://Falconssoft.net/RestService/FSAppServiceDLL.dll/SaveItemCard";
                 String data = "compno=" + URLEncoder.encode("736", "UTF-8") + "&" +
                         "compyear=" + URLEncoder.encode("2019", "UTF-8")+ "&" +
@@ -463,6 +466,8 @@ public class SendCloud {
         protected String doInBackground(String... params) {
             try {
                 String link = "http://falconssoft.net/RestService/FSAppServiceDLL.dll/SaveModifier";
+//                String link = "http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/SaveModifier";
+
 
                 String data = "CompNo=" + URLEncoder.encode("736", "UTF-8") + "&" +
                         "compYear=" + URLEncoder.encode("2019", "UTF-8") + "&" +
@@ -549,12 +554,14 @@ public class SendCloud {
         protected String doInBackground(String... params) {
             try {
                 String link = "http://falconssoft.net/RestService/FSAppServiceDLL.dll/SaveForceQuestion";
+//                String link = "http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/SaveForceQuestion";
+
 
                 String data = "CompNo=" + URLEncoder.encode("736", "UTF-8") + "&" +
                         "compYear=" + URLEncoder.encode("2019", "UTF-8")+ "&" +
                         "FORCEQ=" + URLEncoder.encode(obj.toString().trim(), "UTF-8");
 
-                URL url = new URL(link );
+                URL url = new URL(link);
 
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setDoOutput(true);
@@ -637,6 +644,8 @@ public class SendCloud {
         protected String doInBackground(String... params) {
             try {
                 String link = "http://falconssoft.net/RestService/FSAppServiceDLL.dll/SaveItemWModifier";
+//                String link = "http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/SaveItemWModifier";
+
 
                 String data = "CompNo=" + URLEncoder.encode("736", "UTF-8") + "&" +
                         "compYear=" + URLEncoder.encode("2019", "UTF-8") + "&" +
@@ -723,7 +732,9 @@ public class SendCloud {
         @Override
         protected String doInBackground(String... params) {
             try {
-                String link = "http://falconssoft.net/RestService/FSAppServiceDLL.dll/SaveCategWModifier";
+//                String link = "http://falconssoft.net/RestService/FSAppServiceDLL.dll/SaveCategWModifier";
+                String link = "http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/SaveCategWModifier";
+
 
                 String data = "CompNo=" + URLEncoder.encode("736", "UTF-8") + "&" +
                         "compYear=" + URLEncoder.encode("2019", "UTF-8")+ "&" +
@@ -810,6 +821,8 @@ public class SendCloud {
         protected String doInBackground(String... params) {
             try {
                 String link = "http://falconssoft.net/RestService/FSAppServiceDLL.dll/SaveItemWFQ";
+//                String link = "http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/SaveItemWFQ";
+
 
                 String data = "CompNo=" + URLEncoder.encode("736", "UTF-8") + "&" +
                         "compYear=" + URLEncoder.encode("2019", "UTF-8") + "&" +
@@ -896,6 +909,7 @@ public class SendCloud {
         protected String doInBackground(String... params) {
             try {
                 String link = "http://falconssoft.net/RestService/FSAppServiceDLL.dll/SaveANNOUNCEMENT";
+//                String link = "http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/SaveANNOUNCEMENT";
 
                 String data = "CompNo=" + URLEncoder.encode("736", "UTF-8") + "&" +
                         "compYear=" + URLEncoder.encode("2019", "UTF-8") + "&" +

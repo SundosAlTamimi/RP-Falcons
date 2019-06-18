@@ -446,6 +446,9 @@ public class OrderTransactions {
             obj.put("SHIFTNM", shiftName);
             obj.put("VHFTIME", time);
             obj.put("VHFDATE", voucherDate);
+            obj.put("ORGNO", orgNo);
+            obj.put("ORGPOS", orgPos);
+            obj.put("RETURNQTY", returnQty);
 
         } catch (JSONException e) {
             Log.e("Tag", "JSONException");

@@ -422,6 +422,9 @@ public class OrderHeader {
             obj.put("VHFTIME", time);
             obj.put("VHFDATE", voucherDate);
 
+            obj.put("ORGNO", orgNo);
+            obj.put("ORGPOS", orgPos);
+
         } catch (JSONException e) {
             Log.e("Tag" , "JSONException");
         }
