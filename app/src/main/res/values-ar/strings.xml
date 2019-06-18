@@ -148,7 +148,7 @@
 
     <string name="category_name">اسم الفئة</string>
     <string name="category">الفئة</string>
-    <string name="family">العئلة</string>
+    <string name="family">العائلة</string>
     <string name="categories">الفئات</string>
     <string name="family_name">اسم العائلة</string>
     <string name="show_in_menu">اظهار في القائمة</string>
@@ -190,7 +190,7 @@
     <string name="menu_layout">بناء شاشة الطلبات</string>
     <string name="job_group">مجموعات العمل</string>
     <string name="employee_registration">تسجيل الموظفين</string>
-    <string name="employee_schedule">جدول الوظفين</string>
+    <string name="employee_schedule">جدول الموظفين</string>
     <string name="payroll">كشف الرواتب</string>
     <string name="vacation">العطل</string>
     <string name="dine_in_layout">بناء شاشة الزوار</string>
@@ -219,7 +219,7 @@
     <string name="top_family_sales_report">تقرير الحد الاعلى لبيع العائلات</string>
     <string name="sales_report_by_customer">تقرير المبيعات حسب العمل</string>
     <string name="sales_report_by_card_type">تقرير المبيعات حسب نوع البطاقة</string>
-    <string name="waiter_sales_report">تقرير مبيعات الناذل</string>
+    <string name="waiter_sales_report">تقرير مبيعات النادل</string>
     <string name="profit_loss_report">تقرير البيع و الخسارة</string>
     <string name="detail_sales_report">تقرير البيع المفصل</string>
     <string name="store">المخزن</string>
@@ -239,7 +239,7 @@
     <string name="question_no">رقم السؤال</string>
     <string name="question_no_">رقم السؤال</string>
     <string name="question_text">نص السؤال</string>
-    <string name="questions">الأسئلة</string>
+    <string name="questions">الاسئلة</string>
     <string name="answer">الاجابة</string>
     <string name="selected_answer">الاجابة المختارة</string>
     <string name="only_one_answer">جواب واحد فقط</string>
@@ -489,7 +489,7 @@
     <string name="please_select_user">الرجاء اختيار مستخدم</string>
     <string name="fill_all_information">يرجى ملء جميع المعلومات المطلوبة</string>
     <string name="printing_before">تم طباعة هذا التقرير سابقا لا يمكن طباعته مرة اخرى </string>
-    <string name="add_to_list">تم اضافته للفائمة</string>
+    <string name="add_to_list">تم اضافته للقائمة</string>
     <string name="saved_before">تم حفظ هذه القيمة سابقا </string>
     <string name="input_will_be_lost">سيتم فقد مدخلاتك ، هل أنت متأكد من أنك تريد الاغلاق ؟</string>
     <string name="no_text_to_add">لا يوجد نص لإضافته!</string>
@@ -518,7 +518,7 @@
     <string name="input_cat_name">الرجاء ادخال اسم الفئة</string>
     <string name="please_input_unit_name">يرجى إدخال اسم الوحدة</string>
     <string name="input_family_name">يرجى إدخال اسم العائلة</string>
-    <string name="add_ready_item_first">الرجاء إضافة العنصر الجاهز أولاً</string>
+    <string name="add_ready_item_first">الرجاء إضافة العنصر الجاهز اولاً</string>
     <string name="do_you_want_to_delete_recipe">هل تريد حذف هذه الوصفة؟</string>
     <string name="delete_category">هل تريد حذف هذه الفئة؟</string>
 
