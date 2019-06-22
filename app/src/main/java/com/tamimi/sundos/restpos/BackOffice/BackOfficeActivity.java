@@ -5854,7 +5854,7 @@ public class BackOfficeActivity extends AppCompatActivity {
             transactionsPdf.clear();
             salesHeader.clear();
             List<Double> Total_ = new ArrayList<>();
-            List<Integer> qty_ = new ArrayList<>();
+            List<Double> qty_ = new ArrayList<>();
             List<String> itemBarcode_ = new ArrayList<>();
             List<String> item_name = new ArrayList<>();
 
@@ -5913,7 +5913,8 @@ public class BackOfficeActivity extends AppCompatActivity {
             for (int i = 0; i < transactions.size(); i++) {
 
                 double total_ = 0.0;
-                int coun_ = 0, qty_x_ = 0;
+                int coun_ = 0;
+                double qty_x_ = 0;
                 String cou_date = transactions.get(i).getVoucherDate();
                 String cou_total = transactions.get(i).getUserName();
                 String cou_qty = transactions.get(i).getShiftName();
@@ -6762,7 +6763,7 @@ public class BackOfficeActivity extends AppCompatActivity {
             OrderTransactions transactions1 = new OrderTransactions();
             transactions1.setTime("*");
             transactions1.setItemCategory(transactions.get(0).getItemCategory());
-            transactions1.setQty((int) totalQty);
+            transactions1.setQty( totalQty);
 
             orderTransactionData.add(transactions1);
         }

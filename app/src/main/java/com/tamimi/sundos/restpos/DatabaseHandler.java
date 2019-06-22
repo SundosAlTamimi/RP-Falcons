@@ -2496,7 +2496,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 item.setKitchenAlias(cursor.getString(10));
                 item.setItemCategory(cursor.getString(11));
                 item.setItemFamily(cursor.getString(12));
-                item.setQty(Integer.parseInt(cursor.getString(13)));
+                item.setQty(Double.parseDouble(cursor.getString(13)));
                 item.setPrice(Double.parseDouble(cursor.getString(14)));
                 item.setTotal(Double.parseDouble(cursor.getString(15)));
                 item.setDiscount(Double.parseDouble(cursor.getString(16)));
@@ -2516,7 +2516,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 item.setTime(cursor.getString(30));
                 item.setOrgNo(cursor.getString(31));
                 item.setOrgPos(cursor.getInt(32));
-                item.setReturnQty(cursor.getInt(33));
+                item.setReturnQty(cursor.getDouble(33));
                 item.setIsPost(cursor.getInt(34));
 
                 orderTransactions.add(item);
@@ -2626,7 +2626,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 item.setKitchenAlias(cursor.getString(10));
                 item.setItemCategory(cursor.getString(11));
                 item.setItemFamily(cursor.getString(12));
-                item.setQty(Integer.parseInt(cursor.getString(13)));
+                item.setQty(Double.parseDouble(cursor.getString(13)));
                 item.setPrice(Double.parseDouble(cursor.getString(14)));
                 item.setTotal(Double.parseDouble(cursor.getString(15)));
                 item.setDiscount(Double.parseDouble(cursor.getString(16)));
@@ -2646,7 +2646,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 item.setTime(cursor.getString(30));
                 item.setOrgNo(cursor.getString(31));
                 item.setOrgPos(cursor.getInt(32));
-                item.setReturnQty(cursor.getInt(33));
+                item.setReturnQty(cursor.getDouble(33));
                 item.setIsPost(cursor.getInt(34));
                 items.add(item);
             } while (cursor.moveToNext());
@@ -2678,7 +2678,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 item.setKitchenAlias(cursor.getString(10));
                 item.setItemCategory(cursor.getString(11));
                 item.setItemFamily(cursor.getString(12));
-                item.setQty(Integer.parseInt(cursor.getString(13)));
+                item.setQty(Double.parseDouble(cursor.getString(13)));
                 item.setPrice(Double.parseDouble(cursor.getString(14)));
                 item.setTotal(Double.parseDouble(cursor.getString(15)));
                 item.setDiscount(Double.parseDouble(cursor.getString(16)));
@@ -2698,7 +2698,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 item.setTime(cursor.getString(30));
                 item.setOrgNo(cursor.getString(31));
                 item.setOrgPos(cursor.getInt(32));
-                item.setReturnQty(cursor.getInt(33));
+                item.setReturnQty(cursor.getDouble(33));
                 item.setIsPost(cursor.getInt(34));
                 items.add(item);
             } while (cursor.moveToNext());
@@ -2730,7 +2730,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 item.setKitchenAlias(cursor.getString(10));
                 item.setItemCategory(cursor.getString(11));
                 item.setItemFamily(cursor.getString(12));
-                item.setQty(Integer.parseInt(cursor.getString(13)));
+                item.setQty(Double.parseDouble(cursor.getString(13)));
                 item.setPrice(Double.parseDouble(cursor.getString(14)));
                 item.setTotal(Double.parseDouble(cursor.getString(15)));
                 item.setDiscount(Double.parseDouble(cursor.getString(16)));
@@ -2750,7 +2750,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 item.setTime(cursor.getString(30));
                 item.setOrgNo(cursor.getString(31));
                 item.setOrgPos(cursor.getInt(32));
-                item.setReturnQty(cursor.getInt(33));
+                item.setReturnQty(cursor.getDouble(33));
                 items.add(item);
             } while (cursor.moveToNext());
         }
@@ -2781,7 +2781,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 item.setKitchenAlias(cursor.getString(10));
                 item.setItemCategory(cursor.getString(11));
                 item.setItemFamily(cursor.getString(12));
-                item.setQty(Integer.parseInt(cursor.getString(13)));
+                item.setQty(Double.parseDouble(cursor.getString(13)));
                 item.setPrice(Double.parseDouble(cursor.getString(14)));
                 item.setTotal(Double.parseDouble(cursor.getString(15)));
                 item.setDiscount(Double.parseDouble(cursor.getString(16)));
@@ -2801,7 +2801,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 item.setTime(cursor.getString(30));
                 item.setOrgNo(cursor.getString(31));
                 item.setOrgPos(cursor.getInt(32));
-                item.setReturnQty(cursor.getInt(33));
+                item.setReturnQty(cursor.getDouble(33));
                 items.add(item);
             } while (cursor.moveToNext());
         }
@@ -4003,7 +4003,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
 
-    public void updateOrderTrancactionReturn(int Pos, String itemBarcode,String Vserial,String OrderKind, int returnQty) {
+    public void updateOrderTrancactionReturn(int Pos, String itemBarcode,String Vserial,String OrderKind, double returnQty) {
         db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         String filter = POS_NO1 + " = '" + Pos + "' and " + ITEM_BARCODE1 + "= '" + itemBarcode +"' and " + VOUCHER_NO1 + "= '" + Vserial + "' and " + ORDER_KIND1 + "= '" + OrderKind +"'";

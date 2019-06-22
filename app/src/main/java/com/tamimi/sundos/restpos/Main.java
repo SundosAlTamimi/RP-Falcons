@@ -1849,7 +1849,7 @@ public class Main extends AppCompatActivity {
                     customer.setText("customer");
 
                     for (int i = 0; i < orderTransactions.size(); i++) {
-                        int qty_ = orderTransactions.get(i).getQty() + orderTransactions.get(i).getReturnQty();
+                        double qty_ = orderTransactions.get(i).getQty() + orderTransactions.get(i).getReturnQty();
                         if ((qty_) != 0) {
                             orderTransactions1.add(orderTransactions.get(i));
                         }
@@ -1898,9 +1898,9 @@ public class Main extends AppCompatActivity {
                         if (!text.getText().toString().equals("")) {
                             textData = Integer.parseInt(text.getText().toString());
                             rowRefund.add(orderTransactions.get(i));
-                            int q = orderTransactions.get(i).getQty();
+                            double q = orderTransactions.get(i).getQty();
                             double oldTotal = orderTransactions.get(i).getTotal();
-                            rowRefund.get(index).setQty(Integer.parseInt("-" + text.getText().toString()));
+                            rowRefund.get(index).setQty(Double.parseDouble("-" + text.getText().toString()));
                             double lDiscon = orderTransactions.get(i).getlDiscount();
                             rowRefund.get(index).setTotal(textData * (orderTransactions.get(i).getPrice()));
                             rowRefund.get(index).setlDiscount(textData * (lDiscon / q));
@@ -1950,7 +1950,7 @@ public class Main extends AppCompatActivity {
     }
 
 
-    void insertRow(int serial, String itemName, final int qty, final ArrayList<OrderTransactions> list, final TableLayout recipeTable, TextView totalText, TextView DiscountText, TextView nettotalText) {
+    void insertRow(int serial, String itemName, final double qty, final ArrayList<OrderTransactions> list, final TableLayout recipeTable, TextView totalText, TextView DiscountText, TextView nettotalText) {
 
         final TableRow row = new TableRow(Main.this);
         final double[] rTotal = {0.0};

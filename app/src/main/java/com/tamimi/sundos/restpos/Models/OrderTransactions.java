@@ -20,7 +20,7 @@ public class OrderTransactions {
     private String kitchenAlias;
     private String itemCategory;
     private String itemFamily;
-    private int qty;
+    private double qty;
     private double price;
     private double total;
     private double discount;
@@ -42,7 +42,7 @@ public class OrderTransactions {
     private String note;
     private  String orgNo ;
     private  int orgPos ;
-    private int returnQty;
+    private double returnQty;
     private int isPost;
 
 
@@ -53,9 +53,9 @@ public class OrderTransactions {
     public OrderTransactions(int orderType, int orderKind, String voucherDate, int posNo, int storeNo,
                              String voucherNo, int voucherSerial, String itemBarcode, String itemName,
                              String secondaryName, String kitchenAlias, String itemCategory, String itemFamily,
-                             int qty, double price, double total, double discount, double lDiscount, double totalDiscount,
+                             double qty, double price, double total, double discount, double lDiscount, double totalDiscount,
                              double taxValue, double taxPerc, int taxKind, double service, double serviceTax, int tableNo,
-                             int sectionNo, int shiftNo, String shiftName, int userNo, String userName, String time, String orgNo, int orgPos, int returnQty) {
+                             int sectionNo, int shiftNo, String shiftName, int userNo, String userName, String time, String orgNo, int orgPos, double returnQty) {
         this.orderType = orderType;
         this.orderKind = orderKind;
         this.voucherDate = voucherDate;
@@ -212,11 +212,11 @@ public class OrderTransactions {
         this.itemFamily = itemFamily;
     }
 
-    public int getQty() {
+    public double getQty() {
         return qty;
     }
 
-    public void setQty(int qty) {
+    public void setQty(double qty) {
         this.qty = qty;
     }
 
@@ -372,11 +372,11 @@ public class OrderTransactions {
         this.orgPos = orgPos;
     }
 
-    public int getReturnQty() {
+    public double getReturnQty() {
         return returnQty;
     }
 
-    public void setReturnQty(int returnQty) {
+    public void setReturnQty(double returnQty) {
         this.returnQty = returnQty;
     }
 

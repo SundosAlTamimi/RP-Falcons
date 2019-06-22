@@ -1584,7 +1584,7 @@ public class Order2 extends AppCompatActivity {
             OrderTransactionsObj.add(new OrderTransactions(orderTypeFlag, 0, today, Settings.POS_number, Settings.store_number,
                     voucherNo, voucherSerial, "" + wantedItems.get(k).getItemBarcode(), wantedItems.get(k).getMenuName(),
                     wantedItems.get(k).getSecondaryName(), wantedItems.get(k).getKitchenAlias(), wantedItems.get(k).getMenuCategory(),
-                    wantedItems.get(k).getFamilyName(), Integer.parseInt(convertToEnglish(textViewQty.getText().toString())), wantedItems.get(k).getPrice(),
+                    wantedItems.get(k).getFamilyName(), Double.parseDouble(convertToEnglish(textViewQty.getText().toString())), wantedItems.get(k).getPrice(),
                     totalLine, discount, lineDiscount_, discount + lineDiscount_, wantedItems.get(k).getTax(),
                     wantedItems.get(k).getTax(), 0, Double.parseDouble(service.getText().toString()), serviceTax,
                     tableNumber, sectionNumber, Settings.shift_number, Settings.shift_name, Settings.user_no, Settings.user_name, time,"0",-1,0));
@@ -1635,7 +1635,7 @@ public class Order2 extends AppCompatActivity {
             mDbHandler.addOrderTransactionTemp(new OrderTransactions(orderTypeFlag, 0, today, Settings.POS_number, Settings.store_number,
                     voucherNo, voucherSerial, "" + wantedItems.get(k).getItemBarcode(), wantedItems.get(k).getMenuName(),
                     wantedItems.get(k).getSecondaryName(), wantedItems.get(k).getKitchenAlias(), wantedItems.get(k).getMenuCategory(),
-                    wantedItems.get(k).getFamilyName(), Integer.parseInt(convertToEnglish(textViewQty.getText().toString())), wantedItems.get(k).getPrice(),
+                    wantedItems.get(k).getFamilyName(), Double.parseDouble(convertToEnglish(textViewQty.getText().toString())), wantedItems.get(k).getPrice(),
                     totalLine, discount, lineDiscount_, discount + lineDiscount_, wantedItems.get(k).getTax(),
                     wantedItems.get(k).getTax(), 0, Double.parseDouble(convertToEnglish(service.getText().toString())), serviceTax,
                     tableNumber, sectionNumber, Settings.shift_number, Settings.shift_name, Settings.user_no, Settings.user_name, time,"0",-1,0));
