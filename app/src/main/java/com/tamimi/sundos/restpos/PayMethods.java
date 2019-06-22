@@ -1621,7 +1621,7 @@ public class PayMethods extends AppCompatActivity {
 
 
                 sendToKitchen(PayMethods.this, obj.getOrderHeaderObj(), obj.getOrderTransactionObj(), payMethodList, itemWithScreens);
-                sendToServer(obj.getOrderHeaderObj(), obj.getOrderTransactionObj(), payMethodList);
+                sendToServer(PayMethods.this,obj.getOrderHeaderObj(), obj.getOrderTransactionObj(), payMethodList);
 
 //                Intent intent = new Intent(PayMethods.this, Order.class);
 //                startActivity(intent);
@@ -1644,7 +1644,7 @@ public class PayMethods extends AppCompatActivity {
                 mDHandler.deleteFromOrderTransactionTemp(sectionNo, tableNo);
 
                 sendToKitchen(PayMethods.this, orderHeaderTemp.get(0), orderTransTemp, payMethodList, itemWithScreens);
-                sendToServer(orderHeaderTemp.get(0), orderTransTemp, payMethodList);
+                sendToServer(PayMethods.this,orderHeaderTemp.get(0), orderTransTemp, payMethodList);
 
                 Intent intent = new Intent(PayMethods.this, DineIn.class);
                 startActivity(intent);
@@ -1699,7 +1699,7 @@ public class PayMethods extends AppCompatActivity {
         }
     }
 
-    void sendToServer(OrderHeader OrderHeaderObj, List<OrderTransactions> OrderTransactionsObj, List<PayMethod> PayMethodObj) {
+    public void sendToServer(Context context,OrderHeader OrderHeaderObj, List<OrderTransactions> OrderTransactionsObj, List<PayMethod> PayMethodObj) {
         try {
             JSONObject obj1 = OrderHeaderObj.getJSONObject2();
 
@@ -1715,9 +1715,9 @@ public class PayMethods extends AppCompatActivity {
             obj.put("ORDERHEADER", obj1);
             obj.put("ORDERTRANSACTIONS", obj2);
             obj.put("PAYMETHOD", obj3);
-Log.e("order jeson"," = "+obj.toString());
+            Log.e("order jeson"," = "+obj.toString());
 
-            SendCloud sendCloud = new SendCloud(PayMethods.this, obj);
+            SendCloud sendCloud = new SendCloud(context, obj);
             sendCloud.startSending("Order");
 
 
@@ -1897,6 +1897,9 @@ Log.e("order jeson"," = "+obj.toString());
         credit.setOnClickListener(onClickListener);
         point.setOnClickListener(onClickListener);
         save.setOnClickListener(onClickListener);
+
+
+
 
     }
 }

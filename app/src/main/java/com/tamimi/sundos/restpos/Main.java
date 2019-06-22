@@ -2389,6 +2389,7 @@ public class Main extends AppCompatActivity {
                         List<ItemWithScreen> itemWithScreens = mDHandler.getAllItemsWithScreen();
                         PayMethods pay = new PayMethods();
                         pay.sendToKitchen(Main.this, orderHeader, rowRefund, payObj, itemWithScreens);
+                        pay.sendToServer(Main.this, orderHeader, rowRefund, payObj);
 
                         netTotals = 0.0;
                         PayRefund.dismiss();

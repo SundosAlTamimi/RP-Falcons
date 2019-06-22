@@ -132,7 +132,10 @@
 
 
         <!-- defining the service class here -->
-        <service android:name=".MyService" />
+        <service android:name=".MyService"
+            android:stopWithTask="false"
+            android:process=":MyService"
+            android:enabled="true"/>
 
     </application>
 
