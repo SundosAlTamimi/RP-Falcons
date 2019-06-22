@@ -1993,11 +1993,11 @@ public class Main extends AppCompatActivity {
 
                             rTotal[0] = 0.0;
                             if (!rQty.getText().toString().equals("")) {
-                                if (Integer.parseInt(rQty.getText().toString()) <= Integer.parseInt(oldQty.getText().toString())
-                                        && Integer.parseInt(rQty.getText().toString()) > 0) {
+                                if (Double.parseDouble(rQty.getText().toString()) <= Double.parseDouble(oldQty.getText().toString())
+                                        && Double.parseDouble(rQty.getText().toString()) > 0) {
                                     rows = row;
                                     rows.setBackgroundColor(getResources().getColor(R.color.layer3));
-                                    rTotal[0] = ((Integer.parseInt(rQty.getText().toString())) * list.get(i).getPrice());
+                                    rTotal[0] = ((Double.parseDouble(rQty.getText().toString())) * list.get(i).getPrice());
                                     rTotals.setText(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(""+rTotal[0])))));
                                     isGrater.setText("0");
                                     CheckTrue = true;
@@ -2006,8 +2006,8 @@ public class Main extends AppCompatActivity {
 
                                     totalAdd += Double.parseDouble(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(rTotals.getText().toString())))));
                                     if (Double.parseDouble(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(rTotals.getText().toString()))))) != 0.0 && !convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(rQty.getText().toString())))).equals("")) {
-                                        discountAdd += ((list.get(i).getDiscount() / list.get(i).getQty()) + (list.get(i).getlDiscount() / list.get(i).getQty())) * Integer.parseInt(rQty.getText().toString());
-                                        taxValue += ((list.get(i).getTaxValue() / list.get(i).getQty())) * Integer.parseInt(rQty.getText().toString());
+                                        discountAdd += ((list.get(i).getDiscount() / list.get(i).getQty()) + (list.get(i).getlDiscount() / list.get(i).getQty())) * Double.parseDouble(rQty.getText().toString());
+                                        taxValue += ((list.get(i).getTaxValue() / list.get(i).getQty())) * Double.parseDouble(rQty.getText().toString());
 
                                     } else {
                                         discountAdd += 0.0;
