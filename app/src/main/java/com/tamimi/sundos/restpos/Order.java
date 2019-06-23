@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
@@ -69,6 +70,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -78,10 +80,11 @@ public class Order extends AppCompatActivity {
     TextView total, lineDisCount, disCount, deliveryCharge, subTotal, service, tax, amountDue, vhSerial;
     Button pay, order;
     TextView orderType, tableNo, check, date, user, seats;
-    TableLayout tableLayout;
+    TableLayout tableLayout,  tableItem;
     GridView catGridView, itemGridView;
     CheckBox discPerc;
     Button back;
+    LinearLayout baLiner;
 
     private ProgressDialog progressDialog;
     String json_getString;
@@ -277,13 +280,15 @@ public class Order extends AppCompatActivity {
     void showCats() {
         catGridView.setVisibility(View.VISIBLE);
         itemGridView.setVisibility(View.INVISIBLE);
-        back.setVisibility(View.INVISIBLE);
+        back.setVisibility(View.GONE);
+        baLiner.setVisibility(View.GONE);
     }
 
     void showItems() {
         catGridView.setVisibility(View.INVISIBLE);
         itemGridView.setVisibility(View.VISIBLE);
         back.setVisibility(View.VISIBLE);
+        baLiner.setVisibility(View.VISIBLE);
     }
 
     @SuppressLint("SetTextI18n")
@@ -373,6 +378,7 @@ public class Order extends AppCompatActivity {
         });
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     void fillItems(String categoryName) {
         ArrayList<UsedItems> subList = mDbHandler.getRequestedItems(categoryName);
 
@@ -903,6 +909,8 @@ public class Order extends AppCompatActivity {
 
                 } else
                 new Settings().makeText(Order.this,getResources().getString(R.string.enter_qty) );
+
+                focused=null;
             }
         });
         dialog.show();
@@ -1924,6 +1932,8 @@ public class Order extends AppCompatActivity {
     void initialize() {
 
         tableLayout = (TableLayout) findViewById(R.id.tableLayout);
+        tableItem= (TableLayout) findViewById(R.id.tableItem);
+
         itemGridView = (GridView) findViewById(R.id.GridViewItems);
         catGridView = (GridView) findViewById(R.id.GridViewCats);
         orderType = (TextView) findViewById(R.id.orderType);
@@ -1943,6 +1953,7 @@ public class Order extends AppCompatActivity {
         lDiscount = (Button) findViewById(R.id.line_discount_b);
         priceChange = (Button) findViewById(R.id.price_change);
         back = (Button) findViewById(R.id.back);
+        baLiner  = (LinearLayout) findViewById(R.id.baLiner);
 
         total = (TextView) findViewById(R.id.total);
         disCount = (TextView) findViewById(R.id.discount);

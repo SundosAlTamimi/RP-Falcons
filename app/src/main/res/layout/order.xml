@@ -12,9 +12,26 @@
         android:background="@color/layer4"
         android:orientation="horizontal">
 
+        <LinearLayout
+            android:id="@+id/baLiner"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:background="@color/gray"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/back"
+                android:layout_width="35dp"
+                android:layout_height="45dp"
+                android:layout_weight="0.2"
+                android:background="@android:drawable/ic_menu_revert"
+                android:textSize="18sp" />
+        </LinearLayout>
+
         <TextView
             android:id="@+id/orderType"
-            android:layout_width="28dp"
+            android:layout_width="0dp"
             android:layout_height="45dp"
             android:layout_margin="1dp"
             android:layout_weight="1.2"
@@ -201,17 +218,6 @@
                 android:stretchMode="columnWidth"
                 android:verticalSpacing="10dp" />
 
-            <Button
-                android:id="@+id/back"
-                android:layout_width="35dp"
-                android:layout_height="40dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/back_icon" />
-
 
         </RelativeLayout>
 
@@ -226,7 +232,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_marginTop="3dp"
-                android:background="@drawable/focused_table">
+                android:background="@drawable/focused_table"
+                android:id="@+id/tableItem">
+
 
                 <TableRow
                     android:layout_width="match_parent"

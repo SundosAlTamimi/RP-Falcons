@@ -24,32 +24,32 @@
         android:paddingBottom="10dp"
             android:orientation="vertical">
 
-            <ScrollView
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="231dp">
+
+            <TableLayout
+                android:id="@+id/tableOfReasons"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TableLayout
-                    android:id="@+id/tableOfReasons"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="20dp">
+                android:layout_height="match_parent"
+                android:padding="20dp">
 
 
-                </TableLayout>
-            </ScrollView>
+            </TableLayout>
+        </ScrollView>
 
         <EditText
             android:id="@+id/newReason"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:hint="@string/new_reason"
-            android:background="@color/layer1"
-            android:textColor="@color/text_color"
-            android:textColorHint="@color/gray"
             android:layout_marginHorizontal="10dp"
-            android:paddingHorizontal="10dp"/>
+            android:background="@color/layer1"
+            android:hint="@string/new_reason"
+            android:paddingHorizontal="10dp"
+            android:textColor="@color/text_color"
+            android:textColorHint="@color/gray" />
 
-        </LinearLayout>
+    </LinearLayout>
 
 
     <LinearLayout
