@@ -445,7 +445,7 @@ public class Order extends AppCompatActivity {
                                 TextView textViewTotal = (TextView) tableRow.getChildAt(3);
                                 TextView textViewLineDiscount = (TextView) tableRow.getChildAt(4);
 
-                                int qty = Integer.parseInt(convertToEnglish(textViewQty.getText().toString()));
+                                double qty =Double.parseDouble(convertToEnglish(textViewQty.getText().toString()));
                                 double price = Double.parseDouble(convertToEnglish(textViewPrice.getText().toString()));
                                 double newTotal = price * (qty + 1);
 
@@ -1409,8 +1409,8 @@ public class Order extends AppCompatActivity {
             dialog.setContentView(R.layout.delivery_change_dialog);
             dialog.setCanceledOnTouchOutside(true);
 
-            Window window = dialog.getWindow();
-            window.setLayout(460, 220);
+//            Window window = dialog.getWindow();
+//            window.setLayout(460, 220);
 
             final EditText addDeliveryEditText = (EditText) dialog.findViewById(R.id.add_delivery);
             Button buttonDone = (Button) dialog.findViewById(R.id.b_done);

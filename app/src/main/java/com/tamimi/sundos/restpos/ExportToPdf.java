@@ -1029,7 +1029,7 @@ public class ExportToPdf  {
             type = context.getString(R.string.split);
         }
 
-        insertCell(pdfPTableHeader, context.getString(R.string.trans_type) + type, Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
+        insertCell(pdfPTableHeader, context.getString(R.string.trans_type)+" : " + type, Element.ALIGN_RIGHT, 1, arabicFont, BaseColor.WHITE);
 
 
         try {
