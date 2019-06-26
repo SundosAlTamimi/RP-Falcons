@@ -57,7 +57,7 @@ import static com.tamimi.sundos.restpos.Settings.shift_name;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
     // Database Versions
-    private static final int DATABASE_VERSION = 38;
+    private static final int DATABASE_VERSION = 39;
 
     // Database Name
     private static final String DATABASE_NAME = "RestPos";
@@ -77,6 +77,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String MAIN_SETTINGS_SERVICE_VALUE = "SERVICE_VALUE";
     private static final String MAIN_SETTINGS_TAX_TYPE = "TAX_TYPE";
     private static final String MAIN_SETTINGS_TIME_CARD = "TIME_CARD";
+    private static final String MAIN_SETTINGS_CASH_NO = "CASH_NO";
 
     //___________________________________________________________________________________
     private static final String ITEMS = "ITEMS";
@@ -230,6 +231,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String ORG_POS1 = "ORG_POS";
     private static final String RETURN_QTY1 = "RETURN_QTY";
     private static final String IS_POSTED1= "IS_POSTED";
+    private static final String CASH_NO1= "CASH_NO";
     //____________________________________________________________________________________
     private static final String PAY_METHOD = "PAY_METHOD";
 
@@ -252,6 +254,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String ORG_NO14 = "ORG_NO";
     private static final String ORG_POS14 = "ORG_POS";
     private static final String IS_POSTED14= "IS_POSTED";
+    private static final String CASH_NO14= "CASH_NO";
     //________________________________________________________________________________________
     private static final String ORDER_HEADER = "ORDER_HEADER";
     private static final String ORDER_HEADER_TEMP = "ORDER_HEADER_TEMP";
@@ -291,6 +294,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String ORG_NO2 = "ORG_NO";
     private static final String ORG_POS2 = "ORG_POS";
     private static final String IS_POSTED2= "IS_POSTED";
+    private static final String CASH_NO2= "CASH_NO";
 
     //___________________________________________________________________________________
     private static final String FORCE_QUESTIONS = "FORCE_QUESTIONS";
@@ -605,7 +609,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + MAIN_SETTINGS_SERVICE_TAX + " REAL,"
                 + MAIN_SETTINGS_SERVICE_VALUE + " REAL,"
                 + MAIN_SETTINGS_TAX_TYPE + " INTEGER,"
-                + MAIN_SETTINGS_TIME_CARD + " INTEGER" + ")";
+                + MAIN_SETTINGS_TIME_CARD + " INTEGER,"
+                + MAIN_SETTINGS_CASH_NO + " INTEGER" + ")";
         db.execSQL(CREATE_TABLE_MAIN_SETTINGS);
         //___________________________________________________________________________________
 
@@ -765,7 +770,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + ORG_NO1 + " TEXT,"
                 + ORG_POS1 + " INTEGER,"
                 + RETURN_QTY1 + " INTEGER,"
-                + IS_POSTED1 + " INTEGER" + ")";
+                + IS_POSTED1 + " INTEGER,"
+                + CASH_NO1 + " INTEGER" + ")";
         db.execSQL(CREATE_TABLE_ORDER_TRANSACTIONS);
 
         //_______________________________________________________________________________
@@ -804,7 +810,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + TIME1 + " TEXT,"
                 + ORG_NO1 + " TEXT,"
                 + ORG_POS1 + " INTEGER,"
-                + RETURN_QTY1 + " INTEGER" + ")";
+                + RETURN_QTY1 + " INTEGER,"
+                + IS_POSTED1 + " INTEGER,"
+                + CASH_NO1 + " INTEGER" + ")";
         db.execSQL(CREATE_TABLE_ORDER_TRANSACTIONS_TEMP);
 
         //___________________________________________________________________________________
@@ -828,7 +836,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + TIME14 + " TEXT ,"
                 + ORG_NO14 + " TEXT ,"
                 + ORG_POS14 + " INTEGER ,"
-                + IS_POSTED14 + " INTEGER " + ")";
+                + IS_POSTED14 + " INTEGER ,"
+                + CASH_NO14 + " INTEGER " + ")";
         db.execSQL(CREATE_TABLE_PAYMETHOD);
 
 
@@ -868,7 +877,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + TIME2 + " TEXT,"
                 + ORG_NO2 + " TEXT,"
                 + ORG_POS2 + " INTEGER,"
-                + IS_POSTED2 + " INTEGER" + ")";
+                + IS_POSTED2 + " INTEGER,"
+                + CASH_NO2 + " INTEGER" + ")";
         db.execSQL(CREATE_TABLE_ORDER_HEADER);
 
         //_______________________________________________________________________________________
@@ -906,7 +916,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + SEATS_NUMBER2 + " INTEGER ,"
                 + TIME2 + " TEXT,"
                 + ORG_NO2 + " TEXT,"
-                + ORG_POS2 + " INTEGER" + ")";
+                + ORG_POS2 + " INTEGER,"
+                + IS_POSTED2 + " INTEGER,"
+                + CASH_NO2 + " INTEGER" + ")";
         db.execSQL(CREATE_TABLE_ORDER_HEADER_TEMP);
 
         //_______________________________________________________________________________
@@ -1251,9 +1263,22 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 //
 //        db.execSQL("ALTER TABLE ORDER_HEADER_TEMP ADD ORG_NO TAXE NOT NULL DEFAULT '0'");
 //        db.execSQL("ALTER TABLE ORDER_HEADER_TEMP ADD ORG_POS INTEGER NOT NULL DEFAULT '-1'");
-        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS ADD IS_POSTED INTEGER NOT NULL DEFAULT '0'");
-        db.execSQL("ALTER TABLE ORDER_HEADER ADD IS_POSTED INTEGER NOT NULL DEFAULT '0'");
-        db.execSQL("ALTER TABLE PAY_METHOD ADD IS_POSTED INTEGER NOT NULL DEFAULT '0'");
+//        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS ADD IS_POSTED INTEGER NOT NULL DEFAULT '0'");
+//        db.execSQL("ALTER TABLE ORDER_HEADER ADD IS_POSTED INTEGER NOT NULL DEFAULT '0'");
+//        db.execSQL("ALTER TABLE PAY_METHOD ADD IS_POSTED INTEGER NOT NULL DEFAULT '0'");
+
+        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS_TEMP ADD IS_POSTED INTEGER NOT NULL DEFAULT '0'");
+        db.execSQL("ALTER TABLE ORDER_HEADER_TEMP ADD IS_POSTED INTEGER NOT NULL DEFAULT '0'");
+
+        db.execSQL("ALTER TABLE MAIN_SETTINGS ADD CASH_NO INTEGER NOT NULL DEFAULT '0'");
+
+
+        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS ADD CASH_NO INTEGER NOT NULL DEFAULT '0'");
+        db.execSQL("ALTER TABLE ORDER_HEADER ADD CASH_NO INTEGER NOT NULL DEFAULT '0'");
+        db.execSQL("ALTER TABLE PAY_METHOD ADD CASH_NO INTEGER NOT NULL DEFAULT '0'");
+
+        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS_TEMP ADD CASH_NO INTEGER NOT NULL DEFAULT '0'");
+        db.execSQL("ALTER TABLE ORDER_HEADER_TEMP ADD CASH_NO INTEGER NOT NULL DEFAULT '0'");
 
     }
 
@@ -1586,6 +1611,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(ORG_POS1, items.getOrgPos());
         values.put(RETURN_QTY1, items.getReturnQty());
         values.put(IS_POSTED1, items.getIsPost());
+        values.put(CASH_NO1, items.getCashNo());
 
         db.insert(ORDER_TRANSACTIONS, null, values);
         db.close();
@@ -1629,6 +1655,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(ORG_NO1, items.getOrgNo());
         values.put(ORG_POS1, items.getOrgPos());
         values.put(RETURN_QTY1, items.getReturnQty());
+        values.put(IS_POSTED1, items.getIsPost());
+        values.put(CASH_NO1, items.getCashNo());
+
 
         db.insert(ORDER_TRANSACTIONS_TEMP, null, values);
         db.close();
@@ -1657,6 +1686,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(ORG_NO14, payMethod.getOrgNo());
         values.put(ORG_POS14, payMethod.getOrgPos());
         values.put(IS_POSTED14, payMethod.getIsPost());
+        values.put(CASH_NO14, payMethod.getCashNo());
 
 
         db.insert(PAY_METHOD, null, values);
@@ -1703,6 +1733,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(ORG_NO2, orderHeader.getOrgNo());
         values.put(ORG_POS2, orderHeader.getOrgPos());
         values.put(IS_POSTED2, orderHeader.getIsPost());
+        values.put(CASH_NO2, orderHeader.getCashNo());
 
         db.insert(ORDER_HEADER, null, values);
         db.close();
@@ -1746,6 +1777,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(TIME2, orderHeader.getTime());
         values.put(ORG_NO2, orderHeader.getOrgNo());
         values.put(ORG_POS2, orderHeader.getOrgPos());
+        values.put(IS_POSTED2, orderHeader.getIsPost());
+        values.put(CASH_NO2, orderHeader.getCashNo());
 
         db.insert(ORDER_HEADER_TEMP, null, values);
         db.close();
@@ -2141,6 +2174,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             Settings.service_value = cursor.getDouble(8);
             Settings.tax_type = cursor.getInt(9);
             Settings.time_card = cursor.getInt(10);
+            Settings.time_card = cursor.getInt(11);
 
         }
     }
@@ -2518,6 +2552,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 item.setOrgPos(cursor.getInt(32));
                 item.setReturnQty(cursor.getDouble(33));
                 item.setIsPost(cursor.getInt(34));
+                item.setCashNo(cursor.getInt(35));
 
                 orderTransactions.add(item);
 
@@ -2577,6 +2612,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 item.setOrgNo(cursor.getString(16));
                 item.setOrgPos(cursor.getInt(17));
                 item.setIsPost(cursor.getInt(18));
+                item.setCashNo(cursor.getInt(19));
 
                 orderTransactions.add(item);
 
@@ -2648,6 +2684,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 item.setOrgPos(cursor.getInt(32));
                 item.setReturnQty(cursor.getDouble(33));
                 item.setIsPost(cursor.getInt(34));
+                item.setCashNo(cursor.getInt(35));
+
                 items.add(item);
             } while (cursor.moveToNext());
         }
@@ -2700,6 +2738,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 item.setOrgPos(cursor.getInt(32));
                 item.setReturnQty(cursor.getDouble(33));
                 item.setIsPost(cursor.getInt(34));
+                item.setCashNo(cursor.getInt(35));
+
                 items.add(item);
             } while (cursor.moveToNext());
         }
@@ -2751,6 +2791,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 item.setOrgNo(cursor.getString(31));
                 item.setOrgPos(cursor.getInt(32));
                 item.setReturnQty(cursor.getDouble(33));
+                item.setIsPost(cursor.getInt(34));
+                item.setCashNo(cursor.getInt(35));
                 items.add(item);
             } while (cursor.moveToNext());
         }
@@ -2802,6 +2844,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 item.setOrgNo(cursor.getString(31));
                 item.setOrgPos(cursor.getInt(32));
                 item.setReturnQty(cursor.getDouble(33));
+                item.setIsPost(cursor.getInt(34));
+                item.setCashNo(cursor.getInt(35));
                 items.add(item);
             } while (cursor.moveToNext());
         }
@@ -2916,6 +2960,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 payMethod.setOrgNo(cursor.getString(16));
                 payMethod.setOrgPos(cursor.getInt(17));
                 payMethod.setIsPost(cursor.getInt(18));
+                payMethod.setCashNo(cursor.getInt(19));
 
                 payMethodsList.add(payMethod);
 
@@ -3010,6 +3055,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 order_header.setOrgNo(cursor.getString(32));
                 order_header.setOrgPos(cursor.getInt(33));
                 order_header.setIsPost(cursor.getInt(34));
+                order_header.setCashNo(cursor.getInt(35));
 
 
 
@@ -3065,6 +3111,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 order_header.setTime(cursor.getString(31));
                 order_header.setOrgNo(cursor.getString(32));
                 order_header.setOrgPos(cursor.getInt(33));
+                order_header.setIsPost(cursor.getInt(34));
+                order_header.setCashNo(cursor.getInt(35));
 
                 orderHeaders.add(order_header);
 
@@ -3118,6 +3166,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 order_header.setTime(cursor.getString(31));
                 order_header.setOrgNo(cursor.getString(32));
                 order_header.setOrgPos(cursor.getInt(33));
+
+                order_header.setIsPost(cursor.getInt(34));
+                order_header.setCashNo(cursor.getInt(35));
 
                 orderHeaders.add(order_header);
 

@@ -1675,7 +1675,7 @@ public class Order extends AppCompatActivity {
                     wantedItems.get(k).getFamilyName(), Double.parseDouble(convertToEnglish(textViewQty.getText().toString())), wantedItems.get(k).getPrice(),
                     totalLine, discount, lineDiscount_, discount + lineDiscount_, taxValue,
                     wantedItems.get(k).getTax(), 0, Double.parseDouble(service.getText().toString()), serviceTax,
-                    tableNumber, sectionNumber, Settings.shift_number, Settings.shift_name, Settings.user_no, Settings.user_name, time,"0",-1,0));
+                    tableNumber, sectionNumber, Settings.shift_number, Settings.shift_name, Settings.user_no, Settings.user_name, time,"0",-1,0,Settings.cash_no));
         }
     }
 
@@ -1690,7 +1690,7 @@ public class Order extends AppCompatActivity {
                 Settings.service_value, Double.parseDouble((convertToEnglish(tax.getText().toString()))), serviceTax, Double.parseDouble((convertToEnglish(subTotal.getText().toString()))),
                 Double.parseDouble(convertToEnglish(amountDue.getText().toString())), Double.parseDouble(convertToEnglish(deliveryCharge.getText().toString())), tableNumber,
                 sectionNumber, PayMethods.cashValue1, PayMethods.creditCardValue1, PayMethods.chequeValue1, PayMethods.creditValue1,
-                PayMethods.giftCardValue1, PayMethods.pointValue1, Settings.shift_name, Settings.shift_number, "No Waiter", 0, Settings.user_name, Settings.user_no, time,"0",-1);
+                PayMethods.giftCardValue1, PayMethods.pointValue1, Settings.shift_name, Settings.shift_number, "No Waiter", 0, Settings.user_name, Settings.user_no, time,"0",-1,Settings.cash_no);
 
 
     }
@@ -1731,7 +1731,7 @@ public class Order extends AppCompatActivity {
                     wantedItems.get(k).getFamilyName(), Double.parseDouble(convertToEnglish(textViewQty.getText().toString())), wantedItems.get(k).getPrice(),
                     totalLine, discount, lineDiscount_, discount + lineDiscount_, taxValue,
                     wantedItems.get(k).getTax(), 0, Double.parseDouble(convertToEnglish(service.getText().toString())), serviceTax,
-                    tableNumber, sectionNumber, Settings.shift_number, Settings.shift_name, Settings.user_no, Settings.user_name, time,"0",-1,0));
+                    tableNumber, sectionNumber, Settings.shift_number, Settings.shift_name, Settings.user_no, Settings.user_name, time,"0",-1,0,Settings.cash_no));
         }
     }
 
@@ -1749,7 +1749,7 @@ public class Order extends AppCompatActivity {
                 Settings.service_value, Double.parseDouble(convertToEnglish(tax.getText().toString())), serviceTax, Double.parseDouble(convertToEnglish(subTotal.getText().toString())),
                 Double.parseDouble(convertToEnglish(amountDue.getText().toString())), Double.parseDouble(convertToEnglish(deliveryCharge.getText().toString())), sectionNumber,
                 tableNumber, 0.00, 0.00, 0.00, 0.00,
-                0.00, 0.00, Settings.shift_name, Settings.shift_number, waiter, seatNo, Settings.user_name, Settings.user_no, time,"0",-1));
+                0.00, 0.00, Settings.shift_name, Settings.shift_number, waiter, seatNo, Settings.user_name, Settings.user_no, time,"0",-1,Settings.cash_no));
     }
 
 //    void sendToKitchen() {

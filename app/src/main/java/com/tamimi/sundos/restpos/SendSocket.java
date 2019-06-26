@@ -139,6 +139,8 @@ public class SendSocket {
                     else if(orderTransactions.get(i).getOrderKind()==0){
                         obj.put("ISUPDATE", 0);
                         Log.e("ISUPDATE =0",""+orderTransactions.get(i).getOrderKind());}
+
+                    obj.put("CASHNO", orderTransactions.get(i).getCashNo());
                     objNo.put(obj);
 
                 } catch (JSONException e) {
