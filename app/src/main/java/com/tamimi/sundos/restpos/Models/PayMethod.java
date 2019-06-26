@@ -26,6 +26,7 @@ public class PayMethod {
     private  String orgNo ;
     private  int orgPos ;
     private  int isPost ;
+    private  int cashNo ;
 
 
     public PayMethod() {
@@ -34,7 +35,7 @@ public class PayMethod {
 
     public PayMethod(int orderType, int orderKind, String voucherDate, int pointOfSaleNumber, int storeNumber,
                      String voucherNumber, int voucherSerial, String payType, double payValue, String payNumber,
-                     String payName, String shiftName, int shiftNumber, String userName, int userNo, String time,String orgNo,int orgPos) {
+                     String payName, String shiftName, int shiftNumber, String userName, int userNo, String time,String orgNo,int orgPos,int cashNo) {
 
         this.orderType = orderType;
         this.orderKind = orderKind;
@@ -54,6 +55,7 @@ public class PayMethod {
         this.time = time;
         this.orgNo = orgNo;
         this.orgPos = orgPos;
+        this.cashNo = cashNo;
     }
 
     public void setOrderType(int orderType) {
@@ -208,6 +210,14 @@ public class PayMethod {
         this.isPost = isPost;
     }
 
+    public int getCashNo() {
+        return cashNo;
+    }
+
+    public void setCashNo(int cashNo) {
+        this.cashNo = cashNo;
+    }
+
     public JSONObject getJSONObject2() { // for server
         JSONObject obj = new JSONObject();
         try {
@@ -230,6 +240,8 @@ public class PayMethod {
 
             obj.put("ORGNO", orgNo);
             obj.put("ORGPOS", orgPos);
+
+            obj.put("CASHNO", cashNo);
 
         } catch (JSONException e) {
             Log.e("Tag", "JSONException");

@@ -44,6 +44,7 @@ public class OrderTransactions {
     private  int orgPos ;
     private double returnQty;
     private int isPost;
+    private int cashNo;
 
 
     public OrderTransactions() {
@@ -55,7 +56,7 @@ public class OrderTransactions {
                              String secondaryName, String kitchenAlias, String itemCategory, String itemFamily,
                              double qty, double price, double total, double discount, double lDiscount, double totalDiscount,
                              double taxValue, double taxPerc, int taxKind, double service, double serviceTax, int tableNo,
-                             int sectionNo, int shiftNo, String shiftName, int userNo, String userName, String time, String orgNo, int orgPos, double returnQty) {
+                             int sectionNo, int shiftNo, String shiftName, int userNo, String userName, String time, String orgNo, int orgPos, double returnQty,int cashNo) {
         this.orderType = orderType;
         this.orderKind = orderKind;
         this.voucherDate = voucherDate;
@@ -90,6 +91,8 @@ public class OrderTransactions {
         this.orgNo = orgNo;
         this.orgPos = orgPos;
         this.returnQty = returnQty;
+        this.cashNo = cashNo;
+
     }
 
     public int getUserNo() {
@@ -388,6 +391,14 @@ public class OrderTransactions {
         this.isPost = isPost;
     }
 
+    public int getCashNo() {
+        return cashNo;
+    }
+
+    public void setCashNo(int cashNo) {
+        this.cashNo = cashNo;
+    }
+
     public JSONObject getJSONObject() { // for kitchen
         JSONObject obj = new JSONObject();
         try {
@@ -449,6 +460,7 @@ public class OrderTransactions {
             obj.put("ORGNO", orgNo);
             obj.put("ORGPOS", orgPos);
             obj.put("RETURNQTY", returnQty);
+            obj.put("CASHNO", cashNo);
 
         } catch (JSONException e) {
             Log.e("Tag", "JSONException");

@@ -63,7 +63,8 @@ public class ReceiveCloud {
 
                 String data = "Compno=" + URLEncoder.encode("736", "UTF-8") + "&" +
                         "CompYear=" + URLEncoder.encode("2019", "UTF-8") + "&" +
-                        "POSNO=" + URLEncoder.encode("1", "UTF-8");
+                        "POSNO=" + URLEncoder.encode("1", "UTF-8")+ "&" +
+                        "CASHNO=" + URLEncoder.encode(""+Settings.cash_no, "UTF-8");
 
                 URL url = new URL(link + data);
 

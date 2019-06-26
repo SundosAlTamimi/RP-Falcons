@@ -42,6 +42,7 @@ public class OrderHeader {
     private  String orgNo ;
     private  int orgPos ;
     private  int isPost ;
+    private  int cashNo ;
 
 
     public OrderHeader() {
@@ -54,7 +55,7 @@ public class OrderHeader {
                        double totalTax, double totalServiceTax, double subTotal, double amountDue, double deliveryCharge,
                        int sectionNO, int tableNO, double cashValue, double cardsValue, double chequeValue, double couponValue ,
                        double giftValue, double pointValue, String shiftName,int shiftNumber, String waiter,
-                       int seatsNumber, String userName, int userNo, String time,String orgNo,int orgPos) {
+                       int seatsNumber, String userName, int userNo, String time,String orgNo,int orgPos,int cashNo) {
 
         this.orderType = orderType;
         this.orderKind = orderKind;
@@ -90,6 +91,7 @@ public class OrderHeader {
         this.time = time;
         this.orgNo = orgNo;
         this.orgPos = orgPos;
+        this.cashNo = cashNo;
     }
 
     public void setUserName(String userName) {
@@ -371,6 +373,14 @@ public class OrderHeader {
         this.isPost = isPost;
     }
 
+    public int getCashNo() {
+        return cashNo;
+    }
+
+    public void setCashNo(int cashNo) {
+        this.cashNo = cashNo;
+    }
+
     public JSONObject getJSONObject() { // for kitchen
         JSONObject obj = new JSONObject();
         try {
@@ -379,6 +389,7 @@ public class OrderHeader {
             obj.put("ORDERTYPE", orderType);
             obj.put("TABLENO", tableNO);
             obj.put("SECTIONNO", sectionNO);
+            obj.put("CASHNO", cashNo);
 
         } catch (JSONException e) {
             Log.e("Tag" , "JSONException");
@@ -424,6 +435,8 @@ public class OrderHeader {
 
             obj.put("ORGNO", orgNo);
             obj.put("ORGPOS", orgPos);
+
+            obj.put("CASHNO", cashNo);
 
         } catch (JSONException e) {
             Log.e("Tag" , "JSONException");

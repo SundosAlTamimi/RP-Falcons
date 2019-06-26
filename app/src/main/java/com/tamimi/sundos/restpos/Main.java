@@ -2350,7 +2350,7 @@ public class Main extends AppCompatActivity {
                                 -1*service, -1*tax, -1*serviceTax, -1*subTotalValue,
                                 -1*netTotal1, 0, rowRefund.get(0).getTableNo(),
                                 rowRefund.get(0).getSectionNo(), -1*cashValues, -1*creditValues, -1*chequeVales, -1*cardValues,
-                                -1*giftCardValues, -1*pointValues, Settings.shift_name, Settings.shift_number, waiterName, 0, Settings.user_name, Settings.user_no, convertToEnglish(times), rowRefund.get(0).getVoucherNo(), rowRefund.get(0).getPosNo());
+                                -1*giftCardValues, -1*pointValues, Settings.shift_name, Settings.shift_number, waiterName, 0, Settings.user_name, Settings.user_no, convertToEnglish(times), rowRefund.get(0).getVoucherNo(), rowRefund.get(0).getPosNo(),Settings.cash_no);
                         mDHandler.addOrderHeader(orderHeader);
                         orderHeader.setVoucherNumber(rowRefund.get(0).getVoucherNo());
 
@@ -2361,7 +2361,7 @@ public class Main extends AppCompatActivity {
                                     rowRefund.get(i).getItemFamily(), rowRefund.get(i).getQty(), rowRefund.get(i).getPrice(),
                                      rowRefund.get(i).getQty() * rowRefund.get(i).getPrice(), -1*rowRefund.get(i).getDiscount(), -1*rowRefund.get(i).getlDiscount(), -1*(rowRefund.get(i).getDiscount() + rowRefund.get(i).getlDiscount()), -1*rowRefund.get(i).getTaxValue(),
                                     rowRefund.get(i).getTaxPerc(), rowRefund.get(i).getTaxKind(),-1* rowRefund.get(i).getService(),-1* rowRefund.get(i).getServiceTax(),
-                                    rowRefund.get(i).getTableNo(), rowRefund.get(i).getSectionNo(), Settings.shift_number, Settings.shift_name, Settings.user_no, Settings.user_name, convertToEnglish(times), rowRefund.get(i).getVoucherNo(), rowRefund.get(i).getPosNo(), 0);
+                                    rowRefund.get(i).getTableNo(), rowRefund.get(i).getSectionNo(), Settings.shift_number, Settings.shift_name, Settings.user_no, Settings.user_name, convertToEnglish(times), rowRefund.get(i).getVoucherNo(), rowRefund.get(i).getPosNo(), 0,Settings.cash_no);
                             mDHandler.addOrderTransaction(orderTransactions);
                         }
                         for (int i = 0; i < tableLayout.getChildCount(); i++) {
@@ -2377,7 +2377,7 @@ public class Main extends AppCompatActivity {
                                         Settings.store_number, String.valueOf(transactionsSize), i + 1, name_o.getText().toString(),
                                         -1* Double.parseDouble(value_o.getText().toString()), finalAllPayType.get(i).getPayNumber(), finalAllPayType.get(i).getPayName(),
                                         Settings.shift_name, Settings.shift_number, Settings.user_name, Settings.user_no, convertToEnglish(times),
-                                        rowRefund.get(0).getVoucherNo(), Settings.POS_number);
+                                        rowRefund.get(0).getVoucherNo(), Settings.POS_number,Settings.cash_no);
                                 payObj.add(payMethod);
                                 mDHandler.addAllPayMethodItem(payMethod);
                             }
