@@ -16,6 +16,9 @@
     <string name="log_in">log in</string>
     <string name="clear">clear</string>
     <string name="enter_password">Enter Your Password :</string>
+    <string name="required_field">Required Field!</string>
+    <string name="all_fields_are_required">*All Fields Are Required!</string>
+    <string name="cash_no">Cash No</string>
 
     <string name="password">Password</string>
     <string name="user_no">User No</string>

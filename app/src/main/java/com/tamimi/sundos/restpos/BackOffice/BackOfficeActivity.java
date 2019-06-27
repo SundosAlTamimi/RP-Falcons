@@ -397,6 +397,8 @@ public class BackOfficeActivity extends AppCompatActivity {
         EditText serviceValue = (EditText) dialog.findViewById(R.id.main_settings_serviceValue);
         EditText taxType = (EditText) dialog.findViewById(R.id.main_settings_taxType);
         EditText timeCard = (EditText) dialog.findViewById(R.id.main_settings_timeCard);
+        EditText cashNo = (EditText) dialog.findViewById(R.id.main_settings_cashNo);
+
         Button saveSettings = dialog.findViewById(R.id.main_settings_save);
         Button cancel = dialog.findViewById(R.id.main_settings_cancel);
 
@@ -413,6 +415,7 @@ public class BackOfficeActivity extends AppCompatActivity {
             serviceValue.setText("" + Settings.service_value);
             taxType.setText("" + Settings.tax_type);
             timeCard.setText("" + Settings.time_card);
+            cashNo.setText("" + Settings.cash_no);
         }
 
         saveSettings.setOnClickListener(new View.OnClickListener() {
@@ -429,54 +432,69 @@ public class BackOfficeActivity extends AppCompatActivity {
                                                 if (!TextUtils.isEmpty(serviceValue.getText().toString())) {
                                                     if (!TextUtils.isEmpty(taxType.getText().toString())) {
                                                         if (!TextUtils.isEmpty(timeCard.getText().toString())) {
-                                                            mDHandler.deleteCurrentMainSettings();
-                                                            Settings.user_name = userName.getText().toString();
-                                                            Settings.password = Integer.parseInt(userPassword.getText().toString());
-                                                            Settings.user_no = Integer.parseInt(userNo.getText().toString());
-                                                            Settings.POS_number = Integer.parseInt(posNo.getText().toString());
-                                                            Settings.store_number = Integer.parseInt(storeNo.getText().toString());
-                                                            Settings.shift_number = Integer.parseInt(shiftNo.getText().toString());
-                                                            Settings.shift_name = shiftName.getText().toString();
-                                                            Settings.service_tax = Double.parseDouble(serviceTax.getText().toString());
-                                                            Settings.service_value = Double.parseDouble(serviceValue.getText().toString());
-                                                            Settings.tax_type = Integer.parseInt(taxType.getText().toString());
-                                                            Settings.time_card = Integer.parseInt(timeCard.getText().toString());
-                                                            mDHandler.addMainSettings();
-                                                            dialog.dismiss();
-                                                            dialog1.dismiss();
-
+                                                            if (!TextUtils.isEmpty(cashNo.getText().toString())) {
+                                                                mDHandler.deleteCurrentMainSettings();
+                                                                Settings.user_name = userName.getText().toString();
+                                                                Settings.password = Integer.parseInt(userPassword.getText().toString());
+                                                                Settings.user_no = Integer.parseInt(userNo.getText().toString());
+                                                                Settings.POS_number = Integer.parseInt(posNo.getText().toString());
+                                                                Settings.store_number = Integer.parseInt(storeNo.getText().toString());
+                                                                Settings.shift_number = Integer.parseInt(shiftNo.getText().toString());
+                                                                Settings.shift_name = shiftName.getText().toString();
+                                                                Settings.service_tax = Double.parseDouble(serviceTax.getText().toString());
+                                                                Settings.service_value = Double.parseDouble(serviceValue.getText().toString());
+                                                                Settings.tax_type = Integer.parseInt(taxType.getText().toString());
+                                                                Settings.time_card = Integer.parseInt(timeCard.getText().toString());
+                                                                Settings.cash_no = Integer.parseInt(cashNo.getText().toString());
+                                                                mDHandler.addMainSettings();
+                                                                dialog.dismiss();
+                                                                dialog1.dismiss();
+                                                            } else {
+                                                                Toast.makeText(BackOfficeActivity.this, R.string.required_field, Toast.LENGTH_SHORT).show();
+                                                            }
                                                         } else {
-                                                            timeCard.setError("Required field!");
+                                                            Toast.makeText(BackOfficeActivity.this, R.string.required_field, Toast.LENGTH_SHORT).show();
+                                                            // timeCard.setError("Required field!");
                                                         }
                                                     } else {
-                                                        taxType.setError("Required field!");
+                                                        Toast.makeText(BackOfficeActivity.this, R.string.required_field, Toast.LENGTH_SHORT).show();
+                                                        // taxType.setError("Required field!");
                                                     }
                                                 } else {
-                                                    serviceValue.setError("Required field!");
+                                                    Toast.makeText(BackOfficeActivity.this, R.string.required_field, Toast.LENGTH_SHORT).show();
+                                                    // serviceValue.setError("Required field!");
                                                 }
                                             } else {
-                                                serviceTax.setError("Required field!");
+                                                Toast.makeText(BackOfficeActivity.this, R.string.required_field, Toast.LENGTH_SHORT).show();
+                                                // serviceTax.setError("Required field!");
                                             }
                                         } else {
-                                            shiftName.setError("Required field!");
+                                            Toast.makeText(BackOfficeActivity.this, R.string.required_field, Toast.LENGTH_SHORT).show();
+                                            // shiftName.setError("Required field!");
                                         }
                                     } else {
-                                        shiftNo.setError("Required field!");
+                                        Toast.makeText(BackOfficeActivity.this, R.string.required_field, Toast.LENGTH_SHORT).show();
+                                        // shiftNo.setError("Required field!");
                                     }
                                 } else {
-                                    storeNo.setError("Required field!");
+                                    Toast.makeText(BackOfficeActivity.this, R.string.required_field, Toast.LENGTH_SHORT).show();
+                                    // storeNo.setError("Required field!");
                                 }
                             } else {
-                                posNo.setError("Required field!");
+                                Toast.makeText(BackOfficeActivity.this, R.string.required_field, Toast.LENGTH_SHORT).show();
+                                // posNo.setError("Required field!");
                             }
                         } else {
-                            userNo.setError("Required field!");
+                            Toast.makeText(BackOfficeActivity.this, R.string.required_field, Toast.LENGTH_SHORT).show();
+                            // userNo.setError("Required field!");
                         }
                     } else {
-                        userPassword.setError("Required field!");
+                        Toast.makeText(BackOfficeActivity.this, R.string.required_field, Toast.LENGTH_SHORT).show();
+                        // userPassword.setError("Required field!");
                     }
                 } else {
-                    userName.setError("Required field!");
+                    Toast.makeText(BackOfficeActivity.this, R.string.required_field, Toast.LENGTH_SHORT).show();
+                    // userName.setError("Required field!");
                 }
             }
         });
