@@ -77,7 +77,7 @@ public class PayMethods extends AppCompatActivity {
 
     ArrayList chequeListName;
     ArrayAdapter<String> adapter2;
-
+    String maxSerial;
     String mainBalance;
     double cashValue = 0.00;
     double creditCardValue = 0.00;
@@ -101,6 +101,7 @@ public class PayMethods extends AppCompatActivity {
         setContentView(R.layout.pay_method);
 
         initialize();
+        maxSerial =Order.voucherNo;
 
         Date currentTimeAndDate = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
@@ -1626,6 +1627,7 @@ public class PayMethods extends AppCompatActivity {
 //                Intent intent = new Intent(PayMethods.this, Order.class);
 //                startActivity(intent);
                 Print(obj.getOrderTransactionObj(),obj.getOrderHeaderObj());
+                mDHandler.updateMaxVhf(maxSerial);
 
             } else { // Dine In
 

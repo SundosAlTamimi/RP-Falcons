@@ -3593,7 +3593,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                                         sales += headerData.get(i).getAmountDue();
                                         allDiscountSales += headerData.get(i).getAllDiscount();
                                         totalServiceSales += headerData.get(i).getTotalService();
-                                    } else if (headerData.get(i).getOrderKind() == 998) {
+                                    } else if (headerData.get(i).getOrderKind() == 1) {
                                         returns += headerData.get(i).getAmountDue();
                                         allDiscountReturn += headerData.get(i).getAllDiscount();
                                         totalServiceReturn += headerData.get(i).getTotalService();

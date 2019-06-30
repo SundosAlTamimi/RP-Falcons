@@ -41,6 +41,7 @@ import com.tamimi.sundos.restpos.Models.BlindCloseDetails;
 import com.tamimi.sundos.restpos.Models.Cashier;
 import com.tamimi.sundos.restpos.Models.ClockInClockOut;
 import com.tamimi.sundos.restpos.Models.ItemWithScreen;
+import com.tamimi.sundos.restpos.Models.MaxSerial;
 import com.tamimi.sundos.restpos.Models.Money;
 import com.tamimi.sundos.restpos.Models.OrderHeader;
 import com.tamimi.sundos.restpos.Models.OrderTransactions;
@@ -1913,14 +1914,14 @@ public class Main extends AppCompatActivity {
                                 rowRefund.get(index).setServiceTax(rowRefund.get(index).getService() * (orderTransactions.get(i).getServiceTax() / orderTransactions.get(i).getService()));
                             }
 
-                            rowRefund.get(index).setOrderKind(998);
+                            rowRefund.get(index).setOrderKind(1);
 
                             index++;
                             Log.e("taxRefund ", "=" + textData * (lDiscon / q) + "linD/" +
                                     textData * (orderTransactions.get(i).getDiscount() / q) + "Dic/" +
                                     textData * (orderTransactions.get(i).getTaxValue() / q) + "tax/" +
                                     textData * (orderTransactions.get(i).getService() / q) + "srvice/" +
-                                    998);
+                                    1);
                         } else {
                             textData = 0;
                         }
@@ -2214,7 +2215,17 @@ public class Main extends AppCompatActivity {
 
                 ifGraterThan[0] = false;
 
-                int transactionsSize = mDHandler.getMaxSerial("ORDER_HEADER","998")+1;
+//                int transactionsSize = mDHandler.getMaxSerial("ORDER_HEADER","998")+1;
+               List<MaxSerial>max=new ArrayList<>();
+                max=mDHandler.getMaxSerialForVhf();
+              int transactionsSize =0;
+                if(max.size()!= 0){
+                    transactionsSize = Integer.parseInt(mDHandler.getMaxSerialForVhf().get(0).getMaxSerialRefund())+1;
+                }else{
+                    MaxSerial maxN=new MaxSerial("0","0");
+                    mDHandler.addMAXSerial(maxN);
+                    transactionsSize=1;
+                }
 
                 Log.e("size of return = ",""+transactionsSize);
 
@@ -2345,7 +2356,7 @@ public class Main extends AppCompatActivity {
                         }
 
                         OrderHeader orderHeader;
-                        orderHeader = new OrderHeader(rowRefund.get(0).getOrderType(), 998, convertToEnglish(today), Settings.POS_number, Settings.store_number,
+                        orderHeader = new OrderHeader(rowRefund.get(0).getOrderType(), 1, convertToEnglish(today), Settings.POS_number, Settings.store_number,
                                 String.valueOf(transactionsSize), 1, -1*totalAdd, -1*lineDic, -1*dic, -1*(lineDic + dic),
                                 -1*service, -1*tax, -1*serviceTax, -1*subTotalValue,
                                 -1*netTotal1, 0, rowRefund.get(0).getTableNo(),
@@ -2355,7 +2366,7 @@ public class Main extends AppCompatActivity {
                         orderHeader.setVoucherNumber(rowRefund.get(0).getVoucherNo());
 
                         for (int i = 0; i < rowRefund.size(); i++) {
-                            OrderTransactions orderTransactions = new OrderTransactions(rowRefund.get(i).getOrderType(), 998, convertToEnglish(today), Settings.POS_number, Settings.store_number,
+                            OrderTransactions orderTransactions = new OrderTransactions(rowRefund.get(i).getOrderType(), 1, convertToEnglish(today), Settings.POS_number, Settings.store_number,
                                     String.valueOf(transactionsSize), i + 1, "" + rowRefund.get(i).getItemBarcode(), rowRefund.get(i).getItemName(),
                                     rowRefund.get(i).getSecondaryName(), rowRefund.get(i).getKitchenAlias(), rowRefund.get(i).getItemCategory(),
                                     rowRefund.get(i).getItemFamily(), rowRefund.get(i).getQty(), rowRefund.get(i).getPrice(),
@@ -2371,7 +2382,7 @@ public class Main extends AppCompatActivity {
 
                             if (!value_o.getText().toString().equals("") && Double.parseDouble(value_o.getText().toString()) != 0) {
                                 PayMethod payMethod = new PayMethod(list.get(0).getOrderType(),
-                                        998,
+                                        1,
                                         convertToEnglish(today),
                                         Settings.POS_number,
                                         Settings.store_number, String.valueOf(transactionsSize), i + 1, name_o.getText().toString(),
@@ -2392,6 +2403,9 @@ public class Main extends AppCompatActivity {
                         pay.sendToServer(Main.this, orderHeader, rowRefund, payObj);
 
                         netTotals = 0.0;
+
+                        mDHandler.updateMaxVhfRefund(String.valueOf(transactionsSize));
+
                         PayRefund.dismiss();
 
                     } else

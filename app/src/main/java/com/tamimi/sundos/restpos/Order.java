@@ -42,6 +42,7 @@ import com.tamimi.sundos.restpos.Models.ItemWithFq;
 import com.tamimi.sundos.restpos.Models.ItemWithModifier;
 import com.tamimi.sundos.restpos.Models.ItemWithScreen;
 import com.tamimi.sundos.restpos.Models.Items;
+import com.tamimi.sundos.restpos.Models.MaxSerial;
 import com.tamimi.sundos.restpos.Models.Modifier;
 import com.tamimi.sundos.restpos.Models.OrderHeader;
 import com.tamimi.sundos.restpos.Models.OrderTransactions;
@@ -80,7 +81,7 @@ public class Order extends AppCompatActivity {
     TextView total, lineDisCount, disCount, deliveryCharge, subTotal, service, tax, amountDue, vhSerial;
     Button pay, order;
     TextView orderType, tableNo, check, date, user, seats;
-    TableLayout tableLayout,  tableItem;
+    TableLayout tableLayout, tableItem;
     GridView catGridView, itemGridView;
     CheckBox discPerc;
     Button back;
@@ -181,10 +182,11 @@ public class Order extends AppCompatActivity {
 //                            sendToKitchen();
 
                             Intent intentPay = new Intent(Order.this, PayMethods.class);
+//                            intentPay.putExtra("vhfNO",voucherNo);
                             startActivity(intentPay);
 //                            finish();
                         } else
-                        new Settings().makeText(Order.this, getResources().getString(R.string.amountdue_oo));
+                            new Settings().makeText(Order.this, getResources().getString(R.string.amountdue_oo));
                     }
                     break;
 
@@ -193,13 +195,14 @@ public class Order extends AppCompatActivity {
                         if (!(Double.parseDouble(amountDue.getText().toString()) == 0)) {
                             saveInOrderTransactionTemp();
                             saveInOrderHeaderTemp();
+                            mDbHandler.updateMaxVhf(voucherNo);
 
                             Intent intent = new Intent(Order.this, DineIn.class);
                             startActivity(intent);
                             finish();
 
                         } else
-                        new Settings().makeText(Order.this,  getResources().getString(R.string.amountdue_oo));
+                            new Settings().makeText(Order.this, getResources().getString(R.string.amountdue_oo));
                     }
                     break;
 
@@ -323,10 +326,9 @@ public class Order extends AppCompatActivity {
         SimpleDateFormat df2 = new SimpleDateFormat("yyyyMM");
         yearMonth = convertToEnglish(df2.format(currentTimeAndDate));
 
-        int transactionsSize = mDbHandler.getMaxSerial("ORDER_HEADER","0")+1;
-        int transactionsTempSize =  mDbHandler.getMaxSerial("ORDER_HEADER_TEMP","0")+1;
-
-//        int transactionsSize = 0, transactionsTempSize = 0;
+//        int transactionsSize = mDbHandler.getMaxSerial("ORDER_HEADER","0")+1;
+//        int transactionsTempSize =  mDbHandler.getMaxSerial("ORDER_HEADER_TEMP","0")+1;
+        //        int transactionsSize = 0, transactionsTempSize = 0;
 
 //        if (transactions.size() != 0)
 //            transactionsSize = transactions.get(transactions.size() - 1).getVoucherSerial();
@@ -334,13 +336,25 @@ public class Order extends AppCompatActivity {
 //        if (transactionsTemp.size() != 0)
 //            transactionsTempSize = transactionsTemp.get(transactionsTemp.size() - 1).getVoucherSerial();
 
-        if (transactionsSize > transactionsTempSize) {
-            voucherSerial = transactionsSize ;
+//        if (transactionsSize > transactionsTempSize) {
+//            voucherSerial = transactionsSize ;
+//        } else {
+//            voucherSerial = transactionsTempSize;
+//        }
+        List<MaxSerial> max = new ArrayList<>();
+
+        max = mDbHandler.getMaxSerialForVhf();
+        if (max.size() != 0) {
+            voucherSerial = Integer.parseInt(max.get(0).getMaxSerial()) + 1;
         } else {
-            voucherSerial = transactionsTempSize;
+            MaxSerial maxN=new MaxSerial("0","0");
+            mDbHandler.addMAXSerial(maxN);
+            voucherSerial = 1;
         }
+        Log.e("maxSerial = ",""+voucherSerial);
+
         date.setText(today);
-        voucherNo = ""+ voucherSerial;
+        voucherNo = "" + voucherSerial;
 
     }
 
@@ -445,7 +459,7 @@ public class Order extends AppCompatActivity {
                                 TextView textViewTotal = (TextView) tableRow.getChildAt(3);
                                 TextView textViewLineDiscount = (TextView) tableRow.getChildAt(4);
 
-                                double qty =Double.parseDouble(convertToEnglish(textViewQty.getText().toString()));
+                                double qty = Double.parseDouble(convertToEnglish(textViewQty.getText().toString()));
                                 double price = Double.parseDouble(convertToEnglish(textViewPrice.getText().toString()));
                                 double newTotal = price * (qty + 1);
 
@@ -459,7 +473,7 @@ public class Order extends AppCompatActivity {
                                 calculateTotal();
                             }
                         } else
-                        new Settings().makeText(Order.this, getResources().getString(R.string.no_item));
+                            new Settings().makeText(Order.this, getResources().getString(R.string.no_item));
                     }
                 });
             }
@@ -758,7 +772,7 @@ public class Order extends AppCompatActivity {
 //            AlertDialog alertDialog = builder.create();
 //            alertDialog.show();
             } else
-            new Settings().makeText(Order.this,getResources().getString(R.string.chooes_item_delete) );
+                new Settings().makeText(Order.this, getResources().getString(R.string.chooes_item_delete));
         } else {
             new Settings().makeText(Order.this, getResources().getString(R.string.no_item));
         }
@@ -899,18 +913,18 @@ public class Order extends AppCompatActivity {
                                 dialog1.dismiss();
                                 dialog.dismiss();
                             } else
-                            new Settings().makeText(Order.this, getResources().getString(R.string.select_reson_cancele));
+                                new Settings().makeText(Order.this, getResources().getString(R.string.select_reson_cancele));
                         });
 
 
                         dialog1.show();
                     } else
-                    new Settings().makeText(Order.this, getResources().getString(R.string.curent_qty_less_than) + voidQty.getText().toString());
+                        new Settings().makeText(Order.this, getResources().getString(R.string.curent_qty_less_than) + voidQty.getText().toString());
 
                 } else
-                new Settings().makeText(Order.this,getResources().getString(R.string.enter_qty) );
+                    new Settings().makeText(Order.this, getResources().getString(R.string.enter_qty));
 
-                focused=null;
+                focused = null;
             }
         });
         dialog.show();
@@ -980,7 +994,7 @@ public class Order extends AppCompatActivity {
 
                     mDbHandler.addCancleOrder(new CancleOrder(voucherNo, today, Settings.user_name, Settings.user_no, Settings.shift_name,
                             Settings.shift_number, waiter, Integer.parseInt(waiterNo), "" + wantedItems.get(k).getItemBarcode(),
-                            wantedItems.get(k).getMenuName(), Integer.parseInt(convertToEnglish(textViewQty.getText().toString())),
+                            wantedItems.get(k).getMenuName(),  Double.parseDouble(convertToEnglish(textViewQty.getText().toString())),
                             wantedItems.get(k).getPrice(), Double.parseDouble(convertToEnglish(textViewTotal.getText().toString())),
                             reasonText, 1, time, Settings.POS_number));
                 }
@@ -1098,7 +1112,7 @@ public class Order extends AppCompatActivity {
                         }
                     }
                 } else
-                new Settings().makeText(Order.this, getResources().getString(R.string.selected_answer));
+                    new Settings().makeText(Order.this, getResources().getString(R.string.selected_answer));
             }
         });
         no.setOnClickListener(new View.OnClickListener() {
@@ -1125,7 +1139,7 @@ public class Order extends AppCompatActivity {
                         }
                     }
                 } else
-                new Settings().makeText(Order.this,getResources().getString(R.string.selected_answer) );
+                    new Settings().makeText(Order.this, getResources().getString(R.string.selected_answer));
             }
         });
 
@@ -1153,7 +1167,7 @@ public class Order extends AppCompatActivity {
                         }
                     }
                 } else
-                new Settings().makeText(Order.this,getResources().getString(R.string.selected_answer) );
+                    new Settings().makeText(Order.this, getResources().getString(R.string.selected_answer));
             }
         });
         half.setOnClickListener(new View.OnClickListener() {
@@ -1180,7 +1194,7 @@ public class Order extends AppCompatActivity {
                         }
                     }
                 } else
-                new Settings().makeText(Order.this, getResources().getString(R.string.selected_answer));
+                    new Settings().makeText(Order.this, getResources().getString(R.string.selected_answer));
             }
         });
         save.setOnClickListener(new View.OnClickListener() {
@@ -1206,7 +1220,7 @@ public class Order extends AppCompatActivity {
                             }
 
                         } else {
-                            new Settings().makeText(Order.this,getResources().getString(R.string.select_qty) );
+                            new Settings().makeText(Order.this, getResources().getString(R.string.select_qty));
                         }
                         Log.e("here", "******" + answersLinear.getChildCount());
                     } else {
@@ -1229,7 +1243,7 @@ public class Order extends AppCompatActivity {
                                         showForceQuestionDialog(itemBarcode, nextQu);
                                     }
                                 } else {
-                                    new Settings().makeText(Order.this,getResources().getString(R.string.select_qty) );
+                                    new Settings().makeText(Order.this, getResources().getString(R.string.select_qty));
                                 }
                                 Log.e("here", "******" + answersLinear.getChildCount());
                             }
@@ -1306,7 +1320,7 @@ public class Order extends AppCompatActivity {
                                 }
                             }
                         } else
-                        new Settings().makeText(Order.this,getResources().getString(R.string.select_modifer) );
+                            new Settings().makeText(Order.this, getResources().getString(R.string.select_modifer));
                     }
                 });
                 no.setOnClickListener(new View.OnClickListener() {
@@ -1323,7 +1337,7 @@ public class Order extends AppCompatActivity {
                                 }
                             }
                         } else
-                        new Settings().makeText(Order.this, getResources().getString(R.string.select_modifer));
+                            new Settings().makeText(Order.this, getResources().getString(R.string.select_modifer));
                     }
                 });
                 little.setOnClickListener(new View.OnClickListener() {
@@ -1340,7 +1354,7 @@ public class Order extends AppCompatActivity {
                                 }
                             }
                         } else
-                        new Settings().makeText(Order.this, getResources().getString(R.string.select_modifer));
+                            new Settings().makeText(Order.this, getResources().getString(R.string.select_modifer));
                     }
                 });
                 half.setOnClickListener(new View.OnClickListener() {
@@ -1357,7 +1371,7 @@ public class Order extends AppCompatActivity {
                                 }
                             }
                         } else
-                        new Settings().makeText(Order.this,getResources().getString(R.string.select_modifer) );
+                            new Settings().makeText(Order.this, getResources().getString(R.string.select_modifer));
                     }
                 });
                 save.setOnClickListener(new View.OnClickListener() {
@@ -1393,11 +1407,11 @@ public class Order extends AppCompatActivity {
                 dialog.show();
             } else {
 
-                new Settings().makeText(Order.this,getResources().getString(R.string.chooes_item_to_modifier) );
+                new Settings().makeText(Order.this, getResources().getString(R.string.chooes_item_to_modifier));
             }
         } else
 
-        new Settings().makeText(Order.this,getResources().getString(R.string.no_item) );
+            new Settings().makeText(Order.this, getResources().getString(R.string.no_item));
 
     }
 
@@ -1429,7 +1443,7 @@ public class Order extends AppCompatActivity {
             });
             dialog.show();
         } else {
-            new Settings().makeText(Order.this,getResources().getString(R.string.delivary_is_not_avilable) );
+            new Settings().makeText(Order.this, getResources().getString(R.string.delivary_is_not_avilable));
         }
     }
 
@@ -1476,10 +1490,10 @@ public class Order extends AppCompatActivity {
                     dialog.show();
                 } else
 
-                new Settings().makeText(Order.this,getResources().getString(R.string.discount_not_avilable) );
+                    new Settings().makeText(Order.this, getResources().getString(R.string.discount_not_avilable));
             } else
 
-            new Settings().makeText(Order.this, getResources().getString(R.string.chooes_item_to_add_linediscount));
+                new Settings().makeText(Order.this, getResources().getString(R.string.chooes_item_to_add_linediscount));
         }
     }
 
@@ -1524,13 +1538,13 @@ public class Order extends AppCompatActivity {
                         calculateTotal();
                         dialog.dismiss();
                     } else {
-                        new Settings().makeText(Order.this,getResources().getString(R.string.enter_discount) );
+                        new Settings().makeText(Order.this, getResources().getString(R.string.enter_discount));
                     }
                 }
             });
             dialog.show();
         } else
-        new Settings().makeText(Order.this,getResources().getString(R.string.discount_not_avilable_for_curent_item) );
+            new Settings().makeText(Order.this, getResources().getString(R.string.discount_not_avilable_for_curent_item));
     }
 
     void calculateTotal() {
@@ -1661,21 +1675,21 @@ public class Order extends AppCompatActivity {
             if (wantedItems.get(k).getTaxType() == 0) {
                 if (Settings.tax_type != 0) {
                     taxValue = (totalLine - lineDiscount_ - discount) * wantedItems.get(k).getTax() / 100;
-                    Log.e("tax__1" , "(("+ totalLine + "-" + discount +")*" +wantedItems.get(k).getTax() + "/100)");
+                    Log.e("tax__1", "((" + totalLine + "-" + discount + ")*" + wantedItems.get(k).getTax() + "/100)");
                 } else {
                     taxValue = ((totalLine - lineDiscount_ - discount) * wantedItems.get(k).getTax() / 100) / (1 + (wantedItems.get(k).getTax() / 100));
 
-                    Log.e("tax__2" , "(("+ totalLine + "-" + discount +")*" +  wantedItems.get(k).getTax() + "/100)/(1+" + wantedItems.get(k).getTax() + "/100)" );
+                    Log.e("tax__2", "((" + totalLine + "-" + discount + ")*" + wantedItems.get(k).getTax() + "/100)/(1+" + wantedItems.get(k).getTax() + "/100)");
                 }
             }
-         Log.e("tax "," = "+taxValue);
+            Log.e("tax ", " = " + taxValue);
             OrderTransactionsObj.add(new OrderTransactions(orderTypeFlag, 0, today, Settings.POS_number, Settings.store_number,
                     voucherNo, k, "" + wantedItems.get(k).getItemBarcode(), wantedItems.get(k).getMenuName(),
                     wantedItems.get(k).getSecondaryName(), wantedItems.get(k).getKitchenAlias(), wantedItems.get(k).getMenuCategory(),
                     wantedItems.get(k).getFamilyName(), Double.parseDouble(convertToEnglish(textViewQty.getText().toString())), wantedItems.get(k).getPrice(),
                     totalLine, discount, lineDiscount_, discount + lineDiscount_, taxValue,
                     wantedItems.get(k).getTax(), 0, Double.parseDouble(service.getText().toString()), serviceTax,
-                    tableNumber, sectionNumber, Settings.shift_number, Settings.shift_name, Settings.user_no, Settings.user_name, time,"0",-1,0,Settings.cash_no));
+                    tableNumber, sectionNumber, Settings.shift_number, Settings.shift_name, Settings.user_no, Settings.user_name, time, "0", -1, 0, Settings.cash_no));
         }
     }
 
@@ -1690,7 +1704,7 @@ public class Order extends AppCompatActivity {
                 Settings.service_value, Double.parseDouble((convertToEnglish(tax.getText().toString()))), serviceTax, Double.parseDouble((convertToEnglish(subTotal.getText().toString()))),
                 Double.parseDouble(convertToEnglish(amountDue.getText().toString())), Double.parseDouble(convertToEnglish(deliveryCharge.getText().toString())), tableNumber,
                 sectionNumber, PayMethods.cashValue1, PayMethods.creditCardValue1, PayMethods.chequeValue1, PayMethods.creditValue1,
-                PayMethods.giftCardValue1, PayMethods.pointValue1, Settings.shift_name, Settings.shift_number, "No Waiter", 0, Settings.user_name, Settings.user_no, time,"0",-1,Settings.cash_no);
+                PayMethods.giftCardValue1, PayMethods.pointValue1, Settings.shift_name, Settings.shift_number, "No Waiter", 0, Settings.user_name, Settings.user_no, time, "0", -1, Settings.cash_no);
 
 
     }
@@ -1731,7 +1745,7 @@ public class Order extends AppCompatActivity {
                     wantedItems.get(k).getFamilyName(), Double.parseDouble(convertToEnglish(textViewQty.getText().toString())), wantedItems.get(k).getPrice(),
                     totalLine, discount, lineDiscount_, discount + lineDiscount_, taxValue,
                     wantedItems.get(k).getTax(), 0, Double.parseDouble(convertToEnglish(service.getText().toString())), serviceTax,
-                    tableNumber, sectionNumber, Settings.shift_number, Settings.shift_name, Settings.user_no, Settings.user_name, time,"0",-1,0,Settings.cash_no));
+                    tableNumber, sectionNumber, Settings.shift_number, Settings.shift_name, Settings.user_no, Settings.user_name, time, "0", -1, 0, Settings.cash_no));
         }
     }
 
@@ -1749,7 +1763,7 @@ public class Order extends AppCompatActivity {
                 Settings.service_value, Double.parseDouble(convertToEnglish(tax.getText().toString())), serviceTax, Double.parseDouble(convertToEnglish(subTotal.getText().toString())),
                 Double.parseDouble(convertToEnglish(amountDue.getText().toString())), Double.parseDouble(convertToEnglish(deliveryCharge.getText().toString())), sectionNumber,
                 tableNumber, 0.00, 0.00, 0.00, 0.00,
-                0.00, 0.00, Settings.shift_name, Settings.shift_number, waiter, seatNo, Settings.user_name, Settings.user_no, time,"0",-1,Settings.cash_no));
+                0.00, 0.00, Settings.shift_name, Settings.shift_number, waiter, seatNo, Settings.user_name, Settings.user_no, time, "0", -1, Settings.cash_no));
     }
 
 //    void sendToKitchen() {
@@ -1932,7 +1946,7 @@ public class Order extends AppCompatActivity {
     void initialize() {
 
         tableLayout = (TableLayout) findViewById(R.id.tableLayout);
-        tableItem= (TableLayout) findViewById(R.id.tableItem);
+        tableItem = (TableLayout) findViewById(R.id.tableItem);
 
         itemGridView = (GridView) findViewById(R.id.GridViewItems);
         catGridView = (GridView) findViewById(R.id.GridViewCats);
@@ -1953,7 +1967,7 @@ public class Order extends AppCompatActivity {
         lDiscount = (Button) findViewById(R.id.line_discount_b);
         priceChange = (Button) findViewById(R.id.price_change);
         back = (Button) findViewById(R.id.back);
-        baLiner  = (LinearLayout) findViewById(R.id.baLiner);
+        baLiner = (LinearLayout) findViewById(R.id.baLiner);
 
         total = (TextView) findViewById(R.id.total);
         disCount = (TextView) findViewById(R.id.discount);
@@ -1986,22 +2000,21 @@ public class Order extends AppCompatActivity {
     }
 
 
-    public String BitMapToString(Bitmap bitmap){
-        ByteArrayOutputStream baos=new  ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG,100, baos);
-        byte [] arr=baos.toByteArray();
-        String result= Base64.encodeToString(arr, Base64.DEFAULT);
+    public String BitMapToString(Bitmap bitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] arr = baos.toByteArray();
+        String result = Base64.encodeToString(arr, Base64.DEFAULT);
         return result;
     }
 
 
-
-    public Bitmap StringToBitMap(String image){
-        try{
-            byte [] encodeByte=Base64.decode(image,Base64.DEFAULT);
-            Bitmap bitmap= BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+    public Bitmap StringToBitMap(String image) {
+        try {
+            byte[] encodeByte = Base64.decode(image, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
             return bitmap;
-        }catch(Exception e){
+        } catch (Exception e) {
             e.getMessage();
             return null;
         }

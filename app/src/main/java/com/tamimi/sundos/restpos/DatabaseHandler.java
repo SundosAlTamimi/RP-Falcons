@@ -32,6 +32,7 @@ import com.tamimi.sundos.restpos.Models.ItemWithScreen;
 import com.tamimi.sundos.restpos.Models.Items;
 import com.tamimi.sundos.restpos.Models.JobGroup;
 import com.tamimi.sundos.restpos.Models.KitchenScreen;
+import com.tamimi.sundos.restpos.Models.MaxSerial;
 import com.tamimi.sundos.restpos.Models.MemberShipGroup;
 import com.tamimi.sundos.restpos.Models.Modifier;
 import com.tamimi.sundos.restpos.Models.Money;
@@ -57,7 +58,7 @@ import static com.tamimi.sundos.restpos.Settings.shift_name;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
     // Database Versions
-    private static final int DATABASE_VERSION = 39;
+    private static final int DATABASE_VERSION = 40;
 
     // Database Name
     private static final String DATABASE_NAME = "RestPos";
@@ -584,6 +585,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KITCHEN_NAME = "KITCHEN_NAME";
     private static final String KITCHEN_IP = "KITCHEN_IP";
 
+    //____________________________________________________________________________________
+    private static final String MAX_SERIAL = "MAX_SERIAL";
+
+    private static final String MAX_SERIAL_VHF = "MAX_SERIAL_VHF";
+    private static final String MAX_SERIAL_REFUND = "MAX_SERIAL_REFUND";
 
     //___________________________________________________________________________________
     public DatabaseHandler(Context context) {
@@ -1225,6 +1231,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KITCHEN_IP + " TEXT " + ")";
         db.execSQL(CREATE_TABLE_KITCHEN_SCREEN_TABLE);
 
+        //___________________________________________________________________________________
+        String CREATE_TABLE_MAX_SERIAL = "CREATE TABLE " + MAX_SERIAL + " ("
+                + MAX_SERIAL_VHF + " TEXT,"
+                + MAX_SERIAL_REFUND + " TEXT " + ")";
+        db.execSQL(CREATE_TABLE_MAX_SERIAL);
+
+
     }
 
 
@@ -1267,22 +1280,41 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 //        db.execSQL("ALTER TABLE ORDER_HEADER ADD IS_POSTED INTEGER NOT NULL DEFAULT '0'");
 //        db.execSQL("ALTER TABLE PAY_METHOD ADD IS_POSTED INTEGER NOT NULL DEFAULT '0'");
 
-        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS_TEMP ADD IS_POSTED INTEGER NOT NULL DEFAULT '0'");
-        db.execSQL("ALTER TABLE ORDER_HEADER_TEMP ADD IS_POSTED INTEGER NOT NULL DEFAULT '0'");
+//        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS_TEMP ADD IS_POSTED INTEGER NOT NULL DEFAULT '0'");
+//        db.execSQL("ALTER TABLE ORDER_HEADER_TEMP ADD IS_POSTED INTEGER NOT NULL DEFAULT '0'");
+//
+//        db.execSQL("ALTER TABLE MAIN_SETTINGS ADD CASH_NO INTEGER NOT NULL DEFAULT '0'");
+//
+//
+//        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS ADD CASH_NO INTEGER NOT NULL DEFAULT '0'");
+//        db.execSQL("ALTER TABLE ORDER_HEADER ADD CASH_NO INTEGER NOT NULL DEFAULT '0'");
+//        db.execSQL("ALTER TABLE PAY_METHOD ADD CASH_NO INTEGER NOT NULL DEFAULT '0'");
+//
+//        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS_TEMP ADD CASH_NO INTEGER NOT NULL DEFAULT '0'");
+//        db.execSQL("ALTER TABLE ORDER_HEADER_TEMP ADD CASH_NO INTEGER NOT NULL DEFAULT '0'");
 
-        db.execSQL("ALTER TABLE MAIN_SETTINGS ADD CASH_NO INTEGER NOT NULL DEFAULT '0'");
+        String CREATE_TABLE_MAX_SERIAL = "CREATE TABLE " + MAX_SERIAL + " ("
+                + MAX_SERIAL_REFUND + " TEXT,"
+                + MAX_SERIAL_VHF + " TEXT " + ")";
+        db.execSQL(CREATE_TABLE_MAX_SERIAL);
 
-
-        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS ADD CASH_NO INTEGER NOT NULL DEFAULT '0'");
-        db.execSQL("ALTER TABLE ORDER_HEADER ADD CASH_NO INTEGER NOT NULL DEFAULT '0'");
-        db.execSQL("ALTER TABLE PAY_METHOD ADD CASH_NO INTEGER NOT NULL DEFAULT '0'");
-
-        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS_TEMP ADD CASH_NO INTEGER NOT NULL DEFAULT '0'");
-        db.execSQL("ALTER TABLE ORDER_HEADER_TEMP ADD CASH_NO INTEGER NOT NULL DEFAULT '0'");
 
     }
 
     //Insert values to the table Items
+
+    public void addMAXSerial( MaxSerial max){
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(MAX_SERIAL_VHF,max.getMaxSerial());
+        values.put(MAX_SERIAL_REFUND,max.getMaxSerialRefund());
+
+        db.insert(MAX_SERIAL, null , values);
+        db.close();
+    }
+
+
 
     public void addMainSettings(){
         db = this.getWritableDatabase();
@@ -2169,12 +2201,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             Settings.POS_number = cursor.getInt(3);
             Settings.store_number = cursor.getInt(4);
             Settings.shift_number = cursor.getInt(5);
-            shift_name = cursor.getString(6);
+            Settings.shift_name = cursor.getString(6);
             Settings.service_tax= cursor.getDouble(7);
             Settings.service_value = cursor.getDouble(8);
             Settings.tax_type = cursor.getInt(9);
             Settings.time_card = cursor.getInt(10);
-            Settings.time_card = cursor.getInt(11);
+            Settings.cash_no = cursor.getInt(11);
 
         }
     }
@@ -2968,6 +3000,26 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         return payMethodsList;
 
+    }
+
+    public List<MaxSerial> getMaxSerialForVhf() {
+        ArrayList<MaxSerial> items = new ArrayList<>();
+
+        String selectQuery = "SELECT * FROM " + MAX_SERIAL;
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                MaxSerial item = new MaxSerial();
+                item.setMaxSerial(cursor.getString(0));
+                item.setMaxSerialRefund(cursor.getString(1));
+
+                items.add(item);
+
+            } while (cursor.moveToNext());
+        }
+        return items;
     }
 
     public int getMaxSerial( String TableName,String orderKind) {
@@ -4303,5 +4355,27 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("delete from " + VOID_REASONS);
         db.close();
     }
+
+    public void updateMaxVhf(String newMax) {
+
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(MAX_SERIAL_VHF, newMax);
+
+        // updating row
+        db.update(MAX_SERIAL, values,null, null);
+    }
+    public void updateMaxVhfRefund(String newMax) {
+
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(MAX_SERIAL_REFUND, newMax);
+
+        // updating row
+        db.update(MAX_SERIAL, values,null, null);
+    }
+
 
 }

@@ -346,7 +346,7 @@ public class MenuRegistration extends AppCompatActivity {
                     categoriesAdapter.notifyDataSetChanged();
                     familyName = familyNameSpinner.getSelectedItem().toString();
 
-                    ReceiveCloud obj = new ReceiveCloud(MenuRegistration.this, 2);
+                    ReceiveCloud obj = new ReceiveCloud(MenuRegistration.this, 2,"");
                     obj.startReceiving("MaxGroupSerial");
 
                 } else {
@@ -493,7 +493,7 @@ Log.e("save ","suc");
                     families.add(0, familyEditText.getText().toString());
                     familiesAdapter.notifyDataSetChanged();
 
-                    ReceiveCloud obj = new ReceiveCloud(MenuRegistration.this, 1);
+                    ReceiveCloud obj = new ReceiveCloud(MenuRegistration.this, 1,"");
                     obj.startReceiving("MaxGroupSerial");
 
                     dialog2.dismiss();
