@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="950dp"
+    android:layout_width="920dp"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="@color/layer3"
             android:orientation="horizontal"
-            android:padding="20dp">
+           >
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
@@ -203,17 +204,43 @@
                     android:textColor="@color/cardview_dark_background" />
                 </LinearLayout>
 
+                <Button
+                    android:id="@+id/main_settings_save"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="280dp"
+                    android:layout_marginLeft="280dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/done_buttons"
+                    android:padding="10dp"
+                    android:text="@string/save"
+                    android:textAllCaps="false"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/all_fields_are_required"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:textColor="@color/text_color"
+                    android:textSize="18sp"
+                    />
+
             </LinearLayout>
 
             <View
                 android:id="@+id/vertical_line"
                 android:layout_width="1dp"
-                android:layout_height="335dp"
+                android:layout_height="310dp"
                 android:layout_marginTop="5dp"
                 android:background="@color/layer4" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
@@ -375,19 +402,31 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
-                <Button
-                    android:id="@+id/main_settings_save"
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="70dp"
-                    android:layout_marginLeft="70dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginBottom="20dp"
-                    android:background="@drawable/done_buttons"
-                    android:padding="10dp"
-                    android:text="@string/save"
-                    android:textAllCaps="false"
-                    android:textSize="20sp" />
+                    <TextView
+                        android:id="@+id/main_settings_tv12"
+                        android:layout_width="180dp"
+                        android:layout_height="44dp"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="@string/cash_no"
+                        android:textColor="@color/text_color"
+                        android:textSize="20sp" />
+
+                    <EditText
+                        android:id="@+id/main_settings_cashNo"
+                        android:layout_width="220dp"
+                        android:layout_height="44dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_marginRight="20dp"
+                        android:imeOptions="actionGo"
+                        android:padding="10dp"
+                        android:singleLine="true"
+                        android:textColor="@color/cardview_dark_background" />
+                </LinearLayout>
 
                 <Button
                     android:id="@+id/main_settings_cancel"
@@ -398,12 +437,12 @@
                     android:layout_marginEnd="40dp"
                     android:layout_marginRight="40dp"
                     android:layout_marginTop="20dp"
+                    android:layout_marginBottom="60dp"
                     android:background="@drawable/cancel_button"
                     android:padding="10dp"
                     android:text="@string/cancel"
                     android:textAllCaps="false"
                     android:textSize="20sp" />
-                </LinearLayout>
 
             </LinearLayout>
 

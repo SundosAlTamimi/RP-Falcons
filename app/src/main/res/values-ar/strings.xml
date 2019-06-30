@@ -16,6 +16,9 @@
     <string name="log_in">دخول</string>
     <string name="clear">مسح</string>
     <string name="enter_password">ادخل كلمة السر</string>
+    <string name="required_field">حقل اجباري!</string>
+    <string name="all_fields_are_required">*جميع الحقول اجبارية!</string>
+    <string name="cash_no">رقم الكاش</string>
 
     <string name="password">كلمة السر</string>
     <string name="user_no">اسم المستخدم</string>

@@ -1331,6 +1331,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(MAIN_SETTINGS_SERVICE_VALUE, Settings.service_value);
         values.put(MAIN_SETTINGS_TAX_TYPE, Settings.tax_type);
         values.put(MAIN_SETTINGS_TIME_CARD, Settings.time_card);
+        values.put(MAIN_SETTINGS_CASH_NO, Settings.cash_no);
 
         db.insert(MAIN_SETTINGS, null , values);
         db.close();
