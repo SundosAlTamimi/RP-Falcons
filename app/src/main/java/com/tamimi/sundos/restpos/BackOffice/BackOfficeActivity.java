@@ -71,6 +71,7 @@ import com.tamimi.sundos.restpos.Models.VoidResons;
 import com.tamimi.sundos.restpos.Models.ZReport;
 import com.tamimi.sundos.restpos.PayMethods;
 import com.tamimi.sundos.restpos.R;
+import com.tamimi.sundos.restpos.ReceiveCloud;
 import com.tamimi.sundos.restpos.SendCloud;
 import com.tamimi.sundos.restpos.Settings;
 import com.tamimi.sundos.restpos.SyncWithCloud;
@@ -282,7 +283,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     showMainSettingsPasswordDialog();
                     break;
                 case R.id.sync_with_cloud:
-                    showSyncWithCloudDialog();
+                    showSyncWithCloudChoesDialog();
                     break;
                 case R.id.sales_total:
                     salesTotalReportDialog();
@@ -6938,7 +6939,46 @@ public class BackOfficeActivity extends AppCompatActivity {
 
     }
 
-    void insertRaw2(Modifier items, final TableLayout itemsTableLayout, String text) {
+
+
+    private void showSyncWithCloudChoesDialog() {
+        dialog = new Dialog(BackOfficeActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.syncwithcloud_dialog);
+        dialog.setCanceledOnTouchOutside(true);
+
+        LinearLayout syncVhf=(LinearLayout)dialog.findViewById(R.id.sync_with_cloud_vhf);
+        LinearLayout syncCloud=(LinearLayout)dialog.findViewById(R.id.sync_with_cloud_vhf);
+
+        syncCloud.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSyncWithCloudDialog();
+                dialog.dismiss();
+            }
+        });
+
+        syncVhf.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                ReceiveCloud obj = new ReceiveCloud(BackOfficeActivity.this, 2,0);
+                obj.startReceiving("MaxSerial");
+                ReceiveCloud obj2 = new ReceiveCloud(BackOfficeActivity.this, 2,1);
+                obj2.startReceiving("MaxSerial");
+
+                dialog.dismiss();
+
+            }
+        });
+
+
+        dialog.show();
+    }
+
+
+        void insertRaw2(Modifier items, final TableLayout itemsTableLayout, String text) {
         final TableRow row = new TableRow(BackOfficeActivity.this);
 
         TableLayout.LayoutParams lp = new TableLayout.LayoutParams();

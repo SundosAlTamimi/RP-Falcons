@@ -401,7 +401,7 @@
                         android:layout_marginTop="5dp"
                         android:gravity="center"
                         android:padding="5dp"
-                        android:text="@string/time_card"
+                        android:text="@string/cash_no"
                         android:textColor="@color/text_color"
                         android:textSize="18sp" />
 

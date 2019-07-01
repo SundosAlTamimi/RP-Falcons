@@ -407,7 +407,7 @@ public class OrderTransactions {
             obj.put("QTY", qty);
             obj.put("PRICE", price);
             obj.put("NOTE", note);
-            if(getOrderKind()==998){
+            if(getOrderKind()==1){
                 Log.e("isUpdate1 =","up =1 "+"order kind = "+getOrderKind());
                 obj.put("ISUPDATE", 1);}
             else if(getOrderKind()==0){

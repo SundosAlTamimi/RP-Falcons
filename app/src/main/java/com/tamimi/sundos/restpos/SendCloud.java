@@ -26,6 +26,7 @@ public class SendCloud {
     private JSONObject obj;
     DatabaseHandler dbHandler;
 
+
     public SendCloud(Context context, JSONObject obj) {
         this.obj = obj;
         this.context = context;
@@ -36,6 +37,9 @@ public class SendCloud {
 
         if (flag.equals("kitchen"))
             new JSONTaskKitchen().execute();
+
+        if (flag.equals("MaxSerial"))
+            new JSONTaskMaxSerial().execute();
 
         if (flag.equals("Order"))
             new JSONTaskOrder().execute();
@@ -975,6 +979,103 @@ public class SendCloud {
 //            progressDialog.dismiss();
         }
     }
+
+    private class JSONTaskMaxSerial extends AsyncTask<String, String, String> {
+        private String JsonResponse = null;
+        private HttpURLConnection urlConnection = null;
+        private BufferedReader reader = null;
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+//            progressDialog = new ProgressDialog(context);
+//            progressDialog.setCancelable(false);
+//            progressDialog.setMessage("Loading...");
+//            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//            progressDialog.setProgress(0);
+//            progressDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                String link = "http://falconssoft.net/RestService/FSAppServiceDLL.dll/GetMaxVHFNo?";
+
+                String data = "Compno=" + URLEncoder.encode("736", "UTF-8") + "&" +
+                        "CompYear=" + URLEncoder.encode("2019", "UTF-8") + "&" +
+                        "POSNO=" + URLEncoder.encode("1", "UTF-8")+ "&" +
+                        "CASHNO=" + URLEncoder.encode(""+Settings.cash_no, "UTF-8")+ "&" +
+                        "ORDERKIND=" + URLEncoder.encode("1", "UTF-8");
+
+                URL url = new URL(link+data);
+                Log.e("url max serial ", "" + url.toString());
+
+
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+//                httpURLConnection.setDoOutput(true);
+                httpURLConnection.setDoInput(true);
+//                httpURLConnection.setRequestMethod("POST");
+//
+//                DataOutputStream wr = new DataOutputStream(httpURLConnection.getOutputStream());
+//                wr.writeBytes(data);
+//                wr.flush();
+//                wr.close();
+
+
+
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+                StringBuffer stringBuffer = new StringBuffer();
+
+                while ((JsonResponse = bufferedReader.readLine()) != null) {
+                    stringBuffer.append(JsonResponse + "\n");
+                }
+
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+
+                Log.e("tag max serial", "" + stringBuffer.toString()+"ggg");
+
+                return stringBuffer.toString();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e("tag", "Error closing stream", e);
+                    }
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            Log.e("s.content", ""+s.toString());
+
+            if (s != null && s.contains("MaxVHFNO")) {
+                Log.e("tag", "****Success");
+            }else
+            {
+                Log.e("tag maxserial .. ", "****Failed to export data");
+            }
+//            progressDialog.dismiss();
+        }
+    }
+
+
+
 
 }
 

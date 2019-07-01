@@ -4357,6 +4357,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+
+    public void deleteAllMaxSerial() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + MAX_SERIAL);
+        db.close();
+    }
+
     public void updateMaxVhf(String newMax) {
 
         db = this.getWritableDatabase();

@@ -133,7 +133,7 @@ public class SendSocket {
                     obj.put("ORDERTYPE", orderTransactions.get(i).getOrderType());
                     obj.put("TABLENO", orderTransactions.get(i).getTableNo());
                     obj.put("SECTIONNO", orderTransactions.get(i).getSectionNo());
-                    if(orderTransactions.get(i).getOrderKind()==998){
+                    if(orderTransactions.get(i).getOrderKind()==1){
                         obj.put("ISUPDATE", 1);
                         Log.e("ISUPDATE  =1",""+orderTransactions.get(i).getOrderKind());}
                     else if(orderTransactions.get(i).getOrderKind()==0){

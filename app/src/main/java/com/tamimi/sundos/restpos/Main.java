@@ -35,6 +35,7 @@ import android.widget.TextClock;
 import android.widget.TextView;
 
 import com.tamimi.sundos.restpos.BackOffice.BackOfficeActivity;
+import com.tamimi.sundos.restpos.BackOffice.MenuRegistration;
 import com.tamimi.sundos.restpos.Models.Announcemet;
 import com.tamimi.sundos.restpos.Models.BlindClose;
 import com.tamimi.sundos.restpos.Models.BlindCloseDetails;
@@ -176,6 +177,13 @@ public class Main extends AppCompatActivity {
                     break;
 
                 case R.id.cash_drawer:
+//                    ReceiveCloud obj = new ReceiveCloud(Main.this, 2,1);
+//                    obj.startReceiving("MaxSerial");
+
+//                    SendCloud sendCloud = new SendCloud(Main.this, null);
+//                    sendCloud.startSending("MaxSerial");
+
+
                     showCashDrawerDialog();
                     break;
 
@@ -2215,7 +2223,7 @@ public class Main extends AppCompatActivity {
 
                 ifGraterThan[0] = false;
 
-//                int transactionsSize = mDHandler.getMaxSerial("ORDER_HEADER","998")+1;
+//                int transactionsSize = mDHandler.getMaxSerial("ORDER_HEADER","1")+1;
                List<MaxSerial>max=new ArrayList<>();
                 max=mDHandler.getMaxSerialForVhf();
               int transactionsSize =0;

@@ -584,6 +584,7 @@
     <string name="please_return_this_value">Please return this value :</string>
     <string name="kitchen_ip">Kitchen IP</string>
     <string name="not_data">not have data to export ...</string>
+    <string name="sync_max_vhf">Sync Max VHF</string>
 
 
 </resources>
