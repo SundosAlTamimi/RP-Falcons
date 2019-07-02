@@ -1909,7 +1909,7 @@ public class Main extends AppCompatActivity {
                             rowRefund.add(orderTransactions.get(i));
                             double q = orderTransactions.get(i).getQty();
                             double oldTotal = orderTransactions.get(i).getTotal();
-                            rowRefund.get(index).setQty(Double.parseDouble("-" + text.getText().toString()));
+                            rowRefund.get(index).setQty(Double.parseDouble("-" + textData));
                             double lDiscon = orderTransactions.get(i).getlDiscount();
                             rowRefund.get(index).setTotal(textData * (orderTransactions.get(i).getPrice()));
                             rowRefund.get(index).setlDiscount(textData * (lDiscon / q));
@@ -2363,6 +2363,7 @@ public class Main extends AppCompatActivity {
                             waiterName = mDHandler.getAllRequestVoucherHeader(VHF_NO, String.valueOf(Settings.POS_number));
                         }
 
+
                         OrderHeader orderHeader;
                         orderHeader = new OrderHeader(rowRefund.get(0).getOrderType(), 1, convertToEnglish(today), Settings.POS_number, Settings.store_number,
                                 String.valueOf(transactionsSize), 1, -1*totalAdd, -1*lineDic, -1*dic, -1*(lineDic + dic),
@@ -2371,7 +2372,6 @@ public class Main extends AppCompatActivity {
                                 rowRefund.get(0).getSectionNo(), -1*cashValues, -1*creditValues, -1*chequeVales, -1*cardValues,
                                 -1*giftCardValues, -1*pointValues, Settings.shift_name, Settings.shift_number, waiterName, 0, Settings.user_name, Settings.user_no, convertToEnglish(times), rowRefund.get(0).getVoucherNo(), rowRefund.get(0).getPosNo(),Settings.cash_no);
                         mDHandler.addOrderHeader(orderHeader);
-                        orderHeader.setVoucherNumber(rowRefund.get(0).getVoucherNo());
 
                         for (int i = 0; i < rowRefund.size(); i++) {
                             OrderTransactions orderTransactions = new OrderTransactions(rowRefund.get(i).getOrderType(), 1, convertToEnglish(today), Settings.POS_number, Settings.store_number,
@@ -2407,7 +2407,12 @@ public class Main extends AppCompatActivity {
 
                         List<ItemWithScreen> itemWithScreens = mDHandler.getAllItemsWithScreen();
                         PayMethods pay = new PayMethods();
+
+                        orderHeader.setVoucherNumber(rowRefund.get(0).getVoucherNo());
                         pay.sendToKitchen(Main.this, orderHeader, rowRefund, payObj, itemWithScreens);
+
+                        rowRefund.get(0).setVoucherNo(""+transactionsSize);
+                        orderHeader.setVoucherNumber(""+transactionsSize);
                         pay.sendToServer(Main.this, orderHeader, rowRefund, payObj);
 
                         netTotals = 0.0;

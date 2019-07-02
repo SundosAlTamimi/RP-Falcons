@@ -182,9 +182,8 @@ public class Order extends AppCompatActivity {
 //                            sendToKitchen();
 
                             Intent intentPay = new Intent(Order.this, PayMethods.class);
-//                            intentPay.putExtra("vhfNO",voucherNo);
                             startActivity(intentPay);
-//                            finish();
+
                         } else
                             new Settings().makeText(Order.this, getResources().getString(R.string.amountdue_oo));
                     }
@@ -195,8 +194,14 @@ public class Order extends AppCompatActivity {
                         if (!(Double.parseDouble(amountDue.getText().toString()) == 0)) {
                             saveInOrderTransactionTemp();
                             saveInOrderHeaderTemp();
-                            mDbHandler.updateMaxVhf(voucherNo);
-
+                            List<MaxSerial>max=new ArrayList<>();
+                            max=mDbHandler.getMaxSerialForVhf();
+                            if(max.size()!=0) {
+                                String vhNO = max.get(0).getMaxSerial();
+                                if (Integer.parseInt(voucherNo)>Integer.parseInt(vhNO)) {
+                                    mDbHandler.updateMaxVhf(voucherNo);
+                                }
+                            }
                             Intent intent = new Intent(Order.this, DineIn.class);
                             startActivity(intent);
                             finish();

@@ -98,6 +98,8 @@ public class SendCloud {
                 URL url = new URL(link );
 //                new SendDeviceDetails().execute("http://52.88.194.67:8080/IOTProjectServer/registerDevice", postData.toString());
 
+                Log.e("data kitchen ","--> "+obj.toString());
+
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setDoOutput(true);
                 httpURLConnection.setDoInput(true);
@@ -163,7 +165,7 @@ public class SendCloud {
         private String JsonResponse = null;
         private HttpURLConnection urlConnection = null;
         private BufferedReader reader = null;
-        String vhfNo, POSNO;
+        String vhfNo, POSNO ,orderKind;
 
         @Override
         protected void onPreExecute() {
@@ -191,6 +193,8 @@ public class SendCloud {
                     JSONObject jo = obj.getJSONObject("ORDERHEADER");
                     vhfNo = jo.getString("VHFNO");
                     POSNO = jo.getString("POSNO");
+                    orderKind=jo.getString("ORDERKIND");
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -253,9 +257,9 @@ public class SendCloud {
                 Log.e("tag", "****Success");
                 Log.e("vhf Success___", "= " + vhfNo);
 
-                  dbHandler.updateOrderTablesIsPost(vhfNo,POSNO);
-                  dbHandler.updateOrderTablesIsPost2(vhfNo,POSNO);
-                  dbHandler.updateOrderTablesIsPost3(vhfNo,POSNO);
+                  dbHandler.updateOrderTablesIsPost(vhfNo,POSNO,orderKind);
+                  dbHandler.updateOrderTablesIsPost2(vhfNo,POSNO,orderKind);
+                  dbHandler.updateOrderTablesIsPost3(vhfNo,POSNO,orderKind);
 
 //            } else if (s != null && s.contains("voucher saved unsuccessfully,")) {
 //

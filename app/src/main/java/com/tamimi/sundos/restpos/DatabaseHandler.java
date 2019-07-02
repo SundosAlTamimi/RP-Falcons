@@ -4076,30 +4076,30 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.update(ANNOUNCEMENT_TABLE, values, filter, null);
     }
 
-    public void updateOrderTablesIsPost(String VhfNo, String posNO) {
+    public void updateOrderTablesIsPost(String VhfNo, String posNO,String orderKind) {
         db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        String filter = VOUCHER_NO1 + " = '" + VhfNo + "' and " + POS_NO1 + "= '" + posNO + "'";
+        String filter = VOUCHER_NO1 + " = '" + VhfNo + "' and " + POS_NO1 + "= '" + posNO + "' and "+ORDER_KIND1+"= '"+orderKind+"'";
         values.put(IS_POSTED1, 1);
 
         // updating row
         db.update(ORDER_TRANSACTIONS, values, filter, null);
     }
 
-    public void updateOrderTablesIsPost2(String VhfNo, String posNO) {
+    public void updateOrderTablesIsPost2(String VhfNo, String posNO,String orderKind) {
         db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        String filter = VOUCHER_NUMBER2 + " = '" + VhfNo + "' and " + POINT_OF_SALE_NUMBER2 + "= '" + posNO + "'";
+        String filter = VOUCHER_NUMBER2 + " = '" + VhfNo + "' and " + POINT_OF_SALE_NUMBER2 + "= '" + posNO + "' and "+ORDER_KIND2+"= '"+orderKind+"'";
         values.put(IS_POSTED2, 1);
 
         // updating row
         db.update(ORDER_HEADER, values, filter, null);
     }
 
-    public void updateOrderTablesIsPost3(String VhfNo, String posNO) {
+    public void updateOrderTablesIsPost3(String VhfNo, String posNO,String orderKind) {
         db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        String filter = VOUCHER_NUMBER + " = '" + VhfNo + "' and " + POINT_OF_SALE_NUMBER + "= '" + posNO + "'";
+        String filter = VOUCHER_NUMBER + " = '" + VhfNo + "' and " + POINT_OF_SALE_NUMBER + "= '" + posNO + "' and "+ORDER_KIND+"= '"+orderKind+"'";
         values.put(IS_POSTED14, 1);
 
         // updating row
