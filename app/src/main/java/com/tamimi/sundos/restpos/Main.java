@@ -2151,70 +2151,82 @@ public class Main extends AppCompatActivity {
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                focusedTextView.setText(focusedTextView.getText().toString() + "1");
+                if(focusedTextView!=null){
+                focusedTextView.setText(focusedTextView.getText().toString() + "1");}
             }
         });
         b2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                focusedTextView.setText(focusedTextView.getText().toString() + "2");
+                if(focusedTextView!=null){
+                focusedTextView.setText(focusedTextView.getText().toString() + "2");}
             }
         });
         b3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                focusedTextView.setText(focusedTextView.getText().toString() + "3");
+                if(focusedTextView!=null){
+                focusedTextView.setText(focusedTextView.getText().toString() + "3");}
             }
         });
         b4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                focusedTextView.setText(focusedTextView.getText().toString() + "4");
+                if(focusedTextView!=null){
+                focusedTextView.setText(focusedTextView.getText().toString() + "4");}
             }
         });
         b5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                focusedTextView.setText(focusedTextView.getText().toString() + "5");
+                if(focusedTextView!=null){
+                focusedTextView.setText(focusedTextView.getText().toString() + "5");}
             }
         });
         b6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(focusedTextView!=null)
                 focusedTextView.setText(focusedTextView.getText().toString() + "6");
             }
         });
         b7.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                focusedTextView.setText(focusedTextView.getText().toString() + "7");
+                if(focusedTextView!=null){
+                focusedTextView.setText(focusedTextView.getText().toString() + "7");}
             }
         });
         b8.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                focusedTextView.setText(focusedTextView.getText().toString() + "8");
+                if(focusedTextView!=null){
+                focusedTextView.setText(focusedTextView.getText().toString() + "8");}
             }
         });
         b9.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                focusedTextView.setText(focusedTextView.getText().toString() + "9");
+                if(focusedTextView!=null){
+                focusedTextView.setText(focusedTextView.getText().toString() + "9");}
             }
         });
         b0.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                focusedTextView.setText(focusedTextView.getText().toString() + "0");
+                if(focusedTextView!=null) {
+                    focusedTextView.setText(focusedTextView.getText().toString() + "0");
+                }
             }
         });
         dot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(focusedTextView!=null){
                 if (flag)
                     focusedTextView.setText(focusedTextView.getText().toString() + ".");
                 flag = false;
-            }
+            }}
         });
         ArrayList<PayMethod> finalAllPayType = AllPayType;
         save.setOnClickListener(new View.OnClickListener() {
