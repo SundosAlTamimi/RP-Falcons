@@ -58,7 +58,7 @@ public class FoodAdapter1 extends BaseAdapter {
         description.setText(items.get(position).getDescription());
         img.setImageDrawable(new BitmapDrawable(context.getResources(), StringToBitMap(items.get(position).getPic())));
         if (items.get(position).getPrice() != 0)
-            price.setText("$" + items.get(position).getPrice());
+            price.setText("JD " + items.get(position).getPrice());
 
         background.setBackgroundColor(items.get(position).getBackground());
         name.setTextColor(items.get(position).getTextColor());

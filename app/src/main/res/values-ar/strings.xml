@@ -589,4 +589,6 @@
     <string name="please_return_this_value">الرجاء ارجاع هذه القيمة :</string>
     <string name="kitchen_ip">المطبخ IP</string>
     <string name="not_data">لا يوجد بيانات لعرضها ...</string>
+    <string name="sync_max_vhf">مزامنة الرقم التسلسلي </string>
+    <string name="details">التفاصيل :</string>
 </resources>

@@ -585,6 +585,7 @@
     <string name="kitchen_ip">Kitchen IP</string>
     <string name="not_data">not have data to export ...</string>
     <string name="sync_max_vhf">Sync Max VHF</string>
+    <string name="details">Details :</string>
 
 
 </resources>

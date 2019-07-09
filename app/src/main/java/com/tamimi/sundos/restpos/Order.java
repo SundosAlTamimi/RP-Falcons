@@ -86,6 +86,7 @@ public class Order extends AppCompatActivity {
     CheckBox discPerc;
     Button back;
     LinearLayout baLiner;
+    boolean showChek=false;
 
     private ProgressDialog progressDialog;
     String json_getString;
@@ -234,6 +235,12 @@ public class Order extends AppCompatActivity {
                 case R.id.back:
                     showCats();
                     break;
+
+                case R.id.orderType:
+                    if(showChek){
+                        showCats();
+                    }
+                    break;
             }
         }
     };
@@ -290,6 +297,8 @@ public class Order extends AppCompatActivity {
         itemGridView.setVisibility(View.INVISIBLE);
         back.setVisibility(View.GONE);
         baLiner.setVisibility(View.GONE);
+        showChek=false;
+
     }
 
     void showItems() {
@@ -297,6 +306,7 @@ public class Order extends AppCompatActivity {
         itemGridView.setVisibility(View.VISIBLE);
         back.setVisibility(View.VISIBLE);
         baLiner.setVisibility(View.VISIBLE);
+        showChek=true;
     }
 
     @SuppressLint("SetTextI18n")
@@ -2001,7 +2011,7 @@ public class Order extends AppCompatActivity {
         discount.setOnClickListener(onClickListener);
         lDiscount.setOnClickListener(onClickListener);
         back.setOnClickListener(onClickListener);
-
+        orderType.setOnClickListener(onClickListener);
     }
 
 

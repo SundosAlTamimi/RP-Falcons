@@ -1293,10 +1293,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 //        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS_TEMP ADD CASH_NO INTEGER NOT NULL DEFAULT '0'");
 //        db.execSQL("ALTER TABLE ORDER_HEADER_TEMP ADD CASH_NO INTEGER NOT NULL DEFAULT '0'");
 
-        String CREATE_TABLE_MAX_SERIAL = "CREATE TABLE " + MAX_SERIAL + " ("
-                + MAX_SERIAL_REFUND + " TEXT,"
-                + MAX_SERIAL_VHF + " TEXT " + ")";
-        db.execSQL(CREATE_TABLE_MAX_SERIAL);
+//        String CREATE_TABLE_MAX_SERIAL = "CREATE TABLE " + MAX_SERIAL + " ("
+//                + MAX_SERIAL_REFUND + " TEXT,"
+//                + MAX_SERIAL_VHF + " TEXT " + ")";
+//        db.execSQL(CREATE_TABLE_MAX_SERIAL);
 
 
     }

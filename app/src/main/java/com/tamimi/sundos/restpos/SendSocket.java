@@ -29,12 +29,12 @@ import java.util.List;
 public class SendSocket {
 
     Context context;
-    JSONObject obj;
+    JSONObject obj1;
     List<OrderTransactions> orderTransactions;
     DatabaseHandler db;
 
     public SendSocket(Context context, JSONObject obj, List<OrderTransactions> orderTransactions) {
-        this.obj = obj;
+        this.obj1 = obj;
         this.context = context;
         this.orderTransactions = orderTransactions;
         db = new DatabaseHandler(context);
@@ -54,17 +54,17 @@ public class SendSocket {
 
                 //this for get all kitchen ...
                 kitchenScreens = db.getAllKitchenScreen();
-                Log.e("size : " , "**" + orderTransactions.size());
+                Log.e("size : ", "**" + orderTransactions.size());
 
                 //this for_loop for filter and send all data to target kitchen has same kitchen no and have ip
                 for (int i = 0; i < kitchenScreens.size(); i++) {
                     if (!kitchenScreens.get(i).getKitchenIP().equals("")) {//&& isHostAvailable(kitchenScreens.get(i).getKitchenIP(), 9002,100)
 
-                            if (checkHosts(kitchenScreens.get(i).getKitchenIP())){
-                            obj3 = getObjectForKitchenNo(orderTransactions ,kitchenScreens.get(i).getKitchenNo());
+                        if (checkHosts(kitchenScreens.get(i).getKitchenIP())) {
+                            obj3 = getObjectForKitchenNo(orderTransactions, kitchenScreens.get(i).getKitchenNo());
                             if (obj3.toString().length() > 2) {
                                 try {
-                                    String ip=kitchenScreens.get(i).getKitchenIP();
+                                    String ip = kitchenScreens.get(i).getKitchenIP();
                                     s = new Socket(ip.trim(), 9002);
                                     out = s.getOutputStream();
                                     output = new PrintWriter(out);
@@ -108,7 +108,7 @@ public class SendSocket {
 
     // this for get all object  send to target kitchen by kitchen no ...
 
-    JSONArray getObjectForKitchenNo(List<OrderTransactions> orderTransactions ,int KitchenNo) {
+    JSONArray getObjectForKitchenNo(List<OrderTransactions> orderTransactions, int KitchenNo) {
 
         JSONArray objNo = new JSONArray();
 
@@ -116,10 +116,10 @@ public class SendSocket {
             if (orderTransactions.get(i).getScreenNo() == KitchenNo) {
                 try {
                     JSONObject obj = new JSONObject();
-                    Log.e("ISUPDATE  =1","1234 ==>"+orderTransactions.get(i).getOrderKind()+"    "+orderTransactions.get(i).toString());
+                    Log.e("ISUPDATE  =1", "1234 ==>" + orderTransactions.get(i).getOrderKind() + "    " + orderTransactions.get(i).toString());
 
-                    String Date =orderTransactions.get(i).getVoucherDate()+" "+orderTransactions.get(i).getTime();
-                    Log.e("date "," ==>"+Date);
+                    String Date = orderTransactions.get(i).getVoucherDate() + " " + orderTransactions.get(i).getTime();
+                    Log.e("date ", " ==>" + Date);
 
                     obj.put("TRINDATE", Date);
                     obj.put("ITEMCODE", orderTransactions.get(i).getItemBarcode());
@@ -129,16 +129,22 @@ public class SendSocket {
                     obj.put("NOTE", orderTransactions.get(i).getNote());
 //                    obj.put("SCREENNO", orderTransactions.get(i).getScreenNo());
                     obj.put("POSNO", orderTransactions.get(i).getPosNo());
-                    obj.put("ORDERNO", orderTransactions.get(i).getVoucherNo());
+//                    obj.put("ORDERNO", orderTransactions.get(i).getVoucherNo());
+//                    JSONObject jo = obj1.getJSONObject("ORDERHEADER");
+                     String  vhfNo = obj1.getString("ORDERNO");
+                     Log.e("Vhf8uuu = = ",""+vhfNo);
+                    obj.put("ORDERNO",vhfNo );
+
                     obj.put("ORDERTYPE", orderTransactions.get(i).getOrderType());
                     obj.put("TABLENO", orderTransactions.get(i).getTableNo());
                     obj.put("SECTIONNO", orderTransactions.get(i).getSectionNo());
-                    if(orderTransactions.get(i).getOrderKind()==1){
+                    if (orderTransactions.get(i).getOrderKind() == 1) {
                         obj.put("ISUPDATE", 1);
-                        Log.e("ISUPDATE  =1",""+orderTransactions.get(i).getOrderKind());}
-                    else if(orderTransactions.get(i).getOrderKind()==0){
+                        Log.e("ISUPDATE  =1", "" + orderTransactions.get(i).getOrderKind());
+                    } else if (orderTransactions.get(i).getOrderKind() == 0) {
                         obj.put("ISUPDATE", 0);
-                        Log.e("ISUPDATE =0",""+orderTransactions.get(i).getOrderKind());}
+                        Log.e("ISUPDATE =0", "" + orderTransactions.get(i).getOrderKind());
+                    }
 
                     obj.put("CASHNO", orderTransactions.get(i).getCashNo());
                     objNo.put(obj);
@@ -153,23 +159,22 @@ public class SendSocket {
         return objNo;
     }
 
-    public boolean checkHosts(String subnet){
-        int timeout=1000;
-        boolean fa=false;
-            try {
-                if (InetAddress.getByName(subnet).isReachable(timeout)){
-                    System.out.println(subnet + " is reachable");
-                    fa=true;
+    public boolean checkHosts(String subnet) {
+        int timeout = 1000;
+        boolean fa = false;
+        try {
+            if (InetAddress.getByName(subnet).isReachable(timeout)) {
+                System.out.println(subnet + " is reachable");
+                fa = true;
 
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                fa=false;
             }
-        Log.e("tesr3","fa ==>"+fa);
-            return fa;
+        } catch (IOException e) {
+            e.printStackTrace();
+            fa = false;
         }
-
+        Log.e("tesr3", "fa ==>" + fa);
+        return fa;
+    }
 
 
 }
