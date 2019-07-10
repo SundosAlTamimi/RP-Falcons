@@ -45,7 +45,7 @@ public class LogIn extends AppCompatActivity {
     ImageView lock;
     Button b1, b2, b3, b4, b5, b6, b7, b8, b9, b0;
     Button clear, logIn;
-    TextView t1, t2, t3, t4;
+    TextView t1, t2, t3, t4,oo;
     TextView[] arrayOfText;
     int index = 0;
     MediaPlayer mp;
@@ -70,6 +70,10 @@ public class LogIn extends AppCompatActivity {
         setShift();
         arrayOfText = new TextView[]{t1, t2, t3, t4};
         showUserNameDialog();
+//        InternetConnection in =new InternetConnection();
+//oo=findViewById(R.id.oo);
+//        Settings.focas=oo;
+
     }
 
     OnClickListener onClickListener = new OnClickListener() {

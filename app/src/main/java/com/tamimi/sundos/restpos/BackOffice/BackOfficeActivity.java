@@ -2913,6 +2913,8 @@ public class BackOfficeActivity extends AppCompatActivity {
         final Button save = (Button) dialog.findViewById(R.id.save);
         final Button exit = (Button) dialog.findViewById(R.id.exit);
 
+        itemWithScreensList.clear();
+
         List<Items> items = mDHandler.getAllItems();
 
         final List<FamilyCategory> familyCategories = mDHandler.getAllFamilyCategory();
@@ -3219,7 +3221,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         final Button save = (Button) dialog.findViewById(R.id.save);
         final Button exit = (Button) dialog.findViewById(R.id.exit);
 
-
+        itemWithModifiersList.clear();
         final List<Items> items = mDHandler.getAllItems();
         final ArrayList<String> itemName = new ArrayList<>();
         itemName.add("");
@@ -3297,6 +3299,8 @@ public class BackOfficeActivity extends AppCompatActivity {
                     }
                 }
 
+
+
                 // save cloud *********
 
                 for (int i = 0; i < itemsTableLayout.getChildCount(); i++) {
@@ -3361,7 +3365,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         final Button add = (Button) dialog.findViewById(R.id.add_question);
         final Button save = (Button) dialog.findViewById(R.id.save);
         final Button exit = (Button) dialog.findViewById(R.id.exit);
-
+        itemWithFqsList.clear();
 
         final List<Items> items = mDHandler.getAllItems();
         final ArrayList<String> itemName = new ArrayList<>();

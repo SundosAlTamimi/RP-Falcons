@@ -19,6 +19,7 @@ public class Settings {
     public static int tax_type = 1;
     public static int time_card = 0;
     public static int cash_no = 1;
+    public static TextView focas;
 
     public Settings(){
     }
@@ -34,4 +35,14 @@ public class Settings {
         group.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.toast));
         toast.show();
     }
+
+
+
+    public void text( String msg ){
+
+       focas.setText(msg);
+
+    }
+
+
 }
