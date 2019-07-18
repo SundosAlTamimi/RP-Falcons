@@ -634,12 +634,14 @@ public class PayMethods extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String t0 = String.valueOf(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(balance.getText().toString())))));
-                String t1 = String.valueOf(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(received.getText().toString())))));
-                String t2 = cardNo.getText().toString();
+//                String t0 = String.valueOf(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(balance.getText().toString())))));
+//                String t1 = String.valueOf(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(received.getText().toString())))));
+//                String t2 = cardNo.getText().toString();
                 //&& spinner.getSelectedItem().toString().equals("")
-                if (!t1.equals("") && !t2.equals("") && creditCardsName.size() != 0) {
-
+                if (!received.getText().toString().equals("") && !cardNo.getText().toString().equals("") && creditCardsName.size() != 0) {
+                    String t0 = String.valueOf(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(balance.getText().toString())))));
+                    String t1 = String.valueOf(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(received.getText().toString())))));
+                    String t2 = cardNo.getText().toString();
                     if (Double.parseDouble(t1) <= Double.parseDouble(t0)) {
 
                         creditCardValue += Double.parseDouble(convertToEnglish(t1));
@@ -870,13 +872,15 @@ public class PayMethods extends AppCompatActivity {
             public void onClick(View view) {
 
 
-                String t0 =convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(balance.getText().toString()))));
-                String t1 = convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish( received.getText().toString()))));
-                String t2 = chequeNumber.getText().toString();
 
-                if (t1.equals("") && t2.equals("") && spinner2.getSelectedItem().toString().equals(""))
-                new Settings().makeText(PayMethods.this,getResources().getString(R.string.enter_recived_value_and_carfno) );
-                else if ((Double.parseDouble(t1) <= Double.parseDouble(t0))&&!t1.equals("")&&!t2.equals("")) {
+                if (received.getText().toString().equals("") && chequeNumber.getText().toString().equals("") && spinner2.getSelectedItem().toString().equals("")) {
+                    new Settings().makeText(PayMethods.this, getResources().getString(R.string.enter_recived_value_and_carfno));
+                }
+                else if ((Double.parseDouble(convertToEnglish( received.getText().toString())) <= Double.parseDouble(convertToEnglish(balance.getText().toString())))&&!received.getText().toString().equals("")&&!chequeNumber.getText().toString().equals("")) {
+                    String t0 =convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(balance.getText().toString()))));
+                    String t1 = convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish( received.getText().toString()))));
+                    String t2 = chequeNumber.getText().toString();
+
                     chequeValue += Double.parseDouble(convertToEnglish( t1));
                     dialog.dismiss();
                     new Settings().makeText(PayMethods.this,getResources().getString(R.string.save) );
@@ -1078,13 +1082,17 @@ public class PayMethods extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String t0 =convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish( balance.getText().toString()))));
-                String t1 = convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(received.getText().toString()))));
-                String t2 = cardNo.getText().toString();
+//                String t0 =convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish( balance.getText().toString()))));
+//                String t1 = convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(received.getText().toString()))));
+//                String t2 = cardNo.getText().toString();
 
-                if (t1.equals("") && t2.equals(""))
+                if (received.getText().toString().equals("") && cardNo.getText().toString().equals(""))
                 new Settings().makeText(PayMethods.this, getResources().getString(R.string.enter_recived_value_and_carfno));
-                else if (Double.parseDouble(t1) <= Double.parseDouble(t0)) {
+                else if (Double.parseDouble(convertToEnglish(received.getText().toString())) <= Double.parseDouble(convertToEnglish( balance.getText().toString()))) {
+
+                    String t0 =convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish( balance.getText().toString()))));
+                    String t1 = convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(received.getText().toString()))));
+                    String t2 = cardNo.getText().toString();
 
                     giftCardValue += Double.parseDouble(t1);
                     dialog.dismiss();
@@ -1424,13 +1432,15 @@ public class PayMethods extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String t0 =convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish( balance.getText().toString()))));
-                String t1 = convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(received.getText().toString()))));
-                String t2 = cardNo.getText().toString();
 
-                if (t1.equals("") && t2.equals(""))
+                if (received.getText().toString().equals("") &&cardNo.getText().toString().equals(""))
                 new Settings().makeText(PayMethods.this, getResources().getString(R.string.enter_recived_value_and_carfno));
-                else if (Double.parseDouble(t1) <= Double.parseDouble(t0)) {
+                else if (Double.parseDouble(convertToEnglish(received.getText().toString())) <= Double.parseDouble(convertToEnglish( balance.getText().toString()))) {
+
+                    String t0 =convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish( balance.getText().toString()))));
+                    String t1 = convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(received.getText().toString()))));
+                    String t2 = cardNo.getText().toString();
+
 
                     pointValue += Double.parseDouble(t1);
                     dialog.dismiss();
