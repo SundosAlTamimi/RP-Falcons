@@ -45,11 +45,10 @@ public class LogIn extends AppCompatActivity {
     ImageView lock;
     Button b1, b2, b3, b4, b5, b6, b7, b8, b9, b0;
     Button clear, logIn;
-    TextView t1, t2, t3, t4,oo;
+    TextView t1, t2, t3, t4,logfocu;
     TextView[] arrayOfText;
     int index = 0;
     MediaPlayer mp;
-
     String date, time, shiftName = "A";
     int shiftNo = 0;
     boolean isActive;
@@ -70,9 +69,14 @@ public class LogIn extends AppCompatActivity {
         setShift();
         arrayOfText = new TextView[]{t1, t2, t3, t4};
         showUserNameDialog();
-//        InternetConnection in =new InternetConnection();
-//oo=findViewById(R.id.oo);
-//        Settings.focas=oo;
+
+
+        Settings.focas = findViewById(R.id.logtext);
+        if (Settings.onOFF) {
+            new Settings().blinkAnnouncement( true);
+        }else {
+            new Settings().blinkAnnouncement( false);
+        }
 
     }
 

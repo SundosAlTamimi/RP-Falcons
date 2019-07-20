@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tamimi.sundos.restpos.BackOffice.BackOfficeActivity;
@@ -37,14 +38,16 @@ public class InternetConnection extends Application {
                 Toast noInternetToast = Toast.makeText(getApplicationContext(),
                        "work Off line ", Toast.LENGTH_LONG);
                 noInternetToast.show();
-//                new Settings().text( "work Off line ");
+                Settings.onOFF=false;
+                new Settings().blinkAnnouncement(false);
 
             }else {
                 Toast noInternetToast = Toast.makeText(getApplicationContext(),
                         "work On Line ", Toast.LENGTH_LONG);
                 noInternetToast.show();
+                Settings.onOFF=true;
 //                new Settings().makeText(context, "internet_msg");
-//                new Settings().text( "work On Line ");
+                new Settings().blinkAnnouncement( true);
             }
         }
     };

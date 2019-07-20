@@ -66,7 +66,7 @@ public class Main extends AppCompatActivity {
 
     Button back, exit;
     Button takeAway, dineIn;
-    TextView userName, shift, date, payIn, payOut, timeCard, safeMode, refund, cashDrawer, annText;
+    TextView userName, shift, date, payIn, payOut, timeCard, safeMode, refund, cashDrawer, annText, mainfocu;
 
     DatabaseHandler mDHandler;
     Dialog dialog;
@@ -85,14 +85,14 @@ public class Main extends AppCompatActivity {
     boolean CheckTrue = true;
     double netTotals = 0.0;
     double balance = 0.0;
-    boolean flag = true,flag2 = true;
+    boolean flag = true, flag2 = true;
     int textId = 0;
     double totalAdd = 0.0;
     double cashValues, creditValues, chequeVales, pointValues, giftCardValues, cardValues;
     double discountAdd = 0.0;
     TableRow rows;
-    DecimalFormatSymbols de =new DecimalFormatSymbols(Locale.ENGLISH);
-    DecimalFormat threeDForm = new DecimalFormat("0.000",de);
+    DecimalFormatSymbols de = new DecimalFormatSymbols(Locale.ENGLISH);
+    DecimalFormat threeDForm = new DecimalFormat("0.000", de);
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @SuppressLint("ClickableViewAccessibility")
@@ -106,6 +106,12 @@ public class Main extends AppCompatActivity {
         focusedTextView = null;
         initialize();
 
+        Settings.focas = findViewById(R.id.mainfouc);
+        if (Settings.onOFF) {
+            new Settings().blinkAnnouncement( true);
+        }else {
+            new Settings().blinkAnnouncement( false);
+        }
 
         Date currentTimeAndDate = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
@@ -116,6 +122,7 @@ public class Main extends AppCompatActivity {
         shift.setText(getResources().getString(R.string.shift) + " : " + mDHandler.getOpenedShifts(today, 1).getShiftName());
 
         showAnnouncement();
+
 
 //        takeAway.setBackgroundDrawable(getResources().getDrawable(getImage("cancel")));
 
@@ -1007,7 +1014,7 @@ public class Main extends AppCompatActivity {
         final TextView mainTotal = (TextView) dialog.findViewById(R.id.mainTotal);
         final boolean[] flag = {true};
         value.setText("0");
-        Button b1, b2, b3, b4, b5, b6, b7, b8, b9, b0, clear,dot;
+        Button b1, b2, b3, b4, b5, b6, b7, b8, b9, b0, clear, dot;
         b1 = (Button) dialog.findViewById(R.id.b1);
         b2 = (Button) dialog.findViewById(R.id.b2);
         b3 = (Button) dialog.findViewById(R.id.b3);
@@ -1019,7 +1026,7 @@ public class Main extends AppCompatActivity {
         b9 = (Button) dialog.findViewById(R.id.b9);
         b0 = (Button) dialog.findViewById(R.id.b0);
 //        clear = (Button) dialog.findViewById(R.id.b_clear);
-       dot= (Button) dialog.findViewById(R.id.dot);
+        dot = (Button) dialog.findViewById(R.id.dot);
 
         b1.setOnClickListener(new OnClickListener() {
             @Override
@@ -1094,7 +1101,7 @@ public class Main extends AppCompatActivity {
         value.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                flag2 =true;
+                flag2 = true;
 
                 focusedTextView = value;
                 focusedTextView.setText("");
@@ -1119,12 +1126,12 @@ public class Main extends AppCompatActivity {
 
 
         dot.setOnClickListener(new OnClickListener() {
-                        @Override
+            @Override
             public void onClick(View view) {
-                            if ( flag2)
-                                focusedTextView.setText(focusedTextView.getText().toString() + ".");
-                            flag2 =false;
-                        }
+                if (flag2)
+                    focusedTextView.setText(focusedTextView.getText().toString() + ".");
+                flag2 = false;
+            }
         });
         String finalSignal = signal;
         save.setOnClickListener(new OnClickListener() {
@@ -1205,7 +1212,7 @@ public class Main extends AppCompatActivity {
 
                         focusedTextView.setText("0");
                     }
-                    flag2 =true;
+                    flag2 = true;
                     focusedTextView = textView1;
                     focusedTextView.setTag("" + position);
                     focusedTextView.setText("");
@@ -1217,7 +1224,7 @@ public class Main extends AppCompatActivity {
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     if (focusedTextView != null) {
-                        if (!focusedTextView.getText().toString().equals("") && !focusedTextView.getTag().toString().equals("*")&&!focusedTextView.getText().toString().equals(".")) {
+                        if (!focusedTextView.getText().toString().equals("") && !focusedTextView.getTag().toString().equals("*") && !focusedTextView.getText().toString().equals(".")) {
 
                             TableRow tableRow = (TableRow) categories.getChildAt(Integer.parseInt(focusedTextView.getTag().toString()));
                             TextView text = (TextView) tableRow.getChildAt(0);
@@ -1790,7 +1797,7 @@ public class Main extends AppCompatActivity {
     }
 
     public String convertToEnglish(String value) {
-        String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0").replaceAll("٫","."));
+        String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0").replaceAll("٫", "."));
         return newValue;
     }
 
@@ -1899,7 +1906,7 @@ public class Main extends AppCompatActivity {
                 }
 
                 Log.e("out 000", " " + CheckTrue + "  netTotals" + netTotals);
-                if (Double.parseDouble(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(""+netTotals))))) != 0.0 && CheckTrue) {
+                if (Double.parseDouble(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish("" + netTotals))))) != 0.0 && CheckTrue) {
                     Log.e("in  000", " " + CheckTrue);
                     int index = 0;
                     for (int i = 0; i < orderTransactions.size(); i++) {
@@ -2007,7 +2014,7 @@ public class Main extends AppCompatActivity {
                                     rows = row;
                                     rows.setBackgroundColor(getResources().getColor(R.color.layer3));
                                     rTotal[0] = ((Double.parseDouble(rQty.getText().toString())) * list.get(i).getPrice());
-                                    rTotals.setText(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(""+rTotal[0])))));
+                                    rTotals.setText(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish("" + rTotal[0])))));
                                     isGrater.setText("0");
                                     CheckTrue = true;
 
@@ -2024,19 +2031,19 @@ public class Main extends AppCompatActivity {
                                     }
 
                                     if (Settings.tax_type == 0) {
-                                        netTotals = Double.parseDouble(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(""+(totalAdd - discountAdd))))));
+                                        netTotals = Double.parseDouble(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish("" + (totalAdd - discountAdd))))));
                                     } else {
-                                        netTotals =Double.parseDouble(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(""+(totalAdd+ taxValue - (discountAdd )))))));
+                                        netTotals = Double.parseDouble(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish("" + (totalAdd + taxValue - (discountAdd)))))));
                                     }
 
                                     Log.e("in 33", "netTotals = " + netTotals + "\n taxValue =" + taxValue + "\n discountAdd= " + discountAdd);
 
                                     balance = netTotals;
-                                    totalText.setText(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(""+totalAdd)))));
+                                    totalText.setText(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish("" + totalAdd)))));
 
-                                    DiscountText.setText(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(""+discountAdd)))));
+                                    DiscountText.setText(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish("" + discountAdd)))));
 
-                                    nettotalText.setText(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(""+netTotals)))));
+                                    nettotalText.setText(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish("" + netTotals)))));
 
                                 } else {
                                     notCorrectValueDialog(getResources().getString(R.string.this_value_not_correct));
@@ -2151,70 +2158,78 @@ public class Main extends AppCompatActivity {
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(focusedTextView!=null){
-                focusedTextView.setText(focusedTextView.getText().toString() + "1");}
+                if (focusedTextView != null) {
+                    focusedTextView.setText(focusedTextView.getText().toString() + "1");
+                }
             }
         });
         b2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(focusedTextView!=null){
-                focusedTextView.setText(focusedTextView.getText().toString() + "2");}
+                if (focusedTextView != null) {
+                    focusedTextView.setText(focusedTextView.getText().toString() + "2");
+                }
             }
         });
         b3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(focusedTextView!=null){
-                focusedTextView.setText(focusedTextView.getText().toString() + "3");}
+                if (focusedTextView != null) {
+                    focusedTextView.setText(focusedTextView.getText().toString() + "3");
+                }
             }
         });
         b4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(focusedTextView!=null){
-                focusedTextView.setText(focusedTextView.getText().toString() + "4");}
+                if (focusedTextView != null) {
+                    focusedTextView.setText(focusedTextView.getText().toString() + "4");
+                }
             }
         });
         b5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(focusedTextView!=null){
-                focusedTextView.setText(focusedTextView.getText().toString() + "5");}
+                if (focusedTextView != null) {
+                    focusedTextView.setText(focusedTextView.getText().toString() + "5");
+                }
             }
         });
         b6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(focusedTextView!=null)
-                focusedTextView.setText(focusedTextView.getText().toString() + "6");
+                if (focusedTextView != null)
+                    focusedTextView.setText(focusedTextView.getText().toString() + "6");
             }
         });
         b7.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(focusedTextView!=null){
-                focusedTextView.setText(focusedTextView.getText().toString() + "7");}
+                if (focusedTextView != null) {
+                    focusedTextView.setText(focusedTextView.getText().toString() + "7");
+                }
             }
         });
         b8.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(focusedTextView!=null){
-                focusedTextView.setText(focusedTextView.getText().toString() + "8");}
+                if (focusedTextView != null) {
+                    focusedTextView.setText(focusedTextView.getText().toString() + "8");
+                }
             }
         });
         b9.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(focusedTextView!=null){
-                focusedTextView.setText(focusedTextView.getText().toString() + "9");}
+                if (focusedTextView != null) {
+                    focusedTextView.setText(focusedTextView.getText().toString() + "9");
+                }
             }
         });
         b0.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(focusedTextView!=null) {
+                if (focusedTextView != null) {
                     focusedTextView.setText(focusedTextView.getText().toString() + "0");
                 }
             }
@@ -2222,11 +2237,12 @@ public class Main extends AppCompatActivity {
         dot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(focusedTextView!=null){
-                if (flag)
-                    focusedTextView.setText(focusedTextView.getText().toString() + ".");
-                flag = false;
-            }}
+                if (focusedTextView != null) {
+                    if (flag)
+                        focusedTextView.setText(focusedTextView.getText().toString() + ".");
+                    flag = false;
+                }
+            }
         });
         ArrayList<PayMethod> finalAllPayType = AllPayType;
         save.setOnClickListener(new View.OnClickListener() {
@@ -2236,18 +2252,18 @@ public class Main extends AppCompatActivity {
                 ifGraterThan[0] = false;
 
 //                int transactionsSize = mDHandler.getMaxSerial("ORDER_HEADER","1")+1;
-               List<MaxSerial>max=new ArrayList<>();
-                max=mDHandler.getMaxSerialForVhf();
-              int transactionsSize =0;
-                if(max.size()!= 0){
-                    transactionsSize = Integer.parseInt(mDHandler.getMaxSerialForVhf().get(0).getMaxSerialRefund())+1;
-                }else{
-                    MaxSerial maxN=new MaxSerial("0","0");
+                List<MaxSerial> max = new ArrayList<>();
+                max = mDHandler.getMaxSerialForVhf();
+                int transactionsSize = 0;
+                if (max.size() != 0) {
+                    transactionsSize = Integer.parseInt(mDHandler.getMaxSerialForVhf().get(0).getMaxSerialRefund()) + 1;
+                } else {
+                    MaxSerial maxN = new MaxSerial("0", "0");
                     mDHandler.addMAXSerial(maxN);
-                    transactionsSize=1;
+                    transactionsSize = 1;
                 }
 
-                Log.e("size of return = ",""+transactionsSize);
+                Log.e("size of return = ", "" + transactionsSize);
 
                 Date currentTimeAndDate = Calendar.getInstance().getTime();
                 SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
@@ -2345,7 +2361,6 @@ public class Main extends AppCompatActivity {
                         ArrayList<PayMethod> payObj = new ArrayList();
 
 
-
                         double total = 0.0, lineDic = 0.0, dic = 0.0, service = 0.0, tax = 0.0, netTotal1 = 0.0, serviceTax = 0.0;
                         for (int p = 0; p < rowRefund.size(); p++) {
 
@@ -2361,7 +2376,7 @@ public class Main extends AppCompatActivity {
                             netTotal1 = total - (lineDic + dic) + service + serviceTax;//+ service
                             Log.e("refound ", "==>" + total + " -" + "(" + lineDic + "+" + dic + "+" + service + "+" + serviceTax + ")");
                         } else {
-                            netTotal1 = total+ tax  - (lineDic + dic) + service + serviceTax;//+ service
+                            netTotal1 = total + tax - (lineDic + dic) + service + serviceTax;//+ service
                             Log.e("refound ", "==>" + total + " -" + "(" + lineDic + "+" + dic + "+" + service + "+" + tax + ")");
                         }
 
@@ -2378,11 +2393,11 @@ public class Main extends AppCompatActivity {
 
                         OrderHeader orderHeader;
                         orderHeader = new OrderHeader(rowRefund.get(0).getOrderType(), 1, convertToEnglish(today), Settings.POS_number, Settings.store_number,
-                                String.valueOf(transactionsSize), 1, -1*totalAdd, -1*lineDic, -1*dic, -1*(lineDic + dic),
-                                -1*service, -1*tax, -1*serviceTax, -1*subTotalValue,
-                                -1*netTotal1, 0, rowRefund.get(0).getTableNo(),
-                                rowRefund.get(0).getSectionNo(), -1*cashValues, -1*creditValues, -1*chequeVales, -1*cardValues,
-                                -1*giftCardValues, -1*pointValues, Settings.shift_name, Settings.shift_number, waiterName, 0, Settings.user_name, Settings.user_no, convertToEnglish(times), rowRefund.get(0).getVoucherNo(), rowRefund.get(0).getPosNo(),Settings.cash_no);
+                                String.valueOf(transactionsSize), 1, -1 * totalAdd, -1 * lineDic, -1 * dic, -1 * (lineDic + dic),
+                                -1 * service, -1 * tax, -1 * serviceTax, -1 * subTotalValue,
+                                -1 * netTotal1, 0, rowRefund.get(0).getTableNo(),
+                                rowRefund.get(0).getSectionNo(), -1 * cashValues, -1 * creditValues, -1 * chequeVales, -1 * cardValues,
+                                -1 * giftCardValues, -1 * pointValues, Settings.shift_name, Settings.shift_number, waiterName, 0, Settings.user_name, Settings.user_no, convertToEnglish(times), rowRefund.get(0).getVoucherNo(), rowRefund.get(0).getPosNo(), Settings.cash_no);
                         mDHandler.addOrderHeader(orderHeader);
 
                         for (int i = 0; i < rowRefund.size(); i++) {
@@ -2390,9 +2405,9 @@ public class Main extends AppCompatActivity {
                                     String.valueOf(transactionsSize), i + 1, "" + rowRefund.get(i).getItemBarcode(), rowRefund.get(i).getItemName(),
                                     rowRefund.get(i).getSecondaryName(), rowRefund.get(i).getKitchenAlias(), rowRefund.get(i).getItemCategory(),
                                     rowRefund.get(i).getItemFamily(), rowRefund.get(i).getQty(), rowRefund.get(i).getPrice(),
-                                     rowRefund.get(i).getQty() * rowRefund.get(i).getPrice(), -1*rowRefund.get(i).getDiscount(), -1*rowRefund.get(i).getlDiscount(), -1*(rowRefund.get(i).getDiscount() + rowRefund.get(i).getlDiscount()), -1*rowRefund.get(i).getTaxValue(),
-                                    rowRefund.get(i).getTaxPerc(), rowRefund.get(i).getTaxKind(),-1* rowRefund.get(i).getService(),-1* rowRefund.get(i).getServiceTax(),
-                                    rowRefund.get(i).getTableNo(), rowRefund.get(i).getSectionNo(), Settings.shift_number, Settings.shift_name, Settings.user_no, Settings.user_name, convertToEnglish(times), rowRefund.get(i).getVoucherNo(), rowRefund.get(i).getPosNo(), 0,Settings.cash_no);
+                                    rowRefund.get(i).getQty() * rowRefund.get(i).getPrice(), -1 * rowRefund.get(i).getDiscount(), -1 * rowRefund.get(i).getlDiscount(), -1 * (rowRefund.get(i).getDiscount() + rowRefund.get(i).getlDiscount()), -1 * rowRefund.get(i).getTaxValue(),
+                                    rowRefund.get(i).getTaxPerc(), rowRefund.get(i).getTaxKind(), -1 * rowRefund.get(i).getService(), -1 * rowRefund.get(i).getServiceTax(),
+                                    rowRefund.get(i).getTableNo(), rowRefund.get(i).getSectionNo(), Settings.shift_number, Settings.shift_name, Settings.user_no, Settings.user_name, convertToEnglish(times), rowRefund.get(i).getVoucherNo(), rowRefund.get(i).getPosNo(), 0, Settings.cash_no);
                             mDHandler.addOrderTransaction(orderTransactions);
                         }
                         for (int i = 0; i < tableLayout.getChildCount(); i++) {
@@ -2406,9 +2421,9 @@ public class Main extends AppCompatActivity {
                                         convertToEnglish(today),
                                         Settings.POS_number,
                                         Settings.store_number, String.valueOf(transactionsSize), i + 1, name_o.getText().toString(),
-                                        -1* Double.parseDouble(value_o.getText().toString()), finalAllPayType.get(i).getPayNumber(), finalAllPayType.get(i).getPayName(),
+                                        -1 * Double.parseDouble(value_o.getText().toString()), finalAllPayType.get(i).getPayNumber(), finalAllPayType.get(i).getPayName(),
                                         Settings.shift_name, Settings.shift_number, Settings.user_name, Settings.user_no, convertToEnglish(times),
-                                        rowRefund.get(0).getVoucherNo(), Settings.POS_number,Settings.cash_no);
+                                        rowRefund.get(0).getVoucherNo(), Settings.POS_number, Settings.cash_no);
                                 payObj.add(payMethod);
                                 mDHandler.addAllPayMethodItem(payMethod);
                             }
@@ -2423,8 +2438,8 @@ public class Main extends AppCompatActivity {
                         orderHeader.setVoucherNumber(rowRefund.get(0).getVoucherNo());
                         pay.sendToKitchen(Main.this, orderHeader, rowRefund, payObj, itemWithScreens);
 
-                        rowRefund.get(0).setVoucherNo(""+transactionsSize);
-                        orderHeader.setVoucherNumber(""+transactionsSize);
+                        rowRefund.get(0).setVoucherNo("" + transactionsSize);
+                        orderHeader.setVoucherNumber("" + transactionsSize);
                         pay.sendToServer(Main.this, orderHeader, rowRefund, payObj);
 
                         netTotals = 0.0;
@@ -2526,19 +2541,20 @@ public class Main extends AppCompatActivity {
                             TextView value_o = (TextView) rowTemp.getChildAt(1);
                             TextView ISGrater_o = (TextView) rowTemp.getChildAt(2);
                             Log.e("in for ==>", "yy" + value_o.getText().toString());
-                            if (!value_o.getText().toString().equals("") ){
-                            if(!value_o.getText().toString().equals(".")) {
-                                if (Double.parseDouble(value_o.getText().toString()) <= Double.parseDouble(value_o.getTag().toString())) {
-                                    Total += Double.parseDouble(value_o.getText().toString());
-                                    double net_total = netTotals - Total;
-                                    Log.e("net_Total_123 ==>", "" + net_total);
-                                    nettotal.setText(threeDForm.format(net_total));
-                                    ISGrater_o.setText("0");
-                                } else {
-                                    new Settings().makeText(Main.this, "Can't return value grater than  " + value_o.getTag().toString());
-                                    ISGrater_o.setText("1");
+                            if (!value_o.getText().toString().equals("")) {
+                                if (!value_o.getText().toString().equals(".")) {
+                                    if (Double.parseDouble(value_o.getText().toString()) <= Double.parseDouble(value_o.getTag().toString())) {
+                                        Total += Double.parseDouble(value_o.getText().toString());
+                                        double net_total = netTotals - Total;
+                                        Log.e("net_Total_123 ==>", "" + net_total);
+                                        nettotal.setText(threeDForm.format(net_total));
+                                        ISGrater_o.setText("0");
+                                    } else {
+                                        new Settings().makeText(Main.this, "Can't return value grater than  " + value_o.getTag().toString());
+                                        ISGrater_o.setText("1");
+                                    }
                                 }
-                            }}else {
+                            } else {
                                 value_o.setText("0");
                             }
                         }
@@ -2560,7 +2576,6 @@ public class Main extends AppCompatActivity {
         recipeTable.addView(row);
         textId++;
     }
-
 
 
     public void notCorrectValueDialog(String mass) {

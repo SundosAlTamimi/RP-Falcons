@@ -1,5 +1,7 @@
 package com.tamimi.sundos.restpos;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -8,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
@@ -17,6 +20,7 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -78,10 +82,10 @@ import androidx.core.content.ContextCompat;
 public class Order extends AppCompatActivity {
 
     Button modifier, void_, delivery, discount, lDiscount, split, priceChange;
-    TextView total, lineDisCount, disCount, deliveryCharge, subTotal, service, tax, amountDue, vhSerial;
+    TextView total, lineDisCount, disCount, deliveryCharge, subTotal, service, tax, amountDue, vhSerial,details,onOffLine;
     Button pay, order;
     TextView orderType, tableNo, check, date, user, seats;
-    TableLayout tableLayout, tableItem;
+    TableLayout tableLayout, tableItem,tableDetail;
     GridView catGridView, itemGridView;
     CheckBox discPerc;
     Button back;
@@ -120,7 +124,7 @@ public class Order extends AppCompatActivity {
 
     TableRow focused = null;
     int selectedModifier = -1;
-
+boolean showdetal=false;
     Dialog dialog;
     private DatabaseHandler mDbHandler;
 
@@ -141,6 +145,13 @@ public class Order extends AppCompatActivity {
 
         fillCategories();
         showCats();
+//        blinkAnnouncement(onOffLine);
+         Settings.focas=onOffLine;
+        if (Settings.onOFF) {
+            new Settings().blinkAnnouncement( true);
+        }else {
+            new Settings().blinkAnnouncement( false);
+        }
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -241,9 +252,33 @@ public class Order extends AppCompatActivity {
                         showCats();
                     }
                     break;
+                case R.id.details:
+                    if(!showdetal){
+                        notShowDetails();
+                    showdetal=true;}
+                    else {
+                        ShowDetails();
+                        showdetal=false;
+                    }
+                    break;
             }
         }
     };
+
+
+    void notShowDetails(){
+
+        tableDetail.setVisibility(View.GONE);
+        details.setBackgroundDrawable(getResources().getDrawable(R.drawable.arrowup));
+
+    }
+
+    void ShowDetails(){
+
+        tableDetail.setVisibility(View.VISIBLE);
+        details.setBackgroundDrawable(getResources().getDrawable(R.drawable.arrowdown));
+
+    }
 
     View.OnTouchListener onTouchListener = new View.OnTouchListener() {
         @Override
@@ -1962,6 +1997,7 @@ public class Order extends AppCompatActivity {
 
         tableLayout = (TableLayout) findViewById(R.id.tableLayout);
         tableItem = (TableLayout) findViewById(R.id.tableItem);
+        tableDetail = (TableLayout) findViewById(R.id.tableDetal);
 
         itemGridView = (GridView) findViewById(R.id.GridViewItems);
         catGridView = (GridView) findViewById(R.id.GridViewCats);
@@ -1971,7 +2007,7 @@ public class Order extends AppCompatActivity {
         date = (TextView) findViewById(R.id.date);
         user = (TextView) findViewById(R.id.user);
         seats = (TextView) findViewById(R.id.seat_number);
-
+        details = (TextView) findViewById(R.id.details);
         pay = (Button) findViewById(R.id.pay);
         order = (Button) findViewById(R.id.order);
         modifier = (Button) findViewById(R.id.modifier);
@@ -1993,7 +2029,7 @@ public class Order extends AppCompatActivity {
         service = (TextView) findViewById(R.id.service);
         amountDue = (TextView) findViewById(R.id.amount_due);
         vhSerial = (TextView) findViewById(R.id.vhSerial);
-
+        onOffLine = (TextView) findViewById(R.id.onOffLine);
         pay.setOnTouchListener(onTouchListener);
         order.setOnTouchListener(onTouchListener);
         modifier.setOnTouchListener(onTouchListener);
@@ -2003,6 +2039,7 @@ public class Order extends AppCompatActivity {
         discount.setOnTouchListener(onTouchListener);
         priceChange.setOnTouchListener(onTouchListener);
 
+       details.setOnClickListener(onClickListener);
         pay.setOnClickListener(onClickListener);
         order.setOnClickListener(onClickListener);
         modifier.setOnClickListener(onClickListener);

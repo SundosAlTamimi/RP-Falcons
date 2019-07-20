@@ -586,6 +586,8 @@
     <string name="not_data">not have data to export ...</string>
     <string name="sync_max_vhf">Sync Max VHF</string>
     <string name="details">Details :</string>
+    <string name="details_">More Details</string>
+    <string name="details_L">Less Details</string>
 
 
 </resources>

@@ -591,4 +591,8 @@
     <string name="not_data">لا يوجد بيانات لعرضها ...</string>
     <string name="sync_max_vhf">مزامنة الرقم التسلسلي </string>
     <string name="details">التفاصيل :</string>
+
+    <string name="details_">تفاصيل اكثر </string>
+    <string name="details_L">تغاصيل اقل </string>
+
 </resources>
