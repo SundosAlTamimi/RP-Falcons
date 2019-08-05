@@ -4341,6 +4341,28 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("delete from " + FAMILY_CATEGORY_TABLE);
         db.close();
     }
+    public void deleteAllModifier() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + MODIFIER);
+        db.close();
+    }
+
+    public void deleteAllItems() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + ITEMS);
+        db.close();
+    }
+    public void deleteAllShift() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + SHIFT_REGISTRATION);
+        db.close();
+    }
+
+    public void deleteAllForceQ() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + FORCE_QUESTIONS);
+        db.close();
+    }
 
     public void deleteAllOrders() {
         SQLiteDatabase db = this.getWritableDatabase();

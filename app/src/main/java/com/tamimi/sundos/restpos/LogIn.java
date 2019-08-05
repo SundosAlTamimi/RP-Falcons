@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.tamimi.sundos.restpos.BackOffice.BackOfficeActivity;
 import com.tamimi.sundos.restpos.BackOffice.EmployeeRegistration;
 import com.tamimi.sundos.restpos.Models.BlindClose;
 import com.tamimi.sundos.restpos.Models.BlindShift;
@@ -218,10 +219,15 @@ public class LogIn extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                SyncWithCloud obj = new SyncWithCloud(LogIn.this);
+                obj.startSyncing("sync");
+
                 final Intent mainIntent = new Intent(LogIn.this, Main.class);
                 startActivity(mainIntent);
                 finish();
                 startService(new Intent(LogIn.this, MyService.class));
+
+
             }
         }, 500);
     }

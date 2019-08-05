@@ -36,7 +36,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.tamimi.sundos.restpos.BackOffice.BackOfficeActivity;
+
 import com.tamimi.sundos.restpos.BackOffice.MenuRegistration;
 import com.tamimi.sundos.restpos.BackOffice.OrderLayout;
 import com.tamimi.sundos.restpos.Models.CancleOrder;
@@ -416,6 +416,8 @@ boolean showdetal=false;
                 allCats.remove(i);
                 i--;
             }
+        Log.e("cat size","="+allCats.size());
+
         for (int i = 0; i < categories.size(); i++) {
             for (int k = 0; k < allCats.size(); k++) {
                 if (categories.get(i).getCategoryName().equals(allCats.get(k).getName())) {
