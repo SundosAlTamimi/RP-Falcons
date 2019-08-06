@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class Settings {
+    public static final String URL = "http://Falconssoft.net/RestService/FSAppServiceDLL.dll/";
     public static String user_name = "no user";
     public static int password = -1;
     public static int user_no = -1;
@@ -27,6 +28,7 @@ public class Settings {
     public static int cash_no = 1;
     public static TextView focas=null;
     public static boolean onOFF=true;
+
 
     public Settings() {
     }

@@ -89,7 +89,7 @@ public class SendCloud {
         protected String doInBackground(String... params) {
             try {
 //                String link = "http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/RestSaveKitchenScreen";
-                String link = "http://Falconssoft.net/RestService/FSAppServiceDLL.dll/RestSaveKitchenScreen";
+                String link = Settings.URL + "RestSaveKitchenScreen";
 //                String link = "http://10.0.0.16:8081/RestSaveKitchenScreen";
                 String data = "compno=" + URLEncoder.encode("736", "UTF-8") + "&" +
                         "compyear=" + URLEncoder.encode("2019", "UTF-8") + "&" +
@@ -183,7 +183,7 @@ public class SendCloud {
             try {
 //                String link = "http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/RestSaveOrder";
 
-                String link = "http://Falconssoft.net/RestService/FSAppServiceDLL.dll/RestSaveOrder";
+                String link = Settings.URL + "RestSaveOrder";
 //               String link = "http://10.0.0.16:8081/RestSaveOrder";
                 String data = "compno=" + URLEncoder.encode("736", "UTF-8") + "&" +
                         "compyear=" + URLEncoder.encode("2019", "UTF-8") +"&"+
@@ -297,7 +297,7 @@ public class SendCloud {
         protected String doInBackground(String... params) {
             try {
 //                String link = "http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/SaveGroup";
-                String link = "http://Falconssoft.net/RestService/FSAppServiceDLL.dll/SaveGroup";
+                String link = Settings.URL + "SaveGroup";
 
                 String data = "Compno=" + URLEncoder.encode("736", "UTF-8") + "&" +
                         "CompYear=" + URLEncoder.encode("2019", "UTF-8") + "&" +
@@ -388,7 +388,7 @@ public class SendCloud {
         protected String doInBackground(String... params) {
             try {
 //                String link = "http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/SaveItemCard";
-            String link = "http://Falconssoft.net/RestService/FSAppServiceDLL.dll/SaveItemCard";
+            String link = Settings.URL + "SaveItemCard";
                 String data = "compno=" + URLEncoder.encode("736", "UTF-8") + "&" +
                         "compyear=" + URLEncoder.encode("2019", "UTF-8")+ "&" +
                         "ITEMCARD=" + URLEncoder.encode(obj.toString().trim(), "UTF-8");
@@ -473,7 +473,7 @@ public class SendCloud {
         @Override
         protected String doInBackground(String... params) {
             try {
-                String link = "http://falconssoft.net/RestService/FSAppServiceDLL.dll/SaveModifier";
+                String link = Settings.URL + "SaveModifier";
 //                String link = "http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/SaveModifier";
 
 
@@ -561,7 +561,7 @@ public class SendCloud {
         @Override
         protected String doInBackground(String... params) {
             try {
-                String link = "http://falconssoft.net/RestService/FSAppServiceDLL.dll/SaveForceQuestion";
+                String link = Settings.URL + "SaveForceQuestion";
 //                String link = "http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/SaveForceQuestion";
 
 
@@ -651,7 +651,7 @@ public class SendCloud {
         @Override
         protected String doInBackground(String... params) {
             try {
-                String link = "http://falconssoft.net/RestService/FSAppServiceDLL.dll/SaveItemWModifier";
+                String link = Settings.URL + "SaveItemWModifier";
 //                String link = "http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/SaveItemWModifier";
 
 
@@ -828,7 +828,7 @@ public class SendCloud {
         @Override
         protected String doInBackground(String... params) {
             try {
-                String link = "http://falconssoft.net/RestService/FSAppServiceDLL.dll/SaveItemWFQ";
+                String link = Settings.URL + "SaveItemWFQ";
 //                String link = "http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/SaveItemWFQ";
 
 
@@ -916,7 +916,7 @@ public class SendCloud {
         @Override
         protected String doInBackground(String... params) {
             try {
-                String link = "http://falconssoft.net/RestService/FSAppServiceDLL.dll/SaveANNOUNCEMENT";
+                String link = Settings.URL + "SaveANNOUNCEMENT";
 //                String link = "http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/SaveANNOUNCEMENT";
 
                 String data = "CompNo=" + URLEncoder.encode("736", "UTF-8") + "&" +
@@ -1004,7 +1004,7 @@ public class SendCloud {
         @Override
         protected String doInBackground(String... params) {
             try {
-                String link = "http://falconssoft.net/RestService/FSAppServiceDLL.dll/GetMaxVHFNo?";
+                String link = Settings.URL + "GetMaxVHFNo?";
 
                 String data = "Compno=" + URLEncoder.encode("736", "UTF-8") + "&" +
                         "CompYear=" + URLEncoder.encode("2019", "UTF-8") + "&" +

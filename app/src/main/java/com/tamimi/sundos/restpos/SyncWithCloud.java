@@ -227,7 +227,7 @@ public class SyncWithCloud {
         @Override
         protected String doInBackground(String... params) {///GetModifer?compno=736&compyear=2019
             try {
-                String link = "http://Falconssoft.net/RestService/FSAppServiceDLL.dll/GetModifer";
+                String link = Settings.URL + "GetModifer";
 
                 String data = "compno=" + URLEncoder.encode("736", "UTF-8") + "&" +
                         "compyear=" + URLEncoder.encode("2019", "UTF-8") ;
@@ -346,7 +346,7 @@ public class SyncWithCloud {
         @Override
         protected String doInBackground(String... params) {///GetModifer?compno=736&compyear=2019
             try {
-                String link = "http://Falconssoft.net/RestService/FSAppServiceDLL.dll/GetForceQ";
+                String link = Settings.URL + "GetForceQ";
 
                 String data = "compno=" + URLEncoder.encode("736", "UTF-8") + "&" +
                         "compyear=" + URLEncoder.encode("2019", "UTF-8") ;
@@ -468,7 +468,7 @@ public class SyncWithCloud {
         @Override
         protected String doInBackground(String... params) {///GetModifer?compno=736&compyear=2019
             try {
-                String link = "http://Falconssoft.net/RestService/FSAppServiceDLL.dll/SyncGetItems";
+                String link = Settings.URL + "SyncGetItems";
 
                 String data = "compno=" + URLEncoder.encode("736", "UTF-8") + "&" +
                         "compyear=" + URLEncoder.encode("2019", "UTF-8") ;
@@ -617,7 +617,7 @@ public class SyncWithCloud {
         @Override
         protected String doInBackground(String... params) {///GetModifer?compno=736&compyear=2019
             try {
-                String link = "http://Falconssoft.net/RestService/FSAppServiceDLL.dll/GetFamCategUnit";
+                String link = Settings.URL + "GetFamCategUnit";
 
                 String data = "compno=" + URLEncoder.encode("736", "UTF-8") + "&" +
                         "compyear=" + URLEncoder.encode("2019", "UTF-8") ;
@@ -742,7 +742,7 @@ public class SyncWithCloud {
         @Override
         protected String doInBackground(String... params) {///GetModifer?compno=736&compyear=2019
             try {
-                String link = "http://Falconssoft.net/RestService/FSAppServiceDLL.dll/GetShifts";
+                String link = Settings.URL + "GetShifts";
 
                 String data = "compno=" + URLEncoder.encode("736", "UTF-8") + "&" +
                         "compyear=" + URLEncoder.encode("2019", "UTF-8") ;
@@ -868,7 +868,7 @@ public class SyncWithCloud {
         @Override
         protected String doInBackground(String... params) {///GetModifer?compno=736&compyear=2019
             try {
-                String link = "http://Falconssoft.net/RestService/FSAppServiceDLL.dll/GetVoidReason";
+                String link = Settings.URL + "GetVoidReason";
 
                 String data = "compno=" + URLEncoder.encode("736", "UTF-8") + "&" +
                         "compyear=" + URLEncoder.encode("2019", "UTF-8") ;
