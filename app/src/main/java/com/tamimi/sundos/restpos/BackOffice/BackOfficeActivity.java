@@ -101,8 +101,10 @@ import org.json.JSONObject;
 //import static com.itextpdf.text.Element.ALIGN_CENTER;
 
 public class BackOfficeActivity extends AppCompatActivity {
+    RadioGroup radioGroup ;//= new RadioGroup(this);
 
 
+    int isChecked = 0;
     LinearLayout lManagement, lSales, lCustomers, lEmployees, lMenu, lSettings;
 
     TableLayout jobTable;
@@ -131,6 +133,7 @@ public class BackOfficeActivity extends AppCompatActivity {
     ArrayList<Announcemet> Announcement;
     ArrayList<Money> finalMoneyArray;
     TableRow focusedRaw = null;
+    private List<TableRow> selectedItemsList = new ArrayList<>();
     int rawPosition = 0;
     Calendar myCalendar;
     List<BlindCloseDetails> focusedRowData = null;
@@ -2930,6 +2933,9 @@ public class BackOfficeActivity extends AppCompatActivity {
         paperSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                selectedItemsList.clear();
+//                isChecked = 0;
+
                 if (!paperSpinner.getSelectedItem().toString().equals("")) {
 //                    insertRaw(items.get(i - 1), itemsTableLayout, "modifier");
                     itemsTableLayout.removeAllViews();
@@ -2947,7 +2953,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                         lp.setMargins(2, 2, 2, 0);
                         row.setLayoutParams(lp);
                         row.setTag(rawPosition);
-                        for (int r = 0; r < 4; r++) {
+                        for (int r = 0; r < 5; r++) {
                             TextView textView = new TextView(BackOfficeActivity.this);
 
                             switch (r) {
@@ -2962,6 +2968,10 @@ public class BackOfficeActivity extends AppCompatActivity {
                                     break;
                                 case 3:
                                     textView.setText("no screen");
+                                    break;
+                                case 4:
+                                    textView.setText("0");
+                                    textView.setVisibility(View.GONE);
                                     break;
                             }
 
@@ -2979,12 +2989,31 @@ public class BackOfficeActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View view) {
                                 // remove focused rows
-                                for (int k = 0; k < itemsTableLayout.getChildCount(); k++) {
-                                    TableRow tableRow = (TableRow) itemsTableLayout.getChildAt(k);
-                                    tableRow.setBackgroundColor(getResources().getColor(R.color.layer3));
+//                                for (int k = 0; k < itemsTableLayout.getChildCount(); k++) {
+//                                    TableRow tableRow = (TableRow) itemsTableLayout.getChildAt(k);
+//                                    tableRow.setBackgroundColor(getResources().getColor(R.color.layer3));
+//                                }
+                                TextView isCheckedTextView = (TextView) row.getChildAt(4); // hidden field to know if row checked or not
+                                TextView getBarcodeTextView = (TextView) row.getChildAt(0);
+
+                                if (isCheckedTextView.getText().toString().equals("0")) {
+                                    ((TextView) row.getChildAt(4)).setText("1");
+                                    focusedRaw = row;
+                                    selectedItemsList.add(row);
+                                    focusedRaw.setBackgroundColor(getResources().getColor(R.color.layer4));
+                                    Log.e("backoffice", "" + selectedItemsList.size());
+                                } else {
+                                    ((TextView) row.getChildAt(4)).setText("0");
+                                    if (selectedItemsList.size() != 0)
+                                        for (int i = 0; i < selectedItemsList.size(); i++)
+                                            if (selectedItemsList.get(i).getChildAt(0) == row.getChildAt(0)) {
+                                                selectedItemsList.remove(i);
+                                                break;
+                                            }
+                                    row.setBackgroundColor(getResources().getColor(R.color.layer3));
+                                    Log.e("backoffice", "" + selectedItemsList.size());
+
                                 }
-                                focusedRaw = row;
-                                focusedRaw.setBackgroundColor(getResources().getColor(R.color.layer4));
                             }
                         });
 
@@ -3001,42 +3030,48 @@ public class BackOfficeActivity extends AppCompatActivity {
         });
 
         ArrayList<KitchenScreen> screens = mDHandler.getAllKitchenScreen();
+         radioGroup = new RadioGroup(this);
         for (int i = 0; i < screens.size(); i++) {
-            CheckBox checkBox = new CheckBox(BackOfficeActivity.this);
-            checkBox.setText("- " + screens.get(i).getKitchenName());
-            checkBox.setTag(screens.get(i).getKitchenNo());
-            checkBox.setTextColor(getResources().getColor(R.color.text_color));
-            checkBox.setTextSize(20);
+            RadioButton radioButton = new RadioButton(BackOfficeActivity.this);
+            radioButton.setText("- " + screens.get(i).getKitchenName());
+            radioButton.setTag(screens.get(i).getKitchenNo());
+            radioButton.setTextColor(getResources().getColor(R.color.text_color));
+            radioButton.setTextSize(20);
+            radioGroup.addView(radioButton);
 
-            screensLinearLayout.addView(checkBox);
         }
+        screensLinearLayout.addView(radioGroup);
 
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (focusedRaw != null) {
-                    if (screensLinearLayout.getChildCount() != 0) {
-                        int childCount = screensLinearLayout.getChildCount();
+//                if (focusedRaw != null) {
+                if (selectedItemsList.size() != 0) {
+                    if (radioGroup.getChildCount() != 0) {
+                        int childCount = radioGroup.getChildCount();
                         for (int i = childCount - 1; i >= 0; i--) {
-                            CheckBox checkBox = (CheckBox) screensLinearLayout.getChildAt(i);
-                            if (checkBox.isChecked()) {
-                                checkBox.setChecked(false);
+                            RadioButton radioButton = (RadioButton) radioGroup.getChildAt(i);
+                            if (radioButton.isChecked()) {
+                                radioButton.setChecked(false);
+                                for (int j = 0; j < selectedItemsList.size(); j++) {
 
-                                TextView itemBa = (TextView) focusedRaw.getChildAt(0);
-                                TextView itemNa = (TextView) focusedRaw.getChildAt(1);
-                                TextView scrNo = (TextView) focusedRaw.getChildAt(2);
-                                TextView scrNa = (TextView) focusedRaw.getChildAt(3);
+                                    TextView itemBa = (TextView) selectedItemsList.get(j).getChildAt(0);//focusedRaw.getChildAt(0);
+                                    TextView itemNa = (TextView) selectedItemsList.get(j).getChildAt(1);//focusedRaw.getChildAt(1);
+                                    TextView scrNo = (TextView) selectedItemsList.get(j).getChildAt(2);//focusedRaw.getChildAt(2);
+                                    TextView scrNa = (TextView) selectedItemsList.get(j).getChildAt(3);//focusedRaw.getChildAt(3);
 
-                                if (scrNa.getText().toString().equals("no screen")) {
-                                    scrNo.setText(checkBox.getTag().toString());
-                                    scrNa.setText(checkBox.getText().toString());
-                                } else {
-                                    scrNo.setText(scrNo.getText().toString() + " , " + checkBox.getTag().toString());
-                                    scrNa.setText(scrNa.getText().toString() + "\n" + checkBox.getText().toString());
+                                    if (scrNa.getText().toString().equals("no screen")) {
+                                        scrNo.setText(radioButton.getTag().toString());
+                                        scrNa.setText(radioButton.getText().toString());
+                                    } else {
+                                        scrNo.setText(scrNo.getText().toString() + " , " + radioButton.getTag().toString());
+                                        scrNa.setText(scrNa.getText().toString() + "\n" + radioButton.getText().toString());
+                                    }
+                                    itemWithScreensList.add(new ItemWithScreen(Integer.parseInt(itemBa.getText().toString()),
+                                            itemNa.getText().toString(), Integer.parseInt(radioButton.getTag().toString()),
+                                            radioButton.getText().toString()));
                                 }
-                                itemWithScreensList.add(new ItemWithScreen(Integer.parseInt(itemBa.getText().toString()),
-                                        itemNa.getText().toString(), Integer.parseInt(checkBox.getTag().toString()),
-                                        checkBox.getText().toString()));
+                                break;
                             }
                         }
                     } else
@@ -3298,7 +3333,6 @@ public class BackOfficeActivity extends AppCompatActivity {
                         mDHandler.addItemWithModifier(itemWithModifiersList.get(i));
                     }
                 }
-
 
 
                 // save cloud *********
@@ -6786,7 +6820,7 @@ public class BackOfficeActivity extends AppCompatActivity {
             OrderTransactions transactions1 = new OrderTransactions();
             transactions1.setTime("*");
             transactions1.setItemCategory(transactions.get(0).getItemCategory());
-            transactions1.setQty( totalQty);
+            transactions1.setQty(totalQty);
 
             orderTransactionData.add(transactions1);
         }
@@ -6944,7 +6978,6 @@ public class BackOfficeActivity extends AppCompatActivity {
     }
 
 
-
     private void showSyncWithCloudChoesDialog() {
         dialog = new Dialog(BackOfficeActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -6952,8 +6985,8 @@ public class BackOfficeActivity extends AppCompatActivity {
         dialog.setContentView(R.layout.syncwithcloud_dialog);
         dialog.setCanceledOnTouchOutside(true);
 
-        LinearLayout syncVhf=(LinearLayout)dialog.findViewById(R.id.sync_with_cloud_vhf);
-        LinearLayout syncCloud=(LinearLayout)dialog.findViewById(R.id.sync_with_cloud);
+        LinearLayout syncVhf = (LinearLayout) dialog.findViewById(R.id.sync_with_cloud_vhf);
+        LinearLayout syncCloud = (LinearLayout) dialog.findViewById(R.id.sync_with_cloud);
 
         syncCloud.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -6968,9 +7001,9 @@ public class BackOfficeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                ReceiveCloud obj = new ReceiveCloud(BackOfficeActivity.this, 2,0);
+                ReceiveCloud obj = new ReceiveCloud(BackOfficeActivity.this, 2, 0);
                 obj.startReceiving("MaxSerial");
-                ReceiveCloud obj2 = new ReceiveCloud(BackOfficeActivity.this, 2,1);
+                ReceiveCloud obj2 = new ReceiveCloud(BackOfficeActivity.this, 2, 1);
                 obj2.startReceiving("MaxSerial");
 
                 dialog.dismiss();
