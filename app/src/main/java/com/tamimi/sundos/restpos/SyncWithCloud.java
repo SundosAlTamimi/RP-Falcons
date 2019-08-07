@@ -52,7 +52,7 @@ public class SyncWithCloud {
             new SyncCategory().execute();
             new SyncShiftNo().execute();
             new SyncVoidReason().execute();
-            new  SyncitemPic().execute();
+//            new SyncitemPic().execute();
 
         }
 
@@ -475,7 +475,9 @@ public class SyncWithCloud {
         @Override
         protected String doInBackground(String... params) {///GetModifer?compno=736&compyear=2019
             try {
-                String link = "http://Falconssoft.net/RestService/FSAppServiceDLL.dll/SyncGetItems";
+//                String link = "http://Falconssoft.net/RestService/FSAppServiceDLL.dll/SyncGetItems";
+
+                String link = "http://10.0.0.16:8081/SyncGetItems";
 
                 String data = "compno=" + URLEncoder.encode("736", "UTF-8") + "&" +
                         "compyear=" + URLEncoder.encode("2019", "UTF-8") ;
@@ -579,6 +581,11 @@ public class SyncWithCloud {
                         obj.setUsed(finalObject.getInt("USED"));
                         obj.setShowInMenu(finalObject.getInt("SHOW_IN_MENU"));
 
+                        try {
+                            obj.setPic(finalObject.getString("ITEMPIC"));
+                        }catch(Exception e){
+                            obj.setPic("");
+                        }
 //
                         items.add(obj);
 

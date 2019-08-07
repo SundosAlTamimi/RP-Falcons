@@ -758,7 +758,7 @@ Log.e("save ","suc");
     void sendToServer(Items items, List<Recipes> recipes) {
         try {
             JSONObject obj1 = items.getJSONObject();
-
+            JSONObject obj3 = items.getJSONObjectPic();
             JSONArray obj2 = new JSONArray();
             for (int i = 0; i < recipes.size(); i++)
                 obj2.put(i, recipes.get(i).getJSONObject());
@@ -766,6 +766,7 @@ Log.e("save ","suc");
             JSONObject obj = new JSONObject();
             obj.put("ITEMS", obj1);
             obj.put("RECIPES", obj2);
+            obj.put("ITEMPIC", obj3);
 
             SendCloud sendCloud = new SendCloud(MenuRegistration.this, obj);
             sendCloud.startSending("MenuRegistration");

@@ -419,6 +419,7 @@ public class SendCloud {
                 httpURLConnection.disconnect();
 
                 Log.e("tag MENUE", "" + stringBuffer.toString());
+                Log.e("tag MENUE2", "" + obj.toString());
 
                 return stringBuffer.toString();
 
