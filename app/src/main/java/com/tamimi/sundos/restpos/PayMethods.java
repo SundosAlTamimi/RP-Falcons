@@ -1686,8 +1686,11 @@ public class PayMethods extends AppCompatActivity {
             for (int i = 0; i < OrderTransactionsObj.size(); i++) {
                 if (OrderTransactionsObj.get(i).getQty() == 0) {
                     OrderTransactionsObj.get(i).setScreenNo(OrderTransactionsObj.get(i - 1).getScreenNo());
-                    OrderTransactionsObj.get(i).setNote("mf");
-                }
+                    if(OrderTransactionsObj.get(i).getItemCategory().equals("modifier")){
+                        OrderTransactionsObj.get(i).setNote("m");
+                    }else{
+                    OrderTransactionsObj.get(i).setNote("f");
+                }}
             }
 
             JSONArray obj2 = new JSONArray();

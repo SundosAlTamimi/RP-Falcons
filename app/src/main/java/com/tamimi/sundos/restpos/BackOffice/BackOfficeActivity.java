@@ -1291,8 +1291,8 @@ public class BackOfficeActivity extends AppCompatActivity {
 
     void showSyncWithCloudDialog() {
 
-        SyncWithCloud obj = new SyncWithCloud(BackOfficeActivity.this);
-        obj.startSyncing("sync");
+//        SyncWithCloud obj = new SyncWithCloud(BackOfficeActivity.this);
+//        obj.startSyncing("sync");
     }
 
     void X_ReportDialog() {

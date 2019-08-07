@@ -219,8 +219,8 @@ public class LogIn extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                SyncWithCloud obj = new SyncWithCloud(LogIn.this);
-                obj.startSyncing("sync");
+//                SyncWithCloud obj = new SyncWithCloud(LogIn.this);
+//                obj.startSyncing("sync");
 
                 final Intent mainIntent = new Intent(LogIn.this, Main.class);
                 startActivity(mainIntent);
