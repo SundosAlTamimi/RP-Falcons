@@ -28,6 +28,7 @@ public class Settings {
     public static int cash_no = 1;
     public static TextView focas=null;
     public static boolean onOFF=true;
+    public static String datatest="";
 
 
     public Settings() {
