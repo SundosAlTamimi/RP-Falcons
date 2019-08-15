@@ -238,6 +238,7 @@
     <string name="picture">Picture</string>
     <string name="show">Show</string>
     <string name="save_">save</string>
+    <string name="edit_save">Edit and Save</string>
 
     <string name="question_no">Question Number</string>
     <string name="question_no_">Question No</string>
@@ -257,8 +258,10 @@
     <string name="kitchen_screen">Kitchen Screen</string>
     <string name="screen_no">Screen No</string>
     <string name="screen_name">Screen Name</string>
-    <string name="add_kitchen_screen">Add Kitchen Screen</string>
+    <string name="edit_add_kitchen_screen">Add/Edit Kitchen Screen</string>
     <string name="join_item_with_kitchen_screen">Join Item With Kitchen Screen</string>
+    <string name="edit_screen_text_view">* If you are want to edit an exist screen information just choose from below menu</string>
+    <string name="no_screen">No screen</string>
 
     <string name="tender">Tender</string>
     <string name="voucher_number">Voucher Number</string>

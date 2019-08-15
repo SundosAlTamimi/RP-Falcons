@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="600dp"
     android:layout_height="wrap_content"
     android:background="@color/layer3"
     android:orientation="vertical"
@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:layout_marginBottom="10dp">
+            android:layout_marginBottom="15dp">
 
             <TableRow
                 android:layout_width="match_parent"
@@ -110,12 +110,36 @@
 
         </TableLayout>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/edit_screen_text_view"
+            android:textColor="@color/cardview_dark_background"
+            android:textSize="17sp"/>
+
+        <Spinner
+            android:id="@+id/addKitchenScreen_editScreen_spinner"
+            android:layout_margin="5dp"
+            android:layout_width="300dp"
+            android:layout_marginBottom="5dp"
+            android:layout_height="wrap_content"></Spinner>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal"
             android:padding="10dp">
+
+            <Button
+                android:id="@+id/addKitchenScreen_edit_screen_info"
+                android:layout_width="150dp"
+                android:layout_height="50dp"
+                android:layout_margin="10dp"
+                android:background="@color/blue_ice"
+                android:text="@string/edit_save"
+                android:textAllCaps="true" />
 
             <Button
                 android:id="@+id/save"
