@@ -43,6 +43,7 @@ public class OrderHeader {
     private  int orgPos ;
     private  int isPost ;
     private  int cashNo ;
+    private String orderTKKind;
 
 
     public OrderHeader() {
@@ -55,7 +56,7 @@ public class OrderHeader {
                        double totalTax, double totalServiceTax, double subTotal, double amountDue, double deliveryCharge,
                        int sectionNO, int tableNO, double cashValue, double cardsValue, double chequeValue, double couponValue ,
                        double giftValue, double pointValue, String shiftName,int shiftNumber, String waiter,
-                       int seatsNumber, String userName, int userNo, String time,String orgNo,int orgPos,int cashNo) {
+                       int seatsNumber, String userName, int userNo, String time,String orgNo,int orgPos,int cashNo,String orderTKKind) {
 
         this.orderType = orderType;
         this.orderKind = orderKind;
@@ -92,6 +93,7 @@ public class OrderHeader {
         this.orgNo = orgNo;
         this.orgPos = orgPos;
         this.cashNo = cashNo;
+        this.orderTKKind = orderTKKind;
     }
 
     public void setUserName(String userName) {
@@ -379,6 +381,14 @@ public class OrderHeader {
 
     public void setCashNo(int cashNo) {
         this.cashNo = cashNo;
+    }
+
+    public String getOrderHeaderKind() {
+        return orderTKKind;
+    }
+
+    public void setOrderHeaderKind(String orderHeaderKind) {
+        this.orderTKKind = orderHeaderKind;
     }
 
     public JSONObject getJSONObject() { // for kitchen

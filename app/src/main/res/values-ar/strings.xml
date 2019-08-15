@@ -595,4 +595,7 @@
     <string name="details_">تفاصيل اكثر </string>
     <string name="details_L">تغاصيل اقل </string>
 
+    <string name="take_away_kind">طريقة الحصول على الوجبة </string>
+    <string name="take_away_kind_name">اسم الطريقة :</string>
+
 </resources>

@@ -44,6 +44,7 @@ import com.tamimi.sundos.restpos.Models.Recipes;
 import com.tamimi.sundos.restpos.Models.Shift;
 import com.tamimi.sundos.restpos.Models.TableActions;
 import com.tamimi.sundos.restpos.Models.Tables;
+import com.tamimi.sundos.restpos.Models.TakeAway;
 import com.tamimi.sundos.restpos.Models.UsedCategories;
 import com.tamimi.sundos.restpos.Models.UsedItems;
 import com.tamimi.sundos.restpos.Models.VoidResons;
@@ -58,7 +59,7 @@ import static com.tamimi.sundos.restpos.Settings.shift_name;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
     // Database Versions
-    private static final int DATABASE_VERSION = 40;
+    private static final int DATABASE_VERSION = 41;
 
     // Database Name
     private static final String DATABASE_NAME = "RestPos";
@@ -592,6 +593,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String MAX_SERIAL_REFUND = "MAX_SERIAL_REFUND";
 
     //___________________________________________________________________________________
+    private static final String TAKE_AWAY_KIND = "TAKE_AWAY_KIND";
+
+    private static final String TA_KIND_SERIAL = "TA_KIND_SERIAL";
+    private static final String TA_KIND_NAME = "TA_KIND_NAME";
+
+    //___________________________________________________________________________________
+
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -1237,6 +1245,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + MAX_SERIAL_REFUND + " TEXT " + ")";
         db.execSQL(CREATE_TABLE_MAX_SERIAL);
 
+        //___________________________________________________________________________________
+        String CREATE_TABLE_TAKE_AWAY_KIND = "CREATE TABLE " + TAKE_AWAY_KIND + " ("
+                + TA_KIND_SERIAL + " INTEGER,"
+                + TA_KIND_NAME + " TEXT " + ")";
+        db.execSQL(CREATE_TABLE_TAKE_AWAY_KIND);
+
 
     }
 
@@ -1298,6 +1312,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 //                + MAX_SERIAL_VHF + " TEXT " + ")";
 //        db.execSQL(CREATE_TABLE_MAX_SERIAL);
 
+try {
+    String CREATE_TABLE_TAKE_AWAY_KIND = "CREATE TABLE " + TAKE_AWAY_KIND + " ("
+            + TA_KIND_SERIAL + " INTEGER,"
+            + TA_KIND_NAME + " TEXT " + ")";
+    db.execSQL(CREATE_TABLE_TAKE_AWAY_KIND);
+}catch(Exception e){
+
+}
+
 
     }
 
@@ -1314,6 +1337,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+
+    public void addTakeAwayKind( TakeAway Taway){
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(TA_KIND_SERIAL,Taway.getSerial());
+        values.put(TA_KIND_NAME,Taway.getTANmae());
+
+        db.insert(TAKE_AWAY_KIND, null , values);
+        db.close();
+    }
 
 
     public void addMainSettings(){
@@ -3023,6 +3057,26 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return items;
     }
 
+    public List<TakeAway> getAllTAKind() {
+       List<TakeAway> items = new ArrayList<>();
+
+        String selectQuery = "SELECT * FROM " + TAKE_AWAY_KIND;
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                TakeAway item = new TakeAway();
+                item.setSerial(cursor.getInt(0));
+                item.setTANmae(cursor.getString(1));
+
+                items.add(item);
+
+            } while (cursor.moveToNext());
+        }
+        return items;
+    }
+
     public int getMaxSerial( String TableName,String orderKind) {
         ArrayList<Integer> moneys = new ArrayList<>();
         int max;
@@ -3109,6 +3163,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 order_header.setOrgPos(cursor.getInt(33));
                 order_header.setIsPost(cursor.getInt(34));
                 order_header.setCashNo(cursor.getInt(35));
+                order_header.setOrderHeaderKind(cursor.getString(36));
 
 
 
@@ -3166,6 +3221,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 order_header.setOrgPos(cursor.getInt(33));
                 order_header.setIsPost(cursor.getInt(34));
                 order_header.setCashNo(cursor.getInt(35));
+                order_header.setOrderHeaderKind(cursor.getString(36));
 
                 orderHeaders.add(order_header);
 
@@ -3222,6 +3278,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
                 order_header.setIsPost(cursor.getInt(34));
                 order_header.setCashNo(cursor.getInt(35));
+                order_header.setOrderHeaderKind(cursor.getString(36));
 
                 orderHeaders.add(order_header);
 

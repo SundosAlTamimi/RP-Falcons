@@ -17,6 +17,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -30,6 +32,7 @@ import com.tamimi.sundos.restpos.Models.Money;
 import com.tamimi.sundos.restpos.Models.OrderHeader;
 import com.tamimi.sundos.restpos.Models.OrderTransactions;
 import com.tamimi.sundos.restpos.Models.PayMethod;
+import com.tamimi.sundos.restpos.Models.TakeAway;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -54,6 +57,7 @@ public class PayMethods extends AppCompatActivity {
     Button cash, creditCard, cheque, giftCard, credit, point, save;
     TextView tableNumber, check, date, remainingBalance, server, orderAmount, discount, subCharge, subTotal, tax, amountDue, deliveryCharge,
             totalDue, totalReceived, balance;
+    LinearLayout TakeAwayTableLayout;
 
     DatabaseHandler mDHandler;
     Dialog dialog, dialog1;
@@ -74,6 +78,7 @@ public class PayMethods extends AppCompatActivity {
     List<OrderTransactions> orderTransTemp = null;
     List<OrderHeader> orderHeaderTemp = null;
     String sectionNo, tableNo;
+    RadioGroup rg;
 
     ArrayList chequeListName;
     ArrayAdapter<String> adapter2;
@@ -106,6 +111,7 @@ public class PayMethods extends AppCompatActivity {
         Date currentTimeAndDate = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
         String today = convertToEnglish(df.format(currentTimeAndDate));
+//        insertRadioButton(TakeAwayTableLayout,"name");
 
         date.setText(convertToEnglish(date.getText().toString() + " " + today));
         mDHandler = new DatabaseHandler(PayMethods.this);
@@ -166,6 +172,8 @@ public class PayMethods extends AppCompatActivity {
         resivePoint = new ArrayList<String>();
         resiveCheque = new ArrayList<String>();
         resiveGift = new ArrayList<String>();
+
+        createRadioButton();
 
     }
 
@@ -449,6 +457,72 @@ public class PayMethods extends AppCompatActivity {
         });
         dialog.show();
     }
+
+    private void createRadioButton() {
+
+      rg = new RadioGroup(this); //create the RadioGroup
+        rg.setGravity(Gravity.CENTER);
+        rg.setOrientation(RadioGroup.HORIZONTAL);//or RadioGroup.VERTICAL
+        List<TakeAway> takeAway=new ArrayList<>();
+        takeAway=mDHandler.getAllTAKind();
+        final RadioButton[] rb = new RadioButton[takeAway.size()];
+        for(int i=0; i<takeAway.size(); i++){
+            rb[i]  = new RadioButton(this);
+            rb[i].setText(takeAway.get(i).getTANmae());
+            rb[i].setTextColor(getResources().getColor(R.color.text_color));
+            rb[i].setPadding(50,10,0,10);
+            rb[i].setId(i + 100);
+            rg.addView(rb[i]);
+        }
+        rb[0].setChecked(true);
+        TakeAwayTableLayout.addView(rg);//you add the whole RadioGroup to the layout
+
+
+
+    }
+
+//    void insertRadioButton( final TableLayout itemsTableLayout, String text) {
+//        final TableRow row = new TableRow(PayMethods.this);
+//
+//        TableLayout.LayoutParams lp = new TableLayout.LayoutParams();
+//        lp.setMargins(2, 2, 2, 0);
+//        row.setLayoutParams(lp);
+//
+//        for (int k = 0; k < 2; k++) {
+//           RadioButton textView = new RadioButton(PayMethods.this);
+//
+//            switch (k) {
+//                case 0:
+//                    textView.setText("j"+k);
+//                    break;
+//                case 1:
+//                    textView.setText("no " + text);
+//                    break;
+//            }
+//
+//            textView.setTextColor(ContextCompat.getColor(PayMethods.this, R.color.text_color));
+//            textView.setGravity(Gravity.CENTER);
+//
+//            TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+//            textView.setLayoutParams(lp2);
+//
+//            row.addView(textView);
+//
+//            row.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    // remove focused rows
+//                    for (int k = 0; k < itemsTableLayout.getChildCount(); k++) {
+//                        TableRow tableRow = (TableRow) itemsTableLayout.getChildAt(k);
+//                        tableRow.setBackgroundColor(getResources().getColor(R.color.layer3));
+//                    }
+//
+//                }
+//            });
+//        }
+//        itemsTableLayout.addView(row);
+//
+//    }
 
 
     void payGraterDialog(String message, String today, String balance_value) {
@@ -1616,6 +1690,26 @@ public class PayMethods extends AppCompatActivity {
             }else { pointValue1 = 0.0;}
             List<ItemWithScreen> itemWithScreens = mDHandler.getAllItemsWithScreen();
 
+            Log.e("count --> ",""+rg.getChildCount());
+//            RadioButton ra=(RadioButton) rg.getChildAt(0);
+
+
+            for(int i1=0;i1<rg.getChildCount();i1++){
+                RadioButton ra=(RadioButton) rg.getChildAt(i1);
+                Log.e("child at  --> "+i1,""+ra.isChecked());
+                Log.e("child atmaster --> ",""+ra.getText().toString());
+
+                if(ra.isChecked()){
+
+
+
+                    break;
+                }
+
+            }
+
+
+
             if (orderHeaderTemp == null) { // Takeaway
                 //getting the data from order activity and save it in database.
                 Log.e("creditCardValue1", " " + creditCardValue1);
@@ -1905,6 +1999,8 @@ public class PayMethods extends AppCompatActivity {
         totalDue = (TextView) findViewById(R.id.total_due);
         totalReceived = (TextView) findViewById(R.id.total_received);
         balance = (TextView) findViewById(R.id.balance);
+
+        TakeAwayTableLayout=(LinearLayout)findViewById(R.id.radioLayout);
 
         cash.setOnClickListener(onClickListener);
         creditCard.setOnClickListener(onClickListener);

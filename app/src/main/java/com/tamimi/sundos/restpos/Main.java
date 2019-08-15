@@ -2405,7 +2405,7 @@ public class Main extends AppCompatActivity {
                                 -1 * service, -1 * tax, -1 * serviceTax, -1 * subTotalValue,
                                 -1 * netTotal1, 0, rowRefund.get(0).getTableNo(),
                                 rowRefund.get(0).getSectionNo(), -1 * cashValues, -1 * creditValues, -1 * chequeVales, -1 * cardValues,
-                                -1 * giftCardValues, -1 * pointValues, Settings.shift_name, Settings.shift_number, waiterName, 0, Settings.user_name, Settings.user_no, convertToEnglish(times), rowRefund.get(0).getVoucherNo(), rowRefund.get(0).getPosNo(), Settings.cash_no);
+                                -1 * giftCardValues, -1 * pointValues, Settings.shift_name, Settings.shift_number, waiterName, 0, Settings.user_name, Settings.user_no, convertToEnglish(times), rowRefund.get(0).getVoucherNo(), rowRefund.get(0).getPosNo(), Settings.cash_no,);
                         mDHandler.addOrderHeader(orderHeader);
 
                         for (int i = 0; i < rowRefund.size(); i++) {

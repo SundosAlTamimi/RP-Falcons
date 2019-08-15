@@ -67,16 +67,14 @@ import com.tamimi.sundos.restpos.Models.Pay;
 import com.tamimi.sundos.restpos.Models.PayMethod;
 import com.tamimi.sundos.restpos.Models.Shift;
 import com.tamimi.sundos.restpos.Models.TableActions;
+import com.tamimi.sundos.restpos.Models.TakeAway;
 import com.tamimi.sundos.restpos.Models.VoidResons;
 import com.tamimi.sundos.restpos.Models.ZReport;
-import com.tamimi.sundos.restpos.PayMethods;
 import com.tamimi.sundos.restpos.R;
 import com.tamimi.sundos.restpos.ReceiveCloud;
 import com.tamimi.sundos.restpos.SendCloud;
 import com.tamimi.sundos.restpos.Settings;
-import com.tamimi.sundos.restpos.SyncWithCloud;
 
-import java.sql.Blob;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
@@ -101,7 +99,7 @@ import org.json.JSONObject;
 //import static com.itextpdf.text.Element.ALIGN_CENTER;
 
 public class BackOfficeActivity extends AppCompatActivity {
-    RadioGroup radioGroup ;//= new RadioGroup(this);
+    RadioGroup radioGroup;//= new RadioGroup(this);
 
 
     int isChecked = 0;
@@ -117,7 +115,7 @@ public class BackOfficeActivity extends AppCompatActivity {
     LinearLayout salesTotal, cashierInOut, canceledOrderHistory, x_report, z_report, market_report_,
             salesReportForDay, salesByHours, salesVolumeByItem, topSalesItemReport, topGroupSalesReport, topFamilySalesReport,
             salesReportByCustomer, salesReportByCardType, waiterSalesReport, tableActionReport, profitLossReport, detailSalesReport,
-            simpleSalesTotalReport, SoldQtyReport, userOrderCountReport, reCancellationReport, reCancellationSupervisorReport;
+            simpleSalesTotalReport, SoldQtyReport, userOrderCountReport, reCancellationReport, reCancellationSupervisorReport, TakeawayKind;
 
     int count, count2, nextSerial;
     Dialog dialog, dialog1;
@@ -348,6 +346,9 @@ public class BackOfficeActivity extends AppCompatActivity {
                     break;
                 case R.id.re_cancellation_report:
                     ShowReCancellationReport();
+                    break;
+                case R.id.TakeKindlayout:
+                    showAddTakeAwayKindDialog();
                     break;
             }
         }
@@ -3030,7 +3031,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         });
 
         ArrayList<KitchenScreen> screens = mDHandler.getAllKitchenScreen();
-         radioGroup = new RadioGroup(this);
+        radioGroup = new RadioGroup(this);
         for (int i = 0; i < screens.size(); i++) {
             RadioButton radioButton = new RadioButton(BackOfficeActivity.this);
             radioButton.setText("- " + screens.get(i).getKitchenName());
@@ -6206,6 +6207,56 @@ public class BackOfficeActivity extends AppCompatActivity {
 
     }
 
+    void showAddTakeAwayKindDialog() {
+        dialog = new Dialog(BackOfficeActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.add_takaway_kind);
+        dialog.setCanceledOnTouchOutside(false);
+        Window window = dialog.getWindow();
+
+        Button save, exit;
+        EditText TAname;
+        TextView serial;
+
+        save = (Button) dialog.findViewById(R.id.save);
+        exit = (Button) dialog.findViewById(R.id.exit);
+        TAname = (EditText) dialog.findViewById(R.id.TakeKind);
+        serial = (TextView) dialog.findViewById(R.id.TakeSerial);
+
+        final int[] serials = {mDHandler.getAllTAKind().size() + 1};
+
+        serial.setText("" + serials[0]);
+
+        save.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onClick(View v) {
+
+                if (!TAname.getText().toString().equals("")) {
+                    mDHandler.addTakeAwayKind(new TakeAway(serials[0], TAname.getText().toString()));
+                    serials[0]++;
+                    serial.setText("" + serials[0]);
+                    TAname.setText("");
+                    Toast.makeText(BackOfficeActivity.this, "Save Successful", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
+        exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dialog.dismiss();
+            }
+        });
+
+
+        dialog.show();
+
+    }
+
     void showAddShiftDialog() {
         dialog = new Dialog(BackOfficeActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -7060,6 +7111,10 @@ public class BackOfficeActivity extends AppCompatActivity {
         rawPosition += 1;
     }
 
+
+
+
+
     void insertRaw3(int number, String string, TableLayout tableLayout) {
 
         if (true) {
@@ -7229,6 +7284,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         SoldQtyReport = (LinearLayout) findViewById(R.id.sold_qty_report);
         userOrderCountReport = (LinearLayout) findViewById(R.id.user_order_count_report);
         reCancellationReport = (LinearLayout) findViewById(R.id.re_cancellation_report);
+        TakeawayKind = (LinearLayout) findViewById(R.id.TakeKindlayout);
 
         butManagement.setOnClickListener(onClickListener);
         butSales.setOnClickListener(onClickListener);
@@ -7286,6 +7342,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         SoldQtyReport.setOnClickListener(onClickListener2);
         userOrderCountReport.setOnClickListener(onClickListener2);
         reCancellationReport.setOnClickListener(onClickListener2);
+        TakeawayKind.setOnClickListener(onClickListener2);
 
     }
 }
