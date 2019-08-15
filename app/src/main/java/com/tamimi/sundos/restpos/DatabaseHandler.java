@@ -4299,6 +4299,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void deleteForUpdateItem(String Barcode) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from ITEMS where ITEM_BARCODE = '" + Barcode + "'");
+        db.close();
+    }
+
     public void deleteCategory(String categorySerial) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from FAMILY_CATEGORY_TABLE where SERIAL = '" + categorySerial + "'");

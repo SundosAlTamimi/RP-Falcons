@@ -638,7 +638,8 @@ public class PayMethods extends AppCompatActivity {
 //                String t1 = String.valueOf(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(received.getText().toString())))));
 //                String t2 = cardNo.getText().toString();
                 //&& spinner.getSelectedItem().toString().equals("")
-                if (!received.getText().toString().equals("") && !cardNo.getText().toString().equals("") && creditCardsName.size() != 0) {
+                //&& !cardNo.getText().toString().equals("")
+                if (!received.getText().toString().equals("")  && creditCardsName.size() != 0) {
                     String t0 = String.valueOf(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(balance.getText().toString())))));
                     String t1 = String.valueOf(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(received.getText().toString())))));
                     String t2 = cardNo.getText().toString();
