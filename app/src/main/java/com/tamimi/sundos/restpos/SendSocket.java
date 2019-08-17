@@ -147,6 +147,9 @@ public class SendSocket {
                     }
 
                     obj.put("CASHNO", orderTransactions.get(i).getCashNo());
+                    obj.put("ORDERTKKIND",obj1.get("ORDERTKKIND") );
+                    obj.put("STGNO","1" );
+                    Log.e("ORDERTKKIND master = = ",""+obj1.get("ORDERTKKIND") );
                     objNo.put(obj);
 
                 } catch (JSONException e) {

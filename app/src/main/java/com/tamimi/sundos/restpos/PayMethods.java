@@ -474,7 +474,12 @@ public class PayMethods extends AppCompatActivity {
             rb[i].setId(i + 100);
             rg.addView(rb[i]);
         }
-        rb[0].setChecked(true);
+        try {
+            rb[0].setChecked(true);
+        }catch (Exception e){
+
+        }
+
         TakeAwayTableLayout.addView(rg);//you add the whole RadioGroup to the layout
 
 
@@ -1571,6 +1576,8 @@ public class PayMethods extends AppCompatActivity {
             }
             String vhfSerial = convertToEnglish(df.format(currentTimeAndDate));// + "-" + (serial);
             String newString = convertToEnglish(vhfSerial.replace("-", "") + "-" + (serial));
+            String TkKind ="Take Away";
+
 
             double cashValues = 0, cardValues = 0, chequeValues = 0, giftValues = 0, couponValues = 0, pointValues = 0;
             List<PayMethod> payMethodList = new ArrayList<>();
@@ -1701,7 +1708,8 @@ public class PayMethods extends AppCompatActivity {
 
                 if(ra.isChecked()){
 
-
+                    TkKind=ra.getText().toString();
+                    Log.e("isCheck --> ",""+ra.getText().toString());
 
                     break;
                 }
@@ -1719,6 +1727,7 @@ public class PayMethods extends AppCompatActivity {
                 obj.getOrderHeaderObj().setGiftValue(giftCardValue1);
                 obj.getOrderHeaderObj().setCouponValue(creditValue1);
                 obj.getOrderHeaderObj().setPointValue(pointValue1);
+                obj.getOrderHeaderObj().setOrderHeaderKind(TkKind);
 
                 mDHandler.addOrderHeader(obj.getOrderHeaderObj());
 

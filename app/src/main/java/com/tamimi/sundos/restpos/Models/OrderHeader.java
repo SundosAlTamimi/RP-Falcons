@@ -400,6 +400,8 @@ public class OrderHeader {
             obj.put("TABLENO", tableNO);
             obj.put("SECTIONNO", sectionNO);
             obj.put("CASHNO", cashNo);
+            obj.put("ORDERTKKIND",orderTKKind );
+            obj.put("STGNO","1" );
 
         } catch (JSONException e) {
             Log.e("Tag" , "JSONException");
@@ -447,6 +449,7 @@ public class OrderHeader {
             obj.put("ORGPOS", orgPos);
 
             obj.put("CASHNO", cashNo);
+            obj.put("ORDERTKKIND",orderTKKind );
 
         } catch (JSONException e) {
             Log.e("Tag" , "JSONException");

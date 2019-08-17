@@ -59,7 +59,7 @@ import static com.tamimi.sundos.restpos.Settings.shift_name;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
     // Database Versions
-    private static final int DATABASE_VERSION = 41;
+    private static final int DATABASE_VERSION = 42;
 
     // Database Name
     private static final String DATABASE_NAME = "RestPos";
@@ -297,6 +297,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String ORG_POS2 = "ORG_POS";
     private static final String IS_POSTED2= "IS_POSTED";
     private static final String CASH_NO2= "CASH_NO";
+    private static final String ORDER_TK_KIND2= "ORDER_TK_KIND";
 
     //___________________________________________________________________________________
     private static final String FORCE_QUESTIONS = "FORCE_QUESTIONS";
@@ -892,7 +893,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + ORG_NO2 + " TEXT,"
                 + ORG_POS2 + " INTEGER,"
                 + IS_POSTED2 + " INTEGER,"
-                + CASH_NO2 + " INTEGER" + ")";
+                + CASH_NO2 + " INTEGER,"
+                + ORDER_TK_KIND2 + " TEXT" + ")";
         db.execSQL(CREATE_TABLE_ORDER_HEADER);
 
         //_______________________________________________________________________________________
@@ -932,7 +934,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + ORG_NO2 + " TEXT,"
                 + ORG_POS2 + " INTEGER,"
                 + IS_POSTED2 + " INTEGER,"
-                + CASH_NO2 + " INTEGER" + ")";
+                + CASH_NO2 + " INTEGER,"
+                + ORDER_TK_KIND2 + " TEXT" + ")";
         db.execSQL(CREATE_TABLE_ORDER_HEADER_TEMP);
 
         //_______________________________________________________________________________
@@ -1311,6 +1314,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 //                + MAX_SERIAL_REFUND + " TEXT,"
 //                + MAX_SERIAL_VHF + " TEXT " + ")";
 //        db.execSQL(CREATE_TABLE_MAX_SERIAL);
+try {
+    db.execSQL("ALTER TABLE ORDER_HEADER ADD ORDER_TK_KIND TAXE NOT NULL DEFAULT 'Take Away'");
+    db.execSQL("ALTER TABLE ORDER_HEADER_TEMP ADD ORDER_TK_KIND TAXE NOT NULL DEFAULT 'Take Away'");
+}catch (Exception e){}
 
 try {
     String CREATE_TABLE_TAKE_AWAY_KIND = "CREATE TABLE " + TAKE_AWAY_KIND + " ("
@@ -1801,6 +1808,7 @@ try {
         values.put(ORG_POS2, orderHeader.getOrgPos());
         values.put(IS_POSTED2, orderHeader.getIsPost());
         values.put(CASH_NO2, orderHeader.getCashNo());
+        values.put(ORDER_TK_KIND2, orderHeader.getOrderHeaderKind());
 
         db.insert(ORDER_HEADER, null, values);
         db.close();
@@ -1846,7 +1854,7 @@ try {
         values.put(ORG_POS2, orderHeader.getOrgPos());
         values.put(IS_POSTED2, orderHeader.getIsPost());
         values.put(CASH_NO2, orderHeader.getCashNo());
-
+        values.put(ORDER_TK_KIND2, orderHeader.getOrderHeaderKind());
         db.insert(ORDER_HEADER_TEMP, null, values);
         db.close();
     }
@@ -2629,10 +2637,10 @@ try {
         return orderTransactions;
     }
 
-    public final String getAllRequestVoucherHeader(String Vfh_No,String POS) {
-         String waterName ="";
+    public final List<String> getAllRequestVoucherHeader(String Vfh_No,String POS) {
+        List<String> waterName =new ArrayList<>();
 //        String selectQuery = "SELECT * FROM " + ORDER_TRANSACTIONS + " where VOUCHER_NO = '" + Vfh_No + "'" + " and ORDER_KIND = '0'";
-        String selectQuery = "SELECT WAITER FROM " + ORDER_HEADER + " where VOUCHER_NUMBER = '" + Vfh_No + "'" + " and ORDER_KIND = '0"+"'" + " and POINT_OF_SALE_NUMBER = '"+POS+"'" ;
+        String selectQuery = "SELECT WAITER , ORDER_TK_KIND FROM " + ORDER_HEADER + " where VOUCHER_NUMBER = '" + Vfh_No + "'" + " and ORDER_KIND = '0"+"'" + " and POINT_OF_SALE_NUMBER = '"+POS+"'" ;
 
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -2642,7 +2650,9 @@ try {
                 OrderHeader item = new OrderHeader();
 
                 item.setWaiter(cursor.getString(0));
-                waterName=item.getWaiter();
+                item.setOrderHeaderKind(cursor.getString(1));
+                waterName.add(item.getWaiter());
+                waterName.add(item.getOrderHeaderKind());
 
             } while (cursor.moveToNext());
         }
