@@ -381,7 +381,8 @@ if(!itemBarcodeUpdate){
    public void  upDateMenuDialog(){
 
        String itemBarcode = convertToEnglish(itemBarcodeEditText.getText().toString());
-
+       itemBarcodeFound = false;
+       clearForm();
        for (int i = 0; i < items.size(); i++) {
            if (!itemBarcode.equals("") && itemBarcode.equals(String.valueOf(items.get(i).getItemBarcode()))) {
                itemBarcodeFound = true;
@@ -423,6 +424,10 @@ if(!itemBarcodeUpdate){
                itemBarcodeUpdate=true;
                break;
            }
+       }
+
+       if(!itemBarcodeFound){
+           new Settings().makeText(MenuRegistration.this,"The Barcode Not Found Please Try Again");
        }
 
 
