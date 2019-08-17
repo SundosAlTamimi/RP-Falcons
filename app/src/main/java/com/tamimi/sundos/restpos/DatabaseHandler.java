@@ -3915,6 +3915,22 @@ try {
         return kitchenScreens;
     }
 
+    public KitchenScreen getKitchenScreenInfo(String screenName) {
+
+        String selectQuery = "SELECT  * FROM " + KITCHEN_SCREEN_TABLE + " where KITCHEN_NAME =\"" + screenName + "\"";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        KitchenScreen kitchenScreen = new KitchenScreen();
+        if (cursor.moveToFirst()) {
+                kitchenScreen.setKitchenName(cursor.getString(0));
+                kitchenScreen.setKitchenNo(cursor.getInt(1));
+                kitchenScreen.setKitchenIP(cursor.getString(2));
+
+        }
+        return kitchenScreen;
+    }
+
 
     public ArrayList<ZReport> getAllZReport() {
         ArrayList<ZReport> items = new ArrayList<>();
@@ -4118,6 +4134,17 @@ try {
     }
 
     //Updating single record
+    public void updateKitchenScreenInfo(KitchenScreen kitchenScreen, int oldKitchenNo) {
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(KITCHEN_NAME, kitchenScreen.getKitchenName());
+        values.put(KITCHEN_NO, kitchenScreen.getKitchenNo());
+        values.put(KITCHEN_IP, kitchenScreen.getKitchenIP());
+
+        // updating row
+        db.update(KITCHEN_SCREEN_TABLE, values, KITCHEN_NO + " = '" + oldKitchenNo + "'", null);
+    }
 
     public void updateUsedCategories(UsedCategories usedCategories) {
         db = this.getWritableDatabase();

@@ -100,6 +100,7 @@ import org.json.JSONObject;
 
 public class BackOfficeActivity extends AppCompatActivity {
     RadioGroup radioGroup;//= new RadioGroup(this);
+    int kitchenNoOldValue = -1;
 
 
     int isChecked = 0;
@@ -6535,35 +6536,137 @@ public class BackOfficeActivity extends AppCompatActivity {
         dialog.setCanceledOnTouchOutside(true);
 
 
-        Button save, exit;
+        Button save, exit, edit;
         EditText kitchenNo, kitchenName, kitchenIP;
+        Spinner editScreenInformation;
+        ArrayAdapter<String> spinnerAdapter;
+        ArrayList<KitchenScreen> allScreensInfo = mDHandler.getAllKitchenScreen();
+        ArrayList<String> screensList = new ArrayList<>();
 
         save = (Button) dialog.findViewById(R.id.save);
         exit = (Button) dialog.findViewById(R.id.exit);
+        edit = (Button) dialog.findViewById(R.id.addKitchenScreen_edit_screen_info);
+        edit.setVisibility(View.GONE);
 
         kitchenNo = (EditText) dialog.findViewById(R.id.kitNo);
         kitchenName = (EditText) dialog.findViewById(R.id.kitName);
         kitchenIP = (EditText) dialog.findViewById(R.id.ip_);
+        editScreenInformation = dialog.findViewById(R.id.addKitchenScreen_editScreen_spinner);
+
+        screensList.add("Select screen");
+
+        if (allScreensInfo.size() != 0)
+            for (int i = 0; i < allScreensInfo.size(); i++)
+                screensList.add(allScreensInfo.get(i).getKitchenName());
+//        else
+//            screensList.add("Select screen");
+
+        spinnerAdapter = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, screensList);
+        editScreenInformation.setAdapter(spinnerAdapter);
+        editScreenInformation.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+//                save.setClickable(false);
+                kitchenNoOldValue = -1;
+//                edit.setVisibility(View.GONE);
+//                save.setVisibility(View.VISIBLE);
+                kitchenNo.setText("");
+                kitchenName.setText("");
+                kitchenIP.setText("");
+                String selectedItem = screensList.get(position);
+//                Log.e("info 1 ", "" + selectedItem);
+
+                if (!selectedItem.equals("Select screen")) {
+                    edit.setVisibility(View.VISIBLE);
+                    save.setVisibility(View.GONE);
+
+                    KitchenScreen kitchenScreen = mDHandler.getKitchenScreenInfo(selectedItem);
+                    Log.e("info ", kitchenScreen.getKitchenName());
+                    kitchenNoOldValue = kitchenScreen.getKitchenNo();
+                    kitchenNo.setText("" + kitchenScreen.getKitchenNo());
+                    kitchenName.setText("" + kitchenScreen.getKitchenName());
+                    kitchenIP.setText("" + kitchenScreen.getKitchenIP());
+
+                } else {
+//                    kitchenNoOldValue = -1;
+                    edit.setVisibility(View.GONE);
+                    save.setVisibility(View.VISIBLE);
+//                    kitchenNo.setText("");
+//                    kitchenName.setText("");
+//                    kitchenIP.setText("");
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean found = false;
+
+                if (!TextUtils.isEmpty(kitchenNo.getText().toString()) && !TextUtils.isEmpty(kitchenName.getText().toString())
+                        && !TextUtils.isEmpty(kitchenIP.getText().toString())) {
+                    KitchenScreen editedScreenInfo = new KitchenScreen(Integer.parseInt(kitchenNo.getText().toString())
+                            , kitchenName.getText().toString()
+                            , kitchenIP.getText().toString());
+                    if (editedScreenInfo.getKitchenNo() != -1) {
+                        List<KitchenScreen> list = mDHandler.getAllKitchenScreen();
+                        for (int i = 0; i < list.size(); i++) {
+                            if (list.get(i).getKitchenNo() == editedScreenInfo.getKitchenNo()) {
+                                found = true;
+                                if (found) {
+                                    if (kitchenNoOldValue == editedScreenInfo.getKitchenNo()) {
+                                        if (list.get(i).getKitchenName().equals(editedScreenInfo.getKitchenName())) {
+                                            if (list.get(i).getKitchenIP().equals(editedScreenInfo.getKitchenIP())) {
+//                              nothing to do, the data not changed
+                                                Toast.makeText(BackOfficeActivity.this, "Saved successfully", Toast.LENGTH_SHORT).show();
+                                            }
+                                        } else {
+                                            mDHandler.updateKitchenScreenInfo(editedScreenInfo, kitchenNoOldValue);
+                                            Toast.makeText(BackOfficeActivity.this, "Saved successfully", Toast.LENGTH_SHORT).show();
+                                        }
+                                    } else {
+                                        Toast.makeText(BackOfficeActivity.this, "Screen No already exist!", Toast.LENGTH_SHORT).show();
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                        if (!found) {
+                            mDHandler.updateKitchenScreenInfo(editedScreenInfo, kitchenNoOldValue);
+                            Toast.makeText(BackOfficeActivity.this, "Saved successfully", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(BackOfficeActivity.this, "Screen No -1 is not allowed!", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(BackOfficeActivity.this, "All fields are required!", Toast.LENGTH_SHORT).show();
+                }
+
+                dialog.dismiss();
+            }
+        });
 
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (!kitchenName.getText().toString().equals("") && !convertToEnglish(kitchenNo.getText().toString()).equals("") && !kitchenIP.getText().toString().equals("")) {
+                if (!kitchenName.getText().toString().equals("") && !convertToEnglish(kitchenNo.getText().toString()).equals("")
+                        && !kitchenIP.getText().toString().equals("")) {
 
-                    KitchenScreen kitchenScreen = new KitchenScreen(Integer.parseInt(convertToEnglish(kitchenNo.getText().toString())), kitchenName.getText().toString(), convertToEnglish(kitchenIP.getText().toString()));
-
+                    KitchenScreen kitchenScreen = new KitchenScreen(Integer.parseInt(convertToEnglish(kitchenNo.getText().toString()))
+                            , kitchenName.getText().toString(), convertToEnglish(kitchenIP.getText().toString()));
                     mDHandler.addKitchenScreen(kitchenScreen);
-
                     kitchenName.setText("");
                     kitchenNo.setText("");
                     kitchenIP.setText("");
-
-
                     new Settings().makeText(BackOfficeActivity.this, getResources().getString(R.string.save_successful));
-
                 } else {
-
                     new Settings().makeText(BackOfficeActivity.this, getResources().getString(R.string.please_insert_all_data));
                 }
 
