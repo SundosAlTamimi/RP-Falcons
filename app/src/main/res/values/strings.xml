@@ -593,6 +593,7 @@
     <string name="details_L">Less Details</string>
     <string name="take_away_kind">Take Away Kind</string>
     <string name="take_away_kind_name">Take Away Kind Name :</string>
+    <string name="dashboard">Dashboard</string>
 
 
 </resources>

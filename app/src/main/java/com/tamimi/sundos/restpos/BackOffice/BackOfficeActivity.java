@@ -136,7 +136,7 @@ public class BackOfficeActivity extends AppCompatActivity {
 
     TableLayout jobTable;
     Button butManagement, butSales, butCustomers, butEmployees, butMenu, butSettings;
-    LinearLayout announcement, giftCard, employeeClockInOut, menuSearch, reCancellationSupervisor;
+    LinearLayout announcement, giftCard, employeeClockInOut, menuSearch, reCancellationSupervisor,DashboardData;
     LinearLayout membershipGroup, membership, customerRegistration;
     LinearLayout jobGroup, employeeRegistration, employeeSchedule, payroll, vacation, editTables;
     LinearLayout menuCategory, menuRegistration, modifier, forceQuestion, voiding_reasons, menuLayout;
@@ -196,6 +196,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         initialize();
         currentLinear(lManagement);
         mDHandler = new DatabaseHandler(BackOfficeActivity.this);
+        showDashBoardDialog();
     }
 
     View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -239,6 +240,9 @@ public class BackOfficeActivity extends AppCompatActivity {
             switch (view.getId()) {
                 case R.id.announcement:
                     addAnnouncementDialog();
+                    break;
+                case R.id.DashboardData:
+                    showDashBoardDialog();
                     break;
                 case R.id.gift_card:
                     kitchenOrderDialog();
@@ -361,7 +365,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     showTablesActionReport();
                     break;
                 case R.id.profit_loss_report:
-                    showDashBoardDialog();
+
                     break;
                 case R.id.detail_sales_report:
                     break;
@@ -8503,6 +8507,7 @@ List<Float> valueCredit=new ArrayList<>();
         lSettings = (LinearLayout) findViewById(R.id.l_settings);
 
         announcement = (LinearLayout) findViewById(R.id.announcement);
+        DashboardData= (LinearLayout) findViewById(R.id.DashboardData);
         giftCard = (LinearLayout) findViewById(R.id.gift_card);
         employeeClockInOut = (LinearLayout) findViewById(R.id.employee_click_out);
         menuSearch = (LinearLayout) findViewById(R.id.menu_search);
@@ -8561,6 +8566,7 @@ List<Float> valueCredit=new ArrayList<>();
         butSettings.setOnClickListener(onClickListener);
 
         announcement.setOnClickListener(onClickListener2);
+        DashboardData.setOnClickListener(onClickListener2);
         giftCard.setOnClickListener(onClickListener2);
         employeeClockInOut.setOnClickListener(onClickListener2);
         menuSearch.setOnClickListener(onClickListener2);

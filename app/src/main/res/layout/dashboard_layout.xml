@@ -34,6 +34,98 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/chart5"
+                    android:layout_width="match_parent"
+                    android:layout_height="400dp"
+                    android:layout_weight="1" />
+
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/chart6"
+                    android:layout_width="match_parent"
+                    android:layout_height="400dp"
+                    android:layout_weight="1" />
+
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/chart7"
+                    android:layout_width="match_parent"
+                    android:layout_height="400dp"
+                    android:layout_weight="1" />
+
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textView114"
+                android:layout_width="match_parent"
+                android:layout_height="7dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="@color/light_blue" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView113"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Sales for payMethodes"
+                    android:textColor="@color/text_color"
+                    android:textSize="18sp" />
+
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/chart4"
+                    android:layout_width="match_parent"
+                    android:layout_height="400dp" />
+
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/textView110"
+                android:layout_width="match_parent"
+                android:layout_height="7dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="@color/light_blue" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView117"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Sales in One Weak"
+                    android:textColor="@color/text_color"
+                    android:textSize="18sp" />
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/chart9"
+                    android:layout_width="match_parent"
+                    android:layout_height="400dp"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textView70"
+                android:layout_width="match_parent"
+                android:layout_height="7dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="@color/light_blue" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -82,69 +174,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/textView70"
-                android:layout_width="match_parent"
-                android:layout_height="7dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:background="@color/light_blue" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/textView113"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Sales for payMethodes"
-                    android:textColor="@color/text_color"
-                    android:textSize="18sp" />
-
-                <com.github.mikephil.charting.charts.PieChart
-                    android:id="@+id/chart4"
-                    android:layout_width="match_parent"
-                    android:layout_height="400dp" />
-
-            </LinearLayout>
-
-
-            <TextView
-                android:id="@+id/textView110"
-                android:layout_width="match_parent"
-                android:layout_height="7dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:background="@color/light_blue" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <com.github.mikephil.charting.charts.PieChart
-                    android:id="@+id/chart5"
-                    android:layout_width="match_parent"
-                    android:layout_height="400dp"
-                    android:layout_weight="1"/>
-                <com.github.mikephil.charting.charts.PieChart
-                    android:id="@+id/chart6"
-                    android:layout_width="match_parent"
-                    android:layout_height="400dp"
-                    android:layout_weight="1"/>
-                <com.github.mikephil.charting.charts.PieChart
-                    android:id="@+id/chart7"
-                    android:layout_width="match_parent"
-                    android:layout_height="400dp"
-                    android:layout_weight="1"/>
-
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/textView114"
+                android:id="@+id/textView116"
                 android:layout_width="match_parent"
                 android:layout_height="7dp"
                 android:layout_marginTop="10dp"
@@ -181,34 +211,7 @@
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/textView116"
-                android:layout_width="match_parent"
-                android:layout_height="7dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:background="@color/light_blue" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/textView117"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Sales in One Weak"
-                    android:textColor="@color/text_color"
-                    android:textSize="18sp" />
-                <com.github.mikephil.charting.charts.PieChart
-                    android:id="@+id/chart9"
-                    android:layout_width="match_parent"
-                    android:layout_height="400dp"
-                    android:layout_weight="1"/>
-            </LinearLayout>
-
         </LinearLayout>
     </ScrollView>
+
 </LinearLayout>
