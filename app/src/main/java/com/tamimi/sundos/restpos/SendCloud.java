@@ -1159,7 +1159,8 @@ public class SendCloud {
             int isActive=0;
 //            Log.e("send cloud", " authentication " + s.toString());
 
-            if (s != null && s.contains("OK")) {
+            if (s != null ) {
+                if( s.contains("OK")){
                 Log.e("authentication", "** Success **");
                 try {
                     JSONObject jsonObject=new JSONObject(s);
@@ -1174,7 +1175,7 @@ public class SendCloud {
             } else if (s.contains("No data found")){ // No data found
                 Settings.checkUserFlag = 0;
                 Log.e("authentication", "** no user found **");
-            }else { // no internet connection
+            }}else { // no internet connection
                 Settings.checkUserFlag = 3;
             }
 
