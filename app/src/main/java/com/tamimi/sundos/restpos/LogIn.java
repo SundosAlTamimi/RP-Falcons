@@ -31,13 +31,16 @@ import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 
 public class LogIn extends AppCompatActivity {
 
     ImageView lock;
     Button b1, b2, b3, b4, b5, b6, b7, b8, b9, b0;
     Button clear, logIn;
-    TextView t1, t2, t3, t4,logfocu;
+    TextView t1, t2, t3, t4, logfocu;
     TextView[] arrayOfText;
     int index = 0;
     MediaPlayer mp;
@@ -75,9 +78,9 @@ public class LogIn extends AppCompatActivity {
 
         Settings.focas = findViewById(R.id.logtext);
         if (Settings.onOFF) {
-            new Settings().blinkAnnouncement( true);
-        }else {
-            new Settings().blinkAnnouncement( false);
+            new Settings().blinkAnnouncement(true);
+        } else {
+            new Settings().blinkAnnouncement(false);
         }
 
     }
@@ -127,15 +130,15 @@ public class LogIn extends AppCompatActivity {
                                 Settings.shift_number = mDHandler.getOpenedShifts(date, 1).getShiftNo();
                             }
                             Settings.password = Integer.parseInt(password);
-                            Settings.user_no = foundUserNo(Settings.user_name,Integer.parseInt(password));
+                            Settings.user_no = foundUserNo(Settings.user_name, Integer.parseInt(password));
                             Settings.POS_number = 1;
                             Settings.store_number = 7;
-                            Log.e("userNo = ",""+Settings.user_no);
+                            Log.e("userNo = ", "" + Settings.user_no);
 
                             logIn();
                         } else
 
-                        new Settings().makeText(LogIn.this,getResources().getString(R.string.incorect_password));
+                            new Settings().makeText(LogIn.this, getResources().getString(R.string.incorect_password));
                     }
                     break;
             }
@@ -158,51 +161,76 @@ public class LogIn extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String userText = userNameEditText.getText().toString();
-                if (!userText.equals("")) {
+                Settings.user_name = userText;
+                JSONObject object = new JSONObject();
+                try {
+                    object.put("username", userNameEditText.getText().toString());
 
-                    switch (openedShift(userText)) {
-                        case "":
-                            if (userText.equals("master")) {
-                                isActive = false;
-                                Settings.user_name = userText;
-                                dialog.dismiss();
-                            } else {
-                                isActive = false;
-                                ArrayList<EmployeeRegistrationModle> employees = mDHandler.getAllEmployeeRegistration();
-                                boolean isExist = false;
-                                for (int i = 0; i < employees.size(); i++) {
-                                    if (userText.equals(employees.get(i).getEmployeeName())) {
-                                        Settings.user_name = userText;
-                                        userPassword = employees.get(i).getUserPassword();
-                                        isExist = true;
-                                        break;
-                                    }
-                                }
-                                if (isExist) {
-                                    dialog.dismiss();
-                                } else
-                                    new Settings().makeText(LogIn.this, getResources().getString(R.string.user_not_found));
-//                                    Toast.makeText(LogIn.this, getResources().getString(R.string.user_not_found), Toast.LENGTH_SHORT).show();
-                            }
-                            break;
-                        case "another user is logged":
+                    if (!userText.equals("")) {
+//                        Log.e("check", "" + Settings.checkUserFlag);
+                        SendCloud sendCloud = new SendCloud(LogIn.this,object );
+                        sendCloud.startSending("authentication");
 
-                            new Settings().makeText(LogIn.this,getResources().getString( R.string.other_user_log));
-                            break;
-                        default:
-                            Settings.user_name = userText;
-                            isActive = true;
-                            dialog.dismiss();
-                            break;
+                    } else {
+                        new Settings().makeText(LogIn.this, getResources().getString(R.string.enter_your_user_name));
                     }
-
-                } else {
-                    new Settings().makeText(LogIn.this,getResources().getString( R.string.enter_your_user_name));
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
         });
 
         dialog.show();
+    }
+
+    public void getAuthenticationResponse(String userText) {
+        switch (Settings.checkUserFlag) {// (openedShift(userText)) {
+            case 0:
+                new Settings().makeText(LogIn.this, getResources().getString(R.string.user_not_found));
+                break;
+            case 1:
+                isActive = false;
+//                                Settings.user_name = userText;
+                dialog.dismiss();
+                break;
+            case 3:
+                switch (openedShift(userText)) {
+                    case "":
+                        if (userText.equals("master")) {
+                            isActive = false;
+                            Settings.user_name = userText;
+                            dialog.dismiss();
+                        } else {
+                            isActive = false;
+                            ArrayList<EmployeeRegistrationModle> employees = mDHandler.getAllEmployeeRegistration();
+                            boolean isExist = false;
+                            for (int i = 0; i < employees.size(); i++) {
+                                if (userText.equals(employees.get(i).getEmployeeName())) {
+                                    Settings.user_name = userText;
+                                    userPassword = employees.get(i).getUserPassword();
+                                    isExist = true;
+                                    break;
+                                }
+                            }
+                            if (isExist) {
+                                dialog.dismiss();
+                            } else
+                                new Settings().makeText(LogIn.this, getResources().getString(R.string.user_not_found));
+//                                    Toast.makeText(LogIn.this, getResources().getString(R.string.user_not_found), Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                    case "another user is logged":
+
+                        new Settings().makeText(LogIn.this, getResources().getString(R.string.other_user_log));
+                        break;
+                    default:
+                        Settings.user_name = userText;
+                        isActive = true;
+                        dialog.dismiss();
+                        break;
+                }
+                break;
+        }
     }
 
     public boolean isCorrect(int password) {
@@ -271,7 +299,7 @@ public class LogIn extends AppCompatActivity {
         for (int i = 0; i < shifts.size(); i++) {
             Date currentTime = Calendar.getInstance().getTime();
             SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
-            time =convertToEnglish(tf.format(currentTime));
+            time = convertToEnglish(tf.format(currentTime));
 
 //                Date time1 = new SimpleDateFormat("hh:mm").parse(shifts.get(i).getFromTime());
 //                Calendar calendar1 = Calendar.getInstance();
@@ -306,15 +334,15 @@ public class LogIn extends AppCompatActivity {
                     int timeClose = Integer.parseInt(blindCloseList.get(k).getTime().substring(0, blindCloseList.get(k).getTime().indexOf(":")));
 
                     if (blindCloseList.get(k).getDate().equals(date) &&
-                            timeClose >= time1 && current < time2    &&
+                            timeClose >= time1 && current < time2 &&
                             blindCloseList.get(k).getTransType() == 0) {
 
-                        if(i+1 > shifts.size()-1){
+                        if (i + 1 > shifts.size() - 1) {
                             shiftNo = shifts.get(0).getShiftNo();
                             shiftName = shifts.get(0).getShiftName();
                         } else {
-                            shiftNo = shifts.get(i+1).getShiftNo();
-                            shiftName = shifts.get(i+1).getShiftName();
+                            shiftNo = shifts.get(i + 1).getShiftNo();
+                            shiftName = shifts.get(i + 1).getShiftName();
                         }
                     }
 
@@ -384,13 +412,13 @@ public class LogIn extends AppCompatActivity {
         return newValue;
     }
 
-    int foundUserNo(String userName,int Password){
-        int userNo=-1;
-        if(!userName.equals("master")) {
+    int foundUserNo(String userName, int Password) {
+        int userNo = -1;
+        if (!userName.equals("master")) {
             List<EmployeeRegistrationModle> allEmployee = mDHandler.getAllEmployeeRegistration();
-            for(int i=0;i<allEmployee.size();i++){
-                if(allEmployee.get(i).getEmployeeName().equals(userName)&&allEmployee.get(i).getUserPassword()==Password){
-                    userNo=allEmployee.get(i).getEmployeeNO();
+            for (int i = 0; i < allEmployee.size(); i++) {
+                if (allEmployee.get(i).getEmployeeName().equals(userName) && allEmployee.get(i).getUserPassword() == Password) {
+                    userNo = allEmployee.get(i).getEmployeeNO();
                 }
             }
         }
