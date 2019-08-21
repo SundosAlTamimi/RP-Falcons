@@ -220,8 +220,8 @@ public class LogIn extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-//                SyncWithCloud2 obj = new SyncWithCloud2(LogIn.this);
-//                obj.startSyncing("sync");
+                SyncWithCloud obj = new SyncWithCloud(LogIn.this);
+                obj.startSyncing("sync");
 
 //                try {
 //

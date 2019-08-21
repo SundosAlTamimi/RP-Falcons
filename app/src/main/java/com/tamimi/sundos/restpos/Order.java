@@ -38,7 +38,7 @@ import android.widget.Toast;
 
 
 import com.tamimi.sundos.restpos.BackOffice.MenuRegistration;
-import com.tamimi.sundos.restpos.BackOffice.OrderLayout;
+//import com.tamimi.sundos.restpos.BackOffice.OrderLayout; //update8
 import com.tamimi.sundos.restpos.Models.CancleOrder;
 import com.tamimi.sundos.restpos.Models.FamilyCategory;
 import com.tamimi.sundos.restpos.Models.ForceQuestions;
@@ -134,6 +134,8 @@ boolean showdetal=false;
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.order);
 
+        Log.e("Order ","in 12345");
+
         initialize();
 
         mDbHandler = new DatabaseHandler(Order.this);
@@ -141,7 +143,7 @@ boolean showdetal=false;
         items = mDbHandler.getAllItems();
         wantedItems = new ArrayList<>();
         lineDiscount = new ArrayList<Double>();
-        categories = mDbHandler.getUsedCategories();
+//        categories = mDbHandler.getUsedCategories();//update 10
 
         fillCategories();
         showCats();
@@ -409,25 +411,29 @@ boolean showdetal=false;
     }
 
     void fillCategories() {
-
+        Log.e("Order ","in fill 12345");
         List<FamilyCategory> allCats = mDbHandler.getAllFamilyCategory();
-        for (int i = 0; i < allCats.size(); i++)
+        for (int i = 0; i < allCats.size(); i++){
             if (allCats.get(i).getType() != 2) {
                 allCats.remove(i);
                 i--;
-            }
+            }}
         Log.e("cat size","="+allCats.size());
 
-        for (int i = 0; i < categories.size(); i++) {
-            for (int k = 0; k < allCats.size(); k++) {
-                if (categories.get(i).getCategoryName().equals(allCats.get(k).getName())) {
-                    categories.get(i).setCatPic(StringToBitMap(allCats.get(k).getCatPic()));
-                }
-            }
-        }
+//        for (int i = 0; i < categories.size(); i++) {
+//            for (int k = 0; k < allCats.size(); k++) {
+//                if (categories.get(i).getCategoryName().equals(allCats.get(k).getName())) {
+//                    categories.get(i).setCatPic(StringToBitMap(allCats.get(k).getCatPic()));
+//                }
+//            }
+//        }//update 9
 
-        LayoutCategoryAdapter adapter = new LayoutCategoryAdapter(Order.this, categories, 3);
+//        LayoutCategoryAdapter adapter = new LayoutCategoryAdapter(Order.this, categories, 3);
+//        catGridView.setAdapter(adapter); //update 1
+
+        LayoutCategoryAdapter adapter = new LayoutCategoryAdapter(Order.this, allCats, 3);
         catGridView.setAdapter(adapter);
+
 
         catGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -446,23 +452,46 @@ boolean showdetal=false;
 
     @SuppressLint("ClickableViewAccessibility")
     void fillItems(String categoryName) {
-        ArrayList<UsedItems> subList = mDbHandler.getRequestedItems(categoryName);
+//        ArrayList<UsedItems> subList = mDbHandler.getRequestedItems(categoryName);//update 11
+        ArrayList<Items> subList = mDbHandler.getRequestedItems2(categoryName);
+
 
         if (!categoryName.equals("") && subList.size() != 0) {
 
             if (subList.size() != 0) {
                 List<Items> items = mDbHandler.getAllItems();
                 requestedItems = new ArrayList<>();
+/*first
+//                for (int i = 0; i < subList.size(); i++) {
+//                    if (Character.isDigit(subList.get(i).getitemName().charAt(0)) || subList.get(i).getitemName().equals("")) { // no data in this position
+//                        requestedItems.add(new Items("", "", "", 0, 0, "", "",
+//                                0, 0, 0, "", 0, 0, 0, 0,
+//                                "", "", 0, 0, 0, null, subList.get(i).getBackground(),
+//                                subList.get(i).getBackground(), 0));
+//                    } else {
+//                        for (int j = 0; j < items.size(); j++) {
+//                            if (subList.get(i).getitemName().equals(items.get(j).getMenuName()))
+//                                requestedItems.add(new Items(categoryName, items.get(j).getMenuName(), items.get(j).getFamilyName(),
+//                                        items.get(j).getTax(), items.get(j).getTaxType(), items.get(j).getSecondaryName(), items.get(j).getKitchenAlias(),
+//                                        items.get(j).getItemBarcode(), items.get(j).getStatus(), items.get(j).getItemType(), items.get(j).getInventoryUnit(),
+//                                        items.get(j).getWastagePercent(), items.get(j).getDiscountAvailable(), items.get(j).getPointAvailable(),
+//                                        items.get(j).getOpenPrice(), items.get(j).getKitchenPrinter(), items.get(j).getDescription(), items.get(j).getPrice(),
+//                                        items.get(j).getUsed(), items.get(j).getShowInMenu(), items.get(j).getPic(), subList.get(i).getBackground(),
+//                                        subList.get(i).getTextColor(), subList.get(i).getPosition()));
+//                        }
+//                    }
+//                }//update 12
+end*/
 
                 for (int i = 0; i < subList.size(); i++) {
-                    if (Character.isDigit(subList.get(i).getitemName().charAt(0)) || subList.get(i).getitemName().equals("")) { // no data in this position
+                    if (Character.isDigit(subList.get(i).getMenuName().charAt(0)) || subList.get(i).getMenuName().equals("")) { // no data in this position
                         requestedItems.add(new Items("", "", "", 0, 0, "", "",
                                 0, 0, 0, "", 0, 0, 0, 0,
                                 "", "", 0, 0, 0, null, subList.get(i).getBackground(),
                                 subList.get(i).getBackground(), 0));
                     } else {
                         for (int j = 0; j < items.size(); j++) {
-                            if (subList.get(i).getitemName().equals(items.get(j).getMenuName()))
+                            if (subList.get(i).getMenuName().equals(items.get(j).getMenuName()))
                                 requestedItems.add(new Items(categoryName, items.get(j).getMenuName(), items.get(j).getFamilyName(),
                                         items.get(j).getTax(), items.get(j).getTaxType(), items.get(j).getSecondaryName(), items.get(j).getKitchenAlias(),
                                         items.get(j).getItemBarcode(), items.get(j).getStatus(), items.get(j).getItemType(), items.get(j).getInventoryUnit(),
@@ -470,9 +499,12 @@ boolean showdetal=false;
                                         items.get(j).getOpenPrice(), items.get(j).getKitchenPrinter(), items.get(j).getDescription(), items.get(j).getPrice(),
                                         items.get(j).getUsed(), items.get(j).getShowInMenu(), items.get(j).getPic(), subList.get(i).getBackground(),
                                         subList.get(i).getTextColor(), subList.get(i).getPosition()));
-                        }
+                                               }
                     }
                 }
+
+                Log.e("menu name ",""+requestedItems.get(0).getMenuName());
+
                 foodAdapter = new FoodAdapter1(Order.this, requestedItems);
                 itemGridView.setAdapter(foodAdapter);
 

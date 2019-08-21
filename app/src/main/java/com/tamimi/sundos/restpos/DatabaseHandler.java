@@ -2524,6 +2524,51 @@ try {
         return items;
     }
 
+    public ArrayList<Items> getRequestedItems2(String categoryName) {
+        ArrayList<Items> items = new ArrayList<>();
+
+        String selectQuery = "SELECT * FROM " + ITEMS + " where MENU_CATEGORY = '" + categoryName + "'";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Items item = new Items();
+
+                item.setMenuCategory(cursor.getString(0));
+                item.setMenuName(cursor.getString(1));
+                item.setFamilyName(cursor.getString(2));
+                item.setPrice(Double.parseDouble(cursor.getString(3)));
+                item.setTaxType(Integer.parseInt(cursor.getString(4)));
+                item.setTax(Double.parseDouble(cursor.getString(5)));
+                item.setSecondaryName(cursor.getString(6));
+                item.setKitchenAlias(cursor.getString(7));
+                item.setItemBarcode(Integer.parseInt(cursor.getString(8)));
+                item.setStatus(Integer.parseInt(cursor.getString(9)));
+                item.setItemType(Integer.parseInt(cursor.getString(10)));
+                item.setDescription(cursor.getString(11));
+                item.setInventoryUnit(cursor.getString(12));
+                item.setWastagePercent(Double.parseDouble(cursor.getString(13)));
+                item.setDiscountAvailable(Integer.parseInt(cursor.getString(14)));
+                item.setPointAvailable(Integer.parseInt(cursor.getString(15)));
+                item.setOpenPrice(Integer.parseInt(cursor.getString(16)));
+                item.setKitchenPrinter(cursor.getString(17));
+                item.setUsed(Integer.parseInt(cursor.getString(18)));
+                item.setShowInMenu(Integer.parseInt(cursor.getString(19)));
+                try {
+                    item.setPic(cursor.getString(20));
+                }catch (OutOfMemoryError e) {
+                    e.getMessage();
+                    Log.e("have error ..","1==out of memory ");
+                    item.setPic("");
+                }
+
+                items.add(item);
+            } while (cursor.moveToNext());
+        }
+        return items;
+    }
+
     public List<String> getAllExistingFamilies() {
         List<String> families = new ArrayList<>();
 
