@@ -593,6 +593,10 @@
     <string name="details_L">Less Details</string>
     <string name="take_away_kind">Take Away Kind</string>
     <string name="take_away_kind_name">Take Away Kind Name :</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="comp_year">Comp Year</string>
+    <string name="comp_no">Comp No</string>
+    <string name="first_install_for_app">First Install For App</string>
 
 
 </resources>

@@ -401,7 +401,7 @@ public class OrderHeader {
             obj.put("SECTIONNO", sectionNO);
             obj.put("CASHNO", cashNo);
             obj.put("ORDERTKKIND",orderTKKind );
-            obj.put("STGNO","1" );
+            obj.put("STGNO",1 );
 
         } catch (JSONException e) {
             Log.e("Tag" , "JSONException");

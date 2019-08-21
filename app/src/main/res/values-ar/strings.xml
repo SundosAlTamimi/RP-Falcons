@@ -600,6 +600,9 @@
 
     <string name="take_away_kind">طريقة الحصول على الوجبة </string>
     <string name="take_away_kind_name">اسم الطريقة :</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="comp_year">سنة الشركة</string>
+    <string name="comp_no">رقم الشركة</string>
 
 
 </resources>
