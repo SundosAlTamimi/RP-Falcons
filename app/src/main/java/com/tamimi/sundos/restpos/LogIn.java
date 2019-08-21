@@ -111,40 +111,80 @@ public class LogIn extends AppCompatActivity {
                     break;
 
                 case R.id.b_login:
-                    if (index == 4) {
-                        String password = t1.getText().toString() + t2.getText().toString() + t3.getText().toString() + t4.getText().toString();
+//                    if (index == 4) {
+//                        String password = t1.getText().toString() + t2.getText().toString() + t3.getText().toString() + t4.getText().toString();
+//
+//                        if (isCorrect(Integer.parseInt(password))) {
+//
+//                            Date currentTimeAndDate = Calendar.getInstance().getTime();
+//                            SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
+//                            time = tf.format(currentTimeAndDate);
+//                            if (!isActive) {
+//                                mDHandler.addBlindShiftInOut(new BlindShift(convertToEnglish(date), convertToEnglish(time), 1, shiftNo, shiftName,
+//                                        Integer.parseInt(password), Settings.user_name, 1));
+//
+//                                Settings.shift_name = shiftName;
+//                                Settings.shift_number = shiftNo;
+//                            } else {
+//                                Settings.shift_name = mDHandler.getOpenedShifts(date, 1).getShiftName();
+//                                Settings.shift_number = mDHandler.getOpenedShifts(date, 1).getShiftNo();
+//                            }
+//                            Settings.password = Integer.parseInt(password);
+//                            Settings.user_no = foundUserNo(Settings.user_name, Integer.parseInt(password));
+//                            Settings.POS_number = 1;
+//                            Settings.store_number = 7;
+//                            Log.e("userNo = ", "" + Settings.user_no);
+//
+//                            logIn();
+//                        } else
+//
+//                            new Settings().makeText(LogIn.this, getResources().getString(R.string.incorect_password));
+//                    }
 
-                        if (isCorrect(Integer.parseInt(password))) {
-
-                            Date currentTimeAndDate = Calendar.getInstance().getTime();
-                            SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
-                            time = tf.format(currentTimeAndDate);
-                            if (!isActive) {
-                                mDHandler.addBlindShiftInOut(new BlindShift(convertToEnglish(date), convertToEnglish(time), 1, shiftNo, shiftName,
-                                        Integer.parseInt(password), Settings.user_name, 1));
-
-                                Settings.shift_name = shiftName;
-                                Settings.shift_number = shiftNo;
-                            } else {
-                                Settings.shift_name = mDHandler.getOpenedShifts(date, 1).getShiftName();
-                                Settings.shift_number = mDHandler.getOpenedShifts(date, 1).getShiftNo();
-                            }
-                            Settings.password = Integer.parseInt(password);
-                            Settings.user_no = foundUserNo(Settings.user_name, Integer.parseInt(password));
-                            Settings.POS_number = 1;
-                            Settings.store_number = 7;
-                            Log.e("userNo = ", "" + Settings.user_no);
-
-                            logIn();
-                        } else
-
-                            new Settings().makeText(LogIn.this, getResources().getString(R.string.incorect_password));
-                    }
+                    logCheak();
                     break;
             }
         }
 
     };
+
+
+    void logCheak(){
+
+
+        if (index == 4) {
+            String password = t1.getText().toString() + t2.getText().toString() + t3.getText().toString() + t4.getText().toString();
+
+            if (isCorrect(Integer.parseInt(password))) {
+
+                Date currentTimeAndDate = Calendar.getInstance().getTime();
+                SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
+                time = tf.format(currentTimeAndDate);
+                if (!isActive) {
+                    mDHandler.addBlindShiftInOut(new BlindShift(convertToEnglish(date), convertToEnglish(time), 1, shiftNo, shiftName,
+                            Integer.parseInt(password), Settings.user_name, 1));
+
+                    Settings.shift_name = shiftName;
+                    Settings.shift_number = shiftNo;
+                } else {
+                    Settings.shift_name = mDHandler.getOpenedShifts(date, 1).getShiftName();
+                    Settings.shift_number = mDHandler.getOpenedShifts(date, 1).getShiftNo();
+                }
+                Settings.password = Integer.parseInt(password);
+                Settings.user_no = foundUserNo(Settings.user_name, Integer.parseInt(password));
+                Settings.POS_number = 1;
+                Settings.store_number = 7;
+                Log.e("userNo = ", "" + Settings.user_no);
+
+                logIn();
+            } else
+
+                new Settings().makeText(LogIn.this, getResources().getString(R.string.incorect_password));
+        }
+
+
+
+    }
 
     void showUserNameDialog() {
 
@@ -183,19 +223,30 @@ public class LogIn extends AppCompatActivity {
         dialog.show();
     }
 
-    public void getAuthenticationResponse(String userText) {
-        switch (Settings.checkUserFlag) {// (openedShift(userText)) {
-            case 0:
-                new Settings().makeText(LogIn.this, getResources().getString(R.string.user_not_found));
-                break;
-            case 1:
-                isActive = false;
-//                                Settings.user_name = userText;
-                dialog.dismiss();
-                break;
-            case 3:
+    public void getAuthenticationResponse(String userText,String password,int Active) {
+
                 switch (openedShift(userText)) {
                     case "":
+                        switch (Settings.checkUserFlag) {// (openedShift(userText)) {
+                            case 0:
+                                if (userText.equals("master")) {
+                                isActive = false;
+                                Settings.user_name = userText;
+                                dialog.dismiss();
+                            }else {
+                                    new Settings().makeText(LogIn.this, getResources().getString(R.string.user_not_found));
+                                }
+                                break;
+                            case 1:
+                                isActive = false;
+                                if(Active==0){
+                                userPassword=Integer.parseInt(password);
+                                logCheak();
+                                dialog.dismiss();
+                                }
+
+                                break;
+                            case 3:
                         if (userText.equals("master")) {
                             isActive = false;
                             Settings.user_name = userText;
@@ -219,6 +270,8 @@ public class LogIn extends AppCompatActivity {
 //                                    Toast.makeText(LogIn.this, getResources().getString(R.string.user_not_found), Toast.LENGTH_SHORT).show();
                         }
                         break;
+                }
+                        break;
                     case "another user is logged":
 
                         new Settings().makeText(LogIn.this, getResources().getString(R.string.other_user_log));
@@ -229,8 +282,7 @@ public class LogIn extends AppCompatActivity {
                         dialog.dismiss();
                         break;
                 }
-                break;
-        }
+
     }
 
     public boolean isCorrect(int password) {

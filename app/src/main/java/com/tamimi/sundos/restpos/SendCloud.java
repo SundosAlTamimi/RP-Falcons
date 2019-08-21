@@ -1131,7 +1131,7 @@ public class SendCloud {
                 inputStream.close();
                 httpURLConnection.disconnect();
 
-//                Log.e("tag max serial", "" + stringBuffer.toString()+"ggg");
+                Log.e("Authou serial", "" + stringBuffer.toString()+"ggg");
 
                 return stringBuffer.toString();
 
@@ -1155,11 +1155,21 @@ public class SendCloud {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-
+            String password="";
+            int isActive=0;
 //            Log.e("send cloud", " authentication " + s.toString());
 
             if (s != null && s.contains("OK")) {
                 Log.e("authentication", "** Success **");
+                try {
+                    JSONObject jsonObject=new JSONObject(s);
+                    password=jsonObject.getString("USER_PASSWORD");
+                    isActive=Integer.parseInt(jsonObject.getString("ACTIVE"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
                 Settings.checkUserFlag = 1;
             } else if (s.contains("No data found")){ // No data found
                 Settings.checkUserFlag = 0;
@@ -1170,7 +1180,7 @@ public class SendCloud {
 
             LogIn logIn = (LogIn) context;
             try {
-                logIn.getAuthenticationResponse(obj.getString("username"));
+                logIn.getAuthenticationResponse(obj.getString("username"),password,isActive);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
