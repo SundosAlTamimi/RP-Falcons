@@ -25,6 +25,7 @@ import com.tamimi.sundos.restpos.Models.CustomerPayment;
 import com.tamimi.sundos.restpos.Models.CustomerRegistrationModel;
 import com.tamimi.sundos.restpos.Models.EmployeeRegistrationModle;
 import com.tamimi.sundos.restpos.Models.FamilyCategory;
+import com.tamimi.sundos.restpos.Models.FirstInstlation;
 import com.tamimi.sundos.restpos.Models.ForceQuestions;
 import com.tamimi.sundos.restpos.Models.ItemWithFq;
 import com.tamimi.sundos.restpos.Models.ItemWithModifier;
@@ -59,7 +60,7 @@ import static com.tamimi.sundos.restpos.Settings.shift_name;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
     // Database Versions
-    private static final int DATABASE_VERSION = 42;
+    private static final int DATABASE_VERSION = 43;
 
     // Database Name
     private static final String DATABASE_NAME = "RestPos";
@@ -598,6 +599,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     private static final String TA_KIND_SERIAL = "TA_KIND_SERIAL";
     private static final String TA_KIND_NAME = "TA_KIND_NAME";
+
+    //___________________________________________________________________________________
+
+    private static final String FIRST_INSTALLTION_TABLE = "FIRST_INSTALLTION_TABLE";
+
+    private static final String COMP_NO = "COMP_NO";
+    private static final String COMP_YEAR = "COMP_YEAR";
+    private static final String MAIN_USER_NAME = "MAIN_USER_NAME";
+    private static final String MAIN_PASSWORD = "MAIN_PASSWORD";
 
     //___________________________________________________________________________________
 
@@ -1254,6 +1264,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + TA_KIND_NAME + " TEXT " + ")";
         db.execSQL(CREATE_TABLE_TAKE_AWAY_KIND);
 
+        //___________________________________________________________________________________
+        String CREATE_TABLE_FIRST_INSTALLATION = "CREATE TABLE " + FIRST_INSTALLTION_TABLE + " ("
+                + COMP_NO + " INTEGER,"
+                + COMP_YEAR + " TEXT,"
+                + MAIN_USER_NAME + " TEXT,"
+                + MAIN_PASSWORD + " INTEGER " + ")";
+        db.execSQL(CREATE_TABLE_FIRST_INSTALLATION);
+
 
     }
 
@@ -1328,6 +1346,15 @@ try {
 
 }
 
+try {
+    String CREATE_TABLE_FIRST_INSTALLATION = "CREATE TABLE " + FIRST_INSTALLTION_TABLE + " ("
+            + COMP_NO + " INTEGER,"
+            + COMP_YEAR + " TEXT,"
+            + MAIN_USER_NAME + " TEXT,"
+            + MAIN_PASSWORD + " INTEGER " + ")";
+    db.execSQL(CREATE_TABLE_FIRST_INSTALLATION);
+}catch (Exception e){}
+
 
     }
 
@@ -1355,6 +1382,22 @@ try {
         db.insert(TAKE_AWAY_KIND, null , values);
         db.close();
     }
+
+
+    public void addFirstInformation( FirstInstlation firstInstlation){
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(COMP_NO,firstInstlation.getCompNo());
+        values.put(COMP_YEAR,firstInstlation.getCompYear());
+        values.put(MAIN_USER_NAME,firstInstlation.getUserNameMain());
+        values.put(MAIN_PASSWORD,firstInstlation.getPasswordMain());
+
+
+        db.insert(FIRST_INSTALLTION_TABLE, null , values);
+        db.close();
+    }
+
 
 
     public void addMainSettings(){
@@ -3079,6 +3122,29 @@ try {
                 TakeAway item = new TakeAway();
                 item.setSerial(cursor.getInt(0));
                 item.setTANmae(cursor.getString(1));
+
+                items.add(item);
+
+            } while (cursor.moveToNext());
+        }
+        return items;
+    }
+
+
+    public List<FirstInstlation> getAllFirstInformation() {
+        List<FirstInstlation> items = new ArrayList<>();
+
+        String selectQuery = "SELECT * FROM " + FIRST_INSTALLTION_TABLE;
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                FirstInstlation item = new FirstInstlation();
+                item.setCompNo(cursor.getInt(0));
+                item.setCompYear(cursor.getString(1));
+                item.setUserNameMain(cursor.getString(2));
+                item.setPasswordMain(cursor.getInt(3));
 
                 items.add(item);
 

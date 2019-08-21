@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="600dp"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/layer3"
     android:orientation="vertical"
@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="@string/kitchen_screen"
+        android:text="@string/first_install_for_app"
         android:textColor="@color/gray"
         android:textSize="25sp"
         android:textStyle="bold" />
@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:layout_marginBottom="15dp">
+            android:layout_marginBottom="10dp">
 
             <TableRow
                 android:layout_width="match_parent"
@@ -39,19 +39,17 @@
                     android:id="@+id/textView1002"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/kitchen_screen_no"
+                    android:text="@string/comp_no"
                     android:textColor="@color/text_color"
                     android:textSize="20sp" />
 
                 <EditText
-                    android:id="@+id/kitNo"
+                    android:id="@+id/compNo"
                     android:layout_width="306dp"
                     android:layout_height="40dp"
                     android:layout_marginLeft="12dp"
-                    android:background="@color/layer2"
                     android:ems="10"
                     android:gravity="center"
-                    android:inputType="number"
                     android:textColor="@color/text_color" />
             </TableRow>
 
@@ -65,16 +63,16 @@
                     android:id="@+id/textView107"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/kitchen_screen_name"
+                    android:text="@string/comp_year"
                     android:textColor="@color/text_color"
                     android:textSize="20sp" />
 
                 <EditText
-                    android:id="@+id/kitName"
+                    android:id="@+id/compYear"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:layout_marginLeft="12dp"
-                    android:background="@color/layer2"
+
                     android:ems="10"
                     android:gravity="center"
                     android:inputType="textPersonName"
@@ -85,22 +83,47 @@
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
                 android:padding="5dp">
 
                 <TextView
-                    android:id="@+id/textView1071"
+                    android:id="@+id/textVie2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/kitchen_ip"
+                    android:text="@string/user_name_"
                     android:textColor="@color/text_color"
                     android:textSize="20sp" />
 
                 <EditText
-                    android:id="@+id/ip_"
+                    android:id="@+id/USEr"
+                    android:layout_width="306dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="12dp"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:textColor="@color/text_color" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:padding="5dp">
+
+                <TextView
+                    android:id="@+id/textViw107"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/password"
+                    android:textColor="@color/text_color"
+                    android:textSize="20sp" />
+
+                <EditText
+                    android:id="@+id/pass"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:layout_marginLeft="12dp"
-                    android:background="@color/layer2"
+
                     android:ems="10"
                     android:gravity="center"
                     android:inputType="textPersonName"
@@ -110,21 +133,6 @@
 
         </TableLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="@string/edit_screen_text_view"
-            android:textColor="@color/cardview_dark_background"
-            android:textSize="17sp"/>
-
-        <Spinner
-            android:id="@+id/addKitchenScreen_editScreen_spinner"
-            android:layout_margin="5dp"
-            android:layout_width="300dp"
-            android:layout_marginBottom="5dp"
-            android:layout_height="wrap_content"></Spinner>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -133,21 +141,12 @@
             android:padding="10dp">
 
             <Button
-                android:id="@+id/addKitchenScreen_edit_screen_info"
-                android:layout_width="150dp"
-                android:layout_height="50dp"
-                android:layout_margin="10dp"
-                android:background="@color/blue_ice"
-                android:text="@string/edit_save"
-                android:textAllCaps="true" />
-
-            <Button
-                android:id="@+id/save"
+                android:id="@+id/sync"
                 android:layout_width="150dp"
                 android:layout_height="50dp"
                 android:layout_margin="10dp"
                 android:background="@color/colorPrimary"
-                android:text="@string/save_"
+                android:text="sync"
                 android:textAllCaps="true" />
 
             <Button

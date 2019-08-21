@@ -437,7 +437,8 @@ public class BackOfficeActivity extends AppCompatActivity {
         EditText taxType = (EditText) dialog.findViewById(R.id.main_settings_taxType);
         EditText timeCard = (EditText) dialog.findViewById(R.id.main_settings_timeCard);
         EditText cashNo = (EditText) dialog.findViewById(R.id.main_settings_cashNo);
-
+//        EditText compNo = (EditText) dialog.findViewById(R.id.compNo);
+//        EditText compYear = (EditText) dialog.findViewById(R.id.compYear);
         Button saveSettings = dialog.findViewById(R.id.main_settings_save);
         Button cancel = dialog.findViewById(R.id.main_settings_cancel);
 

@@ -3,13 +3,10 @@ package com.tamimi.sundos.restpos;
 import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,23 +17,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.tamimi.sundos.restpos.BackOffice.BackOfficeActivity;
-import com.tamimi.sundos.restpos.BackOffice.EmployeeRegistration;
 import com.tamimi.sundos.restpos.Models.BlindClose;
 import com.tamimi.sundos.restpos.Models.BlindShift;
 import com.tamimi.sundos.restpos.Models.EmployeeRegistrationModle;
-import com.tamimi.sundos.restpos.Models.Items;
+import com.tamimi.sundos.restpos.Models.FirstInstlation;
 import com.tamimi.sundos.restpos.Models.Shift;
 
-import java.io.ByteArrayOutputStream;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -69,7 +60,17 @@ public class LogIn extends AppCompatActivity {
         initialize();
         setShift();
         arrayOfText = new TextView[]{t1, t2, t3, t4};
-        showUserNameDialog();
+
+        List<FirstInstlation>firstInstlations=new ArrayList<>();
+
+        firstInstlations=mDHandler.getAllFirstInformation();
+
+        if(firstInstlations.size()==0){
+            showFirstInstallDialog();
+
+        }else {showUserNameDialog();}
+
+
 
 
         Settings.focas = findViewById(R.id.logtext);
@@ -323,6 +324,58 @@ public class LogIn extends AppCompatActivity {
 //        } catch (ParseException e) {
 //            e.printStackTrace();
 //        }
+    }
+
+    void showFirstInstallDialog() {
+
+            Dialog dialog1 = new Dialog(LogIn.this);
+        dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog1.setCancelable(false);
+        dialog1.setContentView(R.layout.add_first_information_dialogs);
+        dialog1.setCanceledOnTouchOutside(false);
+
+      EditText compNo,CompYear,userName,password;
+
+      compNo=(EditText)dialog1.findViewById(R.id.compNo);
+        CompYear=(EditText)dialog1.findViewById(R.id.compYear);
+
+        userName=(EditText)dialog1.findViewById(R.id.USEr);
+        password=(EditText)dialog1.findViewById(R.id.pass);
+
+        Button sync,exit;
+        sync=(Button)dialog1.findViewById(R.id.sync);
+        exit=(Button)dialog1.findViewById(R.id.exit);
+
+        sync.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                if(!compNo.getText().toString().equals("")&&!CompYear.getText().toString().equals("")
+               &&!userName.getText().toString().equals("")&&!password.getText().toString().equals("")){
+
+                    mDHandler.addFirstInformation(new FirstInstlation(Integer.parseInt(compNo.getText().toString()),CompYear.getText().toString()
+                    ,userName.getText().toString(),Integer.parseInt(password.getText().toString())));
+
+                    dialog1.dismiss();
+                    showUserNameDialog();
+
+                }else {
+                    Toast.makeText(LogIn.this, "Please Enter All Filled", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
+        exit.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog1.dismiss();
+                System.exit(0);
+            }
+        });
+
+        dialog1.show();
     }
 
 

@@ -36,7 +36,7 @@
                 android:padding="5dp">
 
                 <TextView
-                    android:id="@+id/textView106"
+                    android:id="@+id/textView1002"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/serial"
