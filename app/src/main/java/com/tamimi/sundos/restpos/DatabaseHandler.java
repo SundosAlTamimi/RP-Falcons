@@ -25,6 +25,7 @@ import com.tamimi.sundos.restpos.Models.CustomerPayment;
 import com.tamimi.sundos.restpos.Models.CustomerRegistrationModel;
 import com.tamimi.sundos.restpos.Models.EmployeeRegistrationModle;
 import com.tamimi.sundos.restpos.Models.FamilyCategory;
+import com.tamimi.sundos.restpos.Models.FirstInstlation;
 import com.tamimi.sundos.restpos.Models.ForceQuestions;
 import com.tamimi.sundos.restpos.Models.ItemWithFq;
 import com.tamimi.sundos.restpos.Models.ItemWithModifier;
@@ -32,6 +33,7 @@ import com.tamimi.sundos.restpos.Models.ItemWithScreen;
 import com.tamimi.sundos.restpos.Models.Items;
 import com.tamimi.sundos.restpos.Models.JobGroup;
 import com.tamimi.sundos.restpos.Models.KitchenScreen;
+import com.tamimi.sundos.restpos.Models.MaxSerial;
 import com.tamimi.sundos.restpos.Models.MemberShipGroup;
 import com.tamimi.sundos.restpos.Models.Modifier;
 import com.tamimi.sundos.restpos.Models.Money;
@@ -43,6 +45,7 @@ import com.tamimi.sundos.restpos.Models.Recipes;
 import com.tamimi.sundos.restpos.Models.Shift;
 import com.tamimi.sundos.restpos.Models.TableActions;
 import com.tamimi.sundos.restpos.Models.Tables;
+import com.tamimi.sundos.restpos.Models.TakeAway;
 import com.tamimi.sundos.restpos.Models.UsedCategories;
 import com.tamimi.sundos.restpos.Models.UsedItems;
 import com.tamimi.sundos.restpos.Models.VoidResons;
@@ -57,7 +60,7 @@ import static com.tamimi.sundos.restpos.Settings.shift_name;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
     // Database Versions
-    private static final int DATABASE_VERSION = 39;
+    private static final int DATABASE_VERSION = 43;
 
     // Database Name
     private static final String DATABASE_NAME = "RestPos";
@@ -295,6 +298,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String ORG_POS2 = "ORG_POS";
     private static final String IS_POSTED2= "IS_POSTED";
     private static final String CASH_NO2= "CASH_NO";
+    private static final String ORDER_TK_KIND2= "ORDER_TK_KIND";
 
     //___________________________________________________________________________________
     private static final String FORCE_QUESTIONS = "FORCE_QUESTIONS";
@@ -584,8 +588,29 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KITCHEN_NAME = "KITCHEN_NAME";
     private static final String KITCHEN_IP = "KITCHEN_IP";
 
+    //____________________________________________________________________________________
+    private static final String MAX_SERIAL = "MAX_SERIAL";
+
+    private static final String MAX_SERIAL_VHF = "MAX_SERIAL_VHF";
+    private static final String MAX_SERIAL_REFUND = "MAX_SERIAL_REFUND";
 
     //___________________________________________________________________________________
+    private static final String TAKE_AWAY_KIND = "TAKE_AWAY_KIND";
+
+    private static final String TA_KIND_SERIAL = "TA_KIND_SERIAL";
+    private static final String TA_KIND_NAME = "TA_KIND_NAME";
+
+    //___________________________________________________________________________________
+
+    private static final String FIRST_INSTALLTION_TABLE = "FIRST_INSTALLTION_TABLE";
+
+    private static final String COMP_NO = "COMP_NO";
+    private static final String COMP_YEAR = "COMP_YEAR";
+    private static final String MAIN_USER_NAME = "MAIN_USER_NAME";
+    private static final String MAIN_PASSWORD = "MAIN_PASSWORD";
+
+    //___________________________________________________________________________________
+
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -878,7 +903,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + ORG_NO2 + " TEXT,"
                 + ORG_POS2 + " INTEGER,"
                 + IS_POSTED2 + " INTEGER,"
-                + CASH_NO2 + " INTEGER" + ")";
+                + CASH_NO2 + " INTEGER,"
+                + ORDER_TK_KIND2 + " TEXT" + ")";
         db.execSQL(CREATE_TABLE_ORDER_HEADER);
 
         //_______________________________________________________________________________________
@@ -918,7 +944,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + ORG_NO2 + " TEXT,"
                 + ORG_POS2 + " INTEGER,"
                 + IS_POSTED2 + " INTEGER,"
-                + CASH_NO2 + " INTEGER" + ")";
+                + CASH_NO2 + " INTEGER,"
+                + ORDER_TK_KIND2 + " TEXT" + ")";
         db.execSQL(CREATE_TABLE_ORDER_HEADER_TEMP);
 
         //_______________________________________________________________________________
@@ -1225,6 +1252,27 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KITCHEN_IP + " TEXT " + ")";
         db.execSQL(CREATE_TABLE_KITCHEN_SCREEN_TABLE);
 
+        //___________________________________________________________________________________
+        String CREATE_TABLE_MAX_SERIAL = "CREATE TABLE " + MAX_SERIAL + " ("
+                + MAX_SERIAL_VHF + " TEXT,"
+                + MAX_SERIAL_REFUND + " TEXT " + ")";
+        db.execSQL(CREATE_TABLE_MAX_SERIAL);
+
+        //___________________________________________________________________________________
+        String CREATE_TABLE_TAKE_AWAY_KIND = "CREATE TABLE " + TAKE_AWAY_KIND + " ("
+                + TA_KIND_SERIAL + " INTEGER,"
+                + TA_KIND_NAME + " TEXT " + ")";
+        db.execSQL(CREATE_TABLE_TAKE_AWAY_KIND);
+
+        //___________________________________________________________________________________
+        String CREATE_TABLE_FIRST_INSTALLATION = "CREATE TABLE " + FIRST_INSTALLTION_TABLE + " ("
+                + COMP_NO + " INTEGER,"
+                + COMP_YEAR + " TEXT,"
+                + MAIN_USER_NAME + " TEXT,"
+                + MAIN_PASSWORD + " INTEGER " + ")";
+        db.execSQL(CREATE_TABLE_FIRST_INSTALLATION);
+
+
     }
 
 
@@ -1267,22 +1315,90 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 //        db.execSQL("ALTER TABLE ORDER_HEADER ADD IS_POSTED INTEGER NOT NULL DEFAULT '0'");
 //        db.execSQL("ALTER TABLE PAY_METHOD ADD IS_POSTED INTEGER NOT NULL DEFAULT '0'");
 
-        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS_TEMP ADD IS_POSTED INTEGER NOT NULL DEFAULT '0'");
-        db.execSQL("ALTER TABLE ORDER_HEADER_TEMP ADD IS_POSTED INTEGER NOT NULL DEFAULT '0'");
+//        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS_TEMP ADD IS_POSTED INTEGER NOT NULL DEFAULT '0'");
+//        db.execSQL("ALTER TABLE ORDER_HEADER_TEMP ADD IS_POSTED INTEGER NOT NULL DEFAULT '0'");
+//
+//        db.execSQL("ALTER TABLE MAIN_SETTINGS ADD CASH_NO INTEGER NOT NULL DEFAULT '0'");
+//
+//
+//        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS ADD CASH_NO INTEGER NOT NULL DEFAULT '0'");
+//        db.execSQL("ALTER TABLE ORDER_HEADER ADD CASH_NO INTEGER NOT NULL DEFAULT '0'");
+//        db.execSQL("ALTER TABLE PAY_METHOD ADD CASH_NO INTEGER NOT NULL DEFAULT '0'");
+//
+//        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS_TEMP ADD CASH_NO INTEGER NOT NULL DEFAULT '0'");
+//        db.execSQL("ALTER TABLE ORDER_HEADER_TEMP ADD CASH_NO INTEGER NOT NULL DEFAULT '0'");
 
-        db.execSQL("ALTER TABLE MAIN_SETTINGS ADD CASH_NO INTEGER NOT NULL DEFAULT '0'");
+//        String CREATE_TABLE_MAX_SERIAL = "CREATE TABLE " + MAX_SERIAL + " ("
+//                + MAX_SERIAL_REFUND + " TEXT,"
+//                + MAX_SERIAL_VHF + " TEXT " + ")";
+//        db.execSQL(CREATE_TABLE_MAX_SERIAL);
+try {
+    db.execSQL("ALTER TABLE ORDER_HEADER ADD ORDER_TK_KIND TAXE NOT NULL DEFAULT 'Take Away'");
+    db.execSQL("ALTER TABLE ORDER_HEADER_TEMP ADD ORDER_TK_KIND TAXE NOT NULL DEFAULT 'Take Away'");
+}catch (Exception e){}
 
+try {
+    String CREATE_TABLE_TAKE_AWAY_KIND = "CREATE TABLE " + TAKE_AWAY_KIND + " ("
+            + TA_KIND_SERIAL + " INTEGER,"
+            + TA_KIND_NAME + " TEXT " + ")";
+    db.execSQL(CREATE_TABLE_TAKE_AWAY_KIND);
+}catch(Exception e){
 
-        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS ADD CASH_NO INTEGER NOT NULL DEFAULT '0'");
-        db.execSQL("ALTER TABLE ORDER_HEADER ADD CASH_NO INTEGER NOT NULL DEFAULT '0'");
-        db.execSQL("ALTER TABLE PAY_METHOD ADD CASH_NO INTEGER NOT NULL DEFAULT '0'");
+}
 
-        db.execSQL("ALTER TABLE ORDER_TRANSACTIONS_TEMP ADD CASH_NO INTEGER NOT NULL DEFAULT '0'");
-        db.execSQL("ALTER TABLE ORDER_HEADER_TEMP ADD CASH_NO INTEGER NOT NULL DEFAULT '0'");
+try {
+    String CREATE_TABLE_FIRST_INSTALLATION = "CREATE TABLE " + FIRST_INSTALLTION_TABLE + " ("
+            + COMP_NO + " INTEGER,"
+            + COMP_YEAR + " TEXT,"
+            + MAIN_USER_NAME + " TEXT,"
+            + MAIN_PASSWORD + " INTEGER " + ")";
+    db.execSQL(CREATE_TABLE_FIRST_INSTALLATION);
+}catch (Exception e){}
+
 
     }
 
     //Insert values to the table Items
+
+    public void addMAXSerial( MaxSerial max){
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(MAX_SERIAL_VHF,max.getMaxSerial());
+        values.put(MAX_SERIAL_REFUND,max.getMaxSerialRefund());
+
+        db.insert(MAX_SERIAL, null , values);
+        db.close();
+    }
+
+
+    public void addTakeAwayKind( TakeAway Taway){
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(TA_KIND_SERIAL,Taway.getSerial());
+        values.put(TA_KIND_NAME,Taway.getTANmae());
+
+        db.insert(TAKE_AWAY_KIND, null , values);
+        db.close();
+    }
+
+
+    public void addFirstInformation( FirstInstlation firstInstlation){
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(COMP_NO,firstInstlation.getCompNo());
+        values.put(COMP_YEAR,firstInstlation.getCompYear());
+        values.put(MAIN_USER_NAME,firstInstlation.getUserNameMain());
+        values.put(MAIN_PASSWORD,firstInstlation.getPasswordMain());
+
+
+        db.insert(FIRST_INSTALLTION_TABLE, null , values);
+        db.close();
+    }
+
+
 
     public void addMainSettings(){
         db = this.getWritableDatabase();
@@ -1299,6 +1415,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(MAIN_SETTINGS_SERVICE_VALUE, Settings.service_value);
         values.put(MAIN_SETTINGS_TAX_TYPE, Settings.tax_type);
         values.put(MAIN_SETTINGS_TIME_CARD, Settings.time_card);
+        values.put(MAIN_SETTINGS_CASH_NO, Settings.cash_no);
 
         db.insert(MAIN_SETTINGS, null , values);
         db.close();
@@ -1734,6 +1851,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(ORG_POS2, orderHeader.getOrgPos());
         values.put(IS_POSTED2, orderHeader.getIsPost());
         values.put(CASH_NO2, orderHeader.getCashNo());
+        values.put(ORDER_TK_KIND2, orderHeader.getOrderHeaderKind());
 
         db.insert(ORDER_HEADER, null, values);
         db.close();
@@ -1779,7 +1897,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(ORG_POS2, orderHeader.getOrgPos());
         values.put(IS_POSTED2, orderHeader.getIsPost());
         values.put(CASH_NO2, orderHeader.getCashNo());
-
+        values.put(ORDER_TK_KIND2, orderHeader.getOrderHeaderKind());
         db.insert(ORDER_HEADER_TEMP, null, values);
         db.close();
     }
@@ -2169,12 +2287,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             Settings.POS_number = cursor.getInt(3);
             Settings.store_number = cursor.getInt(4);
             Settings.shift_number = cursor.getInt(5);
-            shift_name = cursor.getString(6);
+            Settings.shift_name = cursor.getString(6);
             Settings.service_tax= cursor.getDouble(7);
             Settings.service_value = cursor.getDouble(8);
             Settings.tax_type = cursor.getInt(9);
             Settings.time_card = cursor.getInt(10);
-            Settings.time_card = cursor.getInt(11);
+            Settings.cash_no = cursor.getInt(11);
 
         }
     }
@@ -2406,6 +2524,51 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return items;
     }
 
+    public ArrayList<Items> getRequestedItems2(String categoryName) {
+        ArrayList<Items> items = new ArrayList<>();
+
+        String selectQuery = "SELECT * FROM " + ITEMS + " where MENU_CATEGORY = '" + categoryName + "'";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Items item = new Items();
+
+                item.setMenuCategory(cursor.getString(0));
+                item.setMenuName(cursor.getString(1));
+                item.setFamilyName(cursor.getString(2));
+                item.setPrice(Double.parseDouble(cursor.getString(3)));
+                item.setTaxType(Integer.parseInt(cursor.getString(4)));
+                item.setTax(Double.parseDouble(cursor.getString(5)));
+                item.setSecondaryName(cursor.getString(6));
+                item.setKitchenAlias(cursor.getString(7));
+                item.setItemBarcode(Integer.parseInt(cursor.getString(8)));
+                item.setStatus(Integer.parseInt(cursor.getString(9)));
+                item.setItemType(Integer.parseInt(cursor.getString(10)));
+                item.setDescription(cursor.getString(11));
+                item.setInventoryUnit(cursor.getString(12));
+                item.setWastagePercent(Double.parseDouble(cursor.getString(13)));
+                item.setDiscountAvailable(Integer.parseInt(cursor.getString(14)));
+                item.setPointAvailable(Integer.parseInt(cursor.getString(15)));
+                item.setOpenPrice(Integer.parseInt(cursor.getString(16)));
+                item.setKitchenPrinter(cursor.getString(17));
+                item.setUsed(Integer.parseInt(cursor.getString(18)));
+                item.setShowInMenu(Integer.parseInt(cursor.getString(19)));
+                try {
+                    item.setPic(cursor.getString(20));
+                }catch (OutOfMemoryError e) {
+                    e.getMessage();
+                    Log.e("have error ..","1==out of memory ");
+                    item.setPic("");
+                }
+
+                items.add(item);
+            } while (cursor.moveToNext());
+        }
+        return items;
+    }
+
     public List<String> getAllExistingFamilies() {
         List<String> families = new ArrayList<>();
 
@@ -2562,10 +2725,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return orderTransactions;
     }
 
-    public final String getAllRequestVoucherHeader(String Vfh_No,String POS) {
-         String waterName ="";
+    public final List<String> getAllRequestVoucherHeader(String Vfh_No,String POS) {
+        List<String> waterName =new ArrayList<>();
 //        String selectQuery = "SELECT * FROM " + ORDER_TRANSACTIONS + " where VOUCHER_NO = '" + Vfh_No + "'" + " and ORDER_KIND = '0'";
-        String selectQuery = "SELECT WAITER FROM " + ORDER_HEADER + " where VOUCHER_NUMBER = '" + Vfh_No + "'" + " and ORDER_KIND = '0"+"'" + " and POINT_OF_SALE_NUMBER = '"+POS+"'" ;
+        String selectQuery = "SELECT WAITER , ORDER_TK_KIND FROM " + ORDER_HEADER + " where VOUCHER_NUMBER = '" + Vfh_No + "'" + " and ORDER_KIND = '0"+"'" + " and POINT_OF_SALE_NUMBER = '"+POS+"'" ;
 
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -2575,7 +2738,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 OrderHeader item = new OrderHeader();
 
                 item.setWaiter(cursor.getString(0));
-                waterName=item.getWaiter();
+                item.setOrderHeaderKind(cursor.getString(1));
+                waterName.add(item.getWaiter());
+                waterName.add(item.getOrderHeaderKind());
 
             } while (cursor.moveToNext());
         }
@@ -2970,6 +3135,69 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
+    public List<MaxSerial> getMaxSerialForVhf() {
+        ArrayList<MaxSerial> items = new ArrayList<>();
+
+        String selectQuery = "SELECT * FROM " + MAX_SERIAL;
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                MaxSerial item = new MaxSerial();
+                item.setMaxSerial(cursor.getString(0));
+                item.setMaxSerialRefund(cursor.getString(1));
+
+                items.add(item);
+
+            } while (cursor.moveToNext());
+        }
+        return items;
+    }
+
+    public List<TakeAway> getAllTAKind() {
+       List<TakeAway> items = new ArrayList<>();
+
+        String selectQuery = "SELECT * FROM " + TAKE_AWAY_KIND;
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                TakeAway item = new TakeAway();
+                item.setSerial(cursor.getInt(0));
+                item.setTANmae(cursor.getString(1));
+
+                items.add(item);
+
+            } while (cursor.moveToNext());
+        }
+        return items;
+    }
+
+
+    public List<FirstInstlation> getAllFirstInformation() {
+        List<FirstInstlation> items = new ArrayList<>();
+
+        String selectQuery = "SELECT * FROM " + FIRST_INSTALLTION_TABLE;
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                FirstInstlation item = new FirstInstlation();
+                item.setCompNo(cursor.getInt(0));
+                item.setCompYear(cursor.getString(1));
+                item.setUserNameMain(cursor.getString(2));
+                item.setPasswordMain(cursor.getInt(3));
+
+                items.add(item);
+
+            } while (cursor.moveToNext());
+        }
+        return items;
+    }
+
     public int getMaxSerial( String TableName,String orderKind) {
         ArrayList<Integer> moneys = new ArrayList<>();
         int max;
@@ -3056,6 +3284,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 order_header.setOrgPos(cursor.getInt(33));
                 order_header.setIsPost(cursor.getInt(34));
                 order_header.setCashNo(cursor.getInt(35));
+                order_header.setOrderHeaderKind(cursor.getString(36));
 
 
 
@@ -3113,6 +3342,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 order_header.setOrgPos(cursor.getInt(33));
                 order_header.setIsPost(cursor.getInt(34));
                 order_header.setCashNo(cursor.getInt(35));
+                order_header.setOrderHeaderKind(cursor.getString(36));
 
                 orderHeaders.add(order_header);
 
@@ -3169,6 +3399,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
                 order_header.setIsPost(cursor.getInt(34));
                 order_header.setCashNo(cursor.getInt(35));
+                order_header.setOrderHeaderKind(cursor.getString(36));
 
                 orderHeaders.add(order_header);
 
@@ -3795,6 +4026,22 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return kitchenScreens;
     }
 
+    public KitchenScreen getKitchenScreenInfo(String screenName) {
+
+        String selectQuery = "SELECT  * FROM " + KITCHEN_SCREEN_TABLE + " where KITCHEN_NAME =\"" + screenName + "\"";
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        KitchenScreen kitchenScreen = new KitchenScreen();
+        if (cursor.moveToFirst()) {
+                kitchenScreen.setKitchenName(cursor.getString(0));
+                kitchenScreen.setKitchenNo(cursor.getInt(1));
+                kitchenScreen.setKitchenIP(cursor.getString(2));
+
+        }
+        return kitchenScreen;
+    }
+
 
     public ArrayList<ZReport> getAllZReport() {
         ArrayList<ZReport> items = new ArrayList<>();
@@ -3998,6 +4245,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     //Updating single record
+    public void updateKitchenScreenInfo(KitchenScreen kitchenScreen, int oldKitchenNo) {
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(KITCHEN_NAME, kitchenScreen.getKitchenName());
+        values.put(KITCHEN_NO, kitchenScreen.getKitchenNo());
+        values.put(KITCHEN_IP, kitchenScreen.getKitchenIP());
+
+        // updating row
+        db.update(KITCHEN_SCREEN_TABLE, values, KITCHEN_NO + " = '" + oldKitchenNo + "'", null);
+    }
 
     public void updateUsedCategories(UsedCategories usedCategories) {
         db = this.getWritableDatabase();
@@ -4023,34 +4281,35 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.update(ANNOUNCEMENT_TABLE, values, filter, null);
     }
 
-    public void updateOrderTablesIsPost(String VhfNo, String posNO) {
+    public void updateOrderTablesIsPost(String VhfNo, String posNO,String orderKind) {
         db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        String filter = VOUCHER_NO1 + " = '" + VhfNo + "' and " + POS_NO1 + "= '" + posNO + "'";
+        String filter = VOUCHER_NO1 + " = '" + VhfNo + "' and " + POS_NO1 + "= '" + posNO + "' and "+ORDER_KIND1+"= '"+orderKind+"'";
         values.put(IS_POSTED1, 1);
 
         // updating row
         db.update(ORDER_TRANSACTIONS, values, filter, null);
     }
 
-    public void updateOrderTablesIsPost2(String VhfNo, String posNO) {
+    public void updateOrderTablesIsPost2(String VhfNo, String posNO,String orderKind) {
         db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        String filter = VOUCHER_NUMBER2 + " = '" + VhfNo + "' and " + POINT_OF_SALE_NUMBER2 + "= '" + posNO + "'";
+        String filter = VOUCHER_NUMBER2 + " = '" + VhfNo + "' and " + POINT_OF_SALE_NUMBER2 + "= '" + posNO + "' and "+ORDER_KIND2+"= '"+orderKind+"'";
         values.put(IS_POSTED2, 1);
 
         // updating row
         db.update(ORDER_HEADER, values, filter, null);
     }
 
-    public void updateOrderTablesIsPost3(String VhfNo, String posNO) {
+    public void updateOrderTablesIsPost3(String VhfNo, String posNO,String orderKind) {
         db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        String filter = VOUCHER_NUMBER + " = '" + VhfNo + "' and " + POINT_OF_SALE_NUMBER + "= '" + posNO + "'";
+        String filter = VOUCHER_NUMBER + " = '" + VhfNo + "' and " + POINT_OF_SALE_NUMBER + "= '" + posNO + "' and "+ORDER_KIND+"= '"+orderKind+"'";
         values.put(IS_POSTED14, 1);
 
         // updating row
         db.update(PAY_METHOD, values, filter, null);
+
     }
 
 
@@ -4245,6 +4504,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void deleteForUpdateItem(String Barcode) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from ITEMS where ITEM_BARCODE = '" + Barcode + "'");
+        db.close();
+    }
+
     public void deleteCategory(String categorySerial) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from FAMILY_CATEGORY_TABLE where SERIAL = '" + categorySerial + "'");
@@ -4287,6 +4552,28 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("delete from " + FAMILY_CATEGORY_TABLE);
         db.close();
     }
+    public void deleteAllModifier() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + MODIFIER);
+        db.close();
+    }
+
+    public void deleteAllItems() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + ITEMS);
+        db.close();
+    }
+    public void deleteAllShift() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + SHIFT_REGISTRATION);
+        db.close();
+    }
+
+    public void deleteAllForceQ() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + FORCE_QUESTIONS);
+        db.close();
+    }
 
     public void deleteAllOrders() {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -4302,5 +4589,34 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("delete from " + VOID_REASONS);
         db.close();
     }
+
+
+    public void deleteAllMaxSerial() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + MAX_SERIAL);
+        db.close();
+    }
+
+    public void updateMaxVhf(String newMax) {
+
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(MAX_SERIAL_VHF, newMax);
+
+        // updating row
+        db.update(MAX_SERIAL, values,null, null);
+    }
+    public void updateMaxVhfRefund(String newMax) {
+
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(MAX_SERIAL_REFUND, newMax);
+
+        // updating row
+        db.update(MAX_SERIAL, values,null, null);
+    }
+
 
 }

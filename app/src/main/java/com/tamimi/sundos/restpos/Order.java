@@ -1,5 +1,7 @@
 package com.tamimi.sundos.restpos;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -8,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
@@ -17,6 +20,7 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -32,9 +36,9 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.tamimi.sundos.restpos.BackOffice.BackOfficeActivity;
+
 import com.tamimi.sundos.restpos.BackOffice.MenuRegistration;
-import com.tamimi.sundos.restpos.BackOffice.OrderLayout;
+//import com.tamimi.sundos.restpos.BackOffice.OrderLayout; //update8
 import com.tamimi.sundos.restpos.Models.CancleOrder;
 import com.tamimi.sundos.restpos.Models.FamilyCategory;
 import com.tamimi.sundos.restpos.Models.ForceQuestions;
@@ -42,6 +46,7 @@ import com.tamimi.sundos.restpos.Models.ItemWithFq;
 import com.tamimi.sundos.restpos.Models.ItemWithModifier;
 import com.tamimi.sundos.restpos.Models.ItemWithScreen;
 import com.tamimi.sundos.restpos.Models.Items;
+import com.tamimi.sundos.restpos.Models.MaxSerial;
 import com.tamimi.sundos.restpos.Models.Modifier;
 import com.tamimi.sundos.restpos.Models.OrderHeader;
 import com.tamimi.sundos.restpos.Models.OrderTransactions;
@@ -77,14 +82,15 @@ import androidx.core.content.ContextCompat;
 public class Order extends AppCompatActivity {
 
     Button modifier, void_, delivery, discount, lDiscount, split, priceChange;
-    TextView total, lineDisCount, disCount, deliveryCharge, subTotal, service, tax, amountDue, vhSerial;
+    TextView total, lineDisCount, disCount, deliveryCharge, subTotal, service, tax, amountDue, vhSerial,details,onOffLine;
     Button pay, order;
     TextView orderType, tableNo, check, date, user, seats;
-    TableLayout tableLayout,  tableItem;
+    TableLayout tableLayout, tableItem,tableDetail;
     GridView catGridView, itemGridView;
     CheckBox discPerc;
     Button back;
     LinearLayout baLiner;
+    boolean showChek=false;
 
     private ProgressDialog progressDialog;
     String json_getString;
@@ -118,7 +124,7 @@ public class Order extends AppCompatActivity {
 
     TableRow focused = null;
     int selectedModifier = -1;
-
+boolean showdetal=false;
     Dialog dialog;
     private DatabaseHandler mDbHandler;
 
@@ -128,6 +134,8 @@ public class Order extends AppCompatActivity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.order);
 
+        Log.e("Order ","in 12345");
+
         initialize();
 
         mDbHandler = new DatabaseHandler(Order.this);
@@ -135,10 +143,17 @@ public class Order extends AppCompatActivity {
         items = mDbHandler.getAllItems();
         wantedItems = new ArrayList<>();
         lineDiscount = new ArrayList<Double>();
-        categories = mDbHandler.getUsedCategories();
+//        categories = mDbHandler.getUsedCategories();//update 10
 
         fillCategories();
         showCats();
+//        blinkAnnouncement(onOffLine);
+         Settings.focas=onOffLine;
+        if (Settings.onOFF) {
+            new Settings().blinkAnnouncement( true);
+        }else {
+            new Settings().blinkAnnouncement( false);
+        }
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -182,9 +197,9 @@ public class Order extends AppCompatActivity {
 
                             Intent intentPay = new Intent(Order.this, PayMethods.class);
                             startActivity(intentPay);
-//                            finish();
+
                         } else
-                        new Settings().makeText(Order.this, getResources().getString(R.string.amountdue_oo));
+                            new Settings().makeText(Order.this, getResources().getString(R.string.amountdue_oo));
                     }
                     break;
 
@@ -193,13 +208,20 @@ public class Order extends AppCompatActivity {
                         if (!(Double.parseDouble(amountDue.getText().toString()) == 0)) {
                             saveInOrderTransactionTemp();
                             saveInOrderHeaderTemp();
-
+                            List<MaxSerial>max=new ArrayList<>();
+                            max=mDbHandler.getMaxSerialForVhf();
+                            if(max.size()!=0) {
+                                String vhNO = max.get(0).getMaxSerial();
+                                if (Integer.parseInt(voucherNo)>Integer.parseInt(vhNO)) {
+                                    mDbHandler.updateMaxVhf(voucherNo);
+                                }
+                            }
                             Intent intent = new Intent(Order.this, DineIn.class);
                             startActivity(intent);
                             finish();
 
                         } else
-                        new Settings().makeText(Order.this,  getResources().getString(R.string.amountdue_oo));
+                            new Settings().makeText(Order.this, getResources().getString(R.string.amountdue_oo));
                     }
                     break;
 
@@ -226,9 +248,39 @@ public class Order extends AppCompatActivity {
                 case R.id.back:
                     showCats();
                     break;
+
+                case R.id.orderType:
+                    if(showChek){
+                        showCats();
+                    }
+                    break;
+                case R.id.details:
+                    if(!showdetal){
+                        notShowDetails();
+                    showdetal=true;}
+                    else {
+                        ShowDetails();
+                        showdetal=false;
+                    }
+                    break;
             }
         }
     };
+
+
+    void notShowDetails(){
+
+        tableDetail.setVisibility(View.GONE);
+        details.setBackgroundDrawable(getResources().getDrawable(R.drawable.arrowup));
+
+    }
+
+    void ShowDetails(){
+
+        tableDetail.setVisibility(View.VISIBLE);
+        details.setBackgroundDrawable(getResources().getDrawable(R.drawable.arrowdown));
+
+    }
 
     View.OnTouchListener onTouchListener = new View.OnTouchListener() {
         @Override
@@ -282,6 +334,8 @@ public class Order extends AppCompatActivity {
         itemGridView.setVisibility(View.INVISIBLE);
         back.setVisibility(View.GONE);
         baLiner.setVisibility(View.GONE);
+        showChek=false;
+
     }
 
     void showItems() {
@@ -289,6 +343,7 @@ public class Order extends AppCompatActivity {
         itemGridView.setVisibility(View.VISIBLE);
         back.setVisibility(View.VISIBLE);
         baLiner.setVisibility(View.VISIBLE);
+        showChek=true;
     }
 
     @SuppressLint("SetTextI18n")
@@ -323,10 +378,9 @@ public class Order extends AppCompatActivity {
         SimpleDateFormat df2 = new SimpleDateFormat("yyyyMM");
         yearMonth = convertToEnglish(df2.format(currentTimeAndDate));
 
-        int transactionsSize = mDbHandler.getMaxSerial("ORDER_HEADER","0")+1;
-        int transactionsTempSize =  mDbHandler.getMaxSerial("ORDER_HEADER_TEMP","0")+1;
-
-//        int transactionsSize = 0, transactionsTempSize = 0;
+//        int transactionsSize = mDbHandler.getMaxSerial("ORDER_HEADER","0")+1;
+//        int transactionsTempSize =  mDbHandler.getMaxSerial("ORDER_HEADER_TEMP","0")+1;
+        //        int transactionsSize = 0, transactionsTempSize = 0;
 
 //        if (transactions.size() != 0)
 //            transactionsSize = transactions.get(transactions.size() - 1).getVoucherSerial();
@@ -334,34 +388,52 @@ public class Order extends AppCompatActivity {
 //        if (transactionsTemp.size() != 0)
 //            transactionsTempSize = transactionsTemp.get(transactionsTemp.size() - 1).getVoucherSerial();
 
-        if (transactionsSize > transactionsTempSize) {
-            voucherSerial = transactionsSize ;
+//        if (transactionsSize > transactionsTempSize) {
+//            voucherSerial = transactionsSize ;
+//        } else {
+//            voucherSerial = transactionsTempSize;
+//        }
+        List<MaxSerial> max = new ArrayList<>();
+
+        max = mDbHandler.getMaxSerialForVhf();
+        if (max.size() != 0) {
+            voucherSerial = Integer.parseInt(max.get(0).getMaxSerial()) + 1;
         } else {
-            voucherSerial = transactionsTempSize;
+            MaxSerial maxN=new MaxSerial("0","0");
+            mDbHandler.addMAXSerial(maxN);
+            voucherSerial = 1;
         }
+        Log.e("maxSerial = ",""+voucherSerial);
+
         date.setText(today);
-        voucherNo = ""+ voucherSerial;
+        voucherNo = "" + voucherSerial;
 
     }
 
     void fillCategories() {
-
+        Log.e("Order ","in fill 12345");
         List<FamilyCategory> allCats = mDbHandler.getAllFamilyCategory();
-        for (int i = 0; i < allCats.size(); i++)
+        for (int i = 0; i < allCats.size(); i++){
             if (allCats.get(i).getType() != 2) {
                 allCats.remove(i);
                 i--;
-            }
-        for (int i = 0; i < categories.size(); i++) {
-            for (int k = 0; k < allCats.size(); k++) {
-                if (categories.get(i).getCategoryName().equals(allCats.get(k).getName())) {
-                    categories.get(i).setCatPic(StringToBitMap(allCats.get(k).getCatPic()));
-                }
-            }
-        }
+            }}
+        Log.e("cat size","="+allCats.size());
 
-        LayoutCategoryAdapter adapter = new LayoutCategoryAdapter(Order.this, categories, 3);
+//        for (int i = 0; i < categories.size(); i++) {
+//            for (int k = 0; k < allCats.size(); k++) {
+//                if (categories.get(i).getCategoryName().equals(allCats.get(k).getName())) {
+//                    categories.get(i).setCatPic(StringToBitMap(allCats.get(k).getCatPic()));
+//                }
+//            }
+//        }//update 9
+
+//        LayoutCategoryAdapter adapter = new LayoutCategoryAdapter(Order.this, categories, 3);
+//        catGridView.setAdapter(adapter); //update 1
+
+        LayoutCategoryAdapter adapter = new LayoutCategoryAdapter(Order.this, allCats, 3);
         catGridView.setAdapter(adapter);
+
 
         catGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -380,23 +452,46 @@ public class Order extends AppCompatActivity {
 
     @SuppressLint("ClickableViewAccessibility")
     void fillItems(String categoryName) {
-        ArrayList<UsedItems> subList = mDbHandler.getRequestedItems(categoryName);
+//        ArrayList<UsedItems> subList = mDbHandler.getRequestedItems(categoryName);//update 11
+        ArrayList<Items> subList = mDbHandler.getRequestedItems2(categoryName);
+
 
         if (!categoryName.equals("") && subList.size() != 0) {
 
             if (subList.size() != 0) {
                 List<Items> items = mDbHandler.getAllItems();
                 requestedItems = new ArrayList<>();
+/*first
+//                for (int i = 0; i < subList.size(); i++) {
+//                    if (Character.isDigit(subList.get(i).getitemName().charAt(0)) || subList.get(i).getitemName().equals("")) { // no data in this position
+//                        requestedItems.add(new Items("", "", "", 0, 0, "", "",
+//                                0, 0, 0, "", 0, 0, 0, 0,
+//                                "", "", 0, 0, 0, null, subList.get(i).getBackground(),
+//                                subList.get(i).getBackground(), 0));
+//                    } else {
+//                        for (int j = 0; j < items.size(); j++) {
+//                            if (subList.get(i).getitemName().equals(items.get(j).getMenuName()))
+//                                requestedItems.add(new Items(categoryName, items.get(j).getMenuName(), items.get(j).getFamilyName(),
+//                                        items.get(j).getTax(), items.get(j).getTaxType(), items.get(j).getSecondaryName(), items.get(j).getKitchenAlias(),
+//                                        items.get(j).getItemBarcode(), items.get(j).getStatus(), items.get(j).getItemType(), items.get(j).getInventoryUnit(),
+//                                        items.get(j).getWastagePercent(), items.get(j).getDiscountAvailable(), items.get(j).getPointAvailable(),
+//                                        items.get(j).getOpenPrice(), items.get(j).getKitchenPrinter(), items.get(j).getDescription(), items.get(j).getPrice(),
+//                                        items.get(j).getUsed(), items.get(j).getShowInMenu(), items.get(j).getPic(), subList.get(i).getBackground(),
+//                                        subList.get(i).getTextColor(), subList.get(i).getPosition()));
+//                        }
+//                    }
+//                }//update 12
+end*/
 
                 for (int i = 0; i < subList.size(); i++) {
-                    if (Character.isDigit(subList.get(i).getitemName().charAt(0)) || subList.get(i).getitemName().equals("")) { // no data in this position
+                    if (Character.isDigit(subList.get(i).getMenuName().charAt(0)) || subList.get(i).getMenuName().equals("")) { // no data in this position
                         requestedItems.add(new Items("", "", "", 0, 0, "", "",
                                 0, 0, 0, "", 0, 0, 0, 0,
                                 "", "", 0, 0, 0, null, subList.get(i).getBackground(),
                                 subList.get(i).getBackground(), 0));
                     } else {
                         for (int j = 0; j < items.size(); j++) {
-                            if (subList.get(i).getitemName().equals(items.get(j).getMenuName()))
+                            if (subList.get(i).getMenuName().equals(items.get(j).getMenuName()))
                                 requestedItems.add(new Items(categoryName, items.get(j).getMenuName(), items.get(j).getFamilyName(),
                                         items.get(j).getTax(), items.get(j).getTaxType(), items.get(j).getSecondaryName(), items.get(j).getKitchenAlias(),
                                         items.get(j).getItemBarcode(), items.get(j).getStatus(), items.get(j).getItemType(), items.get(j).getInventoryUnit(),
@@ -404,9 +499,12 @@ public class Order extends AppCompatActivity {
                                         items.get(j).getOpenPrice(), items.get(j).getKitchenPrinter(), items.get(j).getDescription(), items.get(j).getPrice(),
                                         items.get(j).getUsed(), items.get(j).getShowInMenu(), items.get(j).getPic(), subList.get(i).getBackground(),
                                         subList.get(i).getTextColor(), subList.get(i).getPosition()));
-                        }
+                                               }
                     }
                 }
+
+                Log.e("menu name ",""+requestedItems.get(0).getMenuName());
+
                 foodAdapter = new FoodAdapter1(Order.this, requestedItems);
                 itemGridView.setAdapter(foodAdapter);
 
@@ -445,7 +543,7 @@ public class Order extends AppCompatActivity {
                                 TextView textViewTotal = (TextView) tableRow.getChildAt(3);
                                 TextView textViewLineDiscount = (TextView) tableRow.getChildAt(4);
 
-                                double qty =Double.parseDouble(convertToEnglish(textViewQty.getText().toString()));
+                                double qty = Double.parseDouble(convertToEnglish(textViewQty.getText().toString()));
                                 double price = Double.parseDouble(convertToEnglish(textViewPrice.getText().toString()));
                                 double newTotal = price * (qty + 1);
 
@@ -459,7 +557,7 @@ public class Order extends AppCompatActivity {
                                 calculateTotal();
                             }
                         } else
-                        new Settings().makeText(Order.this, getResources().getString(R.string.no_item));
+                            new Settings().makeText(Order.this, getResources().getString(R.string.no_item));
                     }
                 });
             }
@@ -758,7 +856,7 @@ public class Order extends AppCompatActivity {
 //            AlertDialog alertDialog = builder.create();
 //            alertDialog.show();
             } else
-            new Settings().makeText(Order.this,getResources().getString(R.string.chooes_item_delete) );
+                new Settings().makeText(Order.this, getResources().getString(R.string.chooes_item_delete));
         } else {
             new Settings().makeText(Order.this, getResources().getString(R.string.no_item));
         }
@@ -899,18 +997,18 @@ public class Order extends AppCompatActivity {
                                 dialog1.dismiss();
                                 dialog.dismiss();
                             } else
-                            new Settings().makeText(Order.this, getResources().getString(R.string.select_reson_cancele));
+                                new Settings().makeText(Order.this, getResources().getString(R.string.select_reson_cancele));
                         });
 
 
                         dialog1.show();
                     } else
-                    new Settings().makeText(Order.this, getResources().getString(R.string.curent_qty_less_than) + voidQty.getText().toString());
+                        new Settings().makeText(Order.this, getResources().getString(R.string.curent_qty_less_than) + voidQty.getText().toString());
 
                 } else
-                new Settings().makeText(Order.this,getResources().getString(R.string.enter_qty) );
+                    new Settings().makeText(Order.this, getResources().getString(R.string.enter_qty));
 
-                focused=null;
+                focused = null;
             }
         });
         dialog.show();
@@ -980,7 +1078,7 @@ public class Order extends AppCompatActivity {
 
                     mDbHandler.addCancleOrder(new CancleOrder(voucherNo, today, Settings.user_name, Settings.user_no, Settings.shift_name,
                             Settings.shift_number, waiter, Integer.parseInt(waiterNo), "" + wantedItems.get(k).getItemBarcode(),
-                            wantedItems.get(k).getMenuName(), Integer.parseInt(convertToEnglish(textViewQty.getText().toString())),
+                            wantedItems.get(k).getMenuName(),  Double.parseDouble(convertToEnglish(textViewQty.getText().toString())),
                             wantedItems.get(k).getPrice(), Double.parseDouble(convertToEnglish(textViewTotal.getText().toString())),
                             reasonText, 1, time, Settings.POS_number));
                 }
@@ -1098,7 +1196,7 @@ public class Order extends AppCompatActivity {
                         }
                     }
                 } else
-                new Settings().makeText(Order.this, getResources().getString(R.string.selected_answer));
+                    new Settings().makeText(Order.this, getResources().getString(R.string.selected_answer));
             }
         });
         no.setOnClickListener(new View.OnClickListener() {
@@ -1125,7 +1223,7 @@ public class Order extends AppCompatActivity {
                         }
                     }
                 } else
-                new Settings().makeText(Order.this,getResources().getString(R.string.selected_answer) );
+                    new Settings().makeText(Order.this, getResources().getString(R.string.selected_answer));
             }
         });
 
@@ -1153,7 +1251,7 @@ public class Order extends AppCompatActivity {
                         }
                     }
                 } else
-                new Settings().makeText(Order.this,getResources().getString(R.string.selected_answer) );
+                    new Settings().makeText(Order.this, getResources().getString(R.string.selected_answer));
             }
         });
         half.setOnClickListener(new View.OnClickListener() {
@@ -1180,7 +1278,7 @@ public class Order extends AppCompatActivity {
                         }
                     }
                 } else
-                new Settings().makeText(Order.this, getResources().getString(R.string.selected_answer));
+                    new Settings().makeText(Order.this, getResources().getString(R.string.selected_answer));
             }
         });
         save.setOnClickListener(new View.OnClickListener() {
@@ -1206,7 +1304,7 @@ public class Order extends AppCompatActivity {
                             }
 
                         } else {
-                            new Settings().makeText(Order.this,getResources().getString(R.string.select_qty) );
+                            new Settings().makeText(Order.this, getResources().getString(R.string.select_qty));
                         }
                         Log.e("here", "******" + answersLinear.getChildCount());
                     } else {
@@ -1229,7 +1327,7 @@ public class Order extends AppCompatActivity {
                                         showForceQuestionDialog(itemBarcode, nextQu);
                                     }
                                 } else {
-                                    new Settings().makeText(Order.this,getResources().getString(R.string.select_qty) );
+                                    new Settings().makeText(Order.this, getResources().getString(R.string.select_qty));
                                 }
                                 Log.e("here", "******" + answersLinear.getChildCount());
                             }
@@ -1306,7 +1404,7 @@ public class Order extends AppCompatActivity {
                                 }
                             }
                         } else
-                        new Settings().makeText(Order.this,getResources().getString(R.string.select_modifer) );
+                            new Settings().makeText(Order.this, getResources().getString(R.string.select_modifer));
                     }
                 });
                 no.setOnClickListener(new View.OnClickListener() {
@@ -1323,7 +1421,7 @@ public class Order extends AppCompatActivity {
                                 }
                             }
                         } else
-                        new Settings().makeText(Order.this, getResources().getString(R.string.select_modifer));
+                            new Settings().makeText(Order.this, getResources().getString(R.string.select_modifer));
                     }
                 });
                 little.setOnClickListener(new View.OnClickListener() {
@@ -1340,7 +1438,7 @@ public class Order extends AppCompatActivity {
                                 }
                             }
                         } else
-                        new Settings().makeText(Order.this, getResources().getString(R.string.select_modifer));
+                            new Settings().makeText(Order.this, getResources().getString(R.string.select_modifer));
                     }
                 });
                 half.setOnClickListener(new View.OnClickListener() {
@@ -1357,7 +1455,7 @@ public class Order extends AppCompatActivity {
                                 }
                             }
                         } else
-                        new Settings().makeText(Order.this,getResources().getString(R.string.select_modifer) );
+                            new Settings().makeText(Order.this, getResources().getString(R.string.select_modifer));
                     }
                 });
                 save.setOnClickListener(new View.OnClickListener() {
@@ -1393,11 +1491,11 @@ public class Order extends AppCompatActivity {
                 dialog.show();
             } else {
 
-                new Settings().makeText(Order.this,getResources().getString(R.string.chooes_item_to_modifier) );
+                new Settings().makeText(Order.this, getResources().getString(R.string.chooes_item_to_modifier));
             }
         } else
 
-        new Settings().makeText(Order.this,getResources().getString(R.string.no_item) );
+            new Settings().makeText(Order.this, getResources().getString(R.string.no_item));
 
     }
 
@@ -1429,7 +1527,7 @@ public class Order extends AppCompatActivity {
             });
             dialog.show();
         } else {
-            new Settings().makeText(Order.this,getResources().getString(R.string.delivary_is_not_avilable) );
+            new Settings().makeText(Order.this, getResources().getString(R.string.delivary_is_not_avilable));
         }
     }
 
@@ -1476,10 +1574,10 @@ public class Order extends AppCompatActivity {
                     dialog.show();
                 } else
 
-                new Settings().makeText(Order.this,getResources().getString(R.string.discount_not_avilable) );
+                    new Settings().makeText(Order.this, getResources().getString(R.string.discount_not_avilable));
             } else
 
-            new Settings().makeText(Order.this, getResources().getString(R.string.chooes_item_to_add_linediscount));
+                new Settings().makeText(Order.this, getResources().getString(R.string.chooes_item_to_add_linediscount));
         }
     }
 
@@ -1524,13 +1622,13 @@ public class Order extends AppCompatActivity {
                         calculateTotal();
                         dialog.dismiss();
                     } else {
-                        new Settings().makeText(Order.this,getResources().getString(R.string.enter_discount) );
+                        new Settings().makeText(Order.this, getResources().getString(R.string.enter_discount));
                     }
                 }
             });
             dialog.show();
         } else
-        new Settings().makeText(Order.this,getResources().getString(R.string.discount_not_avilable_for_curent_item) );
+            new Settings().makeText(Order.this, getResources().getString(R.string.discount_not_avilable_for_curent_item));
     }
 
     void calculateTotal() {
@@ -1661,21 +1759,21 @@ public class Order extends AppCompatActivity {
             if (wantedItems.get(k).getTaxType() == 0) {
                 if (Settings.tax_type != 0) {
                     taxValue = (totalLine - lineDiscount_ - discount) * wantedItems.get(k).getTax() / 100;
-                    Log.e("tax__1" , "(("+ totalLine + "-" + discount +")*" +wantedItems.get(k).getTax() + "/100)");
+                    Log.e("tax__1", "((" + totalLine + "-" + discount + ")*" + wantedItems.get(k).getTax() + "/100)");
                 } else {
                     taxValue = ((totalLine - lineDiscount_ - discount) * wantedItems.get(k).getTax() / 100) / (1 + (wantedItems.get(k).getTax() / 100));
 
-                    Log.e("tax__2" , "(("+ totalLine + "-" + discount +")*" +  wantedItems.get(k).getTax() + "/100)/(1+" + wantedItems.get(k).getTax() + "/100)" );
+                    Log.e("tax__2", "((" + totalLine + "-" + discount + ")*" + wantedItems.get(k).getTax() + "/100)/(1+" + wantedItems.get(k).getTax() + "/100)");
                 }
             }
-         Log.e("tax "," = "+taxValue);
+            Log.e("tax ", " = " + taxValue);
             OrderTransactionsObj.add(new OrderTransactions(orderTypeFlag, 0, today, Settings.POS_number, Settings.store_number,
                     voucherNo, k, "" + wantedItems.get(k).getItemBarcode(), wantedItems.get(k).getMenuName(),
                     wantedItems.get(k).getSecondaryName(), wantedItems.get(k).getKitchenAlias(), wantedItems.get(k).getMenuCategory(),
                     wantedItems.get(k).getFamilyName(), Double.parseDouble(convertToEnglish(textViewQty.getText().toString())), wantedItems.get(k).getPrice(),
                     totalLine, discount, lineDiscount_, discount + lineDiscount_, taxValue,
                     wantedItems.get(k).getTax(), 0, Double.parseDouble(service.getText().toString()), serviceTax,
-                    tableNumber, sectionNumber, Settings.shift_number, Settings.shift_name, Settings.user_no, Settings.user_name, time,"0",-1,0,Settings.cash_no));
+                    tableNumber, sectionNumber, Settings.shift_number, Settings.shift_name, Settings.user_no, Settings.user_name, time, "0", -1, 0, Settings.cash_no));
         }
     }
 
@@ -1690,7 +1788,7 @@ public class Order extends AppCompatActivity {
                 Settings.service_value, Double.parseDouble((convertToEnglish(tax.getText().toString()))), serviceTax, Double.parseDouble((convertToEnglish(subTotal.getText().toString()))),
                 Double.parseDouble(convertToEnglish(amountDue.getText().toString())), Double.parseDouble(convertToEnglish(deliveryCharge.getText().toString())), tableNumber,
                 sectionNumber, PayMethods.cashValue1, PayMethods.creditCardValue1, PayMethods.chequeValue1, PayMethods.creditValue1,
-                PayMethods.giftCardValue1, PayMethods.pointValue1, Settings.shift_name, Settings.shift_number, "No Waiter", 0, Settings.user_name, Settings.user_no, time,"0",-1,Settings.cash_no);
+                PayMethods.giftCardValue1, PayMethods.pointValue1, Settings.shift_name, Settings.shift_number, "No Waiter", 0, Settings.user_name, Settings.user_no, time, "0", -1, Settings.cash_no,"noAdd");
 
 
     }
@@ -1731,7 +1829,7 @@ public class Order extends AppCompatActivity {
                     wantedItems.get(k).getFamilyName(), Double.parseDouble(convertToEnglish(textViewQty.getText().toString())), wantedItems.get(k).getPrice(),
                     totalLine, discount, lineDiscount_, discount + lineDiscount_, taxValue,
                     wantedItems.get(k).getTax(), 0, Double.parseDouble(convertToEnglish(service.getText().toString())), serviceTax,
-                    tableNumber, sectionNumber, Settings.shift_number, Settings.shift_name, Settings.user_no, Settings.user_name, time,"0",-1,0,Settings.cash_no));
+                    tableNumber, sectionNumber, Settings.shift_number, Settings.shift_name, Settings.user_no, Settings.user_name, time, "0", -1, 0, Settings.cash_no));
         }
     }
 
@@ -1749,7 +1847,7 @@ public class Order extends AppCompatActivity {
                 Settings.service_value, Double.parseDouble(convertToEnglish(tax.getText().toString())), serviceTax, Double.parseDouble(convertToEnglish(subTotal.getText().toString())),
                 Double.parseDouble(convertToEnglish(amountDue.getText().toString())), Double.parseDouble(convertToEnglish(deliveryCharge.getText().toString())), sectionNumber,
                 tableNumber, 0.00, 0.00, 0.00, 0.00,
-                0.00, 0.00, Settings.shift_name, Settings.shift_number, waiter, seatNo, Settings.user_name, Settings.user_no, time,"0",-1,Settings.cash_no));
+                0.00, 0.00, Settings.shift_name, Settings.shift_number, waiter, seatNo, Settings.user_name, Settings.user_no, time, "0", -1, Settings.cash_no,"noAdd"));
     }
 
 //    void sendToKitchen() {
@@ -1932,7 +2030,8 @@ public class Order extends AppCompatActivity {
     void initialize() {
 
         tableLayout = (TableLayout) findViewById(R.id.tableLayout);
-        tableItem= (TableLayout) findViewById(R.id.tableItem);
+        tableItem = (TableLayout) findViewById(R.id.tableItem);
+        tableDetail = (TableLayout) findViewById(R.id.tableDetal);
 
         itemGridView = (GridView) findViewById(R.id.GridViewItems);
         catGridView = (GridView) findViewById(R.id.GridViewCats);
@@ -1942,7 +2041,7 @@ public class Order extends AppCompatActivity {
         date = (TextView) findViewById(R.id.date);
         user = (TextView) findViewById(R.id.user);
         seats = (TextView) findViewById(R.id.seat_number);
-
+        details = (TextView) findViewById(R.id.details);
         pay = (Button) findViewById(R.id.pay);
         order = (Button) findViewById(R.id.order);
         modifier = (Button) findViewById(R.id.modifier);
@@ -1953,7 +2052,7 @@ public class Order extends AppCompatActivity {
         lDiscount = (Button) findViewById(R.id.line_discount_b);
         priceChange = (Button) findViewById(R.id.price_change);
         back = (Button) findViewById(R.id.back);
-        baLiner  = (LinearLayout) findViewById(R.id.baLiner);
+        baLiner = (LinearLayout) findViewById(R.id.baLiner);
 
         total = (TextView) findViewById(R.id.total);
         disCount = (TextView) findViewById(R.id.discount);
@@ -1964,7 +2063,7 @@ public class Order extends AppCompatActivity {
         service = (TextView) findViewById(R.id.service);
         amountDue = (TextView) findViewById(R.id.amount_due);
         vhSerial = (TextView) findViewById(R.id.vhSerial);
-
+        onOffLine = (TextView) findViewById(R.id.onOffLine);
         pay.setOnTouchListener(onTouchListener);
         order.setOnTouchListener(onTouchListener);
         modifier.setOnTouchListener(onTouchListener);
@@ -1974,6 +2073,7 @@ public class Order extends AppCompatActivity {
         discount.setOnTouchListener(onTouchListener);
         priceChange.setOnTouchListener(onTouchListener);
 
+       details.setOnClickListener(onClickListener);
         pay.setOnClickListener(onClickListener);
         order.setOnClickListener(onClickListener);
         modifier.setOnClickListener(onClickListener);
@@ -1982,26 +2082,25 @@ public class Order extends AppCompatActivity {
         discount.setOnClickListener(onClickListener);
         lDiscount.setOnClickListener(onClickListener);
         back.setOnClickListener(onClickListener);
-
+        orderType.setOnClickListener(onClickListener);
     }
 
 
-    public String BitMapToString(Bitmap bitmap){
-        ByteArrayOutputStream baos=new  ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG,100, baos);
-        byte [] arr=baos.toByteArray();
-        String result= Base64.encodeToString(arr, Base64.DEFAULT);
+    public String BitMapToString(Bitmap bitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] arr = baos.toByteArray();
+        String result = Base64.encodeToString(arr, Base64.DEFAULT);
         return result;
     }
 
 
-
-    public Bitmap StringToBitMap(String image){
-        try{
-            byte [] encodeByte=Base64.decode(image,Base64.DEFAULT);
-            Bitmap bitmap= BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+    public Bitmap StringToBitMap(String image) {
+        try {
+            byte[] encodeByte = Base64.decode(image, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
             return bitmap;
-        }catch(Exception e){
+        } catch (Exception e) {
             e.getMessage();
             return null;
         }

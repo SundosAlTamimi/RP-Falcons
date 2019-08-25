@@ -16,6 +16,9 @@
     <string name="log_in">log in</string>
     <string name="clear">clear</string>
     <string name="enter_password">Enter Your Password :</string>
+    <string name="required_field">Required Field!</string>
+    <string name="all_fields_are_required">*All Fields Are Required!</string>
+    <string name="cash_no">Cash No</string>
 
     <string name="password">Password</string>
     <string name="user_no">User No</string>
@@ -235,6 +238,7 @@
     <string name="picture">Picture</string>
     <string name="show">Show</string>
     <string name="save_">save</string>
+    <string name="edit_save">Edit and Save</string>
 
     <string name="question_no">Question Number</string>
     <string name="question_no_">Question No</string>
@@ -254,8 +258,10 @@
     <string name="kitchen_screen">Kitchen Screen</string>
     <string name="screen_no">Screen No</string>
     <string name="screen_name">Screen Name</string>
-    <string name="add_kitchen_screen">Add Kitchen Screen</string>
+    <string name="edit_add_kitchen_screen">Add/Edit Kitchen Screen</string>
     <string name="join_item_with_kitchen_screen">Join Item With Kitchen Screen</string>
+    <string name="edit_screen_text_view">* If you are want to edit an exist screen information just choose from below menu</string>
+    <string name="no_screen">No screen</string>
 
     <string name="tender">Tender</string>
     <string name="voucher_number">Voucher Number</string>
@@ -581,6 +587,16 @@
     <string name="please_return_this_value">Please return this value :</string>
     <string name="kitchen_ip">Kitchen IP</string>
     <string name="not_data">not have data to export ...</string>
+    <string name="sync_max_vhf">Sync Max VHF</string>
+    <string name="details">Details :</string>
+    <string name="details_">More Details</string>
+    <string name="details_L">Less Details</string>
+    <string name="take_away_kind">Take Away Kind</string>
+    <string name="take_away_kind_name">Take Away Kind Name :</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="comp_year">Comp Year</string>
+    <string name="comp_no">Comp No</string>
+    <string name="first_install_for_app">First Install For App</string>
 
 
 </resources>

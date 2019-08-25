@@ -9,6 +9,8 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -39,6 +41,30 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.animation.Easing;
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IFillFormatter;
+import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.MPPointF;
 import com.tamimi.sundos.restpos.DatabaseHandler;
 import com.tamimi.sundos.restpos.DineInLayout;
 import com.tamimi.sundos.restpos.ExportToPdf;
@@ -67,15 +93,14 @@ import com.tamimi.sundos.restpos.Models.Pay;
 import com.tamimi.sundos.restpos.Models.PayMethod;
 import com.tamimi.sundos.restpos.Models.Shift;
 import com.tamimi.sundos.restpos.Models.TableActions;
+import com.tamimi.sundos.restpos.Models.TakeAway;
 import com.tamimi.sundos.restpos.Models.VoidResons;
 import com.tamimi.sundos.restpos.Models.ZReport;
-import com.tamimi.sundos.restpos.PayMethods;
 import com.tamimi.sundos.restpos.R;
+import com.tamimi.sundos.restpos.ReceiveCloud;
 import com.tamimi.sundos.restpos.SendCloud;
 import com.tamimi.sundos.restpos.Settings;
-import com.tamimi.sundos.restpos.SyncWithCloud;
 
-import java.sql.Blob;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
@@ -100,13 +125,18 @@ import org.json.JSONObject;
 //import static com.itextpdf.text.Element.ALIGN_CENTER;
 
 public class BackOfficeActivity extends AppCompatActivity {
-
-
+    RadioGroup radioGroup;//= new RadioGroup(this);
+    int kitchenNoOldValue = -1;
+    private final RectF onValueSelectedRectF = new RectF();
+    private BarChart chart2,chart1,chart8;
+    private LineChart chart3;
+    private PieChart chart4,chart5,chart6,chart7,chart9;
+    int isChecked = 0;
     LinearLayout lManagement, lSales, lCustomers, lEmployees, lMenu, lSettings;
 
     TableLayout jobTable;
     Button butManagement, butSales, butCustomers, butEmployees, butMenu, butSettings;
-    LinearLayout announcement, giftCard, employeeClockInOut, menuSearch, reCancellationSupervisor;
+    LinearLayout announcement, giftCard, employeeClockInOut, menuSearch, reCancellationSupervisor,DashboardData;
     LinearLayout membershipGroup, membership, customerRegistration;
     LinearLayout jobGroup, employeeRegistration, employeeSchedule, payroll, vacation, editTables;
     LinearLayout menuCategory, menuRegistration, modifier, forceQuestion, voiding_reasons, menuLayout;
@@ -114,7 +144,7 @@ public class BackOfficeActivity extends AppCompatActivity {
     LinearLayout salesTotal, cashierInOut, canceledOrderHistory, x_report, z_report, market_report_,
             salesReportForDay, salesByHours, salesVolumeByItem, topSalesItemReport, topGroupSalesReport, topFamilySalesReport,
             salesReportByCustomer, salesReportByCardType, waiterSalesReport, tableActionReport, profitLossReport, detailSalesReport,
-            simpleSalesTotalReport, SoldQtyReport, userOrderCountReport, reCancellationReport, reCancellationSupervisorReport;
+            simpleSalesTotalReport, SoldQtyReport, userOrderCountReport, reCancellationReport, reCancellationSupervisorReport, TakeawayKind;
 
     int count, count2, nextSerial;
     Dialog dialog, dialog1;
@@ -130,6 +160,7 @@ public class BackOfficeActivity extends AppCompatActivity {
     ArrayList<Announcemet> Announcement;
     ArrayList<Money> finalMoneyArray;
     TableRow focusedRaw = null;
+    private List<TableRow> selectedItemsList = new ArrayList<>();
     int rawPosition = 0;
     Calendar myCalendar;
     List<BlindCloseDetails> focusedRowData = null;
@@ -165,6 +196,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         initialize();
         currentLinear(lManagement);
         mDHandler = new DatabaseHandler(BackOfficeActivity.this);
+        showDashBoardDialog();
     }
 
     View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -208,6 +240,9 @@ public class BackOfficeActivity extends AppCompatActivity {
             switch (view.getId()) {
                 case R.id.announcement:
                     addAnnouncementDialog();
+                    break;
+                case R.id.DashboardData:
+                    showDashBoardDialog();
                     break;
                 case R.id.gift_card:
                     kitchenOrderDialog();
@@ -253,8 +288,10 @@ public class BackOfficeActivity extends AppCompatActivity {
                     startActivity(intentMenuRegistration);
                     break;
                 case R.id.menu_layout:
-                    Intent intentOrderLayout = new Intent(BackOfficeActivity.this, OrderLayout.class);
-                    startActivity(intentOrderLayout);
+                    /*first
+//                    Intent intentOrderLayout = new Intent(BackOfficeActivity.this, OrderLayout.class);
+//                    startActivity(intentOrderLayout);//update 7
+                    end*/
                     break;
                 case R.id.modifier:
                     showModifierDialog();
@@ -282,7 +319,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     showMainSettingsPasswordDialog();
                     break;
                 case R.id.sync_with_cloud:
-                    showSyncWithCloudDialog();
+                    showSyncWithCloudChoesDialog();
                     break;
                 case R.id.sales_total:
                     salesTotalReportDialog();
@@ -330,6 +367,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     showTablesActionReport();
                     break;
                 case R.id.profit_loss_report:
+
                     break;
                 case R.id.detail_sales_report:
                     break;
@@ -344,6 +382,9 @@ public class BackOfficeActivity extends AppCompatActivity {
                     break;
                 case R.id.re_cancellation_report:
                     ShowReCancellationReport();
+                    break;
+                case R.id.TakeKindlayout:
+                    showAddTakeAwayKindDialog();
                     break;
             }
         }
@@ -397,6 +438,9 @@ public class BackOfficeActivity extends AppCompatActivity {
         EditText serviceValue = (EditText) dialog.findViewById(R.id.main_settings_serviceValue);
         EditText taxType = (EditText) dialog.findViewById(R.id.main_settings_taxType);
         EditText timeCard = (EditText) dialog.findViewById(R.id.main_settings_timeCard);
+        EditText cashNo = (EditText) dialog.findViewById(R.id.main_settings_cashNo);
+//        EditText compNo = (EditText) dialog.findViewById(R.id.compNo);
+//        EditText compYear = (EditText) dialog.findViewById(R.id.compYear);
         Button saveSettings = dialog.findViewById(R.id.main_settings_save);
         Button cancel = dialog.findViewById(R.id.main_settings_cancel);
 
@@ -413,6 +457,7 @@ public class BackOfficeActivity extends AppCompatActivity {
             serviceValue.setText("" + Settings.service_value);
             taxType.setText("" + Settings.tax_type);
             timeCard.setText("" + Settings.time_card);
+            cashNo.setText("" + Settings.cash_no);
         }
 
         saveSettings.setOnClickListener(new View.OnClickListener() {
@@ -429,54 +474,69 @@ public class BackOfficeActivity extends AppCompatActivity {
                                                 if (!TextUtils.isEmpty(serviceValue.getText().toString())) {
                                                     if (!TextUtils.isEmpty(taxType.getText().toString())) {
                                                         if (!TextUtils.isEmpty(timeCard.getText().toString())) {
-                                                            mDHandler.deleteCurrentMainSettings();
-                                                            Settings.user_name = userName.getText().toString();
-                                                            Settings.password = Integer.parseInt(userPassword.getText().toString());
-                                                            Settings.user_no = Integer.parseInt(userNo.getText().toString());
-                                                            Settings.POS_number = Integer.parseInt(posNo.getText().toString());
-                                                            Settings.store_number = Integer.parseInt(storeNo.getText().toString());
-                                                            Settings.shift_number = Integer.parseInt(shiftNo.getText().toString());
-                                                            Settings.shift_name = shiftName.getText().toString();
-                                                            Settings.service_tax = Double.parseDouble(serviceTax.getText().toString());
-                                                            Settings.service_value = Double.parseDouble(serviceValue.getText().toString());
-                                                            Settings.tax_type = Integer.parseInt(taxType.getText().toString());
-                                                            Settings.time_card = Integer.parseInt(timeCard.getText().toString());
-                                                            mDHandler.addMainSettings();
-                                                            dialog.dismiss();
-                                                            dialog1.dismiss();
-
+                                                            if (!TextUtils.isEmpty(cashNo.getText().toString())) {
+                                                                mDHandler.deleteCurrentMainSettings();
+                                                                Settings.user_name = userName.getText().toString();
+                                                                Settings.password = Integer.parseInt(userPassword.getText().toString());
+                                                                Settings.user_no = Integer.parseInt(userNo.getText().toString());
+                                                                Settings.POS_number = Integer.parseInt(posNo.getText().toString());
+                                                                Settings.store_number = Integer.parseInt(storeNo.getText().toString());
+                                                                Settings.shift_number = Integer.parseInt(shiftNo.getText().toString());
+                                                                Settings.shift_name = shiftName.getText().toString();
+                                                                Settings.service_tax = Double.parseDouble(serviceTax.getText().toString());
+                                                                Settings.service_value = Double.parseDouble(serviceValue.getText().toString());
+                                                                Settings.tax_type = Integer.parseInt(taxType.getText().toString());
+                                                                Settings.time_card = Integer.parseInt(timeCard.getText().toString());
+                                                                Settings.cash_no = Integer.parseInt(cashNo.getText().toString());
+                                                                mDHandler.addMainSettings();
+                                                                dialog.dismiss();
+                                                                dialog1.dismiss();
+                                                            } else {
+                                                                Toast.makeText(BackOfficeActivity.this, R.string.required_field, Toast.LENGTH_SHORT).show();
+                                                            }
                                                         } else {
-                                                            timeCard.setError("Required field!");
+                                                            Toast.makeText(BackOfficeActivity.this, R.string.required_field, Toast.LENGTH_SHORT).show();
+                                                            // timeCard.setError("Required field!");
                                                         }
                                                     } else {
-                                                        taxType.setError("Required field!");
+                                                        Toast.makeText(BackOfficeActivity.this, R.string.required_field, Toast.LENGTH_SHORT).show();
+                                                        // taxType.setError("Required field!");
                                                     }
                                                 } else {
-                                                    serviceValue.setError("Required field!");
+                                                    Toast.makeText(BackOfficeActivity.this, R.string.required_field, Toast.LENGTH_SHORT).show();
+                                                    // serviceValue.setError("Required field!");
                                                 }
                                             } else {
-                                                serviceTax.setError("Required field!");
+                                                Toast.makeText(BackOfficeActivity.this, R.string.required_field, Toast.LENGTH_SHORT).show();
+                                                // serviceTax.setError("Required field!");
                                             }
                                         } else {
-                                            shiftName.setError("Required field!");
+                                            Toast.makeText(BackOfficeActivity.this, R.string.required_field, Toast.LENGTH_SHORT).show();
+                                            // shiftName.setError("Required field!");
                                         }
                                     } else {
-                                        shiftNo.setError("Required field!");
+                                        Toast.makeText(BackOfficeActivity.this, R.string.required_field, Toast.LENGTH_SHORT).show();
+                                        // shiftNo.setError("Required field!");
                                     }
                                 } else {
-                                    storeNo.setError("Required field!");
+                                    Toast.makeText(BackOfficeActivity.this, R.string.required_field, Toast.LENGTH_SHORT).show();
+                                    // storeNo.setError("Required field!");
                                 }
                             } else {
-                                posNo.setError("Required field!");
+                                Toast.makeText(BackOfficeActivity.this, R.string.required_field, Toast.LENGTH_SHORT).show();
+                                // posNo.setError("Required field!");
                             }
                         } else {
-                            userNo.setError("Required field!");
+                            Toast.makeText(BackOfficeActivity.this, R.string.required_field, Toast.LENGTH_SHORT).show();
+                            // userNo.setError("Required field!");
                         }
                     } else {
-                        userPassword.setError("Required field!");
+                        Toast.makeText(BackOfficeActivity.this, R.string.required_field, Toast.LENGTH_SHORT).show();
+                        // userPassword.setError("Required field!");
                     }
                 } else {
-                    userName.setError("Required field!");
+                    Toast.makeText(BackOfficeActivity.this, R.string.required_field, Toast.LENGTH_SHORT).show();
+                    // userName.setError("Required field!");
                 }
             }
         });
@@ -1269,8 +1329,8 @@ public class BackOfficeActivity extends AppCompatActivity {
 
     void showSyncWithCloudDialog() {
 
-        SyncWithCloud obj = new SyncWithCloud(BackOfficeActivity.this);
-        obj.startSyncing("menuRegistration");
+//        SyncWithCloud obj = new SyncWithCloud(BackOfficeActivity.this);
+//        obj.startSyncing("sync");
     }
 
     void X_ReportDialog() {
@@ -2894,6 +2954,8 @@ public class BackOfficeActivity extends AppCompatActivity {
         final Button save = (Button) dialog.findViewById(R.id.save);
         final Button exit = (Button) dialog.findViewById(R.id.exit);
 
+        itemWithScreensList.clear();
+
         List<Items> items = mDHandler.getAllItems();
 
         final List<FamilyCategory> familyCategories = mDHandler.getAllFamilyCategory();
@@ -2909,6 +2971,9 @@ public class BackOfficeActivity extends AppCompatActivity {
         paperSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                selectedItemsList.clear();
+//                isChecked = 0;
+
                 if (!paperSpinner.getSelectedItem().toString().equals("")) {
 //                    insertRaw(items.get(i - 1), itemsTableLayout, "modifier");
                     itemsTableLayout.removeAllViews();
@@ -2926,7 +2991,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                         lp.setMargins(2, 2, 2, 0);
                         row.setLayoutParams(lp);
                         row.setTag(rawPosition);
-                        for (int r = 0; r < 4; r++) {
+                        for (int r = 0; r < 5; r++) {
                             TextView textView = new TextView(BackOfficeActivity.this);
 
                             switch (r) {
@@ -2941,6 +3006,10 @@ public class BackOfficeActivity extends AppCompatActivity {
                                     break;
                                 case 3:
                                     textView.setText("no screen");
+                                    break;
+                                case 4:
+                                    textView.setText("0");
+                                    textView.setVisibility(View.GONE);
                                     break;
                             }
 
@@ -2958,12 +3027,31 @@ public class BackOfficeActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View view) {
                                 // remove focused rows
-                                for (int k = 0; k < itemsTableLayout.getChildCount(); k++) {
-                                    TableRow tableRow = (TableRow) itemsTableLayout.getChildAt(k);
-                                    tableRow.setBackgroundColor(getResources().getColor(R.color.layer3));
+//                                for (int k = 0; k < itemsTableLayout.getChildCount(); k++) {
+//                                    TableRow tableRow = (TableRow) itemsTableLayout.getChildAt(k);
+//                                    tableRow.setBackgroundColor(getResources().getColor(R.color.layer3));
+//                                }
+                                TextView isCheckedTextView = (TextView) row.getChildAt(4); // hidden field to know if row checked or not
+                                TextView getBarcodeTextView = (TextView) row.getChildAt(0);
+
+                                if (isCheckedTextView.getText().toString().equals("0")) {
+                                    ((TextView) row.getChildAt(4)).setText("1");
+                                    focusedRaw = row;
+                                    selectedItemsList.add(row);
+                                    focusedRaw.setBackgroundColor(getResources().getColor(R.color.layer4));
+                                    Log.e("backoffice", "" + selectedItemsList.size());
+                                } else {
+                                    ((TextView) row.getChildAt(4)).setText("0");
+                                    if (selectedItemsList.size() != 0)
+                                        for (int i = 0; i < selectedItemsList.size(); i++)
+                                            if (selectedItemsList.get(i).getChildAt(0) == row.getChildAt(0)) {
+                                                selectedItemsList.remove(i);
+                                                break;
+                                            }
+                                    row.setBackgroundColor(getResources().getColor(R.color.layer3));
+                                    Log.e("backoffice", "" + selectedItemsList.size());
+
                                 }
-                                focusedRaw = row;
-                                focusedRaw.setBackgroundColor(getResources().getColor(R.color.layer4));
                             }
                         });
 
@@ -2980,42 +3068,48 @@ public class BackOfficeActivity extends AppCompatActivity {
         });
 
         ArrayList<KitchenScreen> screens = mDHandler.getAllKitchenScreen();
+        radioGroup = new RadioGroup(this);
         for (int i = 0; i < screens.size(); i++) {
-            CheckBox checkBox = new CheckBox(BackOfficeActivity.this);
-            checkBox.setText("- " + screens.get(i).getKitchenName());
-            checkBox.setTag(screens.get(i).getKitchenNo());
-            checkBox.setTextColor(getResources().getColor(R.color.text_color));
-            checkBox.setTextSize(20);
+            RadioButton radioButton = new RadioButton(BackOfficeActivity.this);
+            radioButton.setText("- " + screens.get(i).getKitchenName());
+            radioButton.setTag(screens.get(i).getKitchenNo());
+            radioButton.setTextColor(getResources().getColor(R.color.text_color));
+            radioButton.setTextSize(20);
+            radioGroup.addView(radioButton);
 
-            screensLinearLayout.addView(checkBox);
         }
+        screensLinearLayout.addView(radioGroup);
 
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (focusedRaw != null) {
-                    if (screensLinearLayout.getChildCount() != 0) {
-                        int childCount = screensLinearLayout.getChildCount();
+//                if (focusedRaw != null) {
+                if (selectedItemsList.size() != 0) {
+                    if (radioGroup.getChildCount() != 0) {
+                        int childCount = radioGroup.getChildCount();
                         for (int i = childCount - 1; i >= 0; i--) {
-                            CheckBox checkBox = (CheckBox) screensLinearLayout.getChildAt(i);
-                            if (checkBox.isChecked()) {
-                                checkBox.setChecked(false);
+                            RadioButton radioButton = (RadioButton) radioGroup.getChildAt(i);
+                            if (radioButton.isChecked()) {
+                                radioButton.setChecked(false);
+                                for (int j = 0; j < selectedItemsList.size(); j++) {
 
-                                TextView itemBa = (TextView) focusedRaw.getChildAt(0);
-                                TextView itemNa = (TextView) focusedRaw.getChildAt(1);
-                                TextView scrNo = (TextView) focusedRaw.getChildAt(2);
-                                TextView scrNa = (TextView) focusedRaw.getChildAt(3);
+                                    TextView itemBa = (TextView) selectedItemsList.get(j).getChildAt(0);//focusedRaw.getChildAt(0);
+                                    TextView itemNa = (TextView) selectedItemsList.get(j).getChildAt(1);//focusedRaw.getChildAt(1);
+                                    TextView scrNo = (TextView) selectedItemsList.get(j).getChildAt(2);//focusedRaw.getChildAt(2);
+                                    TextView scrNa = (TextView) selectedItemsList.get(j).getChildAt(3);//focusedRaw.getChildAt(3);
 
-                                if (scrNa.getText().toString().equals("no screen")) {
-                                    scrNo.setText(checkBox.getTag().toString());
-                                    scrNa.setText(checkBox.getText().toString());
-                                } else {
-                                    scrNo.setText(scrNo.getText().toString() + " , " + checkBox.getTag().toString());
-                                    scrNa.setText(scrNa.getText().toString() + "\n" + checkBox.getText().toString());
+                                    if (scrNa.getText().toString().equals("no screen")) {
+                                        scrNo.setText(radioButton.getTag().toString());
+                                        scrNa.setText(radioButton.getText().toString());
+                                    } else {
+                                        scrNo.setText(scrNo.getText().toString() + " , " + radioButton.getTag().toString());
+                                        scrNa.setText(scrNa.getText().toString() + "\n" + radioButton.getText().toString());
+                                    }
+                                    itemWithScreensList.add(new ItemWithScreen(Integer.parseInt(itemBa.getText().toString()),
+                                            itemNa.getText().toString(), Integer.parseInt(radioButton.getTag().toString()),
+                                            radioButton.getText().toString()));
                                 }
-                                itemWithScreensList.add(new ItemWithScreen(Integer.parseInt(itemBa.getText().toString()),
-                                        itemNa.getText().toString(), Integer.parseInt(checkBox.getTag().toString()),
-                                        checkBox.getText().toString()));
+                                break;
                             }
                         }
                     } else
@@ -3200,7 +3294,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         final Button save = (Button) dialog.findViewById(R.id.save);
         final Button exit = (Button) dialog.findViewById(R.id.exit);
 
-
+        itemWithModifiersList.clear();
         final List<Items> items = mDHandler.getAllItems();
         final ArrayList<String> itemName = new ArrayList<>();
         itemName.add("");
@@ -3278,6 +3372,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                     }
                 }
 
+
                 // save cloud *********
 
                 for (int i = 0; i < itemsTableLayout.getChildCount(); i++) {
@@ -3342,7 +3437,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         final Button add = (Button) dialog.findViewById(R.id.add_question);
         final Button save = (Button) dialog.findViewById(R.id.save);
         final Button exit = (Button) dialog.findViewById(R.id.exit);
-
+        itemWithFqsList.clear();
 
         final List<Items> items = mDHandler.getAllItems();
         final ArrayList<String> itemName = new ArrayList<>();
@@ -3593,7 +3688,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                                         sales += headerData.get(i).getAmountDue();
                                         allDiscountSales += headerData.get(i).getAllDiscount();
                                         totalServiceSales += headerData.get(i).getTotalService();
-                                    } else if (headerData.get(i).getOrderKind() == 998) {
+                                    } else if (headerData.get(i).getOrderKind() == 1) {
                                         returns += headerData.get(i).getAmountDue();
                                         allDiscountReturn += headerData.get(i).getAllDiscount();
                                         totalServiceReturn += headerData.get(i).getTotalService();
@@ -4091,6 +4186,1076 @@ public class BackOfficeActivity extends AppCompatActivity {
         dialog.show();
 
     }
+
+    void showDashBoardDialog() {
+        dialog = new Dialog(BackOfficeActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.dashboard_layout);
+        dialog.setCanceledOnTouchOutside(true);
+
+        chart2 = dialog.findViewById(R.id.chart2);
+        chart1 = dialog.findViewById(R.id.chart1);
+//        chart3 = dialog.findViewById(R.id.chart3);
+        chart4 = dialog.findViewById(R.id.chart4);
+        chart5 = dialog.findViewById(R.id.chart5);
+        chart6 = dialog.findViewById(R.id.chart6);
+        chart7 = dialog.findViewById(R.id.chart7);
+        chart8 = dialog.findViewById(R.id.chart8);
+        chart9 = dialog.findViewById(R.id.chart9);
+
+        List<Float>val=new ArrayList<>();
+        List<Float>val1=new ArrayList<>();
+
+
+        List<OrderHeader> orderHeaders = mDHandler.getAllOrderHeader();
+        val = getFilteredArrayByHour2(orderHeaders, today, today, getResources().getString(R.string.all),-1, -1);
+        chartLineOneDay(orderHeaders);
+        pipTkKind(orderHeaders);
+        chartLineOneWeak(orderHeaders);
+//        LineChartDataSet();
+        pipChart(orderHeaders);
+        pipChart6(orderHeaders);
+        ArrayList<BarEntry> values1 = new ArrayList<>();
+
+
+        for (int i = 0; i <24; i++) {
+
+            values1.add(new BarEntry(i+1, val.get(i)));
+        }
+
+
+
+        chart2.getDescription().setEnabled(false);
+
+        // if more than 60 entries are displayed in the chart, no values will be
+        // drawn
+        chart2.setMaxVisibleValueCount(60);
+
+        // scaling can now only be done on x- and y-axis separately
+        chart2.setPinchZoom(false);
+
+        chart2.setDrawBarShadow(false);
+        chart2.setDrawGridBackground(false);
+
+        XAxis xAxis = chart2.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setDrawGridLines(false);
+
+        chart2.getAxisLeft().setDrawGridLines(false);
+
+        // setting data
+
+
+        // add a nice and smooth animation
+        chart2.animateY(1500);
+
+        chart2.getLegend().setEnabled(false);
+
+
+        BarDataSet set4;
+
+
+        set4 = new BarDataSet(values1, "Data Set");
+        set4.setColors(ColorTemplate.VORDIPLOM_COLORS);
+        set4.setDrawValues(false);
+
+        ArrayList<IBarDataSet> dataSets = new ArrayList<>();
+        dataSets.add(set4);
+
+        BarData data3 = new BarData(dataSets);
+        chart2.setData(data3);
+        chart2.setFitBars(true);
+
+        chart2.invalidate();
+
+
+        //________________________________________________________________________
+
+
+//        chart3.setViewPortOffsets(0, 0, 0, 0);
+//        chart3.setBackgroundColor(Color.rgb(104, 241, 175));
+//
+//        // no description text
+//        chart3.getDescription().setEnabled(false);
+//
+////        tfLight = Typeface.createFromAsset(getAssets(), "OpenSans-Light.ttf");
+//
+//        // enable touch gestures
+//        chart3.setTouchEnabled(true);
+//
+//        // enable scaling and dragging
+//        chart3.setDragEnabled(true);
+//        chart3.setScaleEnabled(true);
+//
+//        // if disabled, scaling can be done on x- and y-axis separately
+//        chart3.setPinchZoom(false);
+//
+//        chart3.setDrawGridBackground(false);
+//        chart3.setMaxHighlightDistance(300);
+//
+//        XAxis x = chart3.getXAxis();
+//        x.setEnabled(false);
+//
+//        YAxis y = chart3.getAxisLeft();
+////        y.setTypeface(tfLight);
+//        y.setLabelCount(6, false);
+//        y.setTextColor(Color.WHITE);
+//        y.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
+//        y.setDrawGridLines(false);
+//        y.setAxisLineColor(Color.WHITE);
+//
+//        chart3.getAxisRight().setEnabled(false);
+//
+//        // add data
+//
+//        ArrayList<Entry> values = new ArrayList<>();
+////
+//        for (int i = 0; i < val1.size(); i++) {
+//
+//            values.add(new Entry(i, val1.get(i)));
+//        }
+//        LineDataSet set1 = new LineDataSet(values, "DataSet 1");
+//
+//        set1.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+//        set1.setCubicIntensity(0.2f);
+//        set1.setDrawFilled(true);
+//        set1.setDrawCircles(false);
+//        set1.setLineWidth(1.8f);
+//        set1.setCircleRadius(4f);
+//        set1.setCircleColor(Color.WHITE);
+//        set1.setHighLightColor(Color.rgb(244, 117, 117));
+//        set1.setColor(Color.WHITE);
+//        set1.setFillColor(Color.WHITE);
+//        set1.setFillAlpha(100);
+//        set1.setDrawHorizontalHighlightIndicator(false);
+//        set1.setFillFormatter(new IFillFormatter() {
+//            @Override
+//            public float getFillLinePosition(ILineDataSet dataSet, LineDataProvider dataProvider) {
+//                return chart3.getAxisLeft().getAxisMinimum();
+//            }
+//        });
+//
+//        // create a data object with the data sets
+//        LineData data = new LineData(set1);
+//
+//        data.setValueTextSize(9f);
+//        data.setDrawValues(false);
+//
+//        // set data
+//        chart3.setData(data);
+//        chart3.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.e("makemake chart ","chart ");
+//            }
+//        });
+//
+//        // lower max, as cubic runs significantly slower than linear
+//
+//        chart3.getLegend().setEnabled(false);
+//
+//        chart3.animateXY(2000, 2000);
+//
+//        // don't forget to refresh the drawing
+//        chart3.invalidate();
+
+
+        //________________________________________________________________________
+
+        chart4.setUsePercentValues(true);
+        chart4.getDescription().setEnabled(false);
+        chart4.setExtraOffsets(5, 10, 5, 5);
+
+        chart4.setDragDecelerationFrictionCoef(0.95f);
+
+
+        chart4.setDrawHoleEnabled(true);
+        chart4.setHoleColor(Color.WHITE);
+
+        chart4.setTransparentCircleColor(Color.WHITE);
+        chart4.setTransparentCircleAlpha(110);
+
+        chart4.setHoleRadius(58f);
+        chart4.setTransparentCircleRadius(61f);
+
+        chart4.setDrawCenterText(true);
+
+        chart4.setRotationAngle(0);
+        // enable rotation of the chart by touch
+        chart4.setRotationEnabled(true);
+        chart4.setHighlightPerTapEnabled(true);
+
+        // chart.setUnit(" €");
+        // chart.setDrawUnitsInChart(true);
+
+        // add a selection listener
+//        chart4.setOnChartValueSelectedListener(BackOfficeActivity.this);
+
+
+        chart4.animateY(1400, Easing.EasingOption.EaseInQuad);
+
+        Legend l = chart4.getLegend();
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+        l.setOrientation(Legend.LegendOrientation.VERTICAL);
+        l.setDrawInside(false);
+        l.setXEntrySpace(7f);
+        l.setYEntrySpace(0f);
+        l.setYOffset(0f);
+
+        // entry label styling
+        chart4.setEntryLabelColor(Color.WHITE);
+//        chart4.setEntryLabelTypeface(tfRegular);
+        chart4.setEntryLabelTextSize(12f);
+
+     setDatapip(7,100,orderHeaders);
+
+
+        //________________________________________________________________________
+
+
+
+
+        dialog.show();
+    }
+
+
+    void pipTkKind(List<OrderHeader> orderHeaders){
+
+
+        chart9.setUsePercentValues(true);
+        chart9.getDescription().setEnabled(false);
+        chart9.setExtraOffsets(5, 10, 5, 5);
+
+        chart9.setDragDecelerationFrictionCoef(0.95f);
+
+
+        chart9.setDrawHoleEnabled(true);
+        chart9.setHoleColor(Color.WHITE);
+
+        chart9.setTransparentCircleColor(Color.WHITE);
+        chart9.setTransparentCircleAlpha(110);
+
+        chart9.setHoleRadius(58f);
+        chart9.setTransparentCircleRadius(61f);
+
+        chart9.setDrawCenterText(true);
+
+        chart9.setRotationAngle(0);
+        // enable rotation of the chart by touch
+        chart9.setRotationEnabled(true);
+        chart9.setHighlightPerTapEnabled(true);
+
+        // chart.setUnit(" €");
+        // chart.setDrawUnitsInChart(true);
+
+        // add a selection listener
+//        chart4.setOnChartValueSelectedListener(BackOfficeActivity.this);
+
+
+        chart9.animateY(1400, Easing.EasingOption.EaseInQuad);
+
+        Legend l = chart9.getLegend();
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+        l.setOrientation(Legend.LegendOrientation.VERTICAL);
+        l.setDrawInside(false);
+        l.setXEntrySpace(7f);
+        l.setYEntrySpace(0f);
+        l.setYOffset(0f);
+
+        // entry label styling
+        chart9.setEntryLabelColor(Color.WHITE);
+//        chart4.setEntryLabelTypeface(tfRegular);
+        chart9.setEntryLabelTextSize(12f);
+
+        setDatapipTk(7,100,orderHeaders);
+
+
+    }
+
+    void pipChart6(List<OrderHeader> orderHeaders){
+
+        chart6.setUsePercentValues(true);
+        chart6.getDescription().setEnabled(false);
+        chart6.setExtraOffsets(5, 10, 5, 5);
+
+        chart6.setDragDecelerationFrictionCoef(0.95f);
+
+
+        chart6.setDrawHoleEnabled(true);
+        chart6.setHoleColor(Color.WHITE);
+
+        chart6.setTransparentCircleColor(Color.WHITE);
+        chart6.setTransparentCircleAlpha(110);
+
+        chart6.setHoleRadius(58f);
+        chart6.setTransparentCircleRadius(61f);
+
+        chart6.setDrawCenterText(true);
+
+        chart6.setRotationAngle(0);
+        // enable rotation of the chart by touch
+        chart6.setRotationEnabled(true);
+        chart6.setHighlightPerTapEnabled(true);
+
+        // chart.setUnit(" €");
+        // chart.setDrawUnitsInChart(true);
+
+        // add a selection listener
+//        chart4.setOnChartValueSelectedListener(BackOfficeActivity.this);
+
+
+        chart6.animateY(1400, Easing.EasingOption.EaseInQuad);
+
+        Legend l = chart6.getLegend();
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+        l.setOrientation(Legend.LegendOrientation.VERTICAL);
+        l.setDrawInside(false);
+        l.setXEntrySpace(7f);
+        l.setYEntrySpace(0f);
+        l.setYOffset(0f);
+
+        // entry label styling
+        chart6.setEntryLabelColor(Color.WHITE);
+//        chart4.setEntryLabelTypeface(tfRegular);
+        chart6.setEntryLabelTextSize(12f);
+
+        setDatapip6(2,100,orderHeaders);
+
+
+    }
+
+
+    void pipChart(List<OrderHeader> orderHeaders){
+
+        chart5.setUsePercentValues(true);
+        chart5.getDescription().setEnabled(false);
+        chart5.setExtraOffsets(5, 10, 5, 5);
+
+        chart5.setDragDecelerationFrictionCoef(0.95f);
+
+
+        chart5.setDrawHoleEnabled(true);
+        chart5.setHoleColor(Color.WHITE);
+
+        chart5.setTransparentCircleColor(Color.WHITE);
+        chart5.setTransparentCircleAlpha(110);
+
+        chart5.setHoleRadius(58f);
+        chart5.setTransparentCircleRadius(61f);
+
+        chart5.setDrawCenterText(true);
+
+        chart5.setRotationAngle(0);
+        // enable rotation of the chart by touch
+        chart5.setRotationEnabled(true);
+        chart5.setHighlightPerTapEnabled(true);
+
+        // chart.setUnit(" €");
+        // chart.setDrawUnitsInChart(true);
+
+        // add a selection listener
+//        chart4.setOnChartValueSelectedListener(BackOfficeActivity.this);
+
+
+        chart5.animateY(1400, Easing.EasingOption.EaseInQuad);
+
+        Legend l = chart5.getLegend();
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+        l.setOrientation(Legend.LegendOrientation.VERTICAL);
+        l.setDrawInside(false);
+        l.setXEntrySpace(7f);
+        l.setYEntrySpace(0f);
+        l.setYOffset(0f);
+
+        // entry label styling
+        chart5.setEntryLabelColor(Color.WHITE);
+//        chart4.setEntryLabelTypeface(tfRegular);
+        chart5.setEntryLabelTextSize(12f);
+
+        setDatapip5(2,100,orderHeaders);
+
+
+    }
+
+
+    void chartLineOneDay(List<OrderHeader> orderHeaders){
+
+        List<Float>val=new ArrayList<>();
+
+        val = getFilteredArraybyDay(orderHeaders, today,3, getResources().getString(R.string.all),-1, -1);
+
+
+        ArrayList<BarEntry> values1 = new ArrayList<>();
+
+
+        for (int i = 0; i <3; i++) {
+
+            values1.add(new BarEntry(i+1, val.get(2-i)));
+        }
+
+
+
+        chart1.getDescription().setEnabled(false);
+
+        // if more than 60 entries are displayed in the chart, no values will be
+        // drawn
+        chart1.setMaxVisibleValueCount(60);
+
+        // scaling can now only be done on x- and y-axis separately
+        chart1.setPinchZoom(false);
+
+        chart1.setDrawBarShadow(false);
+        chart1.setDrawGridBackground(false);
+
+        XAxis xAxis = chart1.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setDrawGridLines(false);
+
+        chart1.getAxisLeft().setDrawGridLines(false);
+
+        // setting data
+
+
+        // add a nice and smooth animation
+        chart1.animateY(1500);
+
+        chart1.getLegend().setEnabled(false);
+
+
+        BarDataSet set4;
+
+
+        set4 = new BarDataSet(values1, "Data Set");
+        set4.setColors(ColorTemplate.VORDIPLOM_COLORS);
+        set4.setDrawValues(false);
+
+        ArrayList<IBarDataSet> dataSets = new ArrayList<>();
+        dataSets.add(set4);
+
+        BarData data3 = new BarData(dataSets);
+        chart1.setData(data3);
+        chart1.setFitBars(true);
+
+        chart1.invalidate();
+
+    }
+    void chartLineOneWeak(List<OrderHeader> orderHeaders){
+
+        List<Float>val=new ArrayList<>();
+
+        val = getFilteredArraybyDay(orderHeaders, today,7, getResources().getString(R.string.all),-1, -1);
+
+
+        ArrayList<BarEntry> values1 = new ArrayList<>();
+
+
+        for (int i = 0; i <7; i++) {
+
+            values1.add(new BarEntry(i+1, val.get(6-i)));
+        }
+
+
+
+        chart8.getDescription().setEnabled(false);
+
+        // if more than 60 entries are displayed in the chart, no values will be
+        // drawn
+        chart8.setMaxVisibleValueCount(60);
+
+        // scaling can now only be done on x- and y-axis separately
+        chart8.setPinchZoom(false);
+
+        chart8.setDrawBarShadow(false);
+        chart8.setDrawGridBackground(false);
+
+        XAxis xAxis = chart8.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setDrawGridLines(false);
+
+        chart8.getAxisLeft().setDrawGridLines(false);
+
+        // setting data
+
+
+        // add a nice and smooth animation
+        chart8.animateY(1500);
+
+        chart8.getLegend().setEnabled(false);
+
+
+        BarDataSet set4;
+
+
+        set4 = new BarDataSet(values1, "Data Set");
+        set4.setColors(ColorTemplate.VORDIPLOM_COLORS);
+        set4.setDrawValues(false);
+
+        ArrayList<IBarDataSet> dataSets = new ArrayList<>();
+        dataSets.add(set4);
+
+        BarData data3 = new BarData(dataSets);
+        chart8.setData(data3);
+        chart8.setFitBars(true);
+
+        chart8.invalidate();
+
+    }
+    void LineChartDataSet(){
+
+
+//        chart3.setOnChartValueSelectedListener(this);
+
+        // no description text
+        chart3.getDescription().setEnabled(false);
+
+        // enable touch gestures
+        chart3.setTouchEnabled(true);
+
+        chart3.setDragDecelerationFrictionCoef(0.9f);
+
+        // enable scaling and dragging
+        chart3.setDragEnabled(true);
+        chart3.setScaleEnabled(true);
+        chart3.setDrawGridBackground(false);
+        chart3.setHighlightPerDragEnabled(true);
+
+        // if disabled, scaling can be done on x- and y-axis separately
+        chart3.setPinchZoom(true);
+
+        // set an alternative background color
+        chart3.setBackgroundColor(Color.LTGRAY);
+
+        // add data
+
+
+        chart3.animateX(1500);
+
+        // get the legend (only possible after setting data)
+        Legend l = chart3.getLegend();
+
+        // modify the legend ...
+        l.setForm(Legend.LegendForm.LINE);
+//        l.setTypeface(tfLight);
+        l.setTextSize(11f);
+        l.setTextColor(Color.WHITE);
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        l.setDrawInside(false);
+//        l.setYOffset(11f);
+
+        XAxis xAxis = chart3.getXAxis();
+
+        xAxis.setTextSize(11f);
+        xAxis.setTextColor(Color.WHITE);
+        xAxis.setDrawGridLines(false);
+        xAxis.setDrawAxisLine(false);
+
+        YAxis leftAxis = chart3.getAxisLeft();
+//        leftAxis.setTypeface(tfLight);
+        leftAxis.setTextColor(ColorTemplate.getHoloBlue());
+        leftAxis.setAxisMaximum(200f);
+        leftAxis.setAxisMinimum(0f);
+        leftAxis.setDrawGridLines(true);
+        leftAxis.setGranularityEnabled(true);
+
+        YAxis rightAxis = chart3.getAxisRight();
+//        rightAxis.setTypeface(tfLight);
+        rightAxis.setTextColor(Color.RED);
+        rightAxis.setAxisMaximum(900);
+        rightAxis.setAxisMinimum(-200);
+        rightAxis.setDrawGridLines(false);
+        rightAxis.setDrawZeroLine(false);
+        rightAxis.setGranularityEnabled(false);
+
+        setDataLineChart(3,100);
+        chart3.invalidate();
+
+    }
+
+    private void setDataLineChart(int count, float range) {
+
+        ArrayList<Entry> values1 = new ArrayList<>();
+
+        for (int i = 0; i < count; i++) {
+            float val = (float) (Math.random() * (range / 2f)) + 50;
+            values1.add(new Entry(i, val));
+        }
+
+        ArrayList<Entry> values2 = new ArrayList<>();
+
+        for (int i = 0; i < count; i++) {
+            float val = (float) (Math.random() * range) + 450;
+            values2.add(new Entry(i, val));
+        }
+
+
+
+        LineDataSet set1, set2;
+
+        if (chart3.getData() != null &&
+                chart3.getData().getDataSetCount() > 0) {
+            set1 = (LineDataSet) chart3.getData().getDataSetByIndex(0);
+            set2 = (LineDataSet) chart3.getData().getDataSetByIndex(1);
+
+            set1.setValues(values1);
+            set2.setValues(values2);
+
+            chart3.getData().notifyDataChanged();
+            chart3.notifyDataSetChanged();
+        } else {
+            // create a dataset and give it a type
+            set1 = new LineDataSet(values1, "DataSet 1");
+
+            set1.setAxisDependency(YAxis.AxisDependency.LEFT);
+            set1.setColor(ColorTemplate.getHoloBlue());
+            set1.setCircleColor(Color.WHITE);
+            set1.setLineWidth(2f);
+            set1.setCircleRadius(3f);
+            set1.setFillAlpha(65);
+            set1.setFillColor(ColorTemplate.getHoloBlue());
+            set1.setHighLightColor(Color.rgb(244, 117, 117));
+            set1.setDrawCircleHole(false);
+            //set1.setFillFormatter(new MyFillFormatter(0f));
+            //set1.setDrawHorizontalHighlightIndicator(false);
+            //set1.setVisible(false);
+            //set1.setCircleHoleColor(Color.WHITE);
+
+            // create a dataset and give it a type
+            set2 = new LineDataSet(values2, "DataSet 2");
+            set2.setAxisDependency(YAxis.AxisDependency.RIGHT);
+            set2.setColor(Color.RED);
+            set2.setCircleColor(Color.WHITE);
+            set2.setLineWidth(2f);
+            set2.setCircleRadius(3f);
+            set2.setFillAlpha(65);
+            set2.setFillColor(Color.RED);
+            set2.setDrawCircleHole(false);
+            set2.setHighLightColor(Color.rgb(244, 117, 117));
+            //set2.setFillFormatter(new MyFillFormatter(900f));
+
+
+
+            // create a data object with the data sets
+            LineData data = new LineData(set1, set2);
+            data.setValueTextColor(Color.WHITE);
+            data.setValueTextSize(9f);
+
+            // set data
+            chart3.setData(data);
+        }
+    }
+
+    private void setDatapip5(int count, float range,List<OrderHeader>headerData) {
+
+        final String[] parties = new String[] {
+                getResources().getString(R.string.sales),
+                getResources().getString(R.string.refund)
+        };
+
+
+//        headerData = mDHandler.getAllOrderHeader();
+//        payData = mDHandler.getAllExistingPay();
+
+
+        float sales=0,allDiscountSales=0,totalServiceSales=0,cashValue=0,pointValue=0,giftValue=0,
+                creditValue=0,chequeValue=0,visaValue=0,masterValue=0,returns=0;
+        List<Float> valueCredit=new ArrayList<>();
+
+        for (int i = 0; i < headerData.size(); i++) {
+            if (filters(today, today, headerData.get(i).getVoucherDate())) {
+                            if (headerData.get(i).getOrderKind() == 0) {
+                                sales += headerData.get(i).getAmountDue();
+//                                allDiscountSales += headerData.get(i).getAllDiscount();
+//                                totalServiceSales += headerData.get(i).getTotalService();
+                            } else if (headerData.get(i).getOrderKind() == 1) {
+                                returns += headerData.get(i).getAmountDue();
+//                                allDiscountReturn += headerData.get(i).getAllDiscount();
+//                                totalServiceReturn += headerData.get(i).getTotalService();
+                            }
+
+//                cashValue += headerData.get(i).getCashValue();
+//                pointValue += headerData.get(i).getPointValue();
+//                giftValue += headerData.get(i).getGiftValue();
+//                creditValue += headerData.get(i).getCouponValue();  /////???? replace coupon to credit """"
+//                chequeValue += headerData.get(i).getChequeValue();
+
+
+
+
+            }//else 1
+        }
+
+
+
+        valueCredit.add(sales);
+        valueCredit.add(returns);
+
+
+        ArrayList<PieEntry> entries = new ArrayList<>();
+
+        // NOTE: The order of the entries when being added to the entries array determines their position around the center of
+        // the chart.
+        for (int i1 = 0; i1 < valueCredit.size() ; i1++) {
+
+            entries.add(new PieEntry(valueCredit.get(i1),
+                    parties[i1],
+                    getResources().getDrawable(R.drawable.arrowup)));
+        }
+
+        PieDataSet dataSet = new PieDataSet(entries, "Salse and Return");
+
+        dataSet.setDrawIcons(false);
+
+        dataSet.setSliceSpace(3f);
+        dataSet.setIconsOffset(new MPPointF(0, 40));
+        dataSet.setSelectionShift(5f);
+
+        // add a lot of colors
+
+        ArrayList<Integer> colors = new ArrayList<>();
+
+        for (int c : ColorTemplate.VORDIPLOM_COLORS)
+            colors.add(c);
+
+        for (int c : ColorTemplate.JOYFUL_COLORS)
+            colors.add(c);
+
+        for (int c : ColorTemplate.COLORFUL_COLORS)
+            colors.add(c);
+
+        for (int c : ColorTemplate.LIBERTY_COLORS)
+            colors.add(c);
+
+        for (int c : ColorTemplate.PASTEL_COLORS)
+            colors.add(c);
+
+        colors.add(ColorTemplate.getHoloBlue());
+
+        dataSet.setColors(colors);
+        //dataSet.setSelectionShift(0f);
+
+        PieData data = new PieData(dataSet);
+//        data.setValueFormatter(new PercentFormatter(chart4));
+        data.setValueTextSize(11f);
+        data.setValueTextColor(Color.WHITE);
+
+        chart5.setData(data);
+
+        // undo all highlights
+        chart5.highlightValues(null);
+
+        chart5.invalidate();
+    }
+    private void setDatapip6(int count, float range,List<OrderHeader>headerData) {
+
+        final String[] parties = new String[] {
+                getResources().getString(R.string.discount),
+                getResources().getString(R.string.returns_discount)
+        };
+
+
+//        headerData = mDHandler.getAllOrderHeader();
+//        payData = mDHandler.getAllExistingPay();
+
+
+        float sales=0,allDiscountSales=0,allDiscountReturn=0,totalServiceSales=0,cashValue=0,pointValue=0,giftValue=0,
+                creditValue=0,chequeValue=0,visaValue=0,masterValue=0,returns=0;
+        List<Float> valueCredit=new ArrayList<>();
+
+        for (int i = 0; i < headerData.size(); i++) {
+            if (filters(today, today, headerData.get(i).getVoucherDate())) {
+                if (headerData.get(i).getOrderKind() == 0) {
+//                    sales += headerData.get(i).getAmountDue();
+                                allDiscountSales += headerData.get(i).getAllDiscount();
+//                                totalServiceSales += headerData.get(i).getTotalService();
+                } else if (headerData.get(i).getOrderKind() == 1) {
+//                    returns += headerData.get(i).getAmountDue();
+                                allDiscountReturn += headerData.get(i).getAllDiscount();
+//                                totalServiceReturn += headerData.get(i).getTotalService();
+                }
+
+//                cashValue += headerData.get(i).getCashValue();
+//                pointValue += headerData.get(i).getPointValue();
+//                giftValue += headerData.get(i).getGiftValue();
+//                creditValue += headerData.get(i).getCouponValue();  /////???? replace coupon to credit """"
+//                chequeValue += headerData.get(i).getChequeValue();
+
+
+
+
+            }//else 1
+        }
+
+
+
+        valueCredit.add(allDiscountSales);
+        valueCredit.add(allDiscountReturn);
+
+
+        ArrayList<PieEntry> entries = new ArrayList<>();
+
+        // NOTE: The order of the entries when being added to the entries array determines their position around the center of
+        // the chart.
+        for (int i1 = 0; i1 < valueCredit.size() ; i1++) {
+
+            entries.add(new PieEntry(valueCredit.get(i1),
+                    parties[i1],
+                    getResources().getDrawable(R.drawable.arrowup)));
+        }
+
+        PieDataSet dataSet = new PieDataSet(entries, "Discount and DiscountReturn");
+
+        dataSet.setDrawIcons(false);
+
+        dataSet.setSliceSpace(3f);
+        dataSet.setIconsOffset(new MPPointF(0, 40));
+        dataSet.setSelectionShift(5f);
+
+        // add a lot of colors
+
+        ArrayList<Integer> colors = new ArrayList<>();
+
+        for (int c : ColorTemplate.VORDIPLOM_COLORS)
+            colors.add(c);
+
+        for (int c : ColorTemplate.JOYFUL_COLORS)
+            colors.add(c);
+
+        for (int c : ColorTemplate.COLORFUL_COLORS)
+            colors.add(c);
+
+        for (int c : ColorTemplate.LIBERTY_COLORS)
+            colors.add(c);
+
+        for (int c : ColorTemplate.PASTEL_COLORS)
+            colors.add(c);
+
+        colors.add(ColorTemplate.getHoloBlue());
+
+        dataSet.setColors(colors);
+        //dataSet.setSelectionShift(0f);
+
+        PieData data = new PieData(dataSet);
+//        data.setValueFormatter(new PercentFormatter(chart4));
+        data.setValueTextSize(11f);
+        data.setValueTextColor(Color.WHITE);
+
+        chart6.setData(data);
+
+        // undo all highlights
+        chart6.highlightValues(null);
+
+        chart6.invalidate();
+    }
+
+    private void setDatapipTk(int count, float range,List<OrderHeader>headerData) {
+
+
+
+        List<TakeAway>takeAways=new ArrayList<>();
+        takeAways= mDHandler.getAllTAKind();
+        final String[] parties = new String[takeAways.size()];
+
+        float total=0;
+        List<Float> valueCredit=new ArrayList<>();
+for(int k = 0; k < takeAways.size(); k++){
+        for (int i = 0; i < headerData.size(); i++) {
+            if(headerData.get(i).getOrderHeaderKind().equals(takeAways.get(k).getTANmae())){
+
+                total+=headerData.get(i).getAmountDue();
+
+            }
+        }
+    valueCredit.add(total);
+        parties[k]=takeAways.get(k).getTANmae();
+    total=0;
+}
+
+        ArrayList<PieEntry> entries = new ArrayList<>();
+
+        // NOTE: The order of the entries when being added to the entries array determines their position around the center of
+        // the chart.
+        for (int i = 0; i < valueCredit.size() ; i++) {
+
+            entries.add(new PieEntry(valueCredit.get(i),
+                    parties[i],
+                    getResources().getDrawable(R.drawable.arrowup)));
+        }
+
+        PieDataSet dataSet = new PieDataSet(entries, "sales for payMethod");
+
+        dataSet.setDrawIcons(false);
+
+        dataSet.setSliceSpace(3f);
+        dataSet.setIconsOffset(new MPPointF(0, 40));
+        dataSet.setSelectionShift(5f);
+
+        // add a lot of colors
+
+        ArrayList<Integer> colors = new ArrayList<>();
+
+        for (int c : ColorTemplate.VORDIPLOM_COLORS)
+            colors.add(c);
+
+        for (int c : ColorTemplate.JOYFUL_COLORS)
+            colors.add(c);
+
+        for (int c : ColorTemplate.COLORFUL_COLORS)
+            colors.add(c);
+
+        for (int c : ColorTemplate.LIBERTY_COLORS)
+            colors.add(c);
+
+        for (int c : ColorTemplate.PASTEL_COLORS)
+            colors.add(c);
+
+        colors.add(ColorTemplate.getHoloBlue());
+
+        dataSet.setColors(colors);
+        //dataSet.setSelectionShift(0f);
+
+        PieData data = new PieData(dataSet);
+//        data.setValueFormatter(new PercentFormatter(chart4));
+        data.setValueTextSize(11f);
+        data.setValueTextColor(Color.WHITE);
+
+        chart9.setData(data);
+
+        // undo all highlights
+        chart9.highlightValues(null);
+
+        chart9.invalidate();
+    }
+
+
+
+    private void setDatapip(int count, float range,List<OrderHeader>headerData) {
+
+        final String[] parties = new String[] {
+                getResources().getString(R.string.visa),  getResources().getString(R.string.master),
+                getResources().getString(R.string.credit), getResources().getString(R.string.gift_card),
+                getResources().getString(R.string.point),  getResources().getString(R.string.cheque),getResources().getString(R.string.cash)
+        };
+
+
+//        headerData = mDHandler.getAllOrderHeader();
+        payData = mDHandler.getAllExistingPay();
+
+
+float sales=0,allDiscountSales=0,totalServiceSales=0,cashValue=0,pointValue=0,giftValue=0,
+        creditValue=0,chequeValue=0,visaValue=0,masterValue=0;
+List<Float> valueCredit=new ArrayList<>();
+
+        for (int i = 0; i < headerData.size(); i++) {
+            if (filters(today, today, headerData.get(i).getVoucherDate())) {
+//                            if (headerData.get(i).getOrderKind() == 0) {
+//                                sales += headerData.get(i).getAmountDue();
+//                                allDiscountSales += headerData.get(i).getAllDiscount();
+//                                totalServiceSales += headerData.get(i).getTotalService();
+//                            } else if (headerData.get(i).getOrderKind() == 1) {
+//                                returns += headerData.get(i).getAmountDue();
+//                                allDiscountReturn += headerData.get(i).getAllDiscount();
+//                                totalServiceReturn += headerData.get(i).getTotalService();
+//                            }
+
+                            cashValue += headerData.get(i).getCashValue();
+                            pointValue += headerData.get(i).getPointValue();
+                            giftValue += headerData.get(i).getGiftValue();
+                            creditValue += headerData.get(i).getCouponValue();  /////???? replace coupon to credit """"
+                            chequeValue += headerData.get(i).getChequeValue();
+
+
+
+
+            }//else 1
+        }
+
+        for (int i = 0; i < payData.size(); i++) {
+            if (filters(today, today, payData.get(i).getVoucherDate())) {
+
+
+                            if (payData.get(i).getPayType().contains("v") || payData.get(i).getPayType().contains("V"))
+                                visaValue += payData.get(i).getPayValue();
+                            else if (payData.get(i).getPayType().contains("m") || payData.get(i).getPayType().contains("M"))
+                                masterValue += payData.get(i).getPayValue();
+
+
+
+                }
+
+        }
+
+        valueCredit.add(visaValue);
+        valueCredit.add(masterValue);
+        valueCredit.add(creditValue);
+        valueCredit.add(giftValue);
+        valueCredit.add(pointValue);
+        valueCredit.add(chequeValue);
+        valueCredit.add(cashValue);
+
+
+        ArrayList<PieEntry> entries = new ArrayList<>();
+
+        // NOTE: The order of the entries when being added to the entries array determines their position around the center of
+        // the chart.
+        for (int i = 0; i < valueCredit.size() ; i++) {
+
+            entries.add(new PieEntry(valueCredit.get(i),
+                    parties[i],
+                    getResources().getDrawable(R.drawable.arrowup)));
+        }
+
+        PieDataSet dataSet = new PieDataSet(entries, "sales for payMethod");
+
+        dataSet.setDrawIcons(false);
+
+        dataSet.setSliceSpace(3f);
+        dataSet.setIconsOffset(new MPPointF(0, 40));
+        dataSet.setSelectionShift(5f);
+
+        // add a lot of colors
+
+        ArrayList<Integer> colors = new ArrayList<>();
+
+        for (int c : ColorTemplate.VORDIPLOM_COLORS)
+            colors.add(c);
+
+        for (int c : ColorTemplate.JOYFUL_COLORS)
+            colors.add(c);
+
+        for (int c : ColorTemplate.COLORFUL_COLORS)
+            colors.add(c);
+
+        for (int c : ColorTemplate.LIBERTY_COLORS)
+            colors.add(c);
+
+        for (int c : ColorTemplate.PASTEL_COLORS)
+            colors.add(c);
+
+        colors.add(ColorTemplate.getHoloBlue());
+
+        dataSet.setColors(colors);
+        //dataSet.setSelectionShift(0f);
+
+        PieData data = new PieData(dataSet);
+//        data.setValueFormatter(new PercentFormatter(chart4));
+        data.setValueTextSize(11f);
+        data.setValueTextColor(Color.WHITE);
+
+        chart4.setData(data);
+
+        // undo all highlights
+        chart4.highlightValues(null);
+
+        chart4.invalidate();
+    }
+
 
     void showTablesActionReport() {
         dialog = new Dialog(BackOfficeActivity.this);
@@ -4889,6 +6054,71 @@ public class BackOfficeActivity extends AppCompatActivity {
                     }
                 }
             }
+        }
+        return filteredOrderHeaders;
+    }
+
+
+    public List<Float> getFilteredArrayByHour2(List<OrderHeader> orderHeaders, String fromDate, String toDate, String ShiftName,
+                                                    int CashierNo, int posNoString) {
+        float total = 0;
+        List<Float> filteredOrderHeaders = new ArrayList<>();
+        for(int h = 0; h < 24; h++){
+        for (int i = 0; i < orderHeaders.size(); i++) {
+            int orderHour = Integer.parseInt(orderHeaders.get(i).getTime().substring(0, 2));
+
+            if (filters(fromDate, toDate, orderHeaders.get(i).getVoucherDate())) {
+                if (orderHeaders.get(i).getShiftName().equals(ShiftName) || ShiftName.equals(getResources().getString(R.string.all))) {
+                    if (orderHeaders.get(i).getUserNo() == (CashierNo) || CashierNo == -1) {
+                        if (orderHeaders.get(i).getPointOfSaleNumber() == posNoString || posNoString == -1) {
+                            if (orderHour == h) {
+                                total += orderHeaders.get(i).getAmountDue();
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        filteredOrderHeaders.add(total);
+            total = 0;
+    }
+        return filteredOrderHeaders;
+    }
+
+
+    public List<Float> getFilteredArraybyDay(List<OrderHeader> orderHeaders, String fromDate, int dayCount, String ShiftName,
+                                               int CashierNo, int posNoString) {
+        float total = 0;
+        List<Float> filteredOrderHeaders = new ArrayList<>();
+        Log.e("toDate ***---> ","date = "+fromDate);
+        for(int h = 0; h < dayCount; h++){
+            for (int i = 0; i < orderHeaders.size(); i++) {
+
+               int  dateInDay=Integer.parseInt(fromDate.substring(0, 2));
+                Log.e("toDate dateInDay---> ","date = "+dateInDay);
+               int day=dateInDay-h;
+                Log.e("toDate day---> ","date = "+day+"     " +h);
+               String toDate=day+fromDate.substring(2,fromDate.length() );
+
+
+               Log.e("toDate ---> ","date = "+toDate);
+
+                if (filters(toDate, toDate, orderHeaders.get(i).getVoucherDate())) {
+                    if (orderHeaders.get(i).getShiftName().equals(ShiftName) || ShiftName.equals(getResources().getString(R.string.all))) {
+                        if (orderHeaders.get(i).getUserNo() == (CashierNo) || CashierNo == -1) {
+                            if (orderHeaders.get(i).getPointOfSaleNumber() == posNoString || posNoString == -1) {
+
+                                    total += orderHeaders.get(i).getAmountDue();
+
+
+                            }
+                        }
+                    }
+                }
+            }
+            filteredOrderHeaders.add(total);
+            total = 0;
         }
         return filteredOrderHeaders;
     }
@@ -6149,6 +7379,56 @@ public class BackOfficeActivity extends AppCompatActivity {
 
     }
 
+    void showAddTakeAwayKindDialog() {
+        dialog = new Dialog(BackOfficeActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.add_takaway_kind);
+        dialog.setCanceledOnTouchOutside(false);
+        Window window = dialog.getWindow();
+
+        Button save, exit;
+        EditText TAname;
+        TextView serial;
+
+        save = (Button) dialog.findViewById(R.id.save);
+        exit = (Button) dialog.findViewById(R.id.exit);
+        TAname = (EditText) dialog.findViewById(R.id.TakeKind);
+        serial = (TextView) dialog.findViewById(R.id.TakeSerial);
+
+        final int[] serials = {mDHandler.getAllTAKind().size() + 1};
+
+        serial.setText("" + serials[0]);
+
+        save.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onClick(View v) {
+
+                if (!TAname.getText().toString().equals("")) {
+                    mDHandler.addTakeAwayKind(new TakeAway(serials[0], TAname.getText().toString()));
+                    serials[0]++;
+                    serial.setText("" + serials[0]);
+                    TAname.setText("");
+                    Toast.makeText(BackOfficeActivity.this, "Save Successful", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
+        exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dialog.dismiss();
+            }
+        });
+
+
+        dialog.show();
+
+    }
+
     void showAddShiftDialog() {
         dialog = new Dialog(BackOfficeActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -6427,35 +7707,137 @@ public class BackOfficeActivity extends AppCompatActivity {
         dialog.setCanceledOnTouchOutside(true);
 
 
-        Button save, exit;
+        Button save, exit, edit;
         EditText kitchenNo, kitchenName, kitchenIP;
+        Spinner editScreenInformation;
+        ArrayAdapter<String> spinnerAdapter;
+        ArrayList<KitchenScreen> allScreensInfo = mDHandler.getAllKitchenScreen();
+        ArrayList<String> screensList = new ArrayList<>();
 
         save = (Button) dialog.findViewById(R.id.save);
         exit = (Button) dialog.findViewById(R.id.exit);
+        edit = (Button) dialog.findViewById(R.id.addKitchenScreen_edit_screen_info);
+        edit.setVisibility(View.GONE);
 
         kitchenNo = (EditText) dialog.findViewById(R.id.kitNo);
         kitchenName = (EditText) dialog.findViewById(R.id.kitName);
         kitchenIP = (EditText) dialog.findViewById(R.id.ip_);
+        editScreenInformation = dialog.findViewById(R.id.addKitchenScreen_editScreen_spinner);
+
+        screensList.add("Select screen");
+
+        if (allScreensInfo.size() != 0)
+            for (int i = 0; i < allScreensInfo.size(); i++)
+                screensList.add(allScreensInfo.get(i).getKitchenName());
+//        else
+//            screensList.add("Select screen");
+
+        spinnerAdapter = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, screensList);
+        editScreenInformation.setAdapter(spinnerAdapter);
+        editScreenInformation.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+//                save.setClickable(false);
+                kitchenNoOldValue = -1;
+//                edit.setVisibility(View.GONE);
+//                save.setVisibility(View.VISIBLE);
+                kitchenNo.setText("");
+                kitchenName.setText("");
+                kitchenIP.setText("");
+                String selectedItem = screensList.get(position);
+//                Log.e("info 1 ", "" + selectedItem);
+
+                if (!selectedItem.equals("Select screen")) {
+                    edit.setVisibility(View.VISIBLE);
+                    save.setVisibility(View.GONE);
+
+                    KitchenScreen kitchenScreen = mDHandler.getKitchenScreenInfo(selectedItem);
+                    Log.e("info ", kitchenScreen.getKitchenName());
+                    kitchenNoOldValue = kitchenScreen.getKitchenNo();
+                    kitchenNo.setText("" + kitchenScreen.getKitchenNo());
+                    kitchenName.setText("" + kitchenScreen.getKitchenName());
+                    kitchenIP.setText("" + kitchenScreen.getKitchenIP());
+
+                } else {
+//                    kitchenNoOldValue = -1;
+                    edit.setVisibility(View.GONE);
+                    save.setVisibility(View.VISIBLE);
+//                    kitchenNo.setText("");
+//                    kitchenName.setText("");
+//                    kitchenIP.setText("");
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean found = false;
+
+                if (!TextUtils.isEmpty(kitchenNo.getText().toString()) && !TextUtils.isEmpty(kitchenName.getText().toString())
+                        && !TextUtils.isEmpty(kitchenIP.getText().toString())) {
+                    KitchenScreen editedScreenInfo = new KitchenScreen(Integer.parseInt(kitchenNo.getText().toString())
+                            , kitchenName.getText().toString()
+                            , kitchenIP.getText().toString());
+                    if (editedScreenInfo.getKitchenNo() != -1) {
+                        List<KitchenScreen> list = mDHandler.getAllKitchenScreen();
+                        for (int i = 0; i < list.size(); i++) {
+                            if (list.get(i).getKitchenNo() == editedScreenInfo.getKitchenNo()) {
+                                found = true;
+                                if (found) {
+                                    if (kitchenNoOldValue == editedScreenInfo.getKitchenNo()) {
+                                        if (list.get(i).getKitchenName().equals(editedScreenInfo.getKitchenName())) {
+                                            if (list.get(i).getKitchenIP().equals(editedScreenInfo.getKitchenIP())) {
+//                              nothing to do, the data not changed
+                                                Toast.makeText(BackOfficeActivity.this, "Saved successfully", Toast.LENGTH_SHORT).show();
+                                            }
+                                        } else {
+                                            mDHandler.updateKitchenScreenInfo(editedScreenInfo, kitchenNoOldValue);
+                                            Toast.makeText(BackOfficeActivity.this, "Saved successfully", Toast.LENGTH_SHORT).show();
+                                        }
+                                    } else {
+                                        Toast.makeText(BackOfficeActivity.this, "Screen No already exist!", Toast.LENGTH_SHORT).show();
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                        if (!found) {
+                            mDHandler.updateKitchenScreenInfo(editedScreenInfo, kitchenNoOldValue);
+                            Toast.makeText(BackOfficeActivity.this, "Saved successfully", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(BackOfficeActivity.this, "Screen No -1 is not allowed!", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(BackOfficeActivity.this, "All fields are required!", Toast.LENGTH_SHORT).show();
+                }
+
+                dialog.dismiss();
+            }
+        });
 
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (!kitchenName.getText().toString().equals("") && !convertToEnglish(kitchenNo.getText().toString()).equals("") && !kitchenIP.getText().toString().equals("")) {
+                if (!kitchenName.getText().toString().equals("") && !convertToEnglish(kitchenNo.getText().toString()).equals("")
+                        && !kitchenIP.getText().toString().equals("")) {
 
-                    KitchenScreen kitchenScreen = new KitchenScreen(Integer.parseInt(convertToEnglish(kitchenNo.getText().toString())), kitchenName.getText().toString(), convertToEnglish(kitchenIP.getText().toString()));
-
+                    KitchenScreen kitchenScreen = new KitchenScreen(Integer.parseInt(convertToEnglish(kitchenNo.getText().toString()))
+                            , kitchenName.getText().toString(), convertToEnglish(kitchenIP.getText().toString()));
                     mDHandler.addKitchenScreen(kitchenScreen);
-
                     kitchenName.setText("");
                     kitchenNo.setText("");
                     kitchenIP.setText("");
-
-
                     new Settings().makeText(BackOfficeActivity.this, getResources().getString(R.string.save_successful));
-
                 } else {
-
                     new Settings().makeText(BackOfficeActivity.this, getResources().getString(R.string.please_insert_all_data));
                 }
 
@@ -6763,7 +8145,7 @@ public class BackOfficeActivity extends AppCompatActivity {
             OrderTransactions transactions1 = new OrderTransactions();
             transactions1.setTime("*");
             transactions1.setItemCategory(transactions.get(0).getItemCategory());
-            transactions1.setQty( totalQty);
+            transactions1.setQty(totalQty);
 
             orderTransactionData.add(transactions1);
         }
@@ -6920,6 +8302,45 @@ public class BackOfficeActivity extends AppCompatActivity {
 
     }
 
+
+    private void showSyncWithCloudChoesDialog() {
+        dialog = new Dialog(BackOfficeActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.syncwithcloud_dialog);
+        dialog.setCanceledOnTouchOutside(true);
+
+        LinearLayout syncVhf = (LinearLayout) dialog.findViewById(R.id.sync_with_cloud_vhf);
+        LinearLayout syncCloud = (LinearLayout) dialog.findViewById(R.id.sync_with_cloud);
+
+        syncCloud.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dialog.dismiss();
+                showSyncWithCloudDialog();
+            }
+        });
+
+        syncVhf.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                ReceiveCloud obj = new ReceiveCloud(BackOfficeActivity.this, 2, 0);
+                obj.startReceiving("MaxSerial");
+                ReceiveCloud obj2 = new ReceiveCloud(BackOfficeActivity.this, 2, 1);
+                obj2.startReceiving("MaxSerial");
+
+                dialog.dismiss();
+
+            }
+        });
+
+
+        dialog.show();
+    }
+
+
     void insertRaw2(Modifier items, final TableLayout itemsTableLayout, String text) {
         final TableRow row = new TableRow(BackOfficeActivity.this);
 
@@ -6963,6 +8384,10 @@ public class BackOfficeActivity extends AppCompatActivity {
         itemsTableLayout.addView(row);
         rawPosition += 1;
     }
+
+
+
+
 
     void insertRaw3(int number, String string, TableLayout tableLayout) {
 
@@ -7085,6 +8510,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         lSettings = (LinearLayout) findViewById(R.id.l_settings);
 
         announcement = (LinearLayout) findViewById(R.id.announcement);
+        DashboardData= (LinearLayout) findViewById(R.id.DashboardData);
         giftCard = (LinearLayout) findViewById(R.id.gift_card);
         employeeClockInOut = (LinearLayout) findViewById(R.id.employee_click_out);
         menuSearch = (LinearLayout) findViewById(R.id.menu_search);
@@ -7133,6 +8559,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         SoldQtyReport = (LinearLayout) findViewById(R.id.sold_qty_report);
         userOrderCountReport = (LinearLayout) findViewById(R.id.user_order_count_report);
         reCancellationReport = (LinearLayout) findViewById(R.id.re_cancellation_report);
+        TakeawayKind = (LinearLayout) findViewById(R.id.TakeKindlayout);
 
         butManagement.setOnClickListener(onClickListener);
         butSales.setOnClickListener(onClickListener);
@@ -7142,6 +8569,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         butSettings.setOnClickListener(onClickListener);
 
         announcement.setOnClickListener(onClickListener2);
+        DashboardData.setOnClickListener(onClickListener2);
         giftCard.setOnClickListener(onClickListener2);
         employeeClockInOut.setOnClickListener(onClickListener2);
         menuSearch.setOnClickListener(onClickListener2);
@@ -7190,6 +8618,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         SoldQtyReport.setOnClickListener(onClickListener2);
         userOrderCountReport.setOnClickListener(onClickListener2);
         reCancellationReport.setOnClickListener(onClickListener2);
+        TakeawayKind.setOnClickListener(onClickListener2);
 
     }
 }

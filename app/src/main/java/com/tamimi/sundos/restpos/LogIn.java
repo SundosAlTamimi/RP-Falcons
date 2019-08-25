@@ -3,13 +3,10 @@ package com.tamimi.sundos.restpos;
 import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,24 +17,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.tamimi.sundos.restpos.BackOffice.EmployeeRegistration;
 import com.tamimi.sundos.restpos.Models.BlindClose;
 import com.tamimi.sundos.restpos.Models.BlindShift;
 import com.tamimi.sundos.restpos.Models.EmployeeRegistrationModle;
-import com.tamimi.sundos.restpos.Models.Items;
+import com.tamimi.sundos.restpos.Models.FirstInstlation;
 import com.tamimi.sundos.restpos.Models.Shift;
 
-import java.io.ByteArrayOutputStream;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class LogIn extends AppCompatActivity {
@@ -45,11 +40,10 @@ public class LogIn extends AppCompatActivity {
     ImageView lock;
     Button b1, b2, b3, b4, b5, b6, b7, b8, b9, b0;
     Button clear, logIn;
-    TextView t1, t2, t3, t4;
+    TextView t1, t2, t3, t4, logfocu;
     TextView[] arrayOfText;
     int index = 0;
     MediaPlayer mp;
-
     String date, time, shiftName = "A";
     int shiftNo = 0;
     boolean isActive;
@@ -69,7 +63,26 @@ public class LogIn extends AppCompatActivity {
         initialize();
         setShift();
         arrayOfText = new TextView[]{t1, t2, t3, t4};
-        showUserNameDialog();
+
+        List<FirstInstlation>firstInstlations=new ArrayList<>();
+
+        firstInstlations=mDHandler.getAllFirstInformation();
+
+        if(firstInstlations.size()==0){
+            showFirstInstallDialog();
+
+        }else {showUserNameDialog();}
+
+
+
+
+        Settings.focas = findViewById(R.id.logtext);
+        if (Settings.onOFF) {
+            new Settings().blinkAnnouncement(true);
+        } else {
+            new Settings().blinkAnnouncement(false);
+        }
+
     }
 
     OnClickListener onClickListener = new OnClickListener() {
@@ -98,40 +111,80 @@ public class LogIn extends AppCompatActivity {
                     break;
 
                 case R.id.b_login:
-                    if (index == 4) {
-                        String password = t1.getText().toString() + t2.getText().toString() + t3.getText().toString() + t4.getText().toString();
+//                    if (index == 4) {
+//                        String password = t1.getText().toString() + t2.getText().toString() + t3.getText().toString() + t4.getText().toString();
+//
+//                        if (isCorrect(Integer.parseInt(password))) {
+//
+//                            Date currentTimeAndDate = Calendar.getInstance().getTime();
+//                            SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
+//                            time = tf.format(currentTimeAndDate);
+//                            if (!isActive) {
+//                                mDHandler.addBlindShiftInOut(new BlindShift(convertToEnglish(date), convertToEnglish(time), 1, shiftNo, shiftName,
+//                                        Integer.parseInt(password), Settings.user_name, 1));
+//
+//                                Settings.shift_name = shiftName;
+//                                Settings.shift_number = shiftNo;
+//                            } else {
+//                                Settings.shift_name = mDHandler.getOpenedShifts(date, 1).getShiftName();
+//                                Settings.shift_number = mDHandler.getOpenedShifts(date, 1).getShiftNo();
+//                            }
+//                            Settings.password = Integer.parseInt(password);
+//                            Settings.user_no = foundUserNo(Settings.user_name, Integer.parseInt(password));
+//                            Settings.POS_number = 1;
+//                            Settings.store_number = 7;
+//                            Log.e("userNo = ", "" + Settings.user_no);
+//
+//                            logIn();
+//                        } else
+//
+//                            new Settings().makeText(LogIn.this, getResources().getString(R.string.incorect_password));
+//                    }
 
-                        if (isCorrect(Integer.parseInt(password))) {
-
-                            Date currentTimeAndDate = Calendar.getInstance().getTime();
-                            SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
-                            time = tf.format(currentTimeAndDate);
-                            if (!isActive) {
-                                mDHandler.addBlindShiftInOut(new BlindShift(convertToEnglish(date), convertToEnglish(time), 1, shiftNo, shiftName,
-                                        Integer.parseInt(password), Settings.user_name, 1));
-
-                                Settings.shift_name = shiftName;
-                                Settings.shift_number = shiftNo;
-                            } else {
-                                Settings.shift_name = mDHandler.getOpenedShifts(date, 1).getShiftName();
-                                Settings.shift_number = mDHandler.getOpenedShifts(date, 1).getShiftNo();
-                            }
-                            Settings.password = Integer.parseInt(password);
-                            Settings.user_no = foundUserNo(Settings.user_name,Integer.parseInt(password));
-                            Settings.POS_number = 1;
-                            Settings.store_number = 7;
-                            Log.e("userNo = ",""+Settings.user_no);
-
-                            logIn();
-                        } else
-
-                        new Settings().makeText(LogIn.this,getResources().getString(R.string.incorect_password));
-                    }
+                    logCheak();
                     break;
             }
         }
 
     };
+
+
+    void logCheak(){
+
+
+        if (index == 4) {
+            String password = t1.getText().toString() + t2.getText().toString() + t3.getText().toString() + t4.getText().toString();
+
+            if (isCorrect(Integer.parseInt(password))) {
+
+                Date currentTimeAndDate = Calendar.getInstance().getTime();
+                SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
+                time = tf.format(currentTimeAndDate);
+                if (!isActive) {
+                    mDHandler.addBlindShiftInOut(new BlindShift(convertToEnglish(date), convertToEnglish(time), 1, shiftNo, shiftName,
+                            Integer.parseInt(password), Settings.user_name, 1));
+
+                    Settings.shift_name = shiftName;
+                    Settings.shift_number = shiftNo;
+                } else {
+                    Settings.shift_name = mDHandler.getOpenedShifts(date, 1).getShiftName();
+                    Settings.shift_number = mDHandler.getOpenedShifts(date, 1).getShiftNo();
+                }
+                Settings.password = Integer.parseInt(password);
+                Settings.user_no = foundUserNo(Settings.user_name, Integer.parseInt(password));
+                Settings.POS_number = 1;
+                Settings.store_number = 7;
+                Log.e("userNo = ", "" + Settings.user_no);
+
+                logIn();
+            } else
+
+                new Settings().makeText(LogIn.this, getResources().getString(R.string.incorect_password));
+        }
+
+
+
+    }
 
     void showUserNameDialog() {
 
@@ -148,51 +201,88 @@ public class LogIn extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String userText = userNameEditText.getText().toString();
-                if (!userText.equals("")) {
+                Settings.user_name = userText;
+                JSONObject object = new JSONObject();
+                try {
+                    object.put("username", userNameEditText.getText().toString());
 
-                    switch (openedShift(userText)) {
-                        case "":
-                            if (userText.equals("master")) {
-                                isActive = false;
-                                Settings.user_name = userText;
-                                dialog.dismiss();
-                            } else {
-                                isActive = false;
-                                ArrayList<EmployeeRegistrationModle> employees = mDHandler.getAllEmployeeRegistration();
-                                boolean isExist = false;
-                                for (int i = 0; i < employees.size(); i++) {
-                                    if (userText.equals(employees.get(i).getEmployeeName())) {
-                                        Settings.user_name = userText;
-                                        userPassword = employees.get(i).getUserPassword();
-                                        isExist = true;
-                                        break;
-                                    }
-                                }
-                                if (isExist) {
-                                    dialog.dismiss();
-                                } else
-                                    new Settings().makeText(LogIn.this, getResources().getString(R.string.user_not_found));
-//                                    Toast.makeText(LogIn.this, getResources().getString(R.string.user_not_found), Toast.LENGTH_SHORT).show();
-                            }
-                            break;
-                        case "another user is logged":
+                    if (!userText.equals("")) {
+//                        Log.e("check", "" + Settings.checkUserFlag);
+                        SendCloud sendCloud = new SendCloud(LogIn.this,object );
+                        sendCloud.startSending("authentication");
 
-                            new Settings().makeText(LogIn.this,getResources().getString( R.string.other_user_log));
-                            break;
-                        default:
-                            Settings.user_name = userText;
-                            isActive = true;
-                            dialog.dismiss();
-                            break;
+                    } else {
+                        new Settings().makeText(LogIn.this, getResources().getString(R.string.enter_your_user_name));
                     }
-
-                } else {
-                    new Settings().makeText(LogIn.this,getResources().getString( R.string.enter_your_user_name));
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
         });
 
         dialog.show();
+    }
+
+    public void getAuthenticationResponse(String userText,String password,int Active) {
+
+                switch (openedShift(userText)) {
+                    case "":
+                        switch (Settings.checkUserFlag) {// (openedShift(userText)) {
+                            case 0:
+                                if (userText.equals("master")) {
+                                isActive = false;
+                                Settings.user_name = userText;
+                                dialog.dismiss();
+                            }else {
+                                    new Settings().makeText(LogIn.this, getResources().getString(R.string.user_not_found));
+                                }
+                                break;
+                            case 1:
+                                isActive = false;
+                                if(Active==0){
+                                userPassword=Integer.parseInt(password);
+                                logCheak();
+                                dialog.dismiss();
+                                }
+
+                                break;
+                            case 3:
+                        if (userText.equals("master")) {
+                            isActive = false;
+                            Settings.user_name = userText;
+                            dialog.dismiss();
+                        } else {
+                            isActive = false;
+                            ArrayList<EmployeeRegistrationModle> employees = mDHandler.getAllEmployeeRegistration();
+                            boolean isExist = false;
+                            for (int i = 0; i < employees.size(); i++) {
+                                if (userText.equals(employees.get(i).getEmployeeName())) {
+                                    Settings.user_name = userText;
+                                    userPassword = employees.get(i).getUserPassword();
+                                    isExist = true;
+                                    break;
+                                }
+                            }
+                            if (isExist) {
+                                dialog.dismiss();
+                            } else
+                                new Settings().makeText(LogIn.this, getResources().getString(R.string.user_not_found));
+//                                    Toast.makeText(LogIn.this, getResources().getString(R.string.user_not_found), Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                }
+                        break;
+                    case "another user is logged":
+
+                        new Settings().makeText(LogIn.this, getResources().getString(R.string.other_user_log));
+                        break;
+                    default:
+                        Settings.user_name = userText;
+                        isActive = true;
+                        dialog.dismiss();
+                        break;
+                }
+
     }
 
     public boolean isCorrect(int password) {
@@ -210,10 +300,23 @@ public class LogIn extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                SyncWithCloud obj = new SyncWithCloud(LogIn.this);
+                obj.startSyncing("sync");
+
+//                try {
+//
+//                    Thread.sleep(5000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+
+
                 final Intent mainIntent = new Intent(LogIn.this, Main.class);
                 startActivity(mainIntent);
                 finish();
                 startService(new Intent(LogIn.this, MyService.class));
+
+
             }
         }, 500);
     }
@@ -248,7 +351,7 @@ public class LogIn extends AppCompatActivity {
         for (int i = 0; i < shifts.size(); i++) {
             Date currentTime = Calendar.getInstance().getTime();
             SimpleDateFormat tf = new SimpleDateFormat("HH:mm");
-            time =convertToEnglish(tf.format(currentTime));
+            time = convertToEnglish(tf.format(currentTime));
 
 //                Date time1 = new SimpleDateFormat("hh:mm").parse(shifts.get(i).getFromTime());
 //                Calendar calendar1 = Calendar.getInstance();
@@ -283,15 +386,15 @@ public class LogIn extends AppCompatActivity {
                     int timeClose = Integer.parseInt(blindCloseList.get(k).getTime().substring(0, blindCloseList.get(k).getTime().indexOf(":")));
 
                     if (blindCloseList.get(k).getDate().equals(date) &&
-                            timeClose >= time1 && current < time2    &&
+                            timeClose >= time1 && current < time2 &&
                             blindCloseList.get(k).getTransType() == 0) {
 
-                        if(i+1 > shifts.size()-1){
+                        if (i + 1 > shifts.size() - 1) {
                             shiftNo = shifts.get(0).getShiftNo();
                             shiftName = shifts.get(0).getShiftName();
                         } else {
-                            shiftNo = shifts.get(i+1).getShiftNo();
-                            shiftName = shifts.get(i+1).getShiftName();
+                            shiftNo = shifts.get(i + 1).getShiftNo();
+                            shiftName = shifts.get(i + 1).getShiftName();
                         }
                     }
 
@@ -303,19 +406,71 @@ public class LogIn extends AppCompatActivity {
 //        }
     }
 
+    void showFirstInstallDialog() {
+
+            Dialog dialog1 = new Dialog(LogIn.this);
+        dialog1.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog1.setCancelable(false);
+        dialog1.setContentView(R.layout.add_first_information_dialogs);
+        dialog1.setCanceledOnTouchOutside(false);
+
+      EditText compNo,CompYear,userName,password;
+
+      compNo=(EditText)dialog1.findViewById(R.id.compNo);
+        CompYear=(EditText)dialog1.findViewById(R.id.compYear);
+
+        userName=(EditText)dialog1.findViewById(R.id.USEr);
+        password=(EditText)dialog1.findViewById(R.id.pass);
+
+        Button sync,exit;
+        sync=(Button)dialog1.findViewById(R.id.sync);
+        exit=(Button)dialog1.findViewById(R.id.exit);
+
+        sync.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                if(!compNo.getText().toString().equals("")&&!CompYear.getText().toString().equals("")
+               &&!userName.getText().toString().equals("")&&!password.getText().toString().equals("")){
+
+                    mDHandler.addFirstInformation(new FirstInstlation(Integer.parseInt(compNo.getText().toString()),CompYear.getText().toString()
+                    ,userName.getText().toString(),Integer.parseInt(password.getText().toString())));
+
+                    dialog1.dismiss();
+                    showUserNameDialog();
+
+                }else {
+                    Toast.makeText(LogIn.this, "Please Enter All Filled", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
+        exit.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog1.dismiss();
+                System.exit(0);
+            }
+        });
+
+        dialog1.show();
+    }
+
 
     public String convertToEnglish(String value) {
         String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0"));
         return newValue;
     }
 
-    int foundUserNo(String userName,int Password){
-        int userNo=-1;
-        if(!userName.equals("master")) {
+    int foundUserNo(String userName, int Password) {
+        int userNo = -1;
+        if (!userName.equals("master")) {
             List<EmployeeRegistrationModle> allEmployee = mDHandler.getAllEmployeeRegistration();
-            for(int i=0;i<allEmployee.size();i++){
-                if(allEmployee.get(i).getEmployeeName().equals(userName)&&allEmployee.get(i).getUserPassword()==Password){
-                    userNo=allEmployee.get(i).getEmployeeNO();
+            for (int i = 0; i < allEmployee.size(); i++) {
+                if (allEmployee.get(i).getEmployeeName().equals(userName) && allEmployee.get(i).getUserPassword() == Password) {
+                    userNo = allEmployee.get(i).getEmployeeNO();
                 }
             }
         }

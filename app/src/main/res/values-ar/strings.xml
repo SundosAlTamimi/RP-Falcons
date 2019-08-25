@@ -16,6 +16,9 @@
     <string name="log_in">دخول</string>
     <string name="clear">مسح</string>
     <string name="enter_password">ادخل كلمة السر</string>
+    <string name="required_field">حقل اجباري!</string>
+    <string name="all_fields_are_required">*جميع الحقول اجبارية!</string>
+    <string name="cash_no">رقم الكاش</string>
 
     <string name="password">كلمة السر</string>
     <string name="user_no">اسم المستخدم</string>
@@ -235,6 +238,7 @@
     <string name="picture">صورة</string>
     <string name="show">عرض</string>
     <string name="save_">حفظ</string>
+    <string name="edit_save">تعديل و حفظ</string>
 
     <string name="question_no">رقم السؤال</string>
     <string name="question_no_">رقم السؤال</string>
@@ -254,8 +258,10 @@
     <string name="kitchen_screen">شاشة المطبخ</string>
     <string name="screen_no">رقم الشاشة</string>
     <string name="screen_name">اسم الشاشة</string>
-    <string name="add_kitchen_screen">اضافة شاشة مطبخ</string>
+    <string name="edit_add_kitchen_screen">اضافة/تعديل شاشة مطبخ</string>
     <string name="join_item_with_kitchen_screen">ربط المادة مع شاشة المطبخ</string>
+    <string name="edit_screen_text_view">* لتعديل معلومات شاشة موجودة مسبقا اختر من اللائحة في الاسفل</string>
+    <string name="no_screen">لا يوجد</string>
 
     <string name="tender">عطاء</string>
     <string name="voucher_number">رقم الفاتورة</string>
@@ -586,4 +592,17 @@
     <string name="please_return_this_value">الرجاء ارجاع هذه القيمة :</string>
     <string name="kitchen_ip">المطبخ IP</string>
     <string name="not_data">لا يوجد بيانات لعرضها ...</string>
+    <string name="sync_max_vhf">مزامنة الرقم التسلسلي </string>
+    <string name="details">التفاصيل :</string>
+
+    <string name="details_">تفاصيل اكثر </string>
+    <string name="details_L">تغاصيل اقل </string>
+
+    <string name="take_away_kind">طريقة الحصول على الوجبة </string>
+    <string name="take_away_kind_name">اسم الطريقة :</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="comp_year">سنة الشركة</string>
+    <string name="comp_no">رقم الشركة</string>
+
+
 </resources>

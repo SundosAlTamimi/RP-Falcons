@@ -1,22 +1,30 @@
 package com.tamimi.sundos.restpos;
 
 import android.app.ProgressDialog;
+import android.content.ClipData;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.tamimi.sundos.restpos.Models.FamilyCategory;
+import com.tamimi.sundos.restpos.Models.ForceQuestions;
+import com.tamimi.sundos.restpos.Models.Items;
+import com.tamimi.sundos.restpos.Models.Modifier;
+import com.tamimi.sundos.restpos.Models.Shift;
+import com.tamimi.sundos.restpos.Models.VoidResons;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +32,7 @@ public class SyncWithCloud {
     private Context context;
     private ProgressDialog progressDialog;
     private DatabaseHandler mDHandler;
+    public static String data1,data2,data3 ;
 
     public SyncWithCloud(Context context) {
         mDHandler = new DatabaseHandler(context);
@@ -34,6 +43,22 @@ public class SyncWithCloud {
 
         if (flag.equals("menuRegistration"))
             new SyncMenuRegistration().execute();
+
+        if(flag.equals("sync")){
+
+            new SyncModifier().execute();
+            new SyncForceQ().execute();
+            new SyncItem().execute();
+            new SyncCategory().execute();
+            new SyncShiftNo().execute();
+            new SyncVoidReason().execute();
+//            new SyncitemPic().execute();
+
+        }
+
+
+
+
 
     }
 
@@ -188,4 +213,921 @@ public class SyncWithCloud {
         }
         return result;
     }
+
+
+    private class SyncModifier extends AsyncTask<String, String, String> {
+        private String JsonResponse = null;
+        private HttpURLConnection urlConnection = null;
+        private BufferedReader reader = null;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+//            progressDialog = new ProgressDialog(context);
+//            progressDialog.setCancelable(false);
+//            progressDialog.setMessage("Loading...");
+//            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//            progressDialog.setProgress(0);
+//            progressDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {///GetModifer?compno=736&compyear=2019
+            try {
+                String link = Settings.URL + "GetModifer";
+
+                String data = "compno=" + URLEncoder.encode("736", "UTF-8") + "&" +
+                        "compyear=" + URLEncoder.encode("2019", "UTF-8") ;
+//
+                URL url = new URL(link);
+
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setDoOutput(true);
+                httpURLConnection.setDoInput(true);
+                httpURLConnection.setRequestMethod("POST");
+
+
+
+                DataOutputStream wr = new DataOutputStream(httpURLConnection.getOutputStream());
+                wr.writeBytes(data);
+                wr.flush();
+                wr.close();
+
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+                StringBuffer stringBuffer = new StringBuffer();
+
+                while ((JsonResponse = bufferedReader.readLine()) != null) {
+                    stringBuffer.append(JsonResponse + "\n");
+                }
+
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+
+                Log.e("tag", "modifier -->" + stringBuffer.toString());
+
+                return stringBuffer.toString();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e("tag", "Error closing stream", e);
+                    }
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String JsonResponse) {
+            super.onPostExecute(JsonResponse);
+
+            if (JsonResponse != null && JsonResponse.contains("\"ErrorCode\":\"0\"")) {
+                Log.e("tag Modifier", "****Success");
+
+                try {
+
+                    JSONObject parentObject = new JSONObject(JsonResponse);
+                    JSONArray parentArray = parentObject.getJSONArray("Data");
+
+                    List<Modifier>itemModifer=new ArrayList<>();
+
+                    for (int i = 0; i < parentArray.length(); i++) {
+                        JSONObject finalObject = parentArray.getJSONObject(i);
+
+                        Modifier obj = new Modifier();
+                        obj.setModifierNumber(finalObject.getInt("MODIFIER_NO"));
+                        obj.setModifierName(finalObject.getString("MODIFIER_NAME"));
+                        obj.setModifierActive(finalObject.getInt("ACTIVE"));
+//
+                        itemModifer.add(obj);
+
+                    }
+
+//
+                    mDHandler.deleteAllModifier();
+                    for (int i = 0; i < itemModifer.size(); i++) {
+                        mDHandler.addModifierItem(itemModifer.get(i));
+                    }
+
+//
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            } else {
+                Log.e("tag Modifier", "****Failed to export data");
+            }
+//            progressDialog.dismiss();
+        }
+    }
+
+
+
+    private class SyncForceQ extends AsyncTask<String, String, String> {
+        private String JsonResponse = null;
+        private HttpURLConnection urlConnection = null;
+        private BufferedReader reader = null;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+//            progressDialog = new ProgressDialog(context);
+//            progressDialog.setCancelable(false);
+//            progressDialog.setMessage("Loading...");
+//            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//            progressDialog.setProgress(0);
+//            progressDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {///GetModifer?compno=736&compyear=2019
+            try {
+                String link = Settings.URL + "GetForceQ";
+
+                String data = "compno=" + URLEncoder.encode("736", "UTF-8") + "&" +
+                        "compyear=" + URLEncoder.encode("2019", "UTF-8") ;
+//
+                URL url = new URL(link);
+
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setDoOutput(true);
+                httpURLConnection.setDoInput(true);
+                httpURLConnection.setRequestMethod("POST");
+
+
+
+                DataOutputStream wr = new DataOutputStream(httpURLConnection.getOutputStream());
+                wr.writeBytes(data);
+                wr.flush();
+                wr.close();
+
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+                StringBuffer stringBuffer = new StringBuffer();
+
+                while ((JsonResponse = bufferedReader.readLine()) != null) {
+                    stringBuffer.append(JsonResponse + "\n");
+                }
+
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+
+                Log.e("tag", "Force Q -->" + stringBuffer.toString());
+
+                return stringBuffer.toString();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e("tag", "Error closing stream", e);
+                    }
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String JsonResponse) {
+            super.onPostExecute(JsonResponse);
+
+            if (JsonResponse != null && JsonResponse.contains("\"ErrorCode\":\"0\"")) {
+                Log.e("tag fotceQ", "****Success");
+
+                try {
+
+                    JSONObject parentObject = new JSONObject(JsonResponse);
+                    JSONArray parentArray = parentObject.getJSONArray("Data");
+
+                    List<ForceQuestions>itemForceQuestions=new ArrayList<>();
+                    //"QUESTION_NO":"2","QUESTION_TEXT":"Question No 2","MULTIPLE_ANSWER":"0","ANSWER":"No Sugar"}
+
+                    for (int i = 0; i < parentArray.length(); i++) {
+                        JSONObject finalObject = parentArray.getJSONObject(i);
+
+                        ForceQuestions obj = new ForceQuestions();
+                        obj.setQuestionNo(finalObject.getInt("QUESTION_NO"));
+                        obj.setQuestionText(finalObject.getString("QUESTION_TEXT"));
+                        obj.setMultipleAnswer(finalObject.getInt("MULTIPLE_ANSWER"));
+                        obj.setAnswer(finalObject.getString("ANSWER"));
+//
+                        itemForceQuestions.add(obj);
+
+                    }
+
+//
+                    mDHandler.deleteAllForceQ();
+                    for (int i = 0; i < itemForceQuestions.size(); i++) {
+                        mDHandler.addForceQuestion(itemForceQuestions.get(i));
+                    }
+
+//
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            } else {
+                Log.e("tag fotceQ", "****Failed to export data");
+            }
+//            progressDialog.dismiss();
+        }
+    }
+
+
+
+
+    private class SyncItem extends AsyncTask<String, String, String> {
+        private String JsonResponse = null;
+        private HttpURLConnection urlConnection = null;
+        private BufferedReader reader = null;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+//            progressDialog = new ProgressDialog(context);
+//            progressDialog.setCancelable(false);
+//            progressDialog.setMessage("Loading...");
+//            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//            progressDialog.setProgress(0);
+//            progressDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {///GetModifer?compno=736&compyear=2019
+            try {
+//                String link = "http://Falconssoft.net/RestService/FSAppServiceDLL.dll/SyncGetItems";
+
+//                String link = "http://10.0.0.16:8081/SyncGetItems";
+                String link = Settings.URL + "SyncGetItems";
+
+                String data = "compno=" + URLEncoder.encode("736", "UTF-8") + "&" +
+                        "compyear=" + URLEncoder.encode("2019", "UTF-8") ;
+//
+                URL url = new URL(link);
+
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setDoOutput(true);
+                httpURLConnection.setDoInput(true);
+                httpURLConnection.setRequestMethod("POST");
+
+
+
+                DataOutputStream wr = new DataOutputStream(httpURLConnection.getOutputStream());
+                wr.writeBytes(data);
+                wr.flush();
+                wr.close();
+
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+                StringBuffer stringBuffer = new StringBuffer();
+
+                while ((JsonResponse = bufferedReader.readLine()) != null) {
+                    stringBuffer.append(JsonResponse + "\n");
+                }
+
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+
+                Log.e("tag", "items -->" + stringBuffer.toString());
+
+                return stringBuffer.toString();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e("tag", "Error closing stream", e);
+                    }
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String JsonResponse) {
+            super.onPostExecute(JsonResponse);
+
+            if (JsonResponse != null && JsonResponse.contains("\"ErrorCode\":\"0\"")) {
+                Log.e("tag item", "****Success");
+
+                try {
+
+                    JSONObject parentObject = new JSONObject(JsonResponse);
+                    JSONArray parentArray = parentObject.getJSONArray("Data");
+
+                    List<Items>items=new ArrayList<>();
+
+                    for (int i = 0; i <parentArray.length(); i++) {
+                        JSONObject finalObject = parentArray.getJSONObject(i);
+
+                        //
+
+
+                        Items obj = new Items();
+                        obj.setMenuCategory(finalObject.getString("MENU_CATEGORY"));
+                        obj.setMenuName(finalObject.getString("MENU_NAME"));
+                        obj.setFamilyName(finalObject.getString("FAMILY_NAME"));
+
+                        obj.setPrice(finalObject.getDouble("PRICE"));
+                        obj.setTaxType(finalObject.getInt("TAX_TYPE"));
+                        obj.setTax(finalObject.getDouble("TAX_PERCENT"));
+                        obj.setSecondaryName(finalObject.getString("SECONDARY_NAME"));
+
+                        obj.setKitchenAlias(finalObject.getString("KITCHEN_NAME"));
+                        try {
+                            obj.setItemBarcode(finalObject.getInt("ITEM_BARCODE"));
+                        }catch (Exception e){
+                            obj.setItemBarcode(-10);
+                        }
+                        obj.setStatus(finalObject.getInt("STATUS"));
+                        obj.setItemType(finalObject.getInt("ITEM_TYPE"));
+
+                        obj.setDescription(finalObject.getString("DESCRIPTION"));
+                        obj.setInventoryUnit(finalObject.getString("INVENTORY_UNIT"));
+                        obj.setWastagePercent(finalObject.getInt("WASTAGE_PERCENT"));
+                        obj.setDiscountAvailable(finalObject.getInt("DISCOUNT_AVAILABLE"));
+
+
+                        obj.setPointAvailable(finalObject.getInt("POINT_AVAILABLE"));
+                        obj.setOpenPrice(finalObject.getInt("OPEN_PRICE"));
+                        obj.setKitchenPrinter(finalObject.getString("KITCHEN_PRINTER_TO_USE"));
+                        obj.setUsed(finalObject.getInt("USED"));
+                        obj.setShowInMenu(finalObject.getInt("SHOW_IN_MENU"));
+
+                        try {
+                            obj.setPic(finalObject.getString("ITEMPIC"));
+                        }catch(Exception e){
+                            obj.setPic("");
+                        }
+//
+                        items.add(obj);
+
+                    }
+
+ Log.e("tag item1", "item is update ");
+                    mDHandler.deleteAllItems();
+                    for (int i = 0; i < items.size(); i++) {
+                        mDHandler.addItem(items.get(i));
+//                        progressDialog.setMessage("ADDING "+items.get(i).getName()+"...");
+                    }
+
+           Log.e("tag item", "item is update ");
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            } else {
+                Log.e("tag item", "****Failed to export data");
+            }
+//            progressDialog.dismiss();
+        }
+    }
+
+
+    private class SyncCategory extends AsyncTask<String, String, String> {
+        private String JsonResponse = null;
+        private HttpURLConnection urlConnection = null;
+        private BufferedReader reader = null;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+//            progressDialog = new ProgressDialog(context);
+//            progressDialog.setCancelable(false);
+//            progressDialog.setMessage("Loading...");
+//            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//            progressDialog.setProgress(0);
+//            progressDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {///GetModifer?compno=736&compyear=2019
+            try {
+                String link = Settings.URL + "GetFamCategUnit";
+
+                String data = "compno=" + URLEncoder.encode("736", "UTF-8") + "&" +
+                        "compyear=" + URLEncoder.encode("2019", "UTF-8") ;
+//
+                URL url = new URL(link);
+
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setDoOutput(true);
+                httpURLConnection.setDoInput(true);
+                httpURLConnection.setRequestMethod("POST");
+
+
+
+                DataOutputStream wr = new DataOutputStream(httpURLConnection.getOutputStream());
+                wr.writeBytes(data);
+                wr.flush();
+                wr.close();
+
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+                StringBuffer stringBuffer = new StringBuffer();
+
+                while ((JsonResponse = bufferedReader.readLine()) != null) {
+                    stringBuffer.append(JsonResponse + "\n");
+                }
+
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+
+                Log.e("tag", "category -->" + stringBuffer.toString());
+
+                return stringBuffer.toString();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e("tag", "Error closing stream", e);
+                    }
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String JsonResponse) {
+            super.onPostExecute(JsonResponse);
+
+            if (JsonResponse != null && JsonResponse.contains("\"ErrorCode\":\"0\"")) {
+                Log.e("tag category", "****Success");
+
+                try {
+
+                    JSONObject parentObject = new JSONObject(JsonResponse);
+                    JSONArray parentArray = parentObject.getJSONArray("Data");
+
+                    List<FamilyCategory>items=new ArrayList<>();
+
+                    for (int i = 0; i < parentArray.length(); i++) {
+                        JSONObject finalObject = parentArray.getJSONObject(i);
+
+                        //
+
+
+                        FamilyCategory obj = new FamilyCategory();
+                        obj.setName(finalObject.getString("NAME_CATEGORY_FAMILY"));
+                        obj.setType(finalObject.getInt("ITYPE"));
+                        obj.setSerial(finalObject.getInt("SERIAL"));
+
+//                        obj.setCatPic(finalObject.getDouble("PRICE"));
+
+//
+                        items.add(obj);
+
+                    }
+
+//
+                        mDHandler.deleteAllFamilyCategory();
+                    for (int i = 0; i < items.size(); i++) {
+                        mDHandler.addFamilyCategory(items.get(i));
+//                        progressDialog.setMessage("ADDING ("+items.get(i).getName()+")...");
+                    }
+
+//
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            } else {
+                Log.e("tag category", "****Failed to export data");
+            }
+//            progressDialog.dismiss();
+        }
+    }
+
+
+    private class SyncShiftNo extends AsyncTask<String, String, String> {
+        private String JsonResponse = null;
+        private HttpURLConnection urlConnection = null;
+        private BufferedReader reader = null;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+//            progressDialog = new ProgressDialog(context);
+//            progressDialog.setCancelable(false);
+//            progressDialog.setMessage("Loading...");
+//            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//            progressDialog.setProgress(0);
+//            progressDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {///GetModifer?compno=736&compyear=2019
+            try {
+                String link = Settings.URL + "GetShifts";
+
+                String data = "compno=" + URLEncoder.encode("736", "UTF-8") + "&" +
+                        "compyear=" + URLEncoder.encode("2019", "UTF-8") ;
+//
+                URL url = new URL(link);
+
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setDoOutput(true);
+                httpURLConnection.setDoInput(true);
+                httpURLConnection.setRequestMethod("POST");
+
+
+
+                DataOutputStream wr = new DataOutputStream(httpURLConnection.getOutputStream());
+                wr.writeBytes(data);
+                wr.flush();
+                wr.close();
+
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+                StringBuffer stringBuffer = new StringBuffer();
+
+                while ((JsonResponse = bufferedReader.readLine()) != null) {
+                    stringBuffer.append(JsonResponse + "\n");
+                }
+
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+
+                Log.e("tag", "shift -->" + stringBuffer.toString());
+
+                return stringBuffer.toString();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e("tag", "Error closing stream", e);
+                    }
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String JsonResponse) {
+            super.onPostExecute(JsonResponse);
+
+            if (JsonResponse != null && JsonResponse.contains("\"ErrorCode\":\"0\"")) {
+                Log.e("tag shift", "****Success");
+
+                try {
+
+                    JSONObject parentObject = new JSONObject(JsonResponse);
+                    JSONArray parentArray = parentObject.getJSONArray("Data");
+
+                    List<Shift>items=new ArrayList<>();
+
+                    for (int i = 0; i <parentArray.length(); i++) {
+                        JSONObject finalObject = parentArray.getJSONObject(i);
+
+                        //
+
+                      //  SHIFT_NO":"1","SHIFT_NAME":"SHIFT A","FROM_TIME":"06:00","TO_TIME":"04:00"
+                        Shift obj = new Shift();
+                        obj.setShiftNo(finalObject.getInt("SHIFT_NO"));
+                        obj.setShiftName(finalObject.getString("SHIFT_NAME"));
+                        obj.setFromTime(finalObject.getString("FROM_TIME"));
+
+                        obj.setToTime(finalObject.getString("TO_TIME"));
+
+
+//
+                        items.add(obj);
+
+                    }
+
+                    Log.e("tag shift", "shift is update ");
+                    mDHandler.deleteAllShift();
+                    for (int i = 0; i < items.size(); i++) {
+                        mDHandler.addShift(items.get(i));
+//                        progressDialog.setMessage("ADDING "+items.get(i).getName()+"...");
+                    }
+
+                    Log.e("tag shift", "shift is update ");
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            } else {
+                Log.e("tag item", "****Failed to export data");
+            }
+//            progressDialog.dismiss();
+        }
+    }
+
+
+    private class SyncVoidReason extends AsyncTask<String, String, String> {
+        private String JsonResponse = null;
+        private HttpURLConnection urlConnection = null;
+        private BufferedReader reader = null;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+//            progressDialog = new ProgressDialog(context);
+//            progressDialog.setCancelable(false);
+//            progressDialog.setMessage("Loading...");
+//            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//            progressDialog.setProgress(0);
+//            progressDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {///GetModifer?compno=736&compyear=2019
+            try {
+                String link = Settings.URL + "GetVoidReason";
+
+                String data = "compno=" + URLEncoder.encode("736", "UTF-8") + "&" +
+                        "compyear=" + URLEncoder.encode("2019", "UTF-8") ;
+//
+                URL url = new URL(link);
+
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setDoOutput(true);
+                httpURLConnection.setDoInput(true);
+                httpURLConnection.setRequestMethod("POST");
+
+
+
+                DataOutputStream wr = new DataOutputStream(httpURLConnection.getOutputStream());
+                wr.writeBytes(data);
+                wr.flush();
+                wr.close();
+
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+                StringBuffer stringBuffer = new StringBuffer();
+
+                while ((JsonResponse = bufferedReader.readLine()) != null) {
+                    stringBuffer.append(JsonResponse + "\n");
+                }
+
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+
+                Log.e("tag", "voidReson -->" + stringBuffer.toString());
+
+                return stringBuffer.toString();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e("tag", "Error closing stream", e);
+                    }
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String JsonResponse) {
+            super.onPostExecute(JsonResponse);
+
+            if (JsonResponse != null && JsonResponse.contains("\"ErrorCode\":\"0\"")) {
+                Log.e("tag void", "****Success");
+
+                try {
+
+                    JSONObject parentObject = new JSONObject(JsonResponse);
+                    JSONArray parentArray = parentObject.getJSONArray("Data");
+
+                    List<VoidResons>itemModifer=new ArrayList<>();
+
+                    for (int i = 0; i < parentArray.length(); i++) {
+                        JSONObject finalObject = parentArray.getJSONObject(i);
+
+                        //SHIFT_NO":"1","SHIFT_NAME":"SHIFT A","USER_NUMBER":"1","USER_NAME":"ALAA","VOID_REASON":"خطأ مطبخ","SDATE":"04-08-2019","ACTIVEATED":"0"
+
+                        VoidResons obj = new VoidResons();
+                        obj.setShiftNo(finalObject.getInt("SHIFT_NO"));
+                        obj.setShiftName(finalObject.getString("SHIFT_NAME"));
+                        obj.setUserNo(finalObject.getInt("USER_NUMBER"));
+                        obj.setUserName(finalObject.getString("USER_NAME"));
+                        obj.setVoidReason(finalObject.getString("VOID_REASON"));
+                        obj.setDate(finalObject.getString("SDATE"));
+                        obj.setActiveated(finalObject.getInt("ACTIVEATED"));
+
+//
+                        itemModifer.add(obj);
+
+                    }
+
+//
+                    mDHandler.deleteAllVoidReasons();
+                    for (int i = 0; i < itemModifer.size(); i++) {
+                        mDHandler.addVoidReason(itemModifer.get(i));
+                    }
+
+//
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            } else {
+                Log.e("tag voidReson", "****Failed to export data");
+            }
+//            progressDialog.dismiss();
+        }
+    }
+
+
+    private class SyncitemPic extends AsyncTask<String, String, String> {
+        private String JsonResponse = null;
+        private HttpURLConnection urlConnection = null;
+        private BufferedReader reader = null;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+//            progressDialog = new ProgressDialog(context);
+//            progressDialog.setCancelable(false);
+//            progressDialog.setMessage("Loading...");
+//            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//            progressDialog.setProgress(0);
+//            progressDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {///GetModifer?compno=736&compyear=2019
+            try {
+//                String link = "http://Falconssoft.net/RestService/FSAppServiceDLL.dll/GetVoidReason";
+//http://10.0.0.16:8081/GetItemsPic?CompNo=736&compYear=2019
+
+                String link = "http://10.0.0.16:8081/GetItemsPic";
+                String data = "compno=" + URLEncoder.encode("736", "UTF-8") + "&" +
+                        "compyear=" + URLEncoder.encode("2019", "UTF-8") ;
+//
+                URL url = new URL(link);
+
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setDoOutput(true);
+                httpURLConnection.setDoInput(true);
+                httpURLConnection.setRequestMethod("POST");
+
+
+
+                DataOutputStream wr = new DataOutputStream(httpURLConnection.getOutputStream());
+                wr.writeBytes(data);
+                wr.flush();
+                wr.close();
+
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+                StringBuffer stringBuffer = new StringBuffer();
+
+                while ((JsonResponse = bufferedReader.readLine()) != null) {
+                    stringBuffer.append(JsonResponse + "\n");
+                }
+
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+
+                Log.e("tag", "voidReson -->" + stringBuffer.toString());
+
+                return stringBuffer.toString();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e("tag", "Error closing stream", e);
+                    }
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String JsonResponse) {
+            super.onPostExecute(JsonResponse);
+
+            if (JsonResponse != null && JsonResponse.contains("\"ErrorCode\":\"0\"")) {
+                Log.e("tag void", "****Success");
+
+                try {
+
+                    JSONObject parentObject = new JSONObject(JsonResponse);
+                    JSONArray parentArray = parentObject.getJSONArray("Data");
+
+                    List<VoidResons>itemModifer=new ArrayList<>();
+
+//                    for (int i = 0; i < parentArray.length(); i++) {
+//                        JSONObject finalObject = parentArray.getJSONObject(i);
+
+                        //SHIFT_NO":"1","SHIFT_NAME":"SHIFT A","USER_NUMBER":"1","USER_NAME":"ALAA","VOID_REASON":"خطأ مطبخ","SDATE":"04-08-2019","ACTIVEATED":"0"
+
+//                        VoidResons obj = new VoidResons();
+//                        obj.setShiftNo(finalObject.getInt("SHIFT_NO"));
+//                        obj.setShiftName(finalObject.getString("SHIFT_NAME"));
+//                        obj.setUserNo(finalObject.getInt("USER_NUMBER"));
+//                        obj.setUserName(finalObject.getString("USER_NAME"));
+//                        obj.setVoidReason(finalObject.getString("VOID_REASON"));
+//                        obj.setDate(finalObject.getString("SDATE"));
+//                        obj.setActiveated(finalObject.getInt("ACTIVEATED"));
+
+//
+//                        itemModifer.add(obj);
+                    JSONObject finalObject = parentArray.getJSONObject(0);
+                        data1=finalObject.getString("ITEMPIC");
+                        Log.e("bitmap in side ",""+data1);
+
+                    JSONObject finalObject1 = parentArray.getJSONObject(1);
+                        data2=finalObject1.getString("ITEMPIC");
+
+
+                    JSONObject finalObject2 = parentArray.getJSONObject(2);
+                        data3=finalObject2.getString("ITEMPIC");
+
+
+//                    }
+
+//
+//                    mDHandler.deleteAllVoidReasons();
+//                    for (int i = 0; i < itemModifer.size(); i++) {
+//                        mDHandler.addVoidReason(itemModifer.get(i));
+//                    }
+
+//                    progressDialog.dismiss();
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            } else {
+                Log.e("tag voidReson", "****Failed to export data");
+//                progressDialog.dismiss();
+            }
+
+        }
+    }
+
+
+
+
 }

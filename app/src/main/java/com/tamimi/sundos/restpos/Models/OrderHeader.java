@@ -43,6 +43,7 @@ public class OrderHeader {
     private  int orgPos ;
     private  int isPost ;
     private  int cashNo ;
+    private String orderTKKind;
 
 
     public OrderHeader() {
@@ -55,7 +56,7 @@ public class OrderHeader {
                        double totalTax, double totalServiceTax, double subTotal, double amountDue, double deliveryCharge,
                        int sectionNO, int tableNO, double cashValue, double cardsValue, double chequeValue, double couponValue ,
                        double giftValue, double pointValue, String shiftName,int shiftNumber, String waiter,
-                       int seatsNumber, String userName, int userNo, String time,String orgNo,int orgPos,int cashNo) {
+                       int seatsNumber, String userName, int userNo, String time,String orgNo,int orgPos,int cashNo,String orderTKKind) {
 
         this.orderType = orderType;
         this.orderKind = orderKind;
@@ -92,6 +93,7 @@ public class OrderHeader {
         this.orgNo = orgNo;
         this.orgPos = orgPos;
         this.cashNo = cashNo;
+        this.orderTKKind = orderTKKind;
     }
 
     public void setUserName(String userName) {
@@ -381,6 +383,14 @@ public class OrderHeader {
         this.cashNo = cashNo;
     }
 
+    public String getOrderHeaderKind() {
+        return orderTKKind;
+    }
+
+    public void setOrderHeaderKind(String orderHeaderKind) {
+        this.orderTKKind = orderHeaderKind;
+    }
+
     public JSONObject getJSONObject() { // for kitchen
         JSONObject obj = new JSONObject();
         try {
@@ -390,6 +400,8 @@ public class OrderHeader {
             obj.put("TABLENO", tableNO);
             obj.put("SECTIONNO", sectionNO);
             obj.put("CASHNO", cashNo);
+            obj.put("ORDERTKKIND",orderTKKind );
+            obj.put("STGNO",1 );
 
         } catch (JSONException e) {
             Log.e("Tag" , "JSONException");
@@ -437,6 +449,7 @@ public class OrderHeader {
             obj.put("ORGPOS", orgPos);
 
             obj.put("CASHNO", cashNo);
+            obj.put("ORDERTKKIND",orderTKKind );
 
         } catch (JSONException e) {
             Log.e("Tag" , "JSONException");

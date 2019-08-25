@@ -287,6 +287,7 @@
                         </LinearLayout>
 
                         <LinearLayout
+                            android:id="@+id/DashboardData"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_margin="18dp"
@@ -295,6 +296,25 @@
                             android:orientation="vertical">
 
 
+                            <ImageView
+                                android:id="@+id/imageView7"
+                                android:layout_width="70dp"
+                                android:layout_height="70dp"
+                                android:layout_marginTop="5dp"
+                                android:background="@drawable/dashboards_icon"
+                                android:scaleType="fitCenter" />
+
+                            <TextView
+                                android:id="@+id/textView118"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_margin="20dp"
+                                android:gravity="center_horizontal"
+                                android:lineSpacingExtra="15dp"
+                                android:text="@string/dashboard"
+                                android:textColor="@color/text_color"
+                                android:textSize="18sp" />
                         </LinearLayout>
 
                     </LinearLayout>
@@ -722,6 +742,45 @@
                         </LinearLayout>
 
                     </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginHorizontal="20dp"
+                        android:orientation="horizontal">
+
+
+                        <LinearLayout
+                            android:id="@+id/TakeKindlayout"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_margin="18dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="80dp"
+                                android:layout_height="80dp"
+                                android:layout_marginTop="5dp"
+                                android:background="@drawable/take_away_hover"
+                                android:scaleType="fitCenter" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_margin="20dp"
+                                android:gravity="center_horizontal"
+                                android:lineSpacingExtra="15dp"
+                                android:text="@string/take_away_kind"
+                                android:textColor="@color/text_color"
+                                android:textSize="18sp" />
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
 
                 </LinearLayout>
             </ScrollView>

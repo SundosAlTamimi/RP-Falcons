@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.RequiresApi;
 
 import com.tamimi.sundos.restpos.Models.Items;
 
@@ -42,6 +45,7 @@ public class FoodAdapter1 extends BaseAdapter {
         return position;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
 
@@ -58,11 +62,17 @@ public class FoodAdapter1 extends BaseAdapter {
         description.setText(items.get(position).getDescription());
         img.setImageDrawable(new BitmapDrawable(context.getResources(), StringToBitMap(items.get(position).getPic())));
         if (items.get(position).getPrice() != 0)
-            price.setText("$" + items.get(position).getPrice());
+            price.setText("JD " + items.get(position).getPrice());
 
-        background.setBackgroundColor(items.get(position).getBackground());
-        name.setTextColor(items.get(position).getTextColor());
-        description.setTextColor(items.get(position).getTextColor());
+        /*first
+//        background.setBackgroundColor(items.get(position).getBackground());
+//        name.setTextColor(items.get(position).getTextColor());
+//        description.setTextColor(items.get(position).getTextColor()); //update 13
+        end */
+
+        background.setBackgroundColor(context.getColor(R.color.layer2));
+        name.setTextColor(context.getColor(R.color.text_color));
+        description.setTextColor(context.getColor(R.color.text_color));
 
         return view1;
     }
