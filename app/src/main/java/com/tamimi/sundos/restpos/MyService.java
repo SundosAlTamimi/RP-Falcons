@@ -59,7 +59,7 @@ public class MyService extends Service {
         T.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-
+try{
                 OrderHeaderObj.clear();
                 OrderTransactionsObj.clear();
                 PayMethodObj.clear();
@@ -74,6 +74,9 @@ public class MyService extends Service {
                     }
                 }
 //                message();
+            }catch (Exception e){
+
+}
 
             }
         }, 10000, 3000);

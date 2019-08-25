@@ -547,7 +547,12 @@ end*/
                                 double price = Double.parseDouble(convertToEnglish(textViewPrice.getText().toString()));
                                 double newTotal = price * (qty + 1);
 
-                                double originalDisc = lineDiscount.get(index) * 100 / Double.parseDouble(convertToEnglish(textViewTotal.getText().toString()));
+                                double originalDisc=0;
+                                if(Double.parseDouble(convertToEnglish(textViewTotal.getText().toString()))!=0) {
+                                    originalDisc = lineDiscount.get(index) * 100 / Double.parseDouble(convertToEnglish(textViewTotal.getText().toString()));
+                                }else {
+                                    originalDisc = 0 ;
+                                }
                                 double newDiscountValue = originalDisc * newTotal / 100;
                                 lineDiscount.set(index, newDiscountValue);
 

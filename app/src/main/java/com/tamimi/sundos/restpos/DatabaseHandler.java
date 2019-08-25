@@ -3244,6 +3244,10 @@ try {
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
+        try {
+
+
+
         if (cursor.moveToFirst())
             do {
                 OrderHeader order_header = new OrderHeader();
@@ -3291,6 +3295,10 @@ try {
                 orderHeaders.add(order_header);
 
             } while (cursor.moveToNext());
+
+        }catch (Exception e){
+
+        }
         return orderHeaders;
 
 
@@ -4589,7 +4597,23 @@ try {
         db.execSQL("delete from " + VOID_REASONS);
         db.close();
     }
+    public void deleteAllItemModifier() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + ITEM_WITH_MODIFIER);
+        db.close();
+    }
 
+    public void deleteAllItemFQ() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + ITEM_WITH_FQ);
+        db.close();
+    }
+
+    public void deleteAllCategoryModefier() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + CATEGORY_WITH_MODIFIER);
+        db.close();
+    }
 
     public void deleteAllMaxSerial() {
         SQLiteDatabase db = this.getWritableDatabase();
