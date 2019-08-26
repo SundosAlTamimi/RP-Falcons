@@ -1092,7 +1092,7 @@ public class SyncWithCloud {
                         ItemWithModifier obj = new ItemWithModifier();
                         obj.setItemCode(finalObject.getInt("ITEM_CODE"));
                         obj.setModifierNo(finalObject.getInt("MODIFIER_NO"));
-                        obj.setModifierText(finalObject.getString("MODIFIER_TEXT"));
+                        obj.setModifierText("-"+finalObject.getString("MODIFIER_TEXT"));
 
 
 //
