@@ -264,11 +264,11 @@ public class SendCloud {
                 dbHandler.updateOrderTablesIsPost2(vhfNo, POSNO, orderKind);
                 dbHandler.updateOrderTablesIsPost3(vhfNo, POSNO, orderKind);
 
-//            } else if (s != null && s.contains("voucher saved unsuccessfully,")) {
-//
-//                dbHandler.updateOrderTablesIsPost(vhfNo,POSNO);
-//                dbHandler.updateOrderTablesIsPost2(vhfNo,POSNO);
-//                dbHandler.updateOrderTablesIsPost3(vhfNo,POSNO);
+            } else if (s != null && s.contains("ErrorCode : 6")) {
+
+                dbHandler.updateOrderTablesIsPost(vhfNo,POSNO,orderKind);
+                dbHandler.updateOrderTablesIsPost2(vhfNo,POSNO,orderKind);
+                dbHandler.updateOrderTablesIsPost3(vhfNo,POSNO,orderKind);
 
             } else {
 //                Toast.makeText(ExportJason.this, "Failed to export data", Toast.LENGTH_SHORT).show();

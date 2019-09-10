@@ -13,6 +13,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Base64;
 import android.util.Log;
 import android.util.TypedValue;
@@ -82,15 +83,15 @@ import androidx.core.content.ContextCompat;
 public class Order extends AppCompatActivity {
 
     Button modifier, void_, delivery, discount, lDiscount, split, priceChange;
-    TextView total, lineDisCount, disCount, deliveryCharge, subTotal, service, tax, amountDue, vhSerial,details,onOffLine;
+    TextView total, lineDisCount, disCount, deliveryCharge, subTotal, service, tax, amountDue, vhSerial, details, onOffLine;
     Button pay, order;
     TextView orderType, tableNo, check, date, user, seats;
-    TableLayout tableLayout, tableItem,tableDetail;
+    TableLayout tableLayout, tableItem, tableDetail;
     GridView catGridView, itemGridView;
     CheckBox discPerc;
     Button back;
     LinearLayout baLiner;
-    boolean showChek=false;
+    boolean showChek = false;
 
     private ProgressDialog progressDialog;
     String json_getString;
@@ -106,6 +107,7 @@ public class Order extends AppCompatActivity {
     double totalItemsWithDiscount = 0.0;
     double voucherDiscount;
     boolean discChanged = false;
+    int index =0;
 
     static ArrayList<OrderTransactions> OrderTransactionsObj;
     static OrderHeader OrderHeaderObj;
@@ -121,10 +123,12 @@ public class Order extends AppCompatActivity {
     List<Items> items = new ArrayList<>();
     ArrayList<Double> lineDiscount;
     ArrayList<Items> requestedItems;
+    ArrayList<OrderTransactions> requestedItemsSplit;
+    ArrayList<OrderTransactions> requestedItemsSplitTemp;
 
     TableRow focused = null;
     int selectedModifier = -1;
-boolean showdetal=false;
+    boolean showdetal = false;
     Dialog dialog;
     private DatabaseHandler mDbHandler;
 
@@ -133,8 +137,9 @@ boolean showdetal=false;
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.order);
-
-        Log.e("Order ","in 12345");
+        requestedItemsSplit = new ArrayList<>();
+        requestedItemsSplitTemp = new ArrayList<>();
+        Log.e("Order ", "in 12345");
 
         initialize();
 
@@ -148,11 +153,11 @@ boolean showdetal=false;
         fillCategories();
         showCats();
 //        blinkAnnouncement(onOffLine);
-         Settings.focas=onOffLine;
+        Settings.focas = onOffLine;
         if (Settings.onOFF) {
-            new Settings().blinkAnnouncement( true);
-        }else {
-            new Settings().blinkAnnouncement( false);
+            new Settings().blinkAnnouncement(true);
+        } else {
+            new Settings().blinkAnnouncement(false);
         }
 
         Bundle extras = getIntent().getExtras();
@@ -208,11 +213,11 @@ boolean showdetal=false;
                         if (!(Double.parseDouble(amountDue.getText().toString()) == 0)) {
                             saveInOrderTransactionTemp();
                             saveInOrderHeaderTemp();
-                            List<MaxSerial>max=new ArrayList<>();
-                            max=mDbHandler.getMaxSerialForVhf();
-                            if(max.size()!=0) {
+                            List<MaxSerial> max = new ArrayList<>();
+                            max = mDbHandler.getMaxSerialForVhf();
+                            if (max.size() != 0) {
                                 String vhNO = max.get(0).getMaxSerial();
-                                if (Integer.parseInt(voucherNo)>Integer.parseInt(vhNO)) {
+                                if (Integer.parseInt(voucherNo) > Integer.parseInt(vhNO)) {
                                     mDbHandler.updateMaxVhf(voucherNo);
                                 }
                             }
@@ -248,19 +253,22 @@ boolean showdetal=false;
                 case R.id.back:
                     showCats();
                     break;
+                case R.id.split:
+                    showSplitDialog();
+                    break;
 
                 case R.id.orderType:
-                    if(showChek){
+                    if (showChek) {
                         showCats();
                     }
                     break;
                 case R.id.details:
-                    if(!showdetal){
+                    if (!showdetal) {
                         notShowDetails();
-                    showdetal=true;}
-                    else {
+                        showdetal = true;
+                    } else {
                         ShowDetails();
-                        showdetal=false;
+                        showdetal = false;
                     }
                     break;
             }
@@ -268,14 +276,14 @@ boolean showdetal=false;
     };
 
 
-    void notShowDetails(){
+    void notShowDetails() {
 
         tableDetail.setVisibility(View.GONE);
         details.setBackgroundDrawable(getResources().getDrawable(R.drawable.arrowup));
 
     }
 
-    void ShowDetails(){
+    void ShowDetails() {
 
         tableDetail.setVisibility(View.VISIBLE);
         details.setBackgroundDrawable(getResources().getDrawable(R.drawable.arrowdown));
@@ -334,7 +342,7 @@ boolean showdetal=false;
         itemGridView.setVisibility(View.INVISIBLE);
         back.setVisibility(View.GONE);
         baLiner.setVisibility(View.GONE);
-        showChek=false;
+        showChek = false;
 
     }
 
@@ -343,7 +351,7 @@ boolean showdetal=false;
         itemGridView.setVisibility(View.VISIBLE);
         back.setVisibility(View.VISIBLE);
         baLiner.setVisibility(View.VISIBLE);
-        showChek=true;
+        showChek = true;
     }
 
     @SuppressLint("SetTextI18n")
@@ -399,11 +407,11 @@ boolean showdetal=false;
         if (max.size() != 0) {
             voucherSerial = Integer.parseInt(max.get(0).getMaxSerial()) + 1;
         } else {
-            MaxSerial maxN=new MaxSerial("0","0");
+            MaxSerial maxN = new MaxSerial("0", "0");
             mDbHandler.addMAXSerial(maxN);
             voucherSerial = 1;
         }
-        Log.e("maxSerial = ",""+voucherSerial);
+        Log.e("maxSerial = ", "" + voucherSerial);
 
         date.setText(today);
         voucherNo = "" + voucherSerial;
@@ -411,14 +419,15 @@ boolean showdetal=false;
     }
 
     void fillCategories() {
-        Log.e("Order ","in fill 12345");
+        Log.e("Order ", "in fill 12345");
         List<FamilyCategory> allCats = mDbHandler.getAllFamilyCategory();
-        for (int i = 0; i < allCats.size(); i++){
+        for (int i = 0; i < allCats.size(); i++) {
             if (allCats.get(i).getType() != 2) {
                 allCats.remove(i);
                 i--;
-            }}
-        Log.e("cat size","="+allCats.size());
+            }
+        }
+        Log.e("cat size", "=" + allCats.size());
 
 //        for (int i = 0; i < categories.size(); i++) {
 //            for (int k = 0; k < allCats.size(); k++) {
@@ -461,6 +470,7 @@ boolean showdetal=false;
             if (subList.size() != 0) {
                 List<Items> items = mDbHandler.getAllItems();
                 requestedItems = new ArrayList<>();
+
 /*first
 //                for (int i = 0; i < subList.size(); i++) {
 //                    if (Character.isDigit(subList.get(i).getitemName().charAt(0)) || subList.get(i).getitemName().equals("")) { // no data in this position
@@ -499,11 +509,11 @@ end*/
                                         items.get(j).getOpenPrice(), items.get(j).getKitchenPrinter(), items.get(j).getDescription(), items.get(j).getPrice(),
                                         items.get(j).getUsed(), items.get(j).getShowInMenu(), items.get(j).getPic(), subList.get(i).getBackground(),
                                         subList.get(i).getTextColor(), subList.get(i).getPosition()));
-                                               }
+                        }
                     }
                 }
 
-                Log.e("menu name ",""+requestedItems.get(0).getMenuName());
+                Log.e("menu name ", "" + requestedItems.get(0).getMenuName());
 
                 foodAdapter = new FoodAdapter1(Order.this, requestedItems);
                 itemGridView.setAdapter(foodAdapter);
@@ -512,55 +522,65 @@ end*/
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         if (!requestedItems.get(i).getMenuName().equals("")) {
-                            boolean exist = false;
-                            int index = 0;
-                            for (int k = 0; k < tableLayout.getChildCount(); k++) {
-                                TableRow tableRow = (TableRow) tableLayout.getChildAt(k);
-                                TextView textViewName = (TextView) tableRow.getChildAt(1);
-                                if (textViewName.getText().toString().equals(requestedItems.get(i).getMenuName())) {
-                                    exist = true;
-                                    index = k;
-                                    break;
-                                }
-                            }
+                            if (requestedItems.get(i).getOpenPrice() != 0) {
+//
+                                showOpenPriceDilaog(i);
 
-                            if (!exist) {
-                                ArrayList<ItemWithFq> questions = mDbHandler.getItemWithFqs(requestedItems.get(i).itemBarcode);
-                                if (questions.size() == 0) {
-                                    wantedItems.add(requestedItems.get(i));
-                                    lineDiscount.add(0.0);
-                                    insertItemRaw(requestedItems.get(i));
-                                } else {
-                                    wantedItems.add(requestedItems.get(i));
-                                    lineDiscount.add(0.0);
-                                    insertItemRaw(requestedItems.get(i));
-                                    showForceQuestionDialog(requestedItems.get(i).itemBarcode, 0);
-                                }
                             } else {
-                                TableRow tableRow = (TableRow) tableLayout.getChildAt(index);
-                                TextView textViewQty = (TextView) tableRow.getChildAt(0);
-                                TextView textViewPrice = (TextView) tableRow.getChildAt(2);
-                                TextView textViewTotal = (TextView) tableRow.getChildAt(3);
-                                TextView textViewLineDiscount = (TextView) tableRow.getChildAt(4);
+//                            boolean exist = false;
+//                            int index = 0;
+//                            for (int k = 0; k < tableLayout.getChildCount(); k++) {
+//                                TableRow tableRow = (TableRow) tableLayout.getChildAt(k);
+//                                TextView textViewName = (TextView) tableRow.getChildAt(1);
+//                                if (textViewName.getText().toString().equals(requestedItems.get(i).getMenuName())) {
+//                                    exist = true;
+//                                    index = k;
+//                                    break;
+//                                }
+//                            }
+//
+//
+//                            if (!exist) {
+//                                ArrayList<ItemWithFq> questions = mDbHandler.getItemWithFqs(requestedItems.get(i).itemBarcode);
+//                                if (questions.size() == 0) {
+//                                    wantedItems.add(requestedItems.get(i));
+//                                    lineDiscount.add(0.0);
+//                                    insertItemRaw(requestedItems.get(i));
+//                                } else {
+//                                    wantedItems.add(requestedItems.get(i));
+//                                    lineDiscount.add(0.0);
+//                                    insertItemRaw(requestedItems.get(i));
+//                                    showForceQuestionDialog(requestedItems.get(i).itemBarcode, 0);
+//                                }
+//                            } else {
+//                                TableRow tableRow = (TableRow) tableLayout.getChildAt(index);
+//                                TextView textViewQty = (TextView) tableRow.getChildAt(0);
+//                                TextView textViewPrice = (TextView) tableRow.getChildAt(2);
+//                                TextView textViewTotal = (TextView) tableRow.getChildAt(3);
+//                                TextView textViewLineDiscount = (TextView) tableRow.getChildAt(4);
+//
+//                                double qty = Double.parseDouble(convertToEnglish(textViewQty.getText().toString()));
+//                                double price = Double.parseDouble(convertToEnglish(textViewPrice.getText().toString()));
+//                                double newTotal = price * (qty + 1);
+//
+//                                double originalDisc = 0;
+//                                if (Double.parseDouble(convertToEnglish(textViewTotal.getText().toString())) != 0) {
+//                                    originalDisc = lineDiscount.get(index) * 100 / Double.parseDouble(convertToEnglish(textViewTotal.getText().toString()));
+//                                } else {
+//                                    originalDisc = 0;
+//                                }
+//                                double newDiscountValue = originalDisc * newTotal / 100;
+//                                lineDiscount.set(index, newDiscountValue);
+//
+//                                textViewQty.setText("" + (qty + 1));
+//                                textViewTotal.setText("" + newTotal);
+//                                textViewLineDiscount.setText("" + newDiscountValue);
+//                                calculateTotal();
+//                            }
 
-                                double qty = Double.parseDouble(convertToEnglish(textViewQty.getText().toString()));
-                                double price = Double.parseDouble(convertToEnglish(textViewPrice.getText().toString()));
-                                double newTotal = price * (qty + 1);
-
-                                double originalDisc=0;
-                                if(Double.parseDouble(convertToEnglish(textViewTotal.getText().toString()))!=0) {
-                                    originalDisc = lineDiscount.get(index) * 100 / Double.parseDouble(convertToEnglish(textViewTotal.getText().toString()));
-                                }else {
-                                    originalDisc = 0 ;
-                                }
-                                double newDiscountValue = originalDisc * newTotal / 100;
-                                lineDiscount.set(index, newDiscountValue);
-
-                                textViewQty.setText("" + (qty + 1));
-                                textViewTotal.setText("" + newTotal);
-                                textViewLineDiscount.setText("" + newDiscountValue);
-                                calculateTotal();
+                                insertAndCheackItem(i);
                             }
+
                         } else
                             new Settings().makeText(Order.this, getResources().getString(R.string.no_item));
                     }
@@ -636,6 +656,98 @@ end*/
         }
         tableLayout.addView(row);
         tableLayoutPosition++;
+
+        calculateTotal();
+    }
+
+    void insertItemRawSplit(OrderTransactions item, TableLayout tableLayout, int origNSplit) {
+        final TableRow row = new TableRow(Order.this);
+
+        TableLayout.LayoutParams lp = new TableLayout.LayoutParams();
+        lp.setMargins(2, 0, 2, 0);
+        row.setLayoutParams(lp);
+
+        for (int i = 0; i < 5; i++) {
+            TextView textView = new TextView(Order.this);
+            EditText editText = new EditText(Order.this);
+
+
+            switch (i) {
+                case 0:
+                    if (origNSplit == 0) {
+                        textView.setText(" " + item.getQty());
+                    } else {
+                        textView.setText("1");
+                    }
+
+                    break;
+                case 1:
+                    textView.setText(item.getItemName());
+                    break;
+                case 2:
+                    textView.setText("" + item.getPrice());
+                    break;
+                case 3:
+                    if (origNSplit == 0) {
+                        textView.setText("" + item.getTotal());
+                    }else {
+                        textView.setText("" + item.getPrice());
+
+                    }
+                    break;
+
+                case 4:
+                        textView.setText("0");
+
+                    break;
+
+//                case 4:
+//                    if(origNSplit==0) {
+//                         editText.setTextColor(ContextCompat.getColor(Order.this, R.color.text_color));
+//                        editText.setGravity(Gravity.CENTER);
+//                        editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+//                        TableRow.LayoutParams lp2 =  new  TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+//                        editText.setLayoutParams(lp2);
+//                        editText.setText("0");
+//                        row.addView(editText);
+//                    }
+//                    break;
+
+
+            }
+
+            textView.setTextColor(ContextCompat.getColor(Order.this, R.color.text_color));
+            textView.setGravity(Gravity.CENTER);
+
+            if (i != 4) {
+                TableRow.LayoutParams lp1 = new TableRow.LayoutParams(0, 30, 1.0f);
+                textView.setLayoutParams(lp1);
+            }
+               else {
+                TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, 30, 0.00001f);
+                textView.setLayoutParams(lp2);
+            }
+
+            if (i == 1) {
+                TableRow.LayoutParams lp1 = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+                textView.setLayoutParams(lp1);
+            }
+
+            row.addView(textView);
+            row.setTag("0");
+
+            row.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+//                    focused = row;
+                    setRawFocusedSplit(row, tableLayout);
+                }
+            });
+
+
+        }
+        tableLayout.addView(row);
+//        tableLayoutPosition++;
 
         calculateTotal();
     }
@@ -778,6 +890,24 @@ end*/
             tableRow.setBackgroundDrawable(null);
         }
         raw.setBackgroundColor(getResources().getColor(R.color.layer4));
+    }
+
+    void setRawFocusedSplit(TableRow raw, TableLayout tableLayout) {
+//        for (int k = 0; k < tableLayout.getChildCount(); k++) {
+//            TableRow tableRow = (TableRow) tableLayout.getChildAt(k);
+//            tableRow.setBackgroundDrawable(null);
+//        }
+
+        if (!raw.getTag().toString().equals("1")) {
+            raw.setTag("1");
+            raw.setBackgroundColor(getResources().getColor(R.color.layer4));
+        } else {
+            raw.setTag("0");
+            raw.setBackgroundDrawable(null);
+
+        }
+
+
     }
 
     void deleteRaw(final TableRow row) {
@@ -1083,7 +1213,7 @@ end*/
 
                     mDbHandler.addCancleOrder(new CancleOrder(voucherNo, today, Settings.user_name, Settings.user_no, Settings.shift_name,
                             Settings.shift_number, waiter, Integer.parseInt(waiterNo), "" + wantedItems.get(k).getItemBarcode(),
-                            wantedItems.get(k).getMenuName(),  Double.parseDouble(convertToEnglish(textViewQty.getText().toString())),
+                            wantedItems.get(k).getMenuName(), Double.parseDouble(convertToEnglish(textViewQty.getText().toString())),
                             wantedItems.get(k).getPrice(), Double.parseDouble(convertToEnglish(textViewTotal.getText().toString())),
                             reasonText, 1, time, Settings.POS_number));
                 }
@@ -1123,6 +1253,403 @@ end*/
             TableRow tableRow = (TableRow) tableLayout.getChildAt(i);
             tableRow.setTag("" + i);
         }
+    }
+
+    void showSplitDialog() {
+
+        Dialog dialogSplit = new Dialog(Order.this);
+        dialogSplit.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogSplit.setCancelable(false);
+        dialogSplit.setContentView(R.layout.split_dialog);
+        dialogSplit.setCanceledOnTouchOutside(false);
+
+        Button split, pay, cancel;
+        TableLayout originalTLayout, splitTLayout;
+
+        split = (Button) dialogSplit.findViewById(R.id.split_);
+        pay = (Button) dialogSplit.findViewById(R.id.pay_split);
+        cancel = (Button) dialogSplit.findViewById(R.id.cancel_split);
+        originalTLayout = (TableLayout) dialogSplit.findViewById(R.id.originalTLayout);
+        splitTLayout = (TableLayout) dialogSplit.findViewById(R.id.splitTLayout);
+
+        TextView total_original, delivery_original, lineDiscount_original, discount_original, subTotal_original, service_original, tax_original, amountDue_original;
+        TextView total_split, delivery_split, lineDiscount_split, discount_split, subTotal_split, service_split, tax_split, amountDue_split;
+
+        total_original = (TextView) dialogSplit.findViewById(R.id.total);
+        delivery_original = (TextView) dialogSplit.findViewById(R.id.delivery);
+        lineDiscount_original = (TextView) dialogSplit.findViewById(R.id.line_discount);
+        discount_original = (TextView) dialogSplit.findViewById(R.id.discount);
+        subTotal_original = (TextView) dialogSplit.findViewById(R.id.sub_total);
+        service_original = (TextView) dialogSplit.findViewById(R.id.service);
+        tax_original = (TextView) dialogSplit.findViewById(R.id.tax);
+        amountDue_original = (TextView) dialogSplit.findViewById(R.id.amount_due);
+
+        total_split = (TextView) dialogSplit.findViewById(R.id.total2);
+        delivery_split = (TextView) dialogSplit.findViewById(R.id.delivery2);
+        lineDiscount_split = (TextView) dialogSplit.findViewById(R.id.line_discount2);
+        discount_split = (TextView) dialogSplit.findViewById(R.id.discount2);
+        subTotal_split = (TextView) dialogSplit.findViewById(R.id.sub_total2);
+        service_split = (TextView) dialogSplit.findViewById(R.id.service2);
+        tax_split = (TextView) dialogSplit.findViewById(R.id.tax2);
+        amountDue_split = (TextView) dialogSplit.findViewById(R.id.amount_due2);
+
+        total_original.setText(total.getText().toString());
+        delivery_original.setText(deliveryCharge.getText().toString());
+        lineDiscount_original.setText(lineDisCount.getText().toString());
+        discount_original.setText(disCount.getText().toString());
+        subTotal_original.setText(subTotal.getText().toString());
+        service_original.setText(service.getText().toString());
+        tax_original.setText(tax.getText().toString());
+        amountDue_original.setText(amountDue.getText().toString());
+
+        requestedItemsSplit.clear();
+        requestedItemsSplit = mDbHandler.getAllRequestVoucherOrderTemp(voucherNo, "" + Settings.POS_number);
+
+
+        //        for (int i = 0; i < tableLayout.getChildCount(); i++) {
+//            TableRow tableRow = (TableRow) tableLayout.getChildAt(i);
+//            TextView textViewQty = (TextView) tableRow.getChildAt(0);
+//            TextView textViewItemName = (TextView) tableRow.getChildAt(1);
+//            TextView textViewPrice = (TextView) tableRow.getChildAt(2);
+//            TextView textViewTotal = (TextView) tableRow.getChildAt(3);
+//            TextView textViewLineDiscount = (TextView) tableRow.getChildAt(4);
+//
+//            OrderTransactions orderTransactions = new OrderTransactions();
+//            orderTransactions.setItemName(textViewItemName.getText().toString());
+//            orderTransactions.setTotal(Double.parseDouble(convertToEnglish(textViewTotal.getText().toString())));
+//            orderTransactions.setQty(Double.parseDouble(convertToEnglish(textViewQty.getText().toString())));
+//            orderTransactions.setPrice(Double.parseDouble(convertToEnglish(textViewPrice.getText().toString())));
+//            orderTransactions.setlDiscount(Double.parseDouble(convertToEnglish(textViewLineDiscount.getText().toString())));
+//
+//            requestedItemsSplit.add(orderTransactions);
+//
+//        }
+
+
+        for (int i = 0; i < requestedItemsSplit.size(); i++) {
+            insertItemRawSplit(requestedItemsSplit.get(i), originalTLayout, 0);
+
+        }
+
+
+        split.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                findAndAddQty(originalTLayout,splitTLayout);
+                List <String>originaltData= calculateSplit(originalTLayout, splitTLayout, requestedItemsSplit);
+                List <String>splitData= calculateSplit(splitTLayout, splitTLayout, requestedItemsSplitTemp);
+
+                total_original.setText(originaltData.get(0));
+                delivery_original.setText(originaltData.get(1));
+                lineDiscount_original.setText(originaltData.get(2));
+                discount_original.setText(originaltData.get(3));
+                subTotal_original.setText(originaltData.get(4));
+                service_original.setText(originaltData.get(5));
+                tax_original.setText(originaltData.get(6));
+                amountDue_original.setText(originaltData.get(7));
+
+
+                total_split.setText(splitData.get(0));
+                delivery_split.setText(splitData.get(1));
+                lineDiscount_split .setText(splitData.get(2));
+                discount_split.setText(splitData.get(3));
+                subTotal_split.setText(splitData.get(4));
+                service_split.setText(splitData.get(5));
+                tax_split .setText(splitData.get(6));
+                amountDue_split .setText(splitData.get(7));
+
+
+                Toast.makeText(Order.this, "split ...", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+        pay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogSplit.dismiss();
+                requestedItemsSplit.clear();
+            }
+        });
+
+
+        dialogSplit.show();
+
+    }
+
+    void findAndAddQty(TableLayout tableLayout1,TableLayout tableLayout2){
+
+
+        for (int i = 0; i < tableLayout1.getChildCount(); i++) {
+            TableRow tableRow = (TableRow) tableLayout1.getChildAt(i);
+            TextView textViewORGqTY = (TextView) tableRow.getChildAt(0);
+            TextView textViewOrgItemName = (TextView) tableRow.getChildAt(1);
+            TextView textViewPrices = (TextView) tableRow.getChildAt(2);
+
+            TextView textViewTotal = (TextView) tableRow.getChildAt(3);
+
+            if(tableLayout2.getChildCount()!=0) {
+                if (tableRow.getTag().toString().equals("1")) {
+                    boolean isFound=false;
+                    TextView QtyText=null;
+                    TextView textPrice=null;
+                    TextView textTotal=null;
+
+                    for (int q = 0; q < tableLayout2.getChildCount(); q++) {
+                        TableRow tableRows = (TableRow) tableLayout2.getChildAt(q);
+                        TextView textViewQty = (TextView) tableRows.getChildAt(0);
+                        TextView textViewItemName = (TextView) tableRows.getChildAt(1);
+                        TextView textViewPrice= (TextView) tableRows.getChildAt(2);
+                        TextView textViewTotalS = (TextView) tableRows.getChildAt(3);
+
+                        isFound = false;
+
+                        if (textViewItemName.getText().toString().equals(textViewOrgItemName.getText().toString())) {
+                            isFound = true;
+                            QtyText=textViewQty;
+                            textPrice=textViewPrice;
+                            textTotal=textViewTotalS;
+                            break;
+                        }
+                    }
+
+                        if(isFound){
+
+                            double orgQty = Double.parseDouble(convertToEnglish(textViewORGqTY.getText().toString())) - 1;
+                            double splitQty = Double.parseDouble(convertToEnglish(QtyText.getText().toString())) + 1;
+                            QtyText.setText("" + (splitQty));
+                            textViewORGqTY.setText("" + (orgQty));
+
+                            double orgTotal=orgQty*Double.parseDouble(convertToEnglish(textViewPrices.getText().toString()));
+                            double splitTotal=splitQty*Double.parseDouble(convertToEnglish(textPrice.getText().toString()));
+
+                            textTotal.setText(""+splitTotal);
+                            textViewTotal.setText(""+orgTotal);
+
+                            if(orgQty==0){
+                                tableLayout1.removeView(tableRow);
+                                requestedItemsSplit.remove(i);
+
+                            }
+
+                        }else {
+
+                            requestedItemsSplitTemp.add(requestedItemsSplit.get(i));
+                            insertItemRawSplit(requestedItemsSplitTemp.get(index), tableLayout2, 1);
+                            double orgQty = Double.parseDouble(convertToEnglish(textViewORGqTY.getText().toString())) - 1;
+                            textViewORGqTY.setText("" + (orgQty));
+
+                            double orgTotal=orgQty*Double.parseDouble(convertToEnglish(textViewPrices.getText().toString()));
+
+                            textViewTotal.setText(""+orgTotal);
+
+                            index++;
+                            if(orgQty==0){
+                                tableLayout1.removeView(tableRow);
+                                requestedItemsSplit.remove(i);
+
+                            }
+
+                        }
+
+
+
+                    }
+
+            }else {
+
+                if (tableRow.getTag().toString().equals("1")){
+                    requestedItemsSplitTemp.add(requestedItemsSplit.get(i));
+                insertItemRawSplit(requestedItemsSplitTemp.get(index), tableLayout2, 1);
+                double orgQty = Double.parseDouble(convertToEnglish(textViewORGqTY.getText().toString())) - 1;
+                textViewORGqTY.setText("" + (orgQty));
+
+                    double orgTotal=orgQty*Double.parseDouble(convertToEnglish(textViewPrices.getText().toString()));
+                    double splitTotal=1*(requestedItemsSplitTemp.get(index).getPrice());
+
+                    textViewTotal.setText(""+orgTotal);
+
+                    index++;
+                if (orgQty == 0) {
+                    tableLayout1.removeView(tableRow);
+
+                    requestedItemsSplit.remove(i);
+
+
+                }
+            }
+            }
+
+        }
+
+    }
+
+
+    List<String> calculateSplit(TableLayout originalTableLayout, TableLayout splitTableLayout, List<OrderTransactions> orderTransactions) {
+
+        double total =0,delivery=0,lDiscount=0,discount=0,subTotal=0,service=0,tax=0,amountDue=0;
+        List<String> originalData=new ArrayList<>();
+        List<String> SplitData=new ArrayList<>();
+        for(int i=0;i<originalTableLayout.getChildCount();i++){
+
+            TableRow tableRow = (TableRow) originalTableLayout.getChildAt(i);
+            TextView textViewORGqTY = (TextView) tableRow.getChildAt(0);
+            TextView textViewOrgItemName =(TextView) tableRow.getChildAt(1);
+            TextView textViewPrices = (TextView) tableRow.getChildAt(2);
+            TextView textViewTotal = (TextView) tableRow.getChildAt(3);
+            TextView textViewlDisc = (TextView) tableRow.getChildAt(4);
+            double lDisc=0;
+            lDisc =(orderTransactions.get(i).getlDiscount()/orderTransactions.get(i).getQty())*Double.parseDouble(convertToEnglish(textViewORGqTY.getText().toString()));
+            textViewlDisc.setText(""+lDisc);
+
+            double Disc=0;
+            Disc =(orderTransactions.get(i).getDiscount()/orderTransactions.get(i).getQty())*Double.parseDouble(convertToEnglish(textViewORGqTY.getText().toString()));
+
+
+            total+=Double.parseDouble(convertToEnglish(textViewTotal.getText().toString()));
+//            delivery+=Double.parseDouble(convertToEnglish(textViewTotal.getText().toString()));
+            lDiscount+=lDisc;
+            discount+=Disc;
+
+//            service+=Double.parseDouble(convertToEnglish(textViewTotal.getText().toString()));
+//            tax+=Double.parseDouble(convertToEnglish(textViewTotal.getText().toString()));
+
+        }
+
+        subTotal=total+delivery-(discount+lDiscount);
+        amountDue+=subTotal+tax+service;
+
+
+        originalData.add(""+total);
+        originalData.add(""+delivery);
+        originalData.add(""+lDiscount);
+        originalData.add(""+discount);
+        originalData.add(""+subTotal);
+        originalData.add(""+service);
+        originalData.add(""+tax);
+        originalData.add(""+amountDue);
+
+
+        return  originalData;
+
+    }
+
+
+    void showOpenPriceDilaog(int mainIndex) {
+
+        dialog = new Dialog(Order.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.open_price_dialog);
+        dialog.setCanceledOnTouchOutside(false);
+
+        EditText price, newName;
+        Button save, cancel;
+
+        price = (EditText) dialog.findViewById(R.id.price);
+        newName = (EditText) dialog.findViewById(R.id.newName);
+
+        save = (Button) dialog.findViewById(R.id.save);
+        cancel = (Button) dialog.findViewById(R.id.cancel);
+
+
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!price.getText().toString().equals("")) {
+
+                    requestedItems.get(mainIndex).setPrice(Double.parseDouble(price.getText().toString()));
+                    if (!newName.getText().toString().equals("")) {
+                        requestedItems.get(mainIndex).setMenuName(newName.getText().toString());
+                    }
+
+                    insertAndCheackItem(mainIndex);
+                    dialog.dismiss();
+
+                } else {
+                    Toast.makeText(Order.this, " please Enter Price ", Toast.LENGTH_SHORT).show();
+                }
+
+
+            }
+        });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+
+        dialog.show();
+    }
+
+
+    void insertAndCheackItem(int mainIndex) {
+
+
+        Log.e("openprice sar", "" + "    " + requestedItems.get(mainIndex).getPrice() + "///////////" + requestedItems.get(mainIndex).getMenuName());
+
+        boolean exist = false;
+        int index = 0;
+        for (int k = 0; k < tableLayout.getChildCount(); k++) {
+            TableRow tableRow = (TableRow) tableLayout.getChildAt(k);
+            TextView textViewName = (TextView) tableRow.getChildAt(1);
+            if (textViewName.getText().toString().equals(requestedItems.get(mainIndex).getMenuName())) {
+                exist = true;
+                index = k;
+                break;
+            }
+        }
+
+
+        if (!exist) {
+            ArrayList<ItemWithFq> questions = mDbHandler.getItemWithFqs(requestedItems.get(mainIndex).itemBarcode);
+            if (questions.size() == 0) {
+                wantedItems.add(requestedItems.get(mainIndex));
+                lineDiscount.add(0.0);
+                insertItemRaw(requestedItems.get(mainIndex));
+            } else {
+                wantedItems.add(requestedItems.get(mainIndex));
+                lineDiscount.add(0.0);
+                insertItemRaw(requestedItems.get(mainIndex));
+                showForceQuestionDialog(requestedItems.get(mainIndex).itemBarcode, 0);
+            }
+        } else {
+            TableRow tableRow = (TableRow) tableLayout.getChildAt(index);
+            TextView textViewQty = (TextView) tableRow.getChildAt(0);
+            TextView textViewPrice = (TextView) tableRow.getChildAt(2);
+            TextView textViewTotal = (TextView) tableRow.getChildAt(3);
+            TextView textViewLineDiscount = (TextView) tableRow.getChildAt(4);
+
+            double qty = Double.parseDouble(convertToEnglish(textViewQty.getText().toString()));
+            double price = Double.parseDouble(convertToEnglish(textViewPrice.getText().toString()));
+            double newTotal = price * (qty + 1);
+
+            double originalDisc = 0;
+            if (Double.parseDouble(convertToEnglish(textViewTotal.getText().toString())) != 0) {
+                originalDisc = lineDiscount.get(index) * 100 / Double.parseDouble(convertToEnglish(textViewTotal.getText().toString()));
+            } else {
+                originalDisc = 0;
+            }
+            double newDiscountValue = originalDisc * newTotal / 100;
+            lineDiscount.set(index, newDiscountValue);
+
+            textViewQty.setText("" + (qty + 1));
+            textViewTotal.setText("" + newTotal);
+            textViewLineDiscount.setText("" + newDiscountValue);
+            calculateTotal();
+        }
+
+
     }
 
     void showForceQuestionDialog(final int itemBarcode, final int questionNo) {
@@ -1793,7 +2320,7 @@ end*/
                 Settings.service_value, Double.parseDouble((convertToEnglish(tax.getText().toString()))), serviceTax, Double.parseDouble((convertToEnglish(subTotal.getText().toString()))),
                 Double.parseDouble(convertToEnglish(amountDue.getText().toString())), Double.parseDouble(convertToEnglish(deliveryCharge.getText().toString())), tableNumber,
                 sectionNumber, PayMethods.cashValue1, PayMethods.creditCardValue1, PayMethods.chequeValue1, PayMethods.creditValue1,
-                PayMethods.giftCardValue1, PayMethods.pointValue1, Settings.shift_name, Settings.shift_number, "No Waiter", 0, Settings.user_name, Settings.user_no, time, "0", -1, Settings.cash_no,"noAdd");
+                PayMethods.giftCardValue1, PayMethods.pointValue1, Settings.shift_name, Settings.shift_number, "No Waiter", 0, Settings.user_name, Settings.user_no, time, "0", -1, Settings.cash_no, "noAdd");
 
 
     }
@@ -1852,7 +2379,7 @@ end*/
                 Settings.service_value, Double.parseDouble(convertToEnglish(tax.getText().toString())), serviceTax, Double.parseDouble(convertToEnglish(subTotal.getText().toString())),
                 Double.parseDouble(convertToEnglish(amountDue.getText().toString())), Double.parseDouble(convertToEnglish(deliveryCharge.getText().toString())), sectionNumber,
                 tableNumber, 0.00, 0.00, 0.00, 0.00,
-                0.00, 0.00, Settings.shift_name, Settings.shift_number, waiter, seatNo, Settings.user_name, Settings.user_no, time, "0", -1, Settings.cash_no,"noAdd"));
+                0.00, 0.00, Settings.shift_name, Settings.shift_number, waiter, seatNo, Settings.user_name, Settings.user_no, time, "0", -1, Settings.cash_no, "noAdd"));
     }
 
 //    void sendToKitchen() {
@@ -2078,7 +2605,8 @@ end*/
         discount.setOnTouchListener(onTouchListener);
         priceChange.setOnTouchListener(onTouchListener);
 
-       details.setOnClickListener(onClickListener);
+        split.setOnClickListener(onClickListener);
+        details.setOnClickListener(onClickListener);
         pay.setOnClickListener(onClickListener);
         order.setOnClickListener(onClickListener);
         modifier.setOnClickListener(onClickListener);

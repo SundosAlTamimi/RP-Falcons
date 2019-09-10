@@ -144,17 +144,19 @@ public class PayMethods extends AppCompatActivity {
 
         } else {  // pay from takeaway
 
+try {
+    balance.setText(obj.getOrderHeaderObj().getAmountDue() + "");
+    orderAmount.setText(obj.getOrderHeaderObj().getTotal() + "");
+    discount.setText(obj.getOrderHeaderObj().getAllDiscount() + "");
+    deliveryCharge.setText(obj.getOrderHeaderObj().getDeliveryCharge() + "");
+    server.setText(obj.getOrderHeaderObj().getWaiter());
+    subTotal.setText(obj.getOrderHeaderObj().getSubTotal() + "");
+    tax.setText(obj.getOrderHeaderObj().getTotalTax() + "");
+    amountDue.setText(obj.getOrderHeaderObj().getAmountDue() + "");
 
-            balance.setText(obj.getOrderHeaderObj().getAmountDue() + "");
-            orderAmount.setText(obj.getOrderHeaderObj().getTotal() + "");
-            discount.setText(obj.getOrderHeaderObj().getAllDiscount() + "");
-            deliveryCharge.setText(obj.getOrderHeaderObj().getDeliveryCharge() + "");
-            server.setText(obj.getOrderHeaderObj().getWaiter());
-            subTotal.setText(obj.getOrderHeaderObj().getSubTotal() + "");
-            tax.setText(obj.getOrderHeaderObj().getTotalTax() + "");
-            amountDue.setText(obj.getOrderHeaderObj().getAmountDue() + "");
-
-
+}catch (Exception e){
+    Log.e("Exception 158","/payMethodClass/");
+}
             mainBalance = convertToEnglish(balance.getText().toString());
             remainingBalance.setText(getResources().getString(R.string.remaining_) +Double.parseDouble( convertToEnglish(balance.getText().toString())));
             check.setText(check.getText().toString() + " -");
