@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="910dp"
+    android:layout_width="940dp"
     android:layout_height="match_parent"
     android:background="@color/layer3"
     android:orientation="vertical"
@@ -47,7 +47,7 @@
                 android:id="@+id/textView121"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Original "
+                android:text="@string/original"
                 android:textColor="@color/text_color"
                 android:textSize="18sp" />
 
@@ -408,13 +408,30 @@
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/split_"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:background="@drawable/split_icon" />
+        <LinearLayout
+            android:layout_width="104dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <Button
+                android:id="@+id/split_"
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/left_arrow" />
+
+            <Button
+                android:id="@+id/split_2"
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/right_arrow" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="389dp"

@@ -4584,12 +4584,14 @@ try {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from ORDER_HEADER_TEMP WHERE SECTION_NUMBER = '" + sectionNo + "' and TABLE_NUMBER = '" + tableNo + "'");
         db.close();
+        Log.e("delete ","HeaderTemp");
     }
 
     public void deleteFromOrderTransactionTemp(String sectionNo, String tableNo) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from ORDER_TRANSACTIONS_TEMP WHERE SECTION_NO = '" + sectionNo + "' and TABLE_NO = '" + tableNo + "'");
         db.close();
+        Log.e("delete ","HeaderTemp");
     }
 
     public void deleteFromOrderTransactionTemp2(String sectionNo, String tableNo, int itemCode) {

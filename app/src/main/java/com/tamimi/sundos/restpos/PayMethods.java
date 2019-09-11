@@ -1742,8 +1742,40 @@ try {
 
 //                Intent intent = new Intent(PayMethods.this, Order.class);
 //                startActivity(intent);
-                Print(obj.getOrderTransactionObj(),obj.getOrderHeaderObj());
-                mDHandler.updateMaxVhf(maxSerial);
+                if(obj.getOrderHeaderObj().getOrderType()==0){
+                    Print(obj.getOrderTransactionObj(),obj.getOrderHeaderObj());
+                    mDHandler.updateMaxVhf(maxSerial);
+                }else {
+
+
+                    obj.updateOrderHeaderTempSplit().setCashValue(cashValue1);
+                    obj.updateOrderHeaderTempSplit().setCardsValue(creditCardValue1);
+                    obj.updateOrderHeaderTempSplit().setChequeValue(chequeValue1);
+                    obj.updateOrderHeaderTempSplit().setGiftValue(giftCardValue1);
+                    obj.updateOrderHeaderTempSplit().setCouponValue(creditValue1);
+                    obj.updateOrderHeaderTempSplit().setPointValue(pointValue1);
+
+                    Log.e("sec no /table no ",""+obj.updateOrderHeaderTempSplit().getSectionNO()+"  /  "+ obj.updateOrderHeaderTempSplit().getTableNO());
+                    Log.e("total no /dis no ",""+obj.updateOrderHeaderTempSplit().getTotal()+"  /  "+ obj.updateOrderHeaderTempSplit().getAllDiscount());
+
+                    Log.e("vouDate no /voh no ",""+obj.updateOrderHeaderTempSplit().getVoucherDate()+"  /  "+ obj.updateOrderHeaderTempSplit().getVoucherNumber());
+
+
+                    mDHandler.deleteFromOrderHeaderTemp( ""+obj.updateOrderHeaderTempSplit().getSectionNO(), ""+ obj.updateOrderHeaderTempSplit().getTableNO());
+                    mDHandler.deleteFromOrderTransactionTemp(""+obj.updateOrderHeaderTempSplit().getSectionNO(), ""+ obj.updateOrderHeaderTempSplit().getTableNO());
+
+                    mDHandler.addOrderHeaderTemp(obj.updateOrderHeaderTempSplit());
+                    for(int i=0;i<obj.updateOrderTransactionTempSplit().size();i++) {
+                        mDHandler.addOrderTransactionTemp(obj.updateOrderTransactionTempSplit().get(i));
+                    }
+
+                    Intent intent = new Intent(PayMethods.this, DineIn.class);
+                    startActivity(intent);
+
+                    mDHandler.updateMaxVhf(obj.getOrderHeaderObj().getVoucherNumber());
+
+
+                                   }
 
             } else { // Dine In
 
