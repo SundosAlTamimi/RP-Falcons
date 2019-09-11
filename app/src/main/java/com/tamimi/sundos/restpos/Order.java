@@ -1654,7 +1654,7 @@ end*/
             TextView textViewPrices = (TextView) tableRow.getChildAt(2);
 
             TextView textViewTotal = (TextView) tableRow.getChildAt(3);
-
+            if(!textViewOrgItemName.getText().toString().contains("*")){
             if (tableLayout2.getChildCount() != 0) {
                 if (tableRow.getTag().toString().equals("1")) {
                     boolean isFound = false;
@@ -1702,7 +1702,7 @@ end*/
                     } else {
 
                         requestedItemsSplit.add(requestedItemsSplitTemp.get(i));
-                        insertItemRawSplit(requestedItemsSplit.get(requestedItemsSplit.size()-1), tableLayout2, 1);
+                        insertItemRawSplit(requestedItemsSplit.get(requestedItemsSplit.size() - 1), tableLayout2, 1);
                         double orgQty = Double.parseDouble(convertToEnglish(textViewORGqTY.getText().toString())) - 1;
                         textViewORGqTY.setText("" + (orgQty));
 
@@ -1725,7 +1725,7 @@ end*/
 
                 if (tableRow.getTag().toString().equals("1")) {
                     requestedItemsSplit.add(requestedItemsSplitTemp.get(i));
-                    insertItemRawSplit(requestedItemsSplit.get(requestedItemsSplit.size()-1), tableLayout2, 1);
+                    insertItemRawSplit(requestedItemsSplit.get(requestedItemsSplit.size() - 1), tableLayout2, 1);
                     double orgQty = Double.parseDouble(convertToEnglish(textViewORGqTY.getText().toString())) - 1;
                     textViewORGqTY.setText("" + (orgQty));
 
@@ -1743,6 +1743,17 @@ end*/
                     }
                 }
             }
+        }else{
+
+            if (tableRow.getTag().toString().equals("1")) {
+                requestedItemsSplit.add(requestedItemsSplitTemp.get(i));
+                insertItemRawSplit(requestedItemsSplit.get(requestedItemsSplit.size()-1), tableLayout2, 0);
+                tableLayout1.removeView(tableRow);
+                requestedItemsSplitTemp.remove(i);
+
+            }
+
+        }
 
         }
 
