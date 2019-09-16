@@ -129,7 +129,6 @@ public class Order extends AppCompatActivity {
     ArrayList<Double> lineDiscount;
     ArrayList<Items> requestedItems;
     ArrayList<OrderTransactions> requestedItemsSplit;
-    ArrayList<OrderTransactions> requestedItemsSplit2;
     ArrayList<OrderTransactions> requestedItemsSplitTemp;
 
     TableRow focused = null;
@@ -144,7 +143,6 @@ public class Order extends AppCompatActivity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.order);
         requestedItemsSplit = new ArrayList<>();
-        requestedItemsSplit2 = new ArrayList<>();
         requestedItemsSplitTemp = new ArrayList<>();
         Log.e("Order ", "in 12345");
 
@@ -1319,30 +1317,7 @@ end*/
         requestedItemsSplit.clear();
         requestedItemsSplit = mDbHandler.getAllRequestVoucherOrderTemp(voucherNo, "" + Settings.POS_number);
 
-
-
-        //        for (int i = 0; i < tableLayout.getChildCount(); i++) {
-//            TableRow tableRow = (TableRow) tableLayout.getChildAt(i);
-//            TextView textViewQty = (TextView) tableRow.getChildAt(0);
-//            TextView textViewItemName = (TextView) tableRow.getChildAt(1);
-//            TextView textViewPrice = (TextView) tableRow.getChildAt(2);
-//            TextView textViewTotal = (TextView) tableRow.getChildAt(3);
-//            TextView textViewLineDiscount = (TextView) tableRow.getChildAt(4);
-//
-//            OrderTransactions orderTransactions = new OrderTransactions();
-//            orderTransactions.setItemName(textViewItemName.getText().toString());
-//            orderTransactions.setTotal(Double.parseDouble(convertToEnglish(textViewTotal.getText().toString())));
-//            orderTransactions.setQty(Double.parseDouble(convertToEnglish(textViewQty.getText().toString())));
-//            orderTransactions.setPrice(Double.parseDouble(convertToEnglish(textViewPrice.getText().toString())));
-//            orderTransactions.setlDiscount(Double.parseDouble(convertToEnglish(textViewLineDiscount.getText().toString())));
-//
-//            requestedItemsSplit.add(orderTransactions);
-//
-//        }
-
-
         for (int i = 0; i < requestedItemsSplit.size(); i++) {
-            requestedItemsSplit2.add(requestedItemsSplit.get(i));
             insertItemRawSplit(requestedItemsSplit.get(i), originalTLayout, 0);
 
         }
@@ -1356,24 +1331,24 @@ end*/
                 List<String> originaltData = calculateSplit(originalTLayout, requestedItemsSplit);
                 List<String> splitData = calculateSplit(splitTLayout, requestedItemsSplitTemp);
 
-                total_original.setText(originaltData.get(0));
-                delivery_original.setText(originaltData.get(1));
-                lineDiscount_original.setText(originaltData.get(2));
-                discount_original.setText(originaltData.get(3));
-                subTotal_original.setText(originaltData.get(4));
-                service_original.setText(originaltData.get(5));
-                tax_original.setText(originaltData.get(6));
-                amountDue_original.setText(originaltData.get(7));
+                total_original.setText(convertToEnglish(String.format("%.3f",Double.parseDouble(originaltData.get(0)))));
+                delivery_original.setText(convertToEnglish(String.format("%.3f",Double.parseDouble(originaltData.get(1)))));
+                lineDiscount_original.setText(convertToEnglish(String.format("%.3f",Double.parseDouble(originaltData.get(2)))));
+                discount_original.setText(convertToEnglish(String.format("%.3f",Double.parseDouble(originaltData.get(3)))));
+                subTotal_original.setText(convertToEnglish(String.format("%.3f",Double.parseDouble(originaltData.get(4)))));
+                service_original.setText(convertToEnglish(String.format("%.3f",Double.parseDouble(originaltData.get(5)))));
+                tax_original.setText(convertToEnglish(String.format("%.3f",Double.parseDouble(originaltData.get(6)))));
+                amountDue_original.setText(convertToEnglish(String.format("%.3f",Double.parseDouble(originaltData.get(7)))));
 
 
-                total_split.setText(splitData.get(0));
-                delivery_split.setText(splitData.get(1));
-                lineDiscount_split.setText(splitData.get(2));
-                discount_split.setText(splitData.get(3));
-                subTotal_split.setText(splitData.get(4));
-                service_split.setText(splitData.get(5));
-                tax_split.setText(splitData.get(6));
-                amountDue_split.setText(splitData.get(7));
+                total_split.setText(convertToEnglish(String.format("%.3f",Double.parseDouble(splitData.get(0)))));
+                delivery_split.setText(convertToEnglish(String.format("%.3f",Double.parseDouble(splitData.get(1)))));
+                lineDiscount_split.setText(convertToEnglish(String.format("%.3f",Double.parseDouble(splitData.get(2)))));
+                discount_split.setText(convertToEnglish(String.format("%.3f",Double.parseDouble(splitData.get(3)))));
+                subTotal_split.setText(convertToEnglish(String.format("%.3f",Double.parseDouble(splitData.get(4)))));
+                service_split.setText(convertToEnglish(String.format("%.3f",Double.parseDouble(splitData.get(5)))));
+                tax_split.setText(convertToEnglish(String.format("%.3f",Double.parseDouble(splitData.get(6)))));
+                amountDue_split.setText(convertToEnglish(String.format("%.3f",Double.parseDouble(splitData.get(7)))));
 
 
                 Toast.makeText(Order.this, "split ...", Toast.LENGTH_SHORT).show();
@@ -1387,24 +1362,24 @@ end*/
                 List<String> originaltData = calculateSplit(originalTLayout, requestedItemsSplit);
                 List<String> splitData = calculateSplit(splitTLayout, requestedItemsSplitTemp);
 
-                total_original.setText(originaltData.get(0));
-                delivery_original.setText(originaltData.get(1));
-                lineDiscount_original.setText(originaltData.get(2));
-                discount_original.setText(originaltData.get(3));
-                subTotal_original.setText(originaltData.get(4));
-                service_original.setText(originaltData.get(5));
-                tax_original.setText(originaltData.get(6));
-                amountDue_original.setText(originaltData.get(7));
+                total_original.setText(convertToEnglish(String.format("%.3f",Double.parseDouble(originaltData.get(0)))));
+                delivery_original.setText(convertToEnglish(String.format("%.3f",Double.parseDouble(originaltData.get(1)))));
+                lineDiscount_original.setText(convertToEnglish(String.format("%.3f",Double.parseDouble(originaltData.get(2)))));
+                discount_original.setText(convertToEnglish(String.format("%.3f",Double.parseDouble(originaltData.get(3)))));
+                subTotal_original.setText(convertToEnglish(String.format("%.3f",Double.parseDouble(originaltData.get(4)))));
+                service_original.setText(convertToEnglish(String.format("%.3f",Double.parseDouble(originaltData.get(5)))));
+                tax_original.setText(convertToEnglish(String.format("%.3f",Double.parseDouble(originaltData.get(6)))));
+                amountDue_original.setText(convertToEnglish(String.format("%.3f",Double.parseDouble(originaltData.get(7)))));
 
 
-                total_split.setText(splitData.get(0));
-                delivery_split.setText(splitData.get(1));
-                lineDiscount_split.setText(splitData.get(2));
-                discount_split.setText(splitData.get(3));
-                subTotal_split.setText(splitData.get(4));
-                service_split.setText(splitData.get(5));
-                tax_split.setText(splitData.get(6));
-                amountDue_split.setText(splitData.get(7));
+                total_split.setText(convertToEnglish(String.format("%.3f",Double.parseDouble(splitData.get(0)))));
+                delivery_split.setText(convertToEnglish(String.format("%.3f",Double.parseDouble(splitData.get(1)))));
+                lineDiscount_split.setText(convertToEnglish(String.format("%.3f",Double.parseDouble(splitData.get(2)))));
+                discount_split.setText(convertToEnglish(String.format("%.3f",Double.parseDouble(splitData.get(3)))));
+                subTotal_split.setText(convertToEnglish(String.format("%.3f",Double.parseDouble(splitData.get(4)))));
+                service_split.setText(convertToEnglish(String.format("%.3f",Double.parseDouble(splitData.get(5)))));
+                tax_split.setText(convertToEnglish(String.format("%.3f",Double.parseDouble(splitData.get(6)))));
+                amountDue_split.setText(convertToEnglish(String.format("%.3f",Double.parseDouble(splitData.get(7)))));
 
 
                 Toast.makeText(Order.this, "split ...", Toast.LENGTH_SHORT).show();
@@ -1420,10 +1395,10 @@ end*/
                 List<MaxSerial> vhSerial = mDbHandler.getMaxSerialForVhf();
 
                 if (requestedItemsSplit.size() != 0) {
-                if (requestedItemsSplitTemp.size() != 0& Double.parseDouble(amountDue_split.getText().toString())!=0) {
+                if (requestedItemsSplitTemp.size() != 0& Double.parseDouble(amountDue_split.getText().toString())!=0& Double.parseDouble(amountDue_original.getText().toString())!=0) {
 
                     OrderHeaderObj = new OrderHeader(orderTypeFlag, 0,requestedItemsSplit.get(0).getVoucherDate(), requestedItemsSplit.get(0).getPosNo(), requestedItemsSplit.get(0).getStoreNo(),
-                            "" + (Integer.parseInt(vhSerial.get(0).getMaxSerial()) + 1), Integer.parseInt(vhSerial.get(0).getMaxSerial()), Double.parseDouble(convertToEnglish(total_split.getText().toString())), Double.parseDouble(convertToEnglish(lineDiscount_split.getText().toString())), Double.parseDouble(convertToEnglish(discount_split.getText().toString())), Double.parseDouble(convertToEnglish(lineDiscount_split.getText().toString())) + Double.parseDouble(convertToEnglish(discount_split.getText().toString())),
+                            "" + (Integer.parseInt(vhSerial.get(0).getMaxSerial()) + 1), 1, Double.parseDouble(convertToEnglish(total_split.getText().toString())), Double.parseDouble(convertToEnglish(lineDiscount_split.getText().toString())), Double.parseDouble(convertToEnglish(discount_split.getText().toString())), Double.parseDouble(convertToEnglish(lineDiscount_split.getText().toString())) + Double.parseDouble(convertToEnglish(discount_split.getText().toString())),
                             Settings.service_value, Double.parseDouble((convertToEnglish(tax_split.getText().toString()))), Double.parseDouble(convertToEnglish(service_split.getText().toString())), Double.parseDouble((convertToEnglish(subTotal_split.getText().toString()))),
                             Double.parseDouble(convertToEnglish(amountDue_split.getText().toString())), Double.parseDouble(convertToEnglish(delivery_split.getText().toString())), tableNumber,
                             sectionNumber, PayMethods.cashValue1, PayMethods.creditCardValue1, PayMethods.chequeValue1, PayMethods.creditValue1,
@@ -1449,7 +1424,7 @@ end*/
                         orderTransactions.setlDiscount(Double.parseDouble(convertToEnglish(textViewLineDiscount.getText().toString())));
 
                         orderTransactions.setVoucherNo("" + (Integer.parseInt(vhSerial.get(0).getMaxSerial()) + 1));
-                        orderTransactions.setVoucherSerial((Integer.parseInt(vhSerial.get(0).getMaxSerial()) + 1));
+                        orderTransactions.setVoucherSerial(i+1);
                         orderTransactions.setServiceTax(Double.parseDouble(convertToEnglish(service_split.getText().toString())));
                         orderTransactions.setService(Double.parseDouble(convertToEnglish(service_split.getText().toString())));
                         orderTransactions.setTotalDiscount(Double.parseDouble(convertToEnglish(textViewLineDiscount.getText().toString())));
@@ -1497,7 +1472,7 @@ end*/
                     Toast.makeText(Order.this, "Amount Due = 0.0 ", Toast.LENGTH_SHORT).show();
                 }
             }else{
-                    Toast.makeText(Order.this, "Please Cheack out this table can not split  ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Order.this, "Please Check out this table can not split  ", Toast.LENGTH_SHORT).show();
                 }
             }
         });

@@ -717,7 +717,8 @@ public class SyncWithCloud {
                         obj.setType(finalObject.getInt("ITYPE"));
                         obj.setSerial(finalObject.getInt("SERIAL"));
 
-//                        obj.setCatPic(finalObject.getDouble("PRICE"));
+
+                        obj.setCatPic(finalObject.getString("PIC"));
 
 //
                         items.add(obj);
