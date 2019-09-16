@@ -155,7 +155,7 @@ public class Order extends AppCompatActivity {
         lineDiscount = new ArrayList<Double>();
 //        categories = mDbHandler.getUsedCategories();//update 10
 
-       OrderTransactionsSplit = new ArrayList<>();;
+       OrderTransactionsSplit = new ArrayList<>();
 
         fillCategories();
         showCats();
@@ -687,8 +687,11 @@ end*/
                 case 0:
                     if (origNSplit == 0) {
                         textView.setText(" " + item.getQty());
-                    } else {
+                    } else if(origNSplit == 1) {
                         textView.setText("1");
+                    }else {
+
+                        textView.setText("0.0");
                     }
 
                     break;
@@ -1316,6 +1319,10 @@ end*/
 
         requestedItemsSplit.clear();
         requestedItemsSplit = mDbHandler.getAllRequestVoucherOrderTemp(voucherNo, "" + Settings.POS_number);
+        String vouchersNo="-1";
+        if(requestedItemsSplit.size()!=0) {
+             vouchersNo = requestedItemsSplit.get(0).getVoucherNo();
+        }
 
         for (int i = 0; i < requestedItemsSplit.size(); i++) {
             insertItemRawSplit(requestedItemsSplit.get(i), originalTLayout, 0);
@@ -1387,12 +1394,15 @@ end*/
         });
 
 
+        String finalVouchersNo = vouchersNo;
         pay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 List<OrderTransactions> original = new ArrayList<>();
                 List<OrderTransactions> split = new ArrayList<>();
                 List<MaxSerial> vhSerial = mDbHandler.getMaxSerialForVhf();
+                OrderTransactionsSplit.clear();
+                OrderTransactionsObj.clear();
 
                 if (requestedItemsSplit.size() != 0) {
                 if (requestedItemsSplitTemp.size() != 0& Double.parseDouble(amountDue_split.getText().toString())!=0& Double.parseDouble(amountDue_original.getText().toString())!=0) {
@@ -1400,8 +1410,8 @@ end*/
                     OrderHeaderObj = new OrderHeader(orderTypeFlag, 0,requestedItemsSplit.get(0).getVoucherDate(), requestedItemsSplit.get(0).getPosNo(), requestedItemsSplit.get(0).getStoreNo(),
                             "" + (Integer.parseInt(vhSerial.get(0).getMaxSerial()) + 1), 1, Double.parseDouble(convertToEnglish(total_split.getText().toString())), Double.parseDouble(convertToEnglish(lineDiscount_split.getText().toString())), Double.parseDouble(convertToEnglish(discount_split.getText().toString())), Double.parseDouble(convertToEnglish(lineDiscount_split.getText().toString())) + Double.parseDouble(convertToEnglish(discount_split.getText().toString())),
                             Settings.service_value, Double.parseDouble((convertToEnglish(tax_split.getText().toString()))), Double.parseDouble(convertToEnglish(service_split.getText().toString())), Double.parseDouble((convertToEnglish(subTotal_split.getText().toString()))),
-                            Double.parseDouble(convertToEnglish(amountDue_split.getText().toString())), Double.parseDouble(convertToEnglish(delivery_split.getText().toString())), tableNumber,
-                            sectionNumber, PayMethods.cashValue1, PayMethods.creditCardValue1, PayMethods.chequeValue1, PayMethods.creditValue1,
+                            Double.parseDouble(convertToEnglish(amountDue_split.getText().toString())), Double.parseDouble(convertToEnglish(delivery_split.getText().toString())),sectionNumber, tableNumber,
+                             PayMethods.cashValue1, PayMethods.creditCardValue1, PayMethods.chequeValue1, PayMethods.creditValue1,
                             PayMethods.giftCardValue1, PayMethods.pointValue1, Settings.shift_name, Settings.shift_number, waiter, 0, Settings.user_name, Settings.user_no, time, "0", -1, Settings.cash_no, "noAdd");
 
 
@@ -1413,28 +1423,25 @@ end*/
                         TextView textViewTotal = (TextView) tableRow.getChildAt(3);
                         TextView textViewLineDiscount = (TextView) tableRow.getChildAt(4);
 
-                        OrderTransactions orderTransactions = new OrderTransactions();
-
-
                         OrderTransactionsObj.add(requestedItemsSplitTemp.get(i));
-                        orderTransactions.setItemName(textViewItemName.getText().toString());
-                        orderTransactions.setTotal(Double.parseDouble(convertToEnglish(textViewTotal.getText().toString())));
-                        orderTransactions.setQty(Double.parseDouble(convertToEnglish(textViewQty.getText().toString())));
-                        orderTransactions.setPrice(Double.parseDouble(convertToEnglish(textViewPrice.getText().toString())));
-                        orderTransactions.setlDiscount(Double.parseDouble(convertToEnglish(textViewLineDiscount.getText().toString())));
+                        OrderTransactionsObj.get(i).setItemName(textViewItemName.getText().toString());
+                        OrderTransactionsObj.get(i).setTotal(Double.parseDouble(convertToEnglish(textViewTotal.getText().toString())));
+                        OrderTransactionsObj.get(i).setQty(Double.parseDouble(convertToEnglish(textViewQty.getText().toString())));
+                        OrderTransactionsObj.get(i).setPrice(Double.parseDouble(convertToEnglish(textViewPrice.getText().toString())));
+                        OrderTransactionsObj.get(i).setlDiscount(Double.parseDouble(convertToEnglish(textViewLineDiscount.getText().toString())));
 
-                        orderTransactions.setVoucherNo("" + (Integer.parseInt(vhSerial.get(0).getMaxSerial()) + 1));
-                        orderTransactions.setVoucherSerial(i+1);
-                        orderTransactions.setServiceTax(Double.parseDouble(convertToEnglish(service_split.getText().toString())));
-                        orderTransactions.setService(Double.parseDouble(convertToEnglish(service_split.getText().toString())));
-                        orderTransactions.setTotalDiscount(Double.parseDouble(convertToEnglish(textViewLineDiscount.getText().toString())));
-                        orderTransactions.setTaxValue(Double.parseDouble((convertToEnglish(tax_split.getText().toString()))));
+                        OrderTransactionsObj.get(i).setVoucherNo("" + (Integer.parseInt(vhSerial.get(0).getMaxSerial()) + 1));
+                        OrderTransactionsObj.get(i).setVoucherSerial(i+1);
+                        OrderTransactionsObj.get(i).setServiceTax(Double.parseDouble(convertToEnglish(service_split.getText().toString())));
+                        OrderTransactionsObj.get(i).setService(Double.parseDouble(convertToEnglish(service_split.getText().toString())));
+                        OrderTransactionsObj.get(i).setTotalDiscount(Double.parseDouble(convertToEnglish(textViewLineDiscount.getText().toString())));
+                        OrderTransactionsObj.get(i).setTaxValue(Double.parseDouble((convertToEnglish(tax_split.getText().toString()))));
 
                     }
 
 
                     orderHeaderSplit = new OrderHeader(orderTypeFlag, 0,  requestedItemsSplit.get(0).getVoucherDate(), requestedItemsSplit.get(0).getPosNo(), requestedItemsSplit.get(0).getStoreNo(),
-                            requestedItemsSplit.get(0).getVoucherNo(), requestedItemsSplit.get(0).getVoucherSerial(), Double.parseDouble(convertToEnglish(total_original.getText().toString())), Double.parseDouble(convertToEnglish(lineDiscount_original.getText().toString())), Double.parseDouble(convertToEnglish(discount_original.getText().toString())), Double.parseDouble(convertToEnglish(lineDiscount_original.getText().toString())) + Double.parseDouble(convertToEnglish(discount_original.getText().toString())),
+                            finalVouchersNo, requestedItemsSplit.get(0).getVoucherSerial(), Double.parseDouble(convertToEnglish(total_original.getText().toString())), Double.parseDouble(convertToEnglish(lineDiscount_original.getText().toString())), Double.parseDouble(convertToEnglish(discount_original.getText().toString())), Double.parseDouble(convertToEnglish(lineDiscount_original.getText().toString())) + Double.parseDouble(convertToEnglish(discount_original.getText().toString())),
                             Settings.service_value, Double.parseDouble((convertToEnglish(tax_original.getText().toString()))), Double.parseDouble(convertToEnglish(service_original.getText().toString())), Double.parseDouble((convertToEnglish(subTotal_original.getText().toString()))),
                             Double.parseDouble(convertToEnglish(amountDue_original.getText().toString())), Double.parseDouble(convertToEnglish(delivery_original.getText().toString())), requestedItemsSplit.get(0).getSectionNo(), requestedItemsSplit.get(0).getTableNo(),
                             PayMethods.cashValue1, PayMethods.creditCardValue1, PayMethods.chequeValue1, PayMethods.creditValue1,
@@ -1449,10 +1456,12 @@ end*/
                         TextView textViewTotal = (TextView) tableRow.getChildAt(3);
                         TextView textViewLineDiscount = (TextView) tableRow.getChildAt(4);
 
-                        OrderTransactions orderTransactions = new OrderTransactions();
-
 
                         OrderTransactionsSplit.add(requestedItemsSplit.get(i));
+                        Log.e("OrderTransactions1","Splittemp "+requestedItemsSplit.get(i).getVoucherNo());
+                        OrderTransactionsSplit.get(i).setVoucherNo(finalVouchersNo);
+
+                        Log.e("OrderTransactions2","Splittemp "+ OrderTransactionsSplit.get(i).getVoucherNo());
                         OrderTransactionsSplit.get(i).setItemName(textViewItemName.getText().toString());
                         OrderTransactionsSplit.get(i).setTotal(Double.parseDouble(convertToEnglish(textViewTotal.getText().toString())));
                         OrderTransactionsSplit.get(i).setQty(Double.parseDouble(convertToEnglish(textViewQty.getText().toString())));
@@ -1554,6 +1563,17 @@ end*/
                         textViewTotal.setText("" + orgTotal);
 
                         if (orgQty == 0) {
+
+                            if(tableLayout1.getChildCount()-1>i){
+                                TableRow table= (TableRow) tableLayout1.getChildAt(i+1);
+                                TextView textViewQtyq = (TextView) table.getChildAt(0);
+                                TextView textViewItemNameq = (TextView) table.getChildAt(1);
+                                if(Double.parseDouble(textViewQtyq.getText().toString())==0&textViewItemNameq.getText().toString().contains("*")){
+                                    requestedItemsSplit.remove(i+1);
+                                    tableLayout1.removeView(table);
+                                }
+                            }
+
                             tableLayout1.removeView(tableRow);
                             requestedItemsSplit.remove(i);
 
@@ -1563,6 +1583,18 @@ end*/
 
                         requestedItemsSplitTemp.add(requestedItemsSplit.get(i));
                         insertItemRawSplit(requestedItemsSplitTemp.get(requestedItemsSplitTemp.size()-1), tableLayout2, 1);
+
+                        if(tableLayout1.getChildCount()-1>i){
+                            TableRow table= (TableRow) tableLayout1.getChildAt(i+1);
+                            TextView textViewQtyq = (TextView) table.getChildAt(0);
+                            TextView textViewItemNameq = (TextView) table.getChildAt(1);
+                            if(Double.parseDouble(textViewQtyq.getText().toString())==0&textViewItemNameq.getText().toString().contains("*")){
+                                requestedItemsSplitTemp.add(requestedItemsSplit.get(i+1));
+                                insertItemRawSplit(requestedItemsSplitTemp.get(requestedItemsSplitTemp.size() - 1), tableLayout2, 2);
+                            }
+                        }
+
+
                         double orgQty = Double.parseDouble(convertToEnglish(textViewORGqTY.getText().toString())) - 1;
                         textViewORGqTY.setText("" + (orgQty));
 
@@ -1571,10 +1603,20 @@ end*/
                         textViewTotal.setText("" + orgTotal);
 
                         if (orgQty == 0) {
+                            if(tableLayout1.getChildCount()-1>i){
+                                TableRow table= (TableRow) tableLayout1.getChildAt(i+1);
+                                TextView textViewQtyq = (TextView) table.getChildAt(0);
+                                TextView textViewItemNameq = (TextView) table.getChildAt(1);
+                                if(Double.parseDouble(textViewQtyq.getText().toString())==0&textViewItemNameq.getText().toString().contains("*")){
+                                    requestedItemsSplit.remove(i+1);
+                                    tableLayout1.removeView(table);
+                                }
+                            }
                             tableLayout1.removeView(tableRow);
                             requestedItemsSplit.remove(i);
 
                         }
+
 
                     }
 
@@ -1586,6 +1628,18 @@ end*/
                 if (tableRow.getTag().toString().equals("1")) {
                     requestedItemsSplitTemp.add(requestedItemsSplit.get(i));
                     insertItemRawSplit(requestedItemsSplitTemp.get(requestedItemsSplitTemp.size()-1), tableLayout2, 1);
+
+                    if(tableLayout1.getChildCount()-1>i){
+                        TableRow table= (TableRow) tableLayout1.getChildAt(i+1);
+                        TextView textViewQtyq = (TextView) table.getChildAt(0);
+                        TextView textViewItemNameq = (TextView) table.getChildAt(1);
+                        if(Double.parseDouble(textViewQtyq.getText().toString())==0&textViewItemNameq.getText().toString().contains("*")){
+                            requestedItemsSplitTemp.add(requestedItemsSplit.get(i+1));
+                            insertItemRawSplit(requestedItemsSplitTemp.get(requestedItemsSplitTemp.size() - 1), tableLayout2, 2);
+                        }
+                    }
+
+
                     double orgQty = Double.parseDouble(convertToEnglish(textViewORGqTY.getText().toString())) - 1;
                     textViewORGqTY.setText("" + (orgQty));
 
@@ -1595,9 +1649,21 @@ end*/
                     textViewTotal.setText("" + orgTotal);
 
                     if (orgQty == 0) {
+
+                        if(tableLayout1.getChildCount()-1>i){
+                            TableRow table= (TableRow) tableLayout1.getChildAt(i+1);
+                            TextView textViewQtyq = (TextView) table.getChildAt(0);
+                            TextView textViewItemNameq = (TextView) table.getChildAt(1);
+                            if(Double.parseDouble(textViewQtyq.getText().toString())==0&textViewItemNameq.getText().toString().contains("*")){
+                                requestedItemsSplit.remove(i+1);
+                                tableLayout1.removeView(table);
+                            }
+                        }
+
                         tableLayout1.removeView(tableRow);
 
                         requestedItemsSplit.remove(i);
+
 
 
                     }
@@ -1605,13 +1671,13 @@ end*/
             }
             }else{
 
-                if (tableRow.getTag().toString().equals("1")) {
-                    requestedItemsSplitTemp.add(requestedItemsSplit.get(i));
-                    insertItemRawSplit(requestedItemsSplitTemp.get(requestedItemsSplitTemp.size()-1), tableLayout2, 0);
-                        tableLayout1.removeView(tableRow);
-                        requestedItemsSplit.remove(i);
-
-                }
+//                if (tableRow.getTag().toString().equals("1")) {
+//                    requestedItemsSplitTemp.add(requestedItemsSplit.get(i));
+//                    insertItemRawSplit(requestedItemsSplitTemp.get(requestedItemsSplitTemp.size()-1), tableLayout2, 0);
+//                        tableLayout1.removeView(tableRow);
+//                        requestedItemsSplit.remove(i);
+//
+//                }
 
             }
 
@@ -1669,6 +1735,17 @@ end*/
                         textViewTotal.setText("" + orgTotal);
 
                         if (orgQty == 0) {
+
+                            if(tableLayout1.getChildCount()-1>i){
+                                TableRow table= (TableRow) tableLayout1.getChildAt(i+1);
+                                TextView textViewQtyq = (TextView) table.getChildAt(0);
+                                TextView textViewItemNameq = (TextView) table.getChildAt(1);
+                                if(Double.parseDouble(textViewQtyq.getText().toString())==0&textViewItemNameq.getText().toString().contains("*")){
+                                requestedItemsSplitTemp.remove(i+1);
+                                tableLayout1.removeView(table);
+                                }
+                            }
+
                             tableLayout1.removeView(tableRow);
                             requestedItemsSplitTemp.remove(i);
 
@@ -1676,8 +1753,20 @@ end*/
 
                     } else {
 
+
                         requestedItemsSplit.add(requestedItemsSplitTemp.get(i));
                         insertItemRawSplit(requestedItemsSplit.get(requestedItemsSplit.size() - 1), tableLayout2, 1);
+
+                        if(tableLayout1.getChildCount()-1>i){
+                            TableRow table= (TableRow) tableLayout1.getChildAt(i+1);
+                            TextView textViewQtyq = (TextView) table.getChildAt(0);
+                            TextView textViewItemNameq = (TextView) table.getChildAt(1);
+                            if(Double.parseDouble(textViewQtyq.getText().toString())==0&textViewItemNameq.getText().toString().contains("*")){
+                                requestedItemsSplit.add(requestedItemsSplitTemp.get(i+1));
+                                insertItemRawSplit(requestedItemsSplit.get(requestedItemsSplit.size() - 1), tableLayout2, 2);
+                            }
+                        }
+
                         double orgQty = Double.parseDouble(convertToEnglish(textViewORGqTY.getText().toString())) - 1;
                         textViewORGqTY.setText("" + (orgQty));
 
@@ -1686,8 +1775,20 @@ end*/
                         textViewTotal.setText("" + orgTotal);
 
                         if (orgQty == 0) {
+
+                            if(tableLayout1.getChildCount()-1>i){
+                                TableRow table= (TableRow) tableLayout1.getChildAt(i+1);
+                                TextView textViewQtyq = (TextView) table.getChildAt(0);
+                                TextView textViewItemNameq = (TextView) table.getChildAt(1);
+                                if(Double.parseDouble(textViewQtyq.getText().toString())==0&textViewItemNameq.getText().toString().contains("*")){
+                                    requestedItemsSplitTemp.remove(i+1);
+                                    tableLayout1.removeView(table);
+                                }
+                            }
+
                             tableLayout1.removeView(tableRow);
                             requestedItemsSplitTemp.remove(i);
+
 
                         }
 
@@ -1701,6 +1802,17 @@ end*/
                 if (tableRow.getTag().toString().equals("1")) {
                     requestedItemsSplit.add(requestedItemsSplitTemp.get(i));
                     insertItemRawSplit(requestedItemsSplit.get(requestedItemsSplit.size() - 1), tableLayout2, 1);
+
+                    if(tableLayout1.getChildCount()-1>i){
+                        TableRow table= (TableRow) tableLayout1.getChildAt(i+1);
+                        TextView textViewQtyq = (TextView) table.getChildAt(0);
+                        TextView textViewItemNameq = (TextView) table.getChildAt(1);
+                        if(Double.parseDouble(textViewQtyq.getText().toString())==0&textViewItemNameq.getText().toString().contains("*")){
+                            requestedItemsSplit.add(requestedItemsSplitTemp.get(i+1));
+                            insertItemRawSplit(requestedItemsSplit.get(requestedItemsSplit.size() - 1), tableLayout2, 2);
+                        }
+                    }
+
                     double orgQty = Double.parseDouble(convertToEnglish(textViewORGqTY.getText().toString())) - 1;
                     textViewORGqTY.setText("" + (orgQty));
 
@@ -1710,23 +1822,32 @@ end*/
                     textViewTotal.setText("" + orgTotal);
 
                     if (orgQty == 0) {
+
+                        if(tableLayout1.getChildCount()-1>i){
+                            TableRow table= (TableRow) tableLayout1.getChildAt(i+1);
+                            TextView textViewQtyq = (TextView) table.getChildAt(0);
+                            TextView textViewItemNameq = (TextView) table.getChildAt(1);
+                            if(Double.parseDouble(textViewQtyq.getText().toString())==0&textViewItemNameq.getText().toString().contains("*")){
+                                requestedItemsSplitTemp.remove(i+1);
+                                tableLayout1.removeView(table);
+                            }
+                        }
                         tableLayout1.removeView(tableRow);
-
                         requestedItemsSplitTemp.remove(i);
-
-
                     }
+
+
                 }
             }
         }else{
 
-            if (tableRow.getTag().toString().equals("1")) {
-                requestedItemsSplit.add(requestedItemsSplitTemp.get(i));
-                insertItemRawSplit(requestedItemsSplit.get(requestedItemsSplit.size()-1), tableLayout2, 0);
-                tableLayout1.removeView(tableRow);
-                requestedItemsSplitTemp.remove(i);
-
-            }
+//            if (tableRow.getTag().toString().equals("1")) {
+//                requestedItemsSplit.add(requestedItemsSplitTemp.get(i));
+//                insertItemRawSplit(requestedItemsSplit.get(requestedItemsSplit.size()-1), tableLayout2, 0);
+//                tableLayout1.removeView(tableRow);
+//                requestedItemsSplitTemp.remove(i);
+//
+//            }
 
         }
 

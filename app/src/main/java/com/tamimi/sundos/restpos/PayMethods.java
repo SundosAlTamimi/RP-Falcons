@@ -32,6 +32,7 @@ import com.tamimi.sundos.restpos.Models.Money;
 import com.tamimi.sundos.restpos.Models.OrderHeader;
 import com.tamimi.sundos.restpos.Models.OrderTransactions;
 import com.tamimi.sundos.restpos.Models.PayMethod;
+import com.tamimi.sundos.restpos.Models.TableActions;
 import com.tamimi.sundos.restpos.Models.TakeAway;
 
 import org.json.JSONArray;
@@ -1733,9 +1734,10 @@ try {
 
                 mDHandler.addOrderHeader(obj.getOrderHeaderObj());
 
-                for (int i = 0; i < obj.getOrderTransactionObj().size(); i++)
+                for (int i = 0; i < obj.getOrderTransactionObj().size(); i++) {
+                    obj.getOrderTransactionObj().get(i).setVoucherNo(obj.getOrderHeaderObj().getVoucherNumber());
                     mDHandler.addOrderTransaction(obj.getOrderTransactionObj().get(i));
-
+                }
 
                 sendToKitchen(PayMethods.this, obj.getOrderHeaderObj(), obj.getOrderTransactionObj(), payMethodList, itemWithScreens);
                 sendToServer(PayMethods.this,obj.getOrderHeaderObj(), obj.getOrderTransactionObj(), payMethodList);
@@ -1745,15 +1747,15 @@ try {
                 if(obj.getOrderHeaderObj().getOrderType()==0){
                     Print(obj.getOrderTransactionObj(),obj.getOrderHeaderObj());
                     mDHandler.updateMaxVhf(maxSerial);
-                }else {
+                }else {// for split method for update temp table ..
 
 
-                    obj.updateOrderHeaderTempSplit().setCashValue(cashValue1);
-                    obj.updateOrderHeaderTempSplit().setCardsValue(creditCardValue1);
-                    obj.updateOrderHeaderTempSplit().setChequeValue(chequeValue1);
-                    obj.updateOrderHeaderTempSplit().setGiftValue(giftCardValue1);
-                    obj.updateOrderHeaderTempSplit().setCouponValue(creditValue1);
-                    obj.updateOrderHeaderTempSplit().setPointValue(pointValue1);
+                    obj.updateOrderHeaderTempSplit().setCashValue(0);
+                    obj.updateOrderHeaderTempSplit().setCardsValue(0);
+                    obj.updateOrderHeaderTempSplit().setChequeValue(0);
+                    obj.updateOrderHeaderTempSplit().setGiftValue(0);
+                    obj.updateOrderHeaderTempSplit().setCouponValue(0);
+                    obj.updateOrderHeaderTempSplit().setPointValue(0);
 
                     Log.e("sec no /table no ",""+obj.updateOrderHeaderTempSplit().getSectionNO()+"  /  "+ obj.updateOrderHeaderTempSplit().getTableNO());
                     Log.e("total no /dis no ",""+obj.updateOrderHeaderTempSplit().getTotal()+"  /  "+ obj.updateOrderHeaderTempSplit().getAllDiscount());
@@ -1766,8 +1768,17 @@ try {
 
                     mDHandler.addOrderHeaderTemp(obj.updateOrderHeaderTempSplit());
                     for(int i=0;i<obj.updateOrderTransactionTempSplit().size();i++) {
+
+                        obj.updateOrderTransactionTempSplit().get(i).setVoucherNo(obj.updateOrderHeaderTempSplit().getVoucherNumber());
                         mDHandler.addOrderTransactionTemp(obj.updateOrderTransactionTempSplit().get(i));
                     }
+
+                    TableActions table=new TableActions( obj.getOrderHeaderObj().getPointOfSaleNumber(), obj.getOrderHeaderObj().getUserName()
+                    , obj.getOrderHeaderObj().getUserNo(), obj.getOrderHeaderObj().getShiftName(), obj.getOrderHeaderObj().getShiftNumber(),
+                            2, obj.getOrderHeaderObj().getVoucherDate(), obj.getOrderHeaderObj().getTime(), obj.getOrderHeaderObj().getTableNO(),
+                            obj.getOrderHeaderObj().getSectionNO(),-1,-1);
+
+                    mDHandler.addTableAction(table);
 
                     Intent intent = new Intent(PayMethods.this, DineIn.class);
                     startActivity(intent);
