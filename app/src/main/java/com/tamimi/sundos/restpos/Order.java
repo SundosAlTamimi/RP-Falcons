@@ -598,7 +598,6 @@ public class Order extends AppCompatActivity {
 
             row.addView(textView);
             row.setTag(tableLayoutPosition);
-
             row.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -1462,10 +1461,8 @@ public class Order extends AppCompatActivity {
                     dialog.setCancelable(false);
                     dialog.setContentView(R.layout.line_discount_dialog);
                     dialog.setCanceledOnTouchOutside(true);
-
 //                    Window window = dialog.getWindow();
 //                    window.setLayout(470, 280);
-
                     final EditText addLineDiscountEditText = (EditText) dialog.findViewById(R.id.add_line_discount);
                     Button buttonDone = (Button) dialog.findViewById(R.id.b_done);
                     final CheckBox radioButton = (CheckBox) dialog.findViewById(R.id.discount_perc);

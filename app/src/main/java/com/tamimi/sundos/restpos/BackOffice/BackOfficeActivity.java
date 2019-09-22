@@ -122,6 +122,7 @@ public class BackOfficeActivity extends AppCompatActivity {
     String today;
     DatabaseHandler mDHandler;
     Bitmap imageBitmap = null;
+
     ImageView moneyPicImageView = null;
 
     ArrayList<OrderHeader> headerData, headerDataMarket;
@@ -536,9 +537,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         Button tillOk = (Button) dialog.findViewById(R.id.tillerOk);
         Button printDenom = (Button) dialog.findViewById(R.id.print_denomination);
         Button moveChangeOver = (Button) dialog.findViewById(R.id.move_change_over_to_another_user);
-
         TextView date = (TextView) dialog.findViewById(R.id.frDate);
-
         Spinner shiftName = (Spinner) dialog.findViewById(R.id.shiftName);
         Spinner cashierNo = (Spinner) dialog.findViewById(R.id.casherNo);
         Spinner PosNo = (Spinner) dialog.findViewById(R.id.posNo);
