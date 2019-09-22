@@ -61,9 +61,10 @@ public class MenuRegistration extends AppCompatActivity {
     CheckBox notUsedCheckBox, discountAvailableCheckBox, pointAvailableCheckBox, openPriceCheckBox;
     EditText menuNameEditText, priceEditText, taxPercentEditText, secondaryNameEditText,
             kitchenAliasEditText, itemBarcodeEditText, descriptionEditText, wastagePercentEditText;
-    Button newButton, saveButton, exitButton, addMenuCategory, addInventoryUnit, addRecipe, deleteCat;
+    Button newButton, saveButton, exitButton, addMenuCategory, addInventoryUnit, addRecipe, deleteCat,updateButton;
     ImageView itemPic;
     ImageView catPic;
+    String BarcodeUpdate;
 
     static EditText catName, familyEditText;
 
@@ -75,8 +76,10 @@ public class MenuRegistration extends AppCompatActivity {
     Dialog dialog, dialog2;
     static final int SELECTED_PICTURE = 1;
     boolean itemBarcodeFound = false;
+    boolean itemBarcodeUpdate = false,isChangePic=false;
     List<Items> items;
     boolean noOpen = false;
+    int index=-1;
     ArrayAdapter<String> categoriesAdapter, unitAdapter, printersAdapter, familiesAdapter, menuNameAdapter;
 
     List<String> categories = new ArrayList<>();
@@ -167,7 +170,7 @@ public class MenuRegistration extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+if(!itemBarcodeUpdate){
                 String itemBarcode = convertToEnglish(itemBarcodeEditText.getText().toString());
                 for (int i = 0; i < items.size(); i++) {
                     if (!itemBarcode.equals("") && itemBarcode.equals(String.valueOf(items.get(i).getItemBarcode()))) {
@@ -205,7 +208,7 @@ public class MenuRegistration extends AppCompatActivity {
                                 break;
                         }
 
-                        itemBitmapPic = getResizedBitmap(itemBitmapPic , 100, 100);
+                        itemBitmapPic = getResizedBitmap(itemBitmapPic, 100, 100);
 
                         storeInDatabase(
                                 categoriesSpinner.getSelectedItem().toString(),
@@ -239,6 +242,87 @@ public class MenuRegistration extends AppCompatActivity {
                 } else
                     new Settings().makeText(MenuRegistration.this, getResources().getString(R.string.chang_ITEM_BARCOGE));
                 itemBarcodeFound = false;
+            }else {
+
+    mDbHandler.deleteForUpdateItem(BarcodeUpdate);
+
+    if (check()) {
+        int taxType = 0;
+        switch (taxTypRadioGroup.getCheckedRadioButtonId()) {
+            case R.id.tax_:
+                taxType = 0;
+                break;
+            case R.id.no_tax:
+                taxType = 1;
+                break;
+        }
+        int status = 0;
+        switch (statusRadioGroup.getCheckedRadioButtonId()) {
+            case R.id.available:
+                status = 0;
+                break;
+            case R.id.out_of_stock:
+                status = 1;
+                break;
+        }
+        int itemType = 0;
+        switch (itemTypeRadioGroup.getCheckedRadioButtonId()) {
+            case R.id.ready:
+                itemType = 0;
+                break;
+            case R.id.row_material:
+                itemType = 1;
+                break;
+        }
+
+        if(isChangePic){
+        itemBitmapPic = getResizedBitmap(itemBitmapPic, 100, 100);}
+        else {
+            itemBitmapPic  =StringToBitMap(items.get(index).getPic()) ;
+                    }
+
+        storeInDatabase(
+                categoriesSpinner.getSelectedItem().toString(),
+                menuNameEditText.getText().toString(),
+                familyName,
+                ifEmptyDouble(convertToEnglish(taxPercentEditText.getText().toString())),
+                taxType,
+                ifEmptyString(secondaryNameEditText.getText().toString()),
+                ifEmptyString(kitchenAliasEditText.getText().toString()),
+                Integer.parseInt(convertToEnglish(BarcodeUpdate)),
+                status,
+                itemType,
+                unitSpinner.getSelectedItem().toString(),
+                ifEmptyDouble(convertToEnglish(wastagePercentEditText.getText().toString())),
+                discountAvailableCheckBox.isChecked() ? 1 : 0,
+                pointAvailableCheckBox.isChecked() ? 1 : 0,
+                openPriceCheckBox.isChecked() ? 1 : 0,
+                printersSpinner.getSelectedItem().toString(),
+                ifEmptyString(descriptionEditText.getText().toString()),
+                ifEmptyDouble(convertToEnglish(priceEditText.getText().toString())),
+                notUsedCheckBox.isChecked() ? 1 : 0,
+                showInMenuVariavle,
+                BitMapToString(itemBitmapPic));
+
+        new Settings().makeText(MenuRegistration.this, getResources().getString(R.string.save_successful));
+        clearForm();
+        itemBarcodeFound = false;
+        BarcodeUpdate="";
+    } else
+        new Settings().makeText(MenuRegistration.this, getResources().getString(R.string.fill_request_filed));
+
+    itemBarcodeUpdate=false;
+
+}
+        }
+        });
+
+
+        updateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                upDateMenuDialog();
             }
         });
 
@@ -293,6 +377,61 @@ public class MenuRegistration extends AppCompatActivity {
 
     };
 
+
+   public void  upDateMenuDialog(){
+
+       String itemBarcode = convertToEnglish(itemBarcodeEditText.getText().toString());
+       itemBarcodeFound = false;
+       clearForm();
+       for (int i = 0; i < items.size(); i++) {
+           if (!itemBarcode.equals("") && itemBarcode.equals(String.valueOf(items.get(i).getItemBarcode()))) {
+               itemBarcodeFound = true;
+//               categoriesSpinner
+               index=i;
+               BarcodeUpdate=itemBarcode;
+               menuNameEditText.setText(items.get(i).getMenuName());
+
+                priceEditText.setText(""+items.get(i).getPrice());
+                taxPercentEditText.setText(""+items.get(i).getTax());
+                secondaryNameEditText.setText(items.get(i).getSecondaryName());
+                       kitchenAliasEditText.setText(items.get(i).getKitchenAlias());
+                       itemBarcodeEditText.setText(""+items.get(i).getItemBarcode());
+                       descriptionEditText.setText(items.get(i).getDescription());
+                       wastagePercentEditText.setText(""+items.get(i).getWastagePercent());
+               itemPic.setImageBitmap(StringToBitMap(items.get(i).getPic()));
+
+               if(items.get(i).getTaxType()==1){
+                   taxTypRadioGroup.check(R.id.no_tax);
+               }else{taxTypRadioGroup.check(R.id.tax_);}
+
+
+               if(items.get(i).getUsed()==1){
+                   notUsedCheckBox.setChecked(true);
+               }else{notUsedCheckBox.setChecked(false);}
+
+
+               if(items.get(i).getDiscountAvailable()==1){
+                   discountAvailableCheckBox.setChecked(true);
+               }else{discountAvailableCheckBox.setChecked(false);}
+
+               if(items.get(i).getPointAvailable()==1){
+                   pointAvailableCheckBox.setChecked(true);
+               }else{pointAvailableCheckBox.setChecked(false);}
+
+               if(items.get(i).getOpenPrice()==1){
+                   openPriceCheckBox.setChecked(true);
+               }else{openPriceCheckBox.setChecked(false);}
+               itemBarcodeUpdate=true;
+               break;
+           }
+       }
+
+       if(!itemBarcodeFound){
+           new Settings().makeText(MenuRegistration.this,"The Barcode Not Found Please Try Again");
+       }
+
+
+    }
 
     void showAddCategoryDialog() {
 
@@ -597,6 +736,7 @@ Log.e("save ","suc");
                 newPic.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        isChangePic=true;
                         itemPic.setBackgroundDrawable(null);
                         itemPic.setImageDrawable(new BitmapDrawable(getResources(), pic));
                         itemBitmapPic = pic;
@@ -709,6 +849,7 @@ Log.e("save ","suc");
                     itemPic.setBackgroundDrawable(null);
                     itemBitmapPic = extras.getParcelable("data");
                     itemPic.setImageDrawable(new BitmapDrawable(getResources(), itemBitmapPic));
+                    isChangePic=true;
                 } else {
                     catPic.setBackgroundDrawable(null);
                     categoryPic = extras.getParcelable("data");
@@ -758,7 +899,7 @@ Log.e("save ","suc");
     void sendToServer(Items items, List<Recipes> recipes) {
         try {
             JSONObject obj1 = items.getJSONObject();
-
+            JSONObject obj3 = items.getJSONObjectPic();
             JSONArray obj2 = new JSONArray();
             for (int i = 0; i < recipes.size(); i++)
                 obj2.put(i, recipes.get(i).getJSONObject());
@@ -766,6 +907,7 @@ Log.e("save ","suc");
             JSONObject obj = new JSONObject();
             obj.put("ITEMS", obj1);
             obj.put("RECIPES", obj2);
+            obj.put("ITEMPIC", obj3);
 
             SendCloud sendCloud = new SendCloud(MenuRegistration.this, obj);
             sendCloud.startSending("MenuRegistration");
@@ -995,7 +1137,8 @@ Log.e("save ","suc");
 
         itemPic.setImageDrawable(getResources().getDrawable(R.drawable.item_pic_icon));
         itemBitmapPic = null;
-
+        isChangePic=false;
+        items = mDbHandler.getAllItems();
         recipeTable.removeAllViews();
         taxPercentEditText.setEnabled(true);
     }
@@ -1034,6 +1177,7 @@ Log.e("save ","suc");
 
         newButton = (Button) findViewById(R.id.newButton);
         saveButton = (Button) findViewById(R.id.saveButton);
+        updateButton = (Button) findViewById(R.id.updateButton);
         exitButton = (Button) findViewById(R.id.exitButton);
         addMenuCategory = (Button) findViewById(R.id.addMenuCategory);
         addInventoryUnit = (Button) findViewById(R.id.addInventoryUnit);

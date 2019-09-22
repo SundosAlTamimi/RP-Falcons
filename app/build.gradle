@@ -33,4 +33,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha3'
     implementation files('libs/DraggableGridView.jar')
     implementation project(':dynamicgrid')
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
 }

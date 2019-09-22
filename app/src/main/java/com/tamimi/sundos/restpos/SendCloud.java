@@ -34,6 +34,7 @@ public class SendCloud {
     }
 
     public void startSending(String flag) {
+//        Log.e("check",flag);
 
         if (flag.equals("kitchen"))
             new JSONTaskKitchen().execute();
@@ -67,6 +68,9 @@ public class SendCloud {
 
         if (flag.equals("Announcement"))
             new JSONAnnouncement().execute();
+
+        if (flag.equals("authentication"))
+            new JSONGetAuthentecationInformation().execute();
     }
 
     private class JSONTaskKitchen extends AsyncTask<String, String, String> {
@@ -89,16 +93,16 @@ public class SendCloud {
         protected String doInBackground(String... params) {
             try {
 //                String link = "http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/RestSaveKitchenScreen";
-                String link = "http://Falconssoft.net/RestService/FSAppServiceDLL.dll/RestSaveKitchenScreen";
+                String link = Settings.URL + "RestSaveKitchenScreen";
 //                String link = "http://10.0.0.16:8081/RestSaveKitchenScreen";
                 String data = "compno=" + URLEncoder.encode("736", "UTF-8") + "&" +
                         "compyear=" + URLEncoder.encode("2019", "UTF-8") + "&" +
                         "voucher=" + URLEncoder.encode(obj.toString().trim(), "UTF-8");
 
-                URL url = new URL(link );
+                URL url = new URL(link);
 //                new SendDeviceDetails().execute("http://52.88.194.67:8080/IOTProjectServer/registerDevice", postData.toString());
 
-                Log.e("data kitchen ","--> "+obj.toString());
+                Log.e("data kitchen ", "--> " + obj.toString());
 
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setDoOutput(true);
@@ -165,7 +169,7 @@ public class SendCloud {
         private String JsonResponse = null;
         private HttpURLConnection urlConnection = null;
         private BufferedReader reader = null;
-        String vhfNo, POSNO ,orderKind;
+        String vhfNo, POSNO, orderKind;
 
         @Override
         protected void onPreExecute() {
@@ -183,22 +187,22 @@ public class SendCloud {
             try {
 //                String link = "http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/RestSaveOrder";
 
-                String link = "http://Falconssoft.net/RestService/FSAppServiceDLL.dll/RestSaveOrder";
+                String link = Settings.URL + "RestSaveOrder";
 //               String link = "http://10.0.0.16:8081/RestSaveOrder";
                 String data = "compno=" + URLEncoder.encode("736", "UTF-8") + "&" +
-                        "compyear=" + URLEncoder.encode("2019", "UTF-8") +"&"+
+                        "compyear=" + URLEncoder.encode("2019", "UTF-8") + "&" +
                         "VOUCHER=" + URLEncoder.encode(obj.toString().trim(), "UTF-8");
 
                 try {
                     JSONObject jo = obj.getJSONObject("ORDERHEADER");
                     vhfNo = jo.getString("VHFNO");
                     POSNO = jo.getString("POSNO");
-                    orderKind=jo.getString("ORDERKIND");
+                    orderKind = jo.getString("ORDERKIND");
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                URL url = new URL(link );
+                URL url = new URL(link);
                 Log.e("url con ", "" + url.toString());
 
 
@@ -211,7 +215,6 @@ public class SendCloud {
                 wr.writeBytes(data);
                 wr.flush();
                 wr.close();
-
 
 
                 InputStream inputStream = httpURLConnection.getInputStream();
@@ -257,18 +260,17 @@ public class SendCloud {
                 Log.e("tag", "****Success");
                 Log.e("vhf Success___", "= " + vhfNo);
 
-                  dbHandler.updateOrderTablesIsPost(vhfNo,POSNO,orderKind);
-                  dbHandler.updateOrderTablesIsPost2(vhfNo,POSNO,orderKind);
-                  dbHandler.updateOrderTablesIsPost3(vhfNo,POSNO,orderKind);
+                dbHandler.updateOrderTablesIsPost(vhfNo, POSNO, orderKind);
+                dbHandler.updateOrderTablesIsPost2(vhfNo, POSNO, orderKind);
+                dbHandler.updateOrderTablesIsPost3(vhfNo, POSNO, orderKind);
 
-//            } else if (s != null && s.contains("voucher saved unsuccessfully,")) {
-//
-//                dbHandler.updateOrderTablesIsPost(vhfNo,POSNO);
-//                dbHandler.updateOrderTablesIsPost2(vhfNo,POSNO);
-//                dbHandler.updateOrderTablesIsPost3(vhfNo,POSNO);
+            } else if (s != null && s.contains("ErrorCode : 6")) {
 
-            }else
-             {
+                dbHandler.updateOrderTablesIsPost(vhfNo,POSNO,orderKind);
+                dbHandler.updateOrderTablesIsPost2(vhfNo,POSNO,orderKind);
+                dbHandler.updateOrderTablesIsPost3(vhfNo,POSNO,orderKind);
+
+            } else {
 //                Toast.makeText(ExportJason.this, "Failed to export data", Toast.LENGTH_SHORT).show();
                 Log.e("tag ORDER", "****Failed to export data");
                 Log.e("vhf failed ___2", "= " + vhfNo + "POSNO = " + POSNO);
@@ -297,14 +299,14 @@ public class SendCloud {
         protected String doInBackground(String... params) {
             try {
 //                String link = "http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/SaveGroup";
-                String link = "http://Falconssoft.net/RestService/FSAppServiceDLL.dll/SaveGroup";
+                String link = Settings.URL + "SaveGroup";
 
                 String data = "Compno=" + URLEncoder.encode("736", "UTF-8") + "&" +
                         "CompYear=" + URLEncoder.encode("2019", "UTF-8") + "&" +
                         "POSNO=" + URLEncoder.encode("1", "UTF-8") + "&" +
-                       "Group=" + URLEncoder.encode(obj.toString().trim(), "UTF-8");
+                        "Group=" + URLEncoder.encode(obj.toString().trim(), "UTF-8");
 
-                URL url = new URL(link );
+                URL url = new URL(link);
 
                 //http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/SaveGroup?Compno=736&CompYear=2019&POSNO=1&Group={%22SERIAL%22:1,%22ITYPE%22:1,%22NAME_CATEGORY_FAMILY%22:%22NEW%20FOOD%22}
                 //http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/SaveGroup?Compno=736&CompYear=2019&POSNO=1&Group=%7B%22SERIAL%22%3A26%2C%22TYPE%22%3A2%2C%22NAME_CATEGORY_FAMILY%22%3A%22cat9+%22%7D
@@ -388,12 +390,12 @@ public class SendCloud {
         protected String doInBackground(String... params) {
             try {
 //                String link = "http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/SaveItemCard";
-            String link = "http://Falconssoft.net/RestService/FSAppServiceDLL.dll/SaveItemCard";
+                String link = Settings.URL + "SaveItemCard";
                 String data = "compno=" + URLEncoder.encode("736", "UTF-8") + "&" +
-                        "compyear=" + URLEncoder.encode("2019", "UTF-8")+ "&" +
+                        "compyear=" + URLEncoder.encode("2019", "UTF-8") + "&" +
                         "ITEMCARD=" + URLEncoder.encode(obj.toString().trim(), "UTF-8");
 
-                URL url = new URL(link );
+                URL url = new URL(link);
 
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setDoOutput(true);
@@ -419,6 +421,7 @@ public class SendCloud {
                 httpURLConnection.disconnect();
 
                 Log.e("tag MENUE", "" + stringBuffer.toString());
+                Log.e("tag MENUE2", "" + obj.toString());
 
                 return stringBuffer.toString();
 
@@ -473,7 +476,7 @@ public class SendCloud {
         @Override
         protected String doInBackground(String... params) {
             try {
-                String link = "http://falconssoft.net/RestService/FSAppServiceDLL.dll/SaveModifier";
+                String link = Settings.URL + "SaveModifier";
 //                String link = "http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/SaveModifier";
 
 
@@ -481,7 +484,7 @@ public class SendCloud {
                         "compYear=" + URLEncoder.encode("2019", "UTF-8") + "&" +
                         "Modifier=" + URLEncoder.encode(obj.toString().trim(), "UTF-8");
 
-                URL url = new URL(link );
+                URL url = new URL(link);
 
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setDoOutput(true);
@@ -561,12 +564,12 @@ public class SendCloud {
         @Override
         protected String doInBackground(String... params) {
             try {
-                String link = "http://falconssoft.net/RestService/FSAppServiceDLL.dll/SaveForceQuestion";
+                String link = Settings.URL + "SaveForceQuestion";
 //                String link = "http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/SaveForceQuestion";
 
 
                 String data = "CompNo=" + URLEncoder.encode("736", "UTF-8") + "&" +
-                        "compYear=" + URLEncoder.encode("2019", "UTF-8")+ "&" +
+                        "compYear=" + URLEncoder.encode("2019", "UTF-8") + "&" +
                         "FORCEQ=" + URLEncoder.encode(obj.toString().trim(), "UTF-8");
 
                 URL url = new URL(link);
@@ -651,7 +654,7 @@ public class SendCloud {
         @Override
         protected String doInBackground(String... params) {
             try {
-                String link = "http://falconssoft.net/RestService/FSAppServiceDLL.dll/SaveItemWModifier";
+                String link = Settings.URL + "SaveItemWModifier";
 //                String link = "http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/SaveItemWModifier";
 
 
@@ -659,7 +662,7 @@ public class SendCloud {
                         "compYear=" + URLEncoder.encode("2019", "UTF-8") + "&" +
                         "ITEMMODIF=" + URLEncoder.encode(obj.toString().trim(), "UTF-8");
 
-                URL url = new URL(link );
+                URL url = new URL(link);
 
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setDoOutput(true);
@@ -745,10 +748,10 @@ public class SendCloud {
 
 
                 String data = "CompNo=" + URLEncoder.encode("736", "UTF-8") + "&" +
-                        "compYear=" + URLEncoder.encode("2019", "UTF-8")+ "&" +
+                        "compYear=" + URLEncoder.encode("2019", "UTF-8") + "&" +
                         "CATEGMODIF=" + URLEncoder.encode(obj.toString().trim(), "UTF-8");
 
-                URL url = new URL(link );
+                URL url = new URL(link);
 
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setDoOutput(true);
@@ -828,7 +831,7 @@ public class SendCloud {
         @Override
         protected String doInBackground(String... params) {
             try {
-                String link = "http://falconssoft.net/RestService/FSAppServiceDLL.dll/SaveItemWFQ";
+                String link = Settings.URL + "SaveItemWFQ";
 //                String link = "http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/SaveItemWFQ";
 
 
@@ -836,7 +839,7 @@ public class SendCloud {
                         "compYear=" + URLEncoder.encode("2019", "UTF-8") + "&" +
                         "ITEMFQ=" + URLEncoder.encode(obj.toString().trim(), "UTF-8");
 
-                URL url = new URL(link );
+                URL url = new URL(link);
 
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setDoOutput(true);
@@ -916,14 +919,14 @@ public class SendCloud {
         @Override
         protected String doInBackground(String... params) {
             try {
-                String link = "http://falconssoft.net/RestService/FSAppServiceDLL.dll/SaveANNOUNCEMENT";
+                String link = Settings.URL + "SaveANNOUNCEMENT";
 //                String link = "http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/SaveANNOUNCEMENT";
 
                 String data = "CompNo=" + URLEncoder.encode("736", "UTF-8") + "&" +
                         "compYear=" + URLEncoder.encode("2019", "UTF-8") + "&" +
                         "ANNOUNC=" + URLEncoder.encode(obj.toString().trim(), "UTF-8");
 
-                URL url = new URL(link );
+                URL url = new URL(link);
 
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setDoOutput(true);
@@ -1004,15 +1007,15 @@ public class SendCloud {
         @Override
         protected String doInBackground(String... params) {
             try {
-                String link = "http://falconssoft.net/RestService/FSAppServiceDLL.dll/GetMaxVHFNo?";
+                String link = Settings.URL + "GetMaxVHFNo?";
 
                 String data = "Compno=" + URLEncoder.encode("736", "UTF-8") + "&" +
                         "CompYear=" + URLEncoder.encode("2019", "UTF-8") + "&" +
-                        "POSNO=" + URLEncoder.encode("1", "UTF-8")+ "&" +
-                        "CASHNO=" + URLEncoder.encode(""+Settings.cash_no, "UTF-8")+ "&" +
+                        "POSNO=" + URLEncoder.encode("1", "UTF-8") + "&" +
+                        "CASHNO=" + URLEncoder.encode("" + Settings.cash_no, "UTF-8") + "&" +
                         "ORDERKIND=" + URLEncoder.encode("1", "UTF-8");
 
-                URL url = new URL(link+data);
+                URL url = new URL(link + data);
                 Log.e("url max serial ", "" + url.toString());
 
 
@@ -1025,7 +1028,6 @@ public class SendCloud {
 //                wr.writeBytes(data);
 //                wr.flush();
 //                wr.close();
-
 
 
                 InputStream inputStream = httpURLConnection.getInputStream();
@@ -1041,7 +1043,7 @@ public class SendCloud {
                 inputStream.close();
                 httpURLConnection.disconnect();
 
-                Log.e("tag max serial", "" + stringBuffer.toString()+"ggg");
+                Log.e("tag max serial", "" + stringBuffer.toString() + "ggg");
 
                 return stringBuffer.toString();
 
@@ -1066,19 +1068,127 @@ public class SendCloud {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
 
-            Log.e("s.content", ""+s.toString());
+            Log.e("s.content", "" + s.toString());
 
             if (s != null && s.contains("MaxVHFNO")) {
                 Log.e("tag", "****Success");
-            }else
-            {
+            } else {
                 Log.e("tag maxserial .. ", "****Failed to export data");
             }
 //            progressDialog.dismiss();
         }
     }
 
+    private class JSONGetAuthentecationInformation extends AsyncTask<String, String, String> {
+        private String JsonResponse = null;
+        private HttpURLConnection urlConnection = null;
+        private BufferedReader reader = null;
 
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+//            progressDialog = new ProgressDialog(context);
+//            progressDialog.setCancelable(false);
+//            progressDialog.setMessage("Loading...");
+//            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//            progressDialog.setProgress(0);
+//            progressDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+//            Log.e("check","open");
+
+            try {
+                String link = Settings.URL + "GetEmpInfoByUserNM?";
+
+                String data = "compno=" + URLEncoder.encode("736", "UTF-8") + "&" +
+                        "compyear=" + URLEncoder.encode("2019", "UTF-8") + "&" +
+                        "USERNM=" + URLEncoder.encode(Settings.user_name, "UTF-8");
+
+                URL url = new URL(link + data);
+//                Log.e("url autentication", "" + url.toString());
+
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+//                httpURLConnection.setDoOutput(true);
+                httpURLConnection.setDoInput(true);
+//                httpURLConnection.setRequestMethod("POST");
+//
+//                DataOutputStream wr = new DataOutputStream(httpURLConnection.getOutputStream());
+//                wr.writeBytes(data);
+//                wr.flush();
+//                wr.close();
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+                StringBuffer stringBuffer = new StringBuffer();
+
+                while ((JsonResponse = bufferedReader.readLine()) != null) {
+                    stringBuffer.append(JsonResponse + "\n");
+                }
+
+                bufferedReader.close();
+                inputStream.close();
+                httpURLConnection.disconnect();
+
+                Log.e("Authou serial", "" + stringBuffer.toString()+"ggg");
+
+                return stringBuffer.toString();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e("tag", "Error closing stream", e);
+                    }
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            String password="";
+            int isActive=0;
+//            Log.e("send cloud", " authentication " + s.toString());
+
+            if (s != null ) {
+                if( s.contains("OK")){
+                Log.e("authentication", "** Success **");
+                try {
+                    JSONObject jsonObject=new JSONObject(s);
+                    password=jsonObject.getString("USER_PASSWORD");
+                    isActive=Integer.parseInt(jsonObject.getString("ACTIVE"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+                Settings.checkUserFlag = 1;
+            } else if (s.contains("No data found")){ // No data found
+                Settings.checkUserFlag = 0;
+                Log.e("authentication", "** no user found **");
+            }}else { // no internet connection
+                Settings.checkUserFlag = 3;
+            }
+
+            LogIn logIn = (LogIn) context;
+            try {
+                logIn.getAuthenticationResponse(obj.getString("username"),password,isActive);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+//            progressDialog.dismiss();
+        }
+    }
 
 
 }

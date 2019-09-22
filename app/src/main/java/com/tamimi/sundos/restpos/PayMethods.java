@@ -17,6 +17,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -30,6 +32,8 @@ import com.tamimi.sundos.restpos.Models.Money;
 import com.tamimi.sundos.restpos.Models.OrderHeader;
 import com.tamimi.sundos.restpos.Models.OrderTransactions;
 import com.tamimi.sundos.restpos.Models.PayMethod;
+import com.tamimi.sundos.restpos.Models.TableActions;
+import com.tamimi.sundos.restpos.Models.TakeAway;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -54,6 +58,7 @@ public class PayMethods extends AppCompatActivity {
     Button cash, creditCard, cheque, giftCard, credit, point, save;
     TextView tableNumber, check, date, remainingBalance, server, orderAmount, discount, subCharge, subTotal, tax, amountDue, deliveryCharge,
             totalDue, totalReceived, balance;
+    LinearLayout TakeAwayTableLayout;
 
     DatabaseHandler mDHandler;
     Dialog dialog, dialog1;
@@ -74,6 +79,7 @@ public class PayMethods extends AppCompatActivity {
     List<OrderTransactions> orderTransTemp = null;
     List<OrderHeader> orderHeaderTemp = null;
     String sectionNo, tableNo;
+    RadioGroup rg;
 
     ArrayList chequeListName;
     ArrayAdapter<String> adapter2;
@@ -106,6 +112,7 @@ public class PayMethods extends AppCompatActivity {
         Date currentTimeAndDate = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
         String today = convertToEnglish(df.format(currentTimeAndDate));
+//        insertRadioButton(TakeAwayTableLayout,"name");
 
         date.setText(convertToEnglish(date.getText().toString() + " " + today));
         mDHandler = new DatabaseHandler(PayMethods.this);
@@ -138,17 +145,19 @@ public class PayMethods extends AppCompatActivity {
 
         } else {  // pay from takeaway
 
+try {
+    balance.setText(obj.getOrderHeaderObj().getAmountDue() + "");
+    orderAmount.setText(obj.getOrderHeaderObj().getTotal() + "");
+    discount.setText(obj.getOrderHeaderObj().getAllDiscount() + "");
+    deliveryCharge.setText(obj.getOrderHeaderObj().getDeliveryCharge() + "");
+    server.setText(obj.getOrderHeaderObj().getWaiter());
+    subTotal.setText(obj.getOrderHeaderObj().getSubTotal() + "");
+    tax.setText(obj.getOrderHeaderObj().getTotalTax() + "");
+    amountDue.setText(obj.getOrderHeaderObj().getAmountDue() + "");
 
-            balance.setText(obj.getOrderHeaderObj().getAmountDue() + "");
-            orderAmount.setText(obj.getOrderHeaderObj().getTotal() + "");
-            discount.setText(obj.getOrderHeaderObj().getAllDiscount() + "");
-            deliveryCharge.setText(obj.getOrderHeaderObj().getDeliveryCharge() + "");
-            server.setText(obj.getOrderHeaderObj().getWaiter());
-            subTotal.setText(obj.getOrderHeaderObj().getSubTotal() + "");
-            tax.setText(obj.getOrderHeaderObj().getTotalTax() + "");
-            amountDue.setText(obj.getOrderHeaderObj().getAmountDue() + "");
-
-
+}catch (Exception e){
+    Log.e("Exception 158","/payMethodClass/");
+}
             mainBalance = convertToEnglish(balance.getText().toString());
             remainingBalance.setText(getResources().getString(R.string.remaining_) +Double.parseDouble( convertToEnglish(balance.getText().toString())));
             check.setText(check.getText().toString() + " -");
@@ -166,6 +175,8 @@ public class PayMethods extends AppCompatActivity {
         resivePoint = new ArrayList<String>();
         resiveCheque = new ArrayList<String>();
         resiveGift = new ArrayList<String>();
+
+        createRadioButton();
 
     }
 
@@ -450,6 +461,77 @@ public class PayMethods extends AppCompatActivity {
         dialog.show();
     }
 
+    private void createRadioButton() {
+
+      rg = new RadioGroup(this); //create the RadioGroup
+        rg.setGravity(Gravity.CENTER);
+        rg.setOrientation(RadioGroup.HORIZONTAL);//or RadioGroup.VERTICAL
+        List<TakeAway> takeAway=new ArrayList<>();
+        takeAway=mDHandler.getAllTAKind();
+        final RadioButton[] rb = new RadioButton[takeAway.size()];
+        for(int i=0; i<takeAway.size(); i++){
+            rb[i]  = new RadioButton(this);
+            rb[i].setText(takeAway.get(i).getTANmae());
+            rb[i].setTextColor(getResources().getColor(R.color.text_color));
+            rb[i].setPadding(50,10,0,10);
+            rb[i].setId(i + 100);
+            rg.addView(rb[i]);
+        }
+        try {
+            rb[0].setChecked(true);
+        }catch (Exception e){
+
+        }
+
+        TakeAwayTableLayout.addView(rg);//you add the whole RadioGroup to the layout
+
+
+
+    }
+
+//    void insertRadioButton( final TableLayout itemsTableLayout, String text) {
+//        final TableRow row = new TableRow(PayMethods.this);
+//
+//        TableLayout.LayoutParams lp = new TableLayout.LayoutParams();
+//        lp.setMargins(2, 2, 2, 0);
+//        row.setLayoutParams(lp);
+//
+//        for (int k = 0; k < 2; k++) {
+//           RadioButton textView = new RadioButton(PayMethods.this);
+//
+//            switch (k) {
+//                case 0:
+//                    textView.setText("j"+k);
+//                    break;
+//                case 1:
+//                    textView.setText("no " + text);
+//                    break;
+//            }
+//
+//            textView.setTextColor(ContextCompat.getColor(PayMethods.this, R.color.text_color));
+//            textView.setGravity(Gravity.CENTER);
+//
+//            TableRow.LayoutParams lp2 = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+//            textView.setLayoutParams(lp2);
+//
+//            row.addView(textView);
+//
+//            row.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    // remove focused rows
+//                    for (int k = 0; k < itemsTableLayout.getChildCount(); k++) {
+//                        TableRow tableRow = (TableRow) itemsTableLayout.getChildAt(k);
+//                        tableRow.setBackgroundColor(getResources().getColor(R.color.layer3));
+//                    }
+//
+//                }
+//            });
+//        }
+//        itemsTableLayout.addView(row);
+//
+//    }
+
 
     void payGraterDialog(String message, String today, String balance_value) {
         Dialog dialog2 = new Dialog(PayMethods.this);
@@ -634,12 +716,15 @@ public class PayMethods extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String t0 = String.valueOf(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(balance.getText().toString())))));
-                String t1 = String.valueOf(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(received.getText().toString())))));
-                String t2 = cardNo.getText().toString();
+//                String t0 = String.valueOf(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(balance.getText().toString())))));
+//                String t1 = String.valueOf(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(received.getText().toString())))));
+//                String t2 = cardNo.getText().toString();
                 //&& spinner.getSelectedItem().toString().equals("")
-                if (!t1.equals("") && !t2.equals("") && creditCardsName.size() != 0) {
-
+                //&& !cardNo.getText().toString().equals("")
+                if (!received.getText().toString().equals("")  && creditCardsName.size() != 0) {
+                    String t0 = String.valueOf(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(balance.getText().toString())))));
+                    String t1 = String.valueOf(convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(received.getText().toString())))));
+                    String t2 = cardNo.getText().toString();
                     if (Double.parseDouble(t1) <= Double.parseDouble(t0)) {
 
                         creditCardValue += Double.parseDouble(convertToEnglish(t1));
@@ -870,13 +955,15 @@ public class PayMethods extends AppCompatActivity {
             public void onClick(View view) {
 
 
-                String t0 =convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(balance.getText().toString()))));
-                String t1 = convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish( received.getText().toString()))));
-                String t2 = chequeNumber.getText().toString();
 
-                if (t1.equals("") && t2.equals("") && spinner2.getSelectedItem().toString().equals(""))
-                new Settings().makeText(PayMethods.this,getResources().getString(R.string.enter_recived_value_and_carfno) );
-                else if ((Double.parseDouble(t1) <= Double.parseDouble(t0))&&!t1.equals("")&&!t2.equals("")) {
+                if (received.getText().toString().equals("") && chequeNumber.getText().toString().equals("") && spinner2.getSelectedItem().toString().equals("")) {
+                    new Settings().makeText(PayMethods.this, getResources().getString(R.string.enter_recived_value_and_carfno));
+                }
+                else if ((Double.parseDouble(convertToEnglish( received.getText().toString())) <= Double.parseDouble(convertToEnglish(balance.getText().toString())))&&!received.getText().toString().equals("")&&!chequeNumber.getText().toString().equals("")) {
+                    String t0 =convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(balance.getText().toString()))));
+                    String t1 = convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish( received.getText().toString()))));
+                    String t2 = chequeNumber.getText().toString();
+
                     chequeValue += Double.parseDouble(convertToEnglish( t1));
                     dialog.dismiss();
                     new Settings().makeText(PayMethods.this,getResources().getString(R.string.save) );
@@ -1078,13 +1165,17 @@ public class PayMethods extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String t0 =convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish( balance.getText().toString()))));
-                String t1 = convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(received.getText().toString()))));
-                String t2 = cardNo.getText().toString();
+//                String t0 =convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish( balance.getText().toString()))));
+//                String t1 = convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(received.getText().toString()))));
+//                String t2 = cardNo.getText().toString();
 
-                if (t1.equals("") && t2.equals(""))
+                if (received.getText().toString().equals("") && cardNo.getText().toString().equals(""))
                 new Settings().makeText(PayMethods.this, getResources().getString(R.string.enter_recived_value_and_carfno));
-                else if (Double.parseDouble(t1) <= Double.parseDouble(t0)) {
+                else if (Double.parseDouble(convertToEnglish(received.getText().toString())) <= Double.parseDouble(convertToEnglish( balance.getText().toString()))) {
+
+                    String t0 =convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish( balance.getText().toString()))));
+                    String t1 = convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(received.getText().toString()))));
+                    String t2 = cardNo.getText().toString();
 
                     giftCardValue += Double.parseDouble(t1);
                     dialog.dismiss();
@@ -1424,13 +1515,15 @@ public class PayMethods extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String t0 =convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish( balance.getText().toString()))));
-                String t1 = convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(received.getText().toString()))));
-                String t2 = cardNo.getText().toString();
 
-                if (t1.equals("") && t2.equals(""))
+                if (received.getText().toString().equals("") &&cardNo.getText().toString().equals(""))
                 new Settings().makeText(PayMethods.this, getResources().getString(R.string.enter_recived_value_and_carfno));
-                else if (Double.parseDouble(t1) <= Double.parseDouble(t0)) {
+                else if (Double.parseDouble(convertToEnglish(received.getText().toString())) <= Double.parseDouble(convertToEnglish( balance.getText().toString()))) {
+
+                    String t0 =convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish( balance.getText().toString()))));
+                    String t1 = convertToEnglish(threeDForm.format(Double.parseDouble(convertToEnglish(received.getText().toString()))));
+                    String t2 = cardNo.getText().toString();
+
 
                     pointValue += Double.parseDouble(t1);
                     dialog.dismiss();
@@ -1486,6 +1579,8 @@ public class PayMethods extends AppCompatActivity {
             }
             String vhfSerial = convertToEnglish(df.format(currentTimeAndDate));// + "-" + (serial);
             String newString = convertToEnglish(vhfSerial.replace("-", "") + "-" + (serial));
+            String TkKind ="Take Away";
+
 
             double cashValues = 0, cardValues = 0, chequeValues = 0, giftValues = 0, couponValues = 0, pointValues = 0;
             List<PayMethod> payMethodList = new ArrayList<>();
@@ -1605,6 +1700,27 @@ public class PayMethods extends AppCompatActivity {
             }else { pointValue1 = 0.0;}
             List<ItemWithScreen> itemWithScreens = mDHandler.getAllItemsWithScreen();
 
+            Log.e("count --> ",""+rg.getChildCount());
+//            RadioButton ra=(RadioButton) rg.getChildAt(0);
+
+
+            for(int i1=0;i1<rg.getChildCount();i1++){
+                RadioButton ra=(RadioButton) rg.getChildAt(i1);
+                Log.e("child at  --> "+i1,""+ra.isChecked());
+                Log.e("child atmaster --> ",""+ra.getText().toString());
+
+                if(ra.isChecked()){
+
+                    TkKind=ra.getText().toString();
+                    Log.e("isCheck --> ",""+ra.getText().toString());
+
+                    break;
+                }
+
+            }
+
+
+
             if (orderHeaderTemp == null) { // Takeaway
                 //getting the data from order activity and save it in database.
                 Log.e("creditCardValue1", " " + creditCardValue1);
@@ -1614,20 +1730,63 @@ public class PayMethods extends AppCompatActivity {
                 obj.getOrderHeaderObj().setGiftValue(giftCardValue1);
                 obj.getOrderHeaderObj().setCouponValue(creditValue1);
                 obj.getOrderHeaderObj().setPointValue(pointValue1);
+                obj.getOrderHeaderObj().setOrderHeaderKind(TkKind);
 
                 mDHandler.addOrderHeader(obj.getOrderHeaderObj());
 
-                for (int i = 0; i < obj.getOrderTransactionObj().size(); i++)
+                for (int i = 0; i < obj.getOrderTransactionObj().size(); i++) {
+                    obj.getOrderTransactionObj().get(i).setVoucherNo(obj.getOrderHeaderObj().getVoucherNumber());
                     mDHandler.addOrderTransaction(obj.getOrderTransactionObj().get(i));
-
+                }
 
                 sendToKitchen(PayMethods.this, obj.getOrderHeaderObj(), obj.getOrderTransactionObj(), payMethodList, itemWithScreens);
                 sendToServer(PayMethods.this,obj.getOrderHeaderObj(), obj.getOrderTransactionObj(), payMethodList);
 
 //                Intent intent = new Intent(PayMethods.this, Order.class);
 //                startActivity(intent);
-                Print(obj.getOrderTransactionObj(),obj.getOrderHeaderObj());
-                mDHandler.updateMaxVhf(maxSerial);
+                if(obj.getOrderHeaderObj().getOrderType()==0){
+                    Print(obj.getOrderTransactionObj(),obj.getOrderHeaderObj());
+                    mDHandler.updateMaxVhf(maxSerial);
+                }else {// for split method for update temp table ..
+
+
+                    obj.updateOrderHeaderTempSplit().setCashValue(0);
+                    obj.updateOrderHeaderTempSplit().setCardsValue(0);
+                    obj.updateOrderHeaderTempSplit().setChequeValue(0);
+                    obj.updateOrderHeaderTempSplit().setGiftValue(0);
+                    obj.updateOrderHeaderTempSplit().setCouponValue(0);
+                    obj.updateOrderHeaderTempSplit().setPointValue(0);
+
+                    Log.e("sec no /table no ",""+obj.updateOrderHeaderTempSplit().getSectionNO()+"  /  "+ obj.updateOrderHeaderTempSplit().getTableNO());
+                    Log.e("total no /dis no ",""+obj.updateOrderHeaderTempSplit().getTotal()+"  /  "+ obj.updateOrderHeaderTempSplit().getAllDiscount());
+
+                    Log.e("vouDate no /voh no ",""+obj.updateOrderHeaderTempSplit().getVoucherDate()+"  /  "+ obj.updateOrderHeaderTempSplit().getVoucherNumber());
+
+
+                    mDHandler.deleteFromOrderHeaderTemp( ""+obj.updateOrderHeaderTempSplit().getSectionNO(), ""+ obj.updateOrderHeaderTempSplit().getTableNO());
+                    mDHandler.deleteFromOrderTransactionTemp(""+obj.updateOrderHeaderTempSplit().getSectionNO(), ""+ obj.updateOrderHeaderTempSplit().getTableNO());
+
+                    mDHandler.addOrderHeaderTemp(obj.updateOrderHeaderTempSplit());
+                    for(int i=0;i<obj.updateOrderTransactionTempSplit().size();i++) {
+
+                        obj.updateOrderTransactionTempSplit().get(i).setVoucherNo(obj.updateOrderHeaderTempSplit().getVoucherNumber());
+                        mDHandler.addOrderTransactionTemp(obj.updateOrderTransactionTempSplit().get(i));
+                    }
+
+                    TableActions table=new TableActions( obj.getOrderHeaderObj().getPointOfSaleNumber(), obj.getOrderHeaderObj().getUserName()
+                    , obj.getOrderHeaderObj().getUserNo(), obj.getOrderHeaderObj().getShiftName(), obj.getOrderHeaderObj().getShiftNumber(),
+                            2, obj.getOrderHeaderObj().getVoucherDate(), obj.getOrderHeaderObj().getTime(), obj.getOrderHeaderObj().getTableNO(),
+                            obj.getOrderHeaderObj().getSectionNO(),-1,-1);
+
+                    mDHandler.addTableAction(table);
+
+                    Intent intent = new Intent(PayMethods.this, DineIn.class);
+                    startActivity(intent);
+
+                    mDHandler.updateMaxVhf(obj.getOrderHeaderObj().getVoucherNumber());
+
+
+                                   }
 
             } else { // Dine In
 
@@ -1676,8 +1835,11 @@ public class PayMethods extends AppCompatActivity {
             for (int i = 0; i < OrderTransactionsObj.size(); i++) {
                 if (OrderTransactionsObj.get(i).getQty() == 0) {
                     OrderTransactionsObj.get(i).setScreenNo(OrderTransactionsObj.get(i - 1).getScreenNo());
-                    OrderTransactionsObj.get(i).setNote("mf");
-                }
+                    if(OrderTransactionsObj.get(i).getItemCategory().equals("modifier")){
+                        OrderTransactionsObj.get(i).setNote("m");
+                    }else{
+                    OrderTransactionsObj.get(i).setNote("f");
+                }}
             }
 
             JSONArray obj2 = new JSONArray();
@@ -1893,6 +2055,8 @@ public class PayMethods extends AppCompatActivity {
         totalDue = (TextView) findViewById(R.id.total_due);
         totalReceived = (TextView) findViewById(R.id.total_received);
         balance = (TextView) findViewById(R.id.balance);
+
+        TakeAwayTableLayout=(LinearLayout)findViewById(R.id.radioLayout);
 
         cash.setOnClickListener(onClickListener);
         creditCard.setOnClickListener(onClickListener);

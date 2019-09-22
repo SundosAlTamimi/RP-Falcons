@@ -119,7 +119,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:layout_width="107dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/from_date"
                         android:textColor="@color/text_color"
@@ -127,7 +127,7 @@
 
                     <TextView
                         android:id="@+id/frDate"
-                        android:layout_width="150dp"
+                        android:layout_width="145dp"
                         android:layout_height="30dp"
                         android:layout_marginRight="20dp"
                         android:background="@color/layer2"

@@ -339,4 +339,19 @@ public class Items {
         }
         return obj;
     }
+
+    public JSONObject getJSONObjectPic() {
+        JSONObject obj = new JSONObject();
+        try {
+
+
+            obj.put("ITEMBARCODE", itemBarcode);
+
+            obj.put("ITEMPIC", pic);
+
+        } catch (JSONException e) {
+            Log.e("Tag" , "JSONException");
+        }
+        return obj;
+    }
 }

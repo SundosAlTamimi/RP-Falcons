@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="600dp"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/layer3"
     android:orientation="vertical"
@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="@string/kitchen_screen"
+        android:text="@string/take_away_kind"
         android:textColor="@color/gray"
         android:textSize="25sp"
         android:textStyle="bold" />
@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:layout_marginBottom="15dp">
+            android:layout_marginBottom="10dp">
 
             <TableRow
                 android:layout_width="match_parent"
@@ -39,19 +39,17 @@
                     android:id="@+id/textView1002"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/kitchen_screen_no"
+                    android:text="@string/serial"
                     android:textColor="@color/text_color"
                     android:textSize="20sp" />
 
-                <EditText
-                    android:id="@+id/kitNo"
+                <TextView
+                    android:id="@+id/TakeSerial"
                     android:layout_width="306dp"
                     android:layout_height="40dp"
                     android:layout_marginLeft="12dp"
-                    android:background="@color/layer2"
                     android:ems="10"
                     android:gravity="center"
-                    android:inputType="number"
                     android:textColor="@color/text_color" />
             </TableRow>
 
@@ -65,38 +63,12 @@
                     android:id="@+id/textView107"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/kitchen_screen_name"
+                    android:text="@string/take_away_kind_name"
                     android:textColor="@color/text_color"
                     android:textSize="20sp" />
 
                 <EditText
-                    android:id="@+id/kitName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_marginLeft="12dp"
-                    android:background="@color/layer2"
-                    android:ems="10"
-                    android:gravity="center"
-                    android:inputType="textPersonName"
-                    android:textColor="@color/text_color" />
-
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="5dp">
-
-                <TextView
-                    android:id="@+id/textView1071"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/kitchen_ip"
-                    android:textColor="@color/text_color"
-                    android:textSize="20sp" />
-
-                <EditText
-                    android:id="@+id/ip_"
+                    android:id="@+id/TakeKind"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:layout_marginLeft="12dp"
@@ -110,36 +82,12 @@
 
         </TableLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="@string/edit_screen_text_view"
-            android:textColor="@color/cardview_dark_background"
-            android:textSize="17sp"/>
-
-        <Spinner
-            android:id="@+id/addKitchenScreen_editScreen_spinner"
-            android:layout_margin="5dp"
-            android:layout_width="300dp"
-            android:layout_marginBottom="5dp"
-            android:layout_height="wrap_content"></Spinner>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal"
             android:padding="10dp">
-
-            <Button
-                android:id="@+id/addKitchenScreen_edit_screen_info"
-                android:layout_width="150dp"
-                android:layout_height="50dp"
-                android:layout_margin="10dp"
-                android:background="@color/blue_ice"
-                android:text="@string/edit_save"
-                android:textAllCaps="true" />
 
             <Button
                 android:id="@+id/save"

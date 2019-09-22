@@ -1,0 +1,54 @@
+//Save To kitchen
+http://localhost:8081/RestSaveKitchenScreen?compno=302&compyear=2018&voucher={"Header" : {"POSNO":1,"ORDERNO":12,"ORDERTYPE":2,"TABLENO":1,"SECTIONNO":"Main"},"Items" : [{"ITEMCODE":"1","ITEMNAME":"Item 1","QTY":3,"PRICE":5.250,"NOTE":"Any","ISUPDATE":0},{"ITEMCODE":"2","ITEMNAME":"ãÇÏÉ 1","QTY":2,"PRICE":10,"NOTE":"Any","ISUPDATE":1}]}
+
+
+// Call Get
+http://localhost:8081/GetRestKitchenData?compno=302&compyear=2018&POSNO=1
+
+// To Update Order is done
+http://localhost:8081/UpdateRestKitchenScreen?compno=302&compyear=2018&posno=1&orderno=10&SCREENNO=1
+-------------------------------------------------------
+On IIS
+
+// Cal Get
+http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/GetRestKitchenData?compno=736&compyear=2019&POSNO=1&SCREENNO=1
+
+//call Save
+10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/RestSaveKitchenScreen?compno=736&compyear=2019&voucher={"Header" : {"POSNO":1,"ORDERNO":12,"ORDERTYPE":2,"TABLENO":1,"SECTIONNO":"Main"},"Items" : [{"ITEMCODE":"1","ITEMNAME":"Item 1","QTY":3,"PRICE":5.250,"NOTE":"Any","ISUPDATE":0,"SCREENNO":1},{"ITEMCODE":"2","ITEMNAME":"ãÇÏÉ 1","QTY":2,"PRICE":10,"NOTE":"Any","ISUPDATE":1,"SCREENNO":2}]}
+
+//update
+http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/UpdateRestKitchenScreen?compno=302&compyear=2018&posno=1&orderno=12&SCREENNO=1
+
+// Save Order
+10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/RestSaveOrder?compno=736&compyear=2019&VOUCHER={ "ORDERHEADER" :{"ORDERTYPE":1,"ORDERKIND":999,"POSNO":1,"STRNO":1,"VHFNO":20,"VHFSERIAL":1,"TOTAL":10.5,"TOTDISC":0,"TOTLDISC":0,"ALLDISC":0,"TOTSERVICE":0,"TOTTAX":1.6,"TOTSERVICETAX":0,"SUBTOT":10,"AMTDUE":10,"DELVCHARGE":0,"TBLNO":0,"SECNO":0,"CASHVAL":10.5,"CARDVAL":0,"CHEQVAL":0,"CPNVAL":0,"GIFTVAL":0,"PNTVAL":0,"USERNM":"ALAA","USERNO":1,"SHIFTNM":"SHIFT A","SHIFTNO" : 1,"WAITER":"","SEATNO":1,"VHFTIME":"12:45","VHFDATE":"01-03-2019"},"ORDERTRANSACTIONS"  :[{"ORDERTYPE":1,"ORDERKIND":999,"POSNO":1,"STRNO":1,"VHFNO":20,"VHFSERIAL":1,"ITEMBARCODE1":"123","ITEMNM":"ITEM 1","SECONDARYNAME":"","KITCHENALIAS":"","ITEMCAT":"GROUP1","ITEMFAM" : "FAM1","QTY":2,"PRICE":3,"TOTAL":6,"DISC":0,"LDISC":0,"TOTDISC":0,"TAXVAL":1,"TAXPERC":16,"TAXKIND":1,"SERVICE":0,"SERVICETAX":0,"TBLNO":0,"USERNO":1,"USERNM":"ALAA","SECNO":0,"SHIFTNO":1,"SHIFTNM":"SHIFT A","VHFTIME":"12:45","VHFDATE":"01-03-2019"},{"ORDERTYPE":1,"ORDERKIND":999,"POSNO":1,"STRNO":1,"VHFNO":20,"VHFSERIAL":2,"ITEMBARCODE1":"456","ITEMNM":"ãÇÏÉ 2","SECONDARYNAME":"","KITCHENALIAS":"","ITEMCAT":"GROUP1","ITEMFAM" : "FAM1","QTY":1,"PRICE":4,"TOTAL":4,"DISC":0,"LDISC":0,"TOTDISC":0,"TAXVAL":0.16,"TAXPERC":16,"TAXKIND":1,"SERVICE":0,"SERVICETAX":0,"TBLNO":0,"USERNO":1,"USERNM":"ALAA","SECNO":0,"SHIFTNO":1,"SHIFTNM":"SHIFT A","VHFTIME":"12:45","VHFDATE":"01-03-2019"}],
+"PAYMETHOD" : [{"ORDERTYPE":1,"ORDERKIND":999,"POSNO":1,"STRNO":1,"VHFNO":20,"VHFSERIAL":1,"PAYTYPE":1,"PAYVAL":10.5,"PAYNO":1,"PAYNAME":"CASH","USERNM":"ALAA","USERNO":1,"SHIFTNM":"SHIFT A","SHIFTNO" : 1,"VHFTIME":"12:45","VHFDATE" : "01-03-2019"}]
+}
+---------------------------------------------------------
+On Cloud
+
+// Cal Get
+http://falconssoft.net/RestService/FSAppServiceDLL.dll/GetRestKitchenData?compno=736&compyear=2019&POSNO=1&SCREENNO=1&STGNO=1
+
+//call Save
+http://Falconssoft.net/RestService/FSAppServiceDLL.dll/RestSaveKitchenScreen?compno=736&compyear=2019&voucher={"Header" : {"POSNO":1,"ORDERNO":12,"ORDERTYPE":2,"TABLENO":1,"SECTIONNO":"Main"},"Items" : [{"ITEMCODE":"1","ITEMNAME":"Item 1","QTY":3,"PRICE":5.250,"NOTE":"Any","ISUPDATE":0,"SCREENNO":1},{"ITEMCODE":"2","ITEMNAME":"ãÇÏÉ 1","QTY":2,"PRICE":10,"NOTE":"Any","ISUPDATE":1,"SCREENNO":2}]}
+
+//update
+http://falconssoft.net/RestService/FSAppServiceDLL.dll/UpdateRestKitchenScreen?compno=302&compyear=2018&posno=1&orderno=12&SCREENNO=1&cashno=0
+
+//transfer
+http://falconssoft.net/RestService/FSAppServiceDLL.dll/RestTransferKitchen?compno=302&compyear=2018&posno=1&orderno=12&SCREENNO=1&cashno=0
+
+//Call Save Order
+http://Falconssoft.net/RestService/FSAppServiceDLL.dll/RestSaveOrder?compno=736&compyear=2019&VOUCHER={ "ORDERHEADER" :{"ORDERTYPE":1,"ORDERKIND":999,"POSNO":1,"STRNO":1,"VHFNO":1,"VHFSERIAL":1,"TOTAL":10.5,"TOTDISC":0,"TOTLDISC":0,"ALLDISC":0,"TOTSERVICE":0,"TOTTAX":1.6,"TOTSERVICETAX":0,"SUBTOT":10,"AMTDUE":10,"DELVCHARGE":0,"TBLNO":0,"SECNO":0,"CASHVAL":10.5,"CARDVAL":0,"CHEQVAL":0,"CPNVAL":0,"GIFTVAL":0,"PNTVAL":0,"USERNM":"ALAA","USERNO":1,"SHIFTNM":"SHIFT A","SHIFTNO" : 1,"WAITER":"","SEATNO":1,"VHFTIME":"12:45","VHFDATE":"01-03-2019"},"ORDERTRANSACTIONS"  :[{"ORDERTYPE":1,"ORDERKIND":999,"POSNO":1,"STRNO":1,"VHFNO":1,"VHFSERIAL":1,"ITEMBARCODE1":"123","ITEMNM":"ITEM 1","SECONDARYNAME":"","KITCHENALIAS":"","ITEMCAT":"GROUP1","ITEMFAM" : "FAM1","QTY":2,"PRICE":3,"TOTAL":6,"DISC":0,"LDISC":0,"TOTDISC":0,"TAXVAL":1,"TAXPERC":16,"TAXKIND":1,"SERVICE":0,"SERVICETAX":0,"TBLNO":0,"USERNO":1,"USERNM":"ALAA","SECNO":0,"SHIFTNO":1,"SHIFTNM":"SHIFT A","VHFTIME":"12:45","VHFDATE":"01-03-2019"},{"ORDERTYPE":1,"ORDERKIND":999,"POSNO":1,"STRNO":1,"VHFNO":1,"VHFSERIAL":2,"ITEMBARCODE1":"456","ITEMNM":"ãÇÏÉ 2","SECONDARYNAME":"","KITCHENALIAS":"","ITEMCAT":"GROUP1","ITEMFAM" : "FAM1","QTY":1,"PRICE":4,"TOTAL":4,"DISC":0,"LDISC":0,"TOTDISC":0,"TAXVAL":0.16,"TAXPERC":16,"TAXKIND":1,"SERVICE":0,"SERVICETAX":0,"TBLNO":0,"USERNO":1,"USERNM":"ALAA","SECNO":0,"SHIFTNO":1,"SHIFTNM":"SHIFT A","VHFTIME":"12:45","VHFDATE":"01-03-2019"}],
+"PAYMETHOD" : [{"ORDERTYPE":1,"ORDERKIND":999,"POSNO":1,"STRNO":1,"VHFNO":1,"VHFSERIAL":1,"PAYTYPE":1,"PAYVAL":10.5,"PAYNO":1,"PAYNAME":"CASH","USERNM":"ALAA","USERNO":1,"SHIFTNM":"SHIFT A","SHIFTNO" : 1,"VHFTIME":"12:45","VHFDATE" : "01-03-2019"}]
+}
+
+//check username
+
+http://falconssoft.net/RestService/FSAppServiceDLL.dll/GetEmpInfoByUserNM?compno=736&compyear=2019&USERNM=master
+
+Response If user Found
+{"ErrorCode":"0","ErrorDescreption":"OK","JOB_GROUP":"","EMPLOYEE_NAME":"Alaa","EMPLOYEE_NO":"1","ISMASTER":"1","MOBILE_NO":"0798899716","SECURITY_LEVEL":"0","USER_PASSWORD":"5555","ACTIVE":"0","HIRE_DATA":"08\/06\/2019","TERMINATION_DATE":"08\/06\/2019","PAY_BASIC":"0","PAY_RATE":"0","HOLIDAY_PAY":"0","EMPLOYEE_TYPE":"","SHIFT_NAME":"","SHIFT_NO":"","JUSTTA":"0","USERNAME":"master"}
+
+Response If user Not Found
+{"ErrorCode" : 11,"ErrorDescreption":"No data found"}

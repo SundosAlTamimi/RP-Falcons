@@ -662,6 +662,16 @@
                     android:textStyle="bold" />
 
                 <Button
+                    android:id="@+id/updateButton"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:background="@color/exit_hover"
+                    android:text="@string/update"
+                    android:textColor="@color/layer1"
+                    android:textStyle="bold" />
+                <Button
                     android:id="@+id/exitButton"
                     android:layout_width="0dp"
                     android:layout_height="40dp"
