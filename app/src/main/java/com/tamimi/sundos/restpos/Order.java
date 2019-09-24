@@ -197,6 +197,7 @@ boolean showdetal=false;
 
                             Intent intentPay = new Intent(Order.this, PayMethods.class);
                             startActivity(intentPay);
+                            setSlideAnimation();
 
                         } else
                             new Settings().makeText(Order.this, getResources().getString(R.string.amountdue_oo));
@@ -218,7 +219,8 @@ boolean showdetal=false;
                             }
                             Intent intent = new Intent(Order.this, DineIn.class);
                             startActivity(intent);
-                            finish();
+                            setSlideAnimation();
+//                            finish();
 
                         } else
                             new Settings().makeText(Order.this, getResources().getString(R.string.amountdue_oo));
@@ -267,8 +269,7 @@ boolean showdetal=false;
         }
     };
 
-
-    void notShowDetails(){
+       void notShowDetails(){
 
         tableDetail.setVisibility(View.GONE);
         details.setBackgroundDrawable(getResources().getDrawable(R.drawable.arrowup));
@@ -2014,12 +2015,25 @@ end*/
         if (orderTypeFlag == 0) {
             Intent intent = new Intent(Order.this, Main.class);
             startActivity(intent);
+
+
         } else {
             Intent intent = new Intent(Order.this, DineIn.class);
             startActivity(intent);
         }
+        finish();
     }
 
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
+
+    public void setSlideAnimation() {
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
+    }
 
     public String convertToEnglish(String value) {
         String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0").replaceAll("٫", "."));

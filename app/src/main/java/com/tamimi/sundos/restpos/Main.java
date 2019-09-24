@@ -69,35 +69,26 @@ import androidx.core.content.ContextCompat;
 
 public class Main extends AppCompatActivity {
 
-    Button back, exit;
-    Button takeAway, dineIn;
-    TextView userName, shift, date, payIn, payOut, timeCard, safeMode, refund, cashDrawer, annText, mainfocu;
+    private Button back, exit;
+    private Button takeAway, dineIn;
+    private TextView userName, shift, date, payIn, payOut, timeCard, safeMode, refund, cashDrawer, annText, mainfocu;
+    private TextView focusedTextView, text, nettotal;
+    private TableRow rows;
+    private TableLayout categories, AnnouncementTable, refundTables, table;
 
-    DatabaseHandler mDHandler;
-    Dialog dialog;
-    String today;
-    TextView focusedTextView;
-    TableLayout categories;
-    TableLayout AnnouncementTable;
-    ArrayList<Double> lineDiscount;
-    ArrayList<Double> DiscountArray;
-    TableLayout refundTables, table;
-    ArrayList<OrderTransactions> orderTransactions;
-    ArrayList<OrderTransactions> rowRefund;
-    TextView text, nettotal;
-    int idGeneral = 0;
-    String data;
-    boolean CheckTrue = true;
-    double netTotals = 0.0;
-    double balance = 0.0;
-    boolean flag = true, flag2 = true;
-    int textId = 0;
-    double totalAdd = 0.0;
-    double cashValues, creditValues, chequeVales, pointValues, giftCardValues, cardValues;
-    double discountAdd = 0.0;
-    TableRow rows;
-    DecimalFormatSymbols de = new DecimalFormatSymbols(Locale.ENGLISH);
-    DecimalFormat threeDForm = new DecimalFormat("0.000", de);
+    private DatabaseHandler mDHandler;
+    private Dialog dialog;
+    private String today, data;
+    private int idGeneral = 0, textId = 0;
+    private boolean flag = true, flag2 = true, CheckTrue = true;
+    private double netTotals = 0.0, balance = 0.0;
+    private double cashValues, creditValues, chequeVales, pointValues, giftCardValues, cardValues, discountAdd = 0.0, totalAdd = 0.0;
+    private ArrayList<Double> lineDiscount;
+    private ArrayList<Double> DiscountArray;
+    private ArrayList<OrderTransactions> orderTransactions;
+    private ArrayList<OrderTransactions> rowRefund;
+    private DecimalFormatSymbols de = new DecimalFormatSymbols(Locale.ENGLISH);
+    private DecimalFormat threeDForm = new DecimalFormat("0.000", de);
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @SuppressLint("ClickableViewAccessibility")
@@ -113,9 +104,9 @@ public class Main extends AppCompatActivity {
 
         Settings.focas = findViewById(R.id.mainfouc);
         if (Settings.onOFF) {
-            new Settings().blinkAnnouncement( true);
-        }else {
-            new Settings().blinkAnnouncement( false);
+            new Settings().blinkAnnouncement(true);
+        } else {
+            new Settings().blinkAnnouncement(false);
         }
 
         Date currentTimeAndDate = Calendar.getInstance().getTime();
@@ -134,15 +125,26 @@ public class Main extends AppCompatActivity {
 //        String na=Settings.datatest;
 //                Log.e("bitmap --->",""+na);
 //        takeAway.setBackground(new BitmapDrawable(Main.this.getResources(), StringToBitMap(na)));
-                showAnnouncement();
+        showAnnouncement();
 
     }
-//    public int getImage(String imageName) {
+
+    //    public int getImage(String imageName) {
 //
 //        int drawableResourceId = Main.this.getResources().getIdentifier(imageName, "drawable", Main.this.getPackageName());
 //
 //        return drawableResourceId;
 //    }
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
+
+    public void setSlideAnimation() {
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
+    }
 
     OnClickListener onClickListener = new OnClickListener() {
         @Override
@@ -152,6 +154,7 @@ public class Main extends AppCompatActivity {
 //                    showDialog();
                     Intent intent0 = new Intent(Main.this, BackOfficeActivity.class);
                     startActivity(intent0);
+                    setSlideAnimation();
                     break;
 
                 case R.id.exit:
@@ -163,6 +166,7 @@ public class Main extends AppCompatActivity {
                 case R.id.tack_away:
                     Intent intent1 = new Intent(Main.this, Order.class);
                     startActivity(intent1);
+                    setSlideAnimation();
                     break;
 
                 case R.id.dine_in:
@@ -173,7 +177,7 @@ public class Main extends AppCompatActivity {
 //                    } else {
                     Intent intent = new Intent(Main.this, DineIn.class);
                     startActivity(intent);
-//                    }
+                    setSlideAnimation();
                     break;
 
                 case R.id.pay_in:
@@ -198,8 +202,6 @@ public class Main extends AppCompatActivity {
 
 //                    SendCloud sendCloud = new SendCloud(Main.this, null);
 //                    sendCloud.startSending("MaxSerial");
-
-
                     showCashDrawerDialog();
                     break;
 
@@ -2391,7 +2393,7 @@ public class Main extends AppCompatActivity {
 
                         double subTotalValue = Double.parseDouble(convertToEnglish((total - (lineDic + dic)) + ""));
 
-List<String> listkind=mDHandler.getAllRequestVoucherHeader(VHF_NO, String.valueOf(Settings.POS_number));
+                        List<String> listkind = mDHandler.getAllRequestVoucherHeader(VHF_NO, String.valueOf(Settings.POS_number));
 
                         String waiterName = "";
                         if (rowRefund.get(0).getOrderType() == 0) {
@@ -2407,7 +2409,7 @@ List<String> listkind=mDHandler.getAllRequestVoucherHeader(VHF_NO, String.valueO
                                 -1 * service, -1 * tax, -1 * serviceTax, -1 * subTotalValue,
                                 -1 * netTotal1, 0, rowRefund.get(0).getTableNo(),
                                 rowRefund.get(0).getSectionNo(), -1 * cashValues, -1 * creditValues, -1 * chequeVales, -1 * cardValues,
-                                -1 * giftCardValues, -1 * pointValues, Settings.shift_name, Settings.shift_number, waiterName, 0, Settings.user_name, Settings.user_no, convertToEnglish(times), rowRefund.get(0).getVoucherNo(), rowRefund.get(0).getPosNo(), Settings.cash_no,listkind.get(1));
+                                -1 * giftCardValues, -1 * pointValues, Settings.shift_name, Settings.shift_number, waiterName, 0, Settings.user_name, Settings.user_no, convertToEnglish(times), rowRefund.get(0).getVoucherNo(), rowRefund.get(0).getPosNo(), Settings.cash_no, listkind.get(1));
                         mDHandler.addOrderHeader(orderHeader);
 
                         for (int i = 0; i < rowRefund.size(); i++) {
@@ -2662,11 +2664,11 @@ List<String> listkind=mDHandler.getAllRequestVoucherHeader(VHF_NO, String.valueO
     }
 
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-
-    }
+//    @Override
+//    public void onBackPressed() {
+////        super.onBackPressed();
+//        setSlideAnimation();
+//    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

@@ -52,31 +52,23 @@ import androidx.core.content.ContextCompat;
 
 public class DineIn extends AppCompatActivity {
 
-    ArrayList<Tables> currentList, list0, list1, list2, list3, list4, list5;
 
-    Dialog dialog;
-    Button addIcon, save;
-    Button mainF, firstF, secondF, thirdF, fourthF, fifthF;
-    TextView move, merge, reservation, takeAway, close, cashDrawer,  checkOut, reprint;
-    LinearLayout add, rightBorder;
-    ViewGroup land;
-    TextView focusedTextView;
-    LinearLayout focused = null;
-    boolean CheckTrue = true;
-    int tableNumber;
-    int current = 0;
-    String waiter, waiterNo;
-    boolean waiterClick = false;
-    int fromSection, toSection;
-    List<String> tablesNoLeft, tablesNoRight;
-    int focusedLeft = -1, focusedRight = -1;
-
-    TableRow rows;
+    private DatabaseHandler mHandler;
+    private Dialog dialog;
+    private Button addIcon, save;
+    private Button mainF, firstF, secondF, thirdF, fourthF, fifthF;
+    private TextView move, merge, reservation, takeAway, close, cashDrawer,  checkOut, reprint, focusedTextView;
+    private LinearLayout add, rightBorder, focused = null;
+    private ViewGroup land;
+    private TableLayout categories;
+    private TableRow rows;
+    private boolean CheckTrue = true, waiterClick = false;
+    private int tableNumber, current = 0, fromSection, toSection, focusedLeft = -1, focusedRight = -1;
+    private String waiter, waiterNo;
     public String today, time;
-    List<OrderTransactions> greenTables;
-    DatabaseHandler mHandler;
-
-    TableLayout categories;
+    private ArrayList<Tables> currentList, list0, list1, list2, list3, list4, list5;
+    private List<String> tablesNoLeft, tablesNoRight;
+    private List<OrderTransactions> greenTables;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -363,12 +355,6 @@ public class DineIn extends AppCompatActivity {
             }
         }
     };
-
-
-
-
-
-
 
     public void openSeatsNumberDialog() {
         dialog = new Dialog(DineIn.this);
@@ -1064,8 +1050,21 @@ public class DineIn extends AppCompatActivity {
         super.onBackPressed();
         Intent intent = new Intent(DineIn.this, Main.class);
         startActivity(intent);
+        finish();
+//        setSlideAnimation();
+//        finish();
     }
 
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
+
+    public void setSlideAnimation() {
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
+    }
 
     public String convertToEnglish(String value) {
         String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0"));

@@ -125,55 +125,51 @@ import org.json.JSONObject;
 //import static com.itextpdf.text.Element.ALIGN_CENTER;
 
 public class BackOfficeActivity extends AppCompatActivity {
-    RadioGroup radioGroup;//= new RadioGroup(this);
-    int kitchenNoOldValue = -1;
+
+    private RadioGroup radioGroup;//= new RadioGroup(this);
+    private int kitchenNoOldValue = -1, isChecked = 0, count, count2, nextSerial, visible = 0, rawPosition = 0;
     private final RectF onValueSelectedRectF = new RectF();
     private BarChart chart2,chart1,chart8;
     private LineChart chart3;
     private PieChart chart4,chart5,chart6,chart7,chart9;
-    int isChecked = 0;
-    LinearLayout lManagement, lSales, lCustomers, lEmployees, lMenu, lSettings;
+    private LinearLayout lManagement, lSales, lCustomers, lEmployees, lMenu, lSettings;
 
-    TableLayout jobTable;
-    Button butManagement, butSales, butCustomers, butEmployees, butMenu, butSettings;
-    LinearLayout announcement, giftCard, employeeClockInOut, menuSearch, reCancellationSupervisor,DashboardData;
-    LinearLayout membershipGroup, membership, customerRegistration;
-    LinearLayout jobGroup, employeeRegistration, employeeSchedule, payroll, vacation, editTables;
-    LinearLayout menuCategory, menuRegistration, modifier, forceQuestion, voiding_reasons, menuLayout;
-    LinearLayout store, storeOperation, users, moneyCategory, kitchenScreen, mainSettings, syncWithCloud;
-    LinearLayout salesTotal, cashierInOut, canceledOrderHistory, x_report, z_report, market_report_,
-            salesReportForDay, salesByHours, salesVolumeByItem, topSalesItemReport, topGroupSalesReport, topFamilySalesReport,
-            salesReportByCustomer, salesReportByCardType, waiterSalesReport, tableActionReport, profitLossReport, detailSalesReport,
-            simpleSalesTotalReport, SoldQtyReport, userOrderCountReport, reCancellationReport, reCancellationSupervisorReport, TakeawayKind;
+    private TableLayout jobTable;
+    private Button butManagement, butSales, butCustomers, butEmployees, butMenu, butSettings;
+    private LinearLayout announcement, giftCard, employeeClockInOut, menuSearch, reCancellationSupervisor,DashboardData;
+    private LinearLayout membershipGroup, membership, customerRegistration;
+    private LinearLayout jobGroup, employeeRegistration, employeeSchedule, payroll, vacation, editTables;
+    private LinearLayout menuCategory, menuRegistration, modifier, forceQuestion, voiding_reasons, menuLayout;
+    private LinearLayout store, storeOperation, users, moneyCategory, kitchenScreen, mainSettings, syncWithCloud;
+    private LinearLayout salesTotal, cashierInOut, canceledOrderHistory, x_report, z_report, market_report_,
+    salesReportForDay, salesByHours, salesVolumeByItem, topSalesItemReport, topGroupSalesReport, topFamilySalesReport,
+    salesReportByCustomer, salesReportByCardType, waiterSalesReport, tableActionReport, profitLossReport, detailSalesReport,
+    simpleSalesTotalReport, SoldQtyReport, userOrderCountReport, reCancellationReport, reCancellationSupervisorReport, TakeawayKind;
 
-    int count, count2, nextSerial;
-    Dialog dialog, dialog1;
-    String today;
-    DatabaseHandler mDHandler;
-    Bitmap imageBitmap = null;
-    ImageView moneyPicImageView = null;
+    private  Dialog dialog, dialog1;
+    private String today;
+    private DatabaseHandler mDHandler;
+    private Bitmap imageBitmap = null;
+    private ImageView moneyPicImageView = null;
 
-    ArrayList<OrderHeader> headerData, headerDataMarket;
-    ArrayList<PayMethod> payData, OrderPayMData;
-    List<OrderTransactions> orderTransactionData;
-    ArrayList<Pay> payInData, PayCashier;
-    ArrayList<Announcemet> Announcement;
-    ArrayList<Money> finalMoneyArray;
-    TableRow focusedRaw = null;
+    private ArrayList<OrderHeader> headerData, headerDataMarket;
+    private ArrayList<PayMethod> payData, OrderPayMData;
+    private List<OrderTransactions> orderTransactionData;
+    private ArrayList<Pay> payInData, PayCashier;
+    private ArrayList<Announcemet> Announcement;
+    private ArrayList<Money> finalMoneyArray;
+    private  TableRow focusedRaw = null, focusedRowReCancellation = null;
     private List<TableRow> selectedItemsList = new ArrayList<>();
-    int rawPosition = 0;
-    Calendar myCalendar;
-    List<BlindCloseDetails> focusedRowData = null;
-    TableRow focusedRowReCancellation = null;
-    int visible = 0;
-    boolean clicked = false;
+    private Calendar myCalendar;
+    private List<BlindCloseDetails> focusedRowData = null;
+    private boolean clicked = false;
 
-    ArrayList<ItemWithFq> itemWithFqsList;
-    ArrayList<ItemWithModifier> itemWithModifiersList;
-    ArrayList<CategoryWithModifier> categoryWithModifiersList;
-    ArrayList<ItemWithScreen> itemWithScreensList;
-    DecimalFormatSymbols de = new DecimalFormatSymbols(Locale.ENGLISH);
-    DecimalFormat threeDForm = new DecimalFormat("0.000", de);
+    private ArrayList<ItemWithFq> itemWithFqsList;
+    private ArrayList<ItemWithModifier> itemWithModifiersList;
+    private ArrayList<CategoryWithModifier> categoryWithModifiersList;
+    private ArrayList<ItemWithScreen> itemWithScreensList;
+    private DecimalFormatSymbols de = new DecimalFormatSymbols(Locale.ENGLISH);
+    private DecimalFormat threeDForm = new DecimalFormat("0.000", de);
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -4952,6 +4948,7 @@ public class BackOfficeActivity extends AppCompatActivity {
 
         chart5.invalidate();
     }
+
     private void setDatapip6(int count, float range,List<OrderHeader>headerData) {
 
         final String[] parties = new String[] {
@@ -5133,8 +5130,6 @@ for(int k = 0; k < takeAways.size(); k++){
         chart9.invalidate();
     }
 
-
-
     private void setDatapip(int count, float range,List<OrderHeader>headerData) {
 
         final String[] parties = new String[] {
@@ -5255,7 +5250,6 @@ List<Float> valueCredit=new ArrayList<>();
 
         chart4.invalidate();
     }
-
 
     void showTablesActionReport() {
         dialog = new Dialog(BackOfficeActivity.this);
@@ -6058,7 +6052,6 @@ List<Float> valueCredit=new ArrayList<>();
         return filteredOrderHeaders;
     }
 
-
     public List<Float> getFilteredArrayByHour2(List<OrderHeader> orderHeaders, String fromDate, String toDate, String ShiftName,
                                                     int CashierNo, int posNoString) {
         float total = 0;
@@ -6085,7 +6078,6 @@ List<Float> valueCredit=new ArrayList<>();
     }
         return filteredOrderHeaders;
     }
-
 
     public List<Float> getFilteredArraybyDay(List<OrderHeader> orderHeaders, String fromDate, int dayCount, String ShiftName,
                                                int CashierNo, int posNoString) {
@@ -7972,7 +7964,6 @@ List<Float> valueCredit=new ArrayList<>();
 
     }
 
-
     void insertRowForReport(TableLayout tableLayout, String num, String Date, String pos, String cashierName,
                             String transType, String Amount, String Times, int switchCount) {
         final TableRow row = new TableRow(BackOfficeActivity.this);
@@ -8201,7 +8192,6 @@ List<Float> valueCredit=new ArrayList<>();
         rawPosition += 1;
     }
 
-
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     void insertRowInMoneyCategory(TableLayout MoneyTable, Money moneyCategory) {
@@ -8302,7 +8292,6 @@ List<Float> valueCredit=new ArrayList<>();
 
     }
 
-
     private void showSyncWithCloudChoesDialog() {
         dialog = new Dialog(BackOfficeActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -8339,7 +8328,6 @@ List<Float> valueCredit=new ArrayList<>();
 
         dialog.show();
     }
-
 
     void insertRaw2(Modifier items, final TableLayout itemsTableLayout, String text) {
         final TableRow row = new TableRow(BackOfficeActivity.this);
@@ -8384,10 +8372,6 @@ List<Float> valueCredit=new ArrayList<>();
         itemsTableLayout.addView(row);
         rawPosition += 1;
     }
-
-
-
-
 
     void insertRaw3(int number, String string, TableLayout tableLayout) {
 
@@ -8487,6 +8471,18 @@ List<Float> valueCredit=new ArrayList<>();
         super.onBackPressed();
         Intent intent = new Intent(BackOfficeActivity.this, Main.class);
         startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
+
+    public void setSlideAnimation() {
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
     }
 
     public String convertToEnglish(String value) {
