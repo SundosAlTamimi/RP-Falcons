@@ -70,9 +70,9 @@ public class FoodAdapter1 extends BaseAdapter {
 //        description.setTextColor(items.get(position).getTextColor()); //update 13
         end */
 
-        background.setBackgroundColor(context.getColor(R.color.layer2));
-        name.setTextColor(context.getColor(R.color.text_color));
-        description.setTextColor(context.getColor(R.color.text_color));
+        background.setBackgroundColor(context.getResources().getColor(R.color.layer2));
+        name.setTextColor(context.getResources().getColor(R.color.text_color));
+        description.setTextColor(context.getResources().getColor(R.color.text_color));
 
         return view1;
     }

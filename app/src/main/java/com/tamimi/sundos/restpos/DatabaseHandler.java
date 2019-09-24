@@ -2724,6 +2724,62 @@ try {
 
         return orderTransactions;
     }
+    public final ArrayList<OrderTransactions> getAllRequestVoucherOrderTemp(String Vfh_No,String POS) {
+        final ArrayList<OrderTransactions> orderTransactions = new ArrayList<>();
+//        String selectQuery = "SELECT * FROM " + ORDER_TRANSACTIONS + " where VOUCHER_NO = '" + Vfh_No + "'" + " and ORDER_KIND = '0'";
+        String selectQuery = "SELECT * FROM " + ORDER_TRANSACTIONS_TEMP + " where VOUCHER_NO = '" + Vfh_No + "'" + " and ORDER_KIND = '0"+"'" + " and POS_NO = '"+POS+"'" ;
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                OrderTransactions item = new OrderTransactions();
+
+                item.setOrderType(Integer.parseInt(cursor.getString(0)));
+                item.setOrderKind(Integer.parseInt(cursor.getString(1)));
+                item.setVoucherDate(cursor.getString(2));
+                item.setPosNo(Integer.parseInt(cursor.getString(3)));
+                item.setStoreNo(Integer.parseInt(cursor.getString(4)));
+                item.setVoucherNo(cursor.getString(5));
+                item.setVoucherSerial(Integer.parseInt(cursor.getString(6)));
+                item.setItemBarcode(cursor.getString(7));
+                item.setItemName(cursor.getString(8));
+                item.setSecondaryName(cursor.getString(9));
+                item.setKitchenAlias(cursor.getString(10));
+                item.setItemCategory(cursor.getString(11));
+                item.setItemFamily(cursor.getString(12));
+                item.setQty(Double.parseDouble(cursor.getString(13)));
+                item.setPrice(Double.parseDouble(cursor.getString(14)));
+                item.setTotal(Double.parseDouble(cursor.getString(15)));
+                item.setDiscount(Double.parseDouble(cursor.getString(16)));
+                item.setlDiscount(Double.parseDouble(cursor.getString(17)));
+                item.setTotalDiscount(Double.parseDouble(cursor.getString(18)));
+                item.setTaxValue(Double.parseDouble(cursor.getString(19)));
+                item.setTaxPerc(Double.parseDouble(cursor.getString(20)));
+                item.setTaxKind(Integer.parseInt(cursor.getString(21)));
+                item.setService(Integer.parseInt(cursor.getString(22)));
+                item.setServiceTax(Double.parseDouble(cursor.getString(23)));
+                item.setTableNo(Integer.parseInt(cursor.getString(24)));
+                item.setUserNo(Integer.parseInt(cursor.getString(25)));
+                item.setUserName(cursor.getString(26));
+                item.setSectionNo(Integer.parseInt(cursor.getString(27)));
+                item.setShiftNo(Integer.parseInt(cursor.getString(28)));
+                item.setShiftName(cursor.getString(29));
+                item.setTime(cursor.getString(30));
+                item.setOrgNo(cursor.getString(31));
+                item.setOrgPos(cursor.getInt(32));
+                item.setReturnQty(cursor.getDouble(33));
+                item.setIsPost(cursor.getInt(34));
+                item.setCashNo(cursor.getInt(35));
+
+                orderTransactions.add(item);
+
+            } while (cursor.moveToNext());
+        }
+
+        return orderTransactions;
+    }
 
     public final List<String> getAllRequestVoucherHeader(String Vfh_No,String POS) {
         List<String> waterName =new ArrayList<>();
@@ -3244,6 +3300,10 @@ try {
         db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
+        try {
+
+
+
         if (cursor.moveToFirst())
             do {
                 OrderHeader order_header = new OrderHeader();
@@ -3291,6 +3351,10 @@ try {
                 orderHeaders.add(order_header);
 
             } while (cursor.moveToNext());
+
+        }catch (Exception e){
+
+        }
         return orderHeaders;
 
 
@@ -4520,12 +4584,14 @@ try {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from ORDER_HEADER_TEMP WHERE SECTION_NUMBER = '" + sectionNo + "' and TABLE_NUMBER = '" + tableNo + "'");
         db.close();
+        Log.e("delete ","HeaderTemp");
     }
 
     public void deleteFromOrderTransactionTemp(String sectionNo, String tableNo) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from ORDER_TRANSACTIONS_TEMP WHERE SECTION_NO = '" + sectionNo + "' and TABLE_NO = '" + tableNo + "'");
         db.close();
+        Log.e("delete ","HeaderTemp");
     }
 
     public void deleteFromOrderTransactionTemp2(String sectionNo, String tableNo, int itemCode) {
@@ -4589,7 +4655,23 @@ try {
         db.execSQL("delete from " + VOID_REASONS);
         db.close();
     }
+    public void deleteAllItemModifier() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + ITEM_WITH_MODIFIER);
+        db.close();
+    }
 
+    public void deleteAllItemFQ() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + ITEM_WITH_FQ);
+        db.close();
+    }
+
+    public void deleteAllCategoryModefier() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + CATEGORY_WITH_MODIFIER);
+        db.close();
+    }
 
     public void deleteAllMaxSerial() {
         SQLiteDatabase db = this.getWritableDatabase();

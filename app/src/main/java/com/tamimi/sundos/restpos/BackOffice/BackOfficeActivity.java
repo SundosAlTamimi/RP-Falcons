@@ -4948,7 +4948,6 @@ public class BackOfficeActivity extends AppCompatActivity {
 
         chart5.invalidate();
     }
-
     private void setDatapip6(int count, float range,List<OrderHeader>headerData) {
 
         final String[] parties = new String[] {
@@ -5130,6 +5129,8 @@ for(int k = 0; k < takeAways.size(); k++){
         chart9.invalidate();
     }
 
+
+
     private void setDatapip(int count, float range,List<OrderHeader>headerData) {
 
         final String[] parties = new String[] {
@@ -5250,6 +5251,7 @@ List<Float> valueCredit=new ArrayList<>();
 
         chart4.invalidate();
     }
+
 
     void showTablesActionReport() {
         dialog = new Dialog(BackOfficeActivity.this);
@@ -6052,6 +6054,7 @@ List<Float> valueCredit=new ArrayList<>();
         return filteredOrderHeaders;
     }
 
+
     public List<Float> getFilteredArrayByHour2(List<OrderHeader> orderHeaders, String fromDate, String toDate, String ShiftName,
                                                     int CashierNo, int posNoString) {
         float total = 0;
@@ -6078,6 +6081,7 @@ List<Float> valueCredit=new ArrayList<>();
     }
         return filteredOrderHeaders;
     }
+
 
     public List<Float> getFilteredArraybyDay(List<OrderHeader> orderHeaders, String fromDate, int dayCount, String ShiftName,
                                                int CashierNo, int posNoString) {
@@ -7964,6 +7968,7 @@ List<Float> valueCredit=new ArrayList<>();
 
     }
 
+
     void insertRowForReport(TableLayout tableLayout, String num, String Date, String pos, String cashierName,
                             String transType, String Amount, String Times, int switchCount) {
         final TableRow row = new TableRow(BackOfficeActivity.this);
@@ -8192,6 +8197,7 @@ List<Float> valueCredit=new ArrayList<>();
         rawPosition += 1;
     }
 
+
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     void insertRowInMoneyCategory(TableLayout MoneyTable, Money moneyCategory) {
@@ -8292,6 +8298,7 @@ List<Float> valueCredit=new ArrayList<>();
 
     }
 
+
     private void showSyncWithCloudChoesDialog() {
         dialog = new Dialog(BackOfficeActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -8328,6 +8335,7 @@ List<Float> valueCredit=new ArrayList<>();
 
         dialog.show();
     }
+
 
     void insertRaw2(Modifier items, final TableLayout itemsTableLayout, String text) {
         final TableRow row = new TableRow(BackOfficeActivity.this);
@@ -8372,6 +8380,10 @@ List<Float> valueCredit=new ArrayList<>();
         itemsTableLayout.addView(row);
         rawPosition += 1;
     }
+
+
+
+
 
     void insertRaw3(int number, String string, TableLayout tableLayout) {
 

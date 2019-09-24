@@ -79,7 +79,8 @@
     <string name="check_number">الطابق:</string>
     <string name="date">التاريخ:</string>
     <string name="date_">التاريخ</string>
-    <string name="time">الوقت</string>
+    <string name="details">التفاصيل : </string>
+    <string name="time"> الوقت:</string>
     <string name="hour">الساعة</string>
     <string name="memo">ملاحظة:</string>
     <string name="waiter">النادل:</string>
@@ -123,6 +124,7 @@
     <string name="not_used">غير مستعمل</string>
     <string name="no_tax">لا ضريبة</string>
     <string name="tax_percent">نسبة الضريبة</string>
+    <string name="tax_number">الرقم الضريبي </string>
     <string name="secondary_name">الاسم الثاني</string>
     <string name="kitchen_name">الاسم في المطبخ</string>
     <string name="item_barcode">رقم المادة</string>
@@ -434,7 +436,7 @@
     <string name="all">الكل</string>
     <string name="cashierno">رقم الكاشير</string>
     <string name="cashier_name">اسم الكاشير</string>
-    <string name="cashier">الكاشير</string>
+    <string name="cashier">الكاشير:</string>
     <string name="pos">الفرع</string>
     <string name="trans_type">نوع العملية</string>
     <string name="amount">الكمية</string>
@@ -459,6 +461,8 @@
     <string name="update_blind_close">تعديل الاغلاق الخفي</string>
     <string name="tiller_ok">اسم الموافق</string>
     <string name="print_denomination">طباعة</string>
+    <string name="print">طباعة </string>
+    <string name="resturant_name"> مطعم </string>
     <string name="move_change_over_to_another_user">نقل الشيفت لمستخدم اخر</string>
     <string name="user_order_count">عداد الطلب للمستخدم</string>
     <string name="announ_date">تاريخ الاعلان</string>
@@ -582,7 +586,7 @@
     <string name="gift_card_value">قيمة بطاقات الهدايا :</string>
     <string name="point_value">قيمة النقاط :</string>
     <string name="cheque_value">قيمة الشيكات :</string>
-    <string name="invoice_no">رقم الفاتورة</string>
+    <string name="invoice_no">رقم الفاتورة:</string>
     <string name="is_show">المشاهدة</string>
     <string name="enter_received">ادخل الباقي :</string>
     <string name="tables_merged">تم دمج الطاولة !</string>
@@ -603,6 +607,10 @@
     <string name="dashboard">Dashboard</string>
     <string name="comp_year">سنة الشركة</string>
     <string name="comp_no">رقم الشركة</string>
+
+    <string name="first_install_for_app">االتنزيل الاول للتطبيق </string>
+    <string name="new_item_name">الاسم الجديد للمادة </string>
+    <string name="original">الاصلي </string>
 
 
 </resources>

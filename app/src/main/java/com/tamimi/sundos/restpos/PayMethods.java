@@ -32,6 +32,7 @@ import com.tamimi.sundos.restpos.Models.Money;
 import com.tamimi.sundos.restpos.Models.OrderHeader;
 import com.tamimi.sundos.restpos.Models.OrderTransactions;
 import com.tamimi.sundos.restpos.Models.PayMethod;
+import com.tamimi.sundos.restpos.Models.TableActions;
 import com.tamimi.sundos.restpos.Models.TakeAway;
 
 import org.json.JSONArray;
@@ -144,17 +145,19 @@ public class PayMethods extends AppCompatActivity {
 
         } else {  // pay from takeaway
 
+try {
+    balance.setText(obj.getOrderHeaderObj().getAmountDue() + "");
+    orderAmount.setText(obj.getOrderHeaderObj().getTotal() + "");
+    discount.setText(obj.getOrderHeaderObj().getAllDiscount() + "");
+    deliveryCharge.setText(obj.getOrderHeaderObj().getDeliveryCharge() + "");
+    server.setText(obj.getOrderHeaderObj().getWaiter());
+    subTotal.setText(obj.getOrderHeaderObj().getSubTotal() + "");
+    tax.setText(obj.getOrderHeaderObj().getTotalTax() + "");
+    amountDue.setText(obj.getOrderHeaderObj().getAmountDue() + "");
 
-            balance.setText(obj.getOrderHeaderObj().getAmountDue() + "");
-            orderAmount.setText(obj.getOrderHeaderObj().getTotal() + "");
-            discount.setText(obj.getOrderHeaderObj().getAllDiscount() + "");
-            deliveryCharge.setText(obj.getOrderHeaderObj().getDeliveryCharge() + "");
-            server.setText(obj.getOrderHeaderObj().getWaiter());
-            subTotal.setText(obj.getOrderHeaderObj().getSubTotal() + "");
-            tax.setText(obj.getOrderHeaderObj().getTotalTax() + "");
-            amountDue.setText(obj.getOrderHeaderObj().getAmountDue() + "");
-
-
+}catch (Exception e){
+    Log.e("Exception 158","/payMethodClass/");
+}
             mainBalance = convertToEnglish(balance.getText().toString());
             remainingBalance.setText(getResources().getString(R.string.remaining_) +Double.parseDouble( convertToEnglish(balance.getText().toString())));
             check.setText(check.getText().toString() + " -");
@@ -1731,17 +1734,59 @@ public class PayMethods extends AppCompatActivity {
 
                 mDHandler.addOrderHeader(obj.getOrderHeaderObj());
 
-                for (int i = 0; i < obj.getOrderTransactionObj().size(); i++)
+                for (int i = 0; i < obj.getOrderTransactionObj().size(); i++) {
+                    obj.getOrderTransactionObj().get(i).setVoucherNo(obj.getOrderHeaderObj().getVoucherNumber());
                     mDHandler.addOrderTransaction(obj.getOrderTransactionObj().get(i));
-
+                }
 
                 sendToKitchen(PayMethods.this, obj.getOrderHeaderObj(), obj.getOrderTransactionObj(), payMethodList, itemWithScreens);
                 sendToServer(PayMethods.this,obj.getOrderHeaderObj(), obj.getOrderTransactionObj(), payMethodList);
 
 //                Intent intent = new Intent(PayMethods.this, Order.class);
 //                startActivity(intent);
-                Print(obj.getOrderTransactionObj(),obj.getOrderHeaderObj());
-                mDHandler.updateMaxVhf(maxSerial);
+                if(obj.getOrderHeaderObj().getOrderType()==0){
+                    Print(obj.getOrderTransactionObj(),obj.getOrderHeaderObj());
+                    mDHandler.updateMaxVhf(maxSerial);
+                }else {// for split method for update temp table ..
+
+
+                    obj.updateOrderHeaderTempSplit().setCashValue(0);
+                    obj.updateOrderHeaderTempSplit().setCardsValue(0);
+                    obj.updateOrderHeaderTempSplit().setChequeValue(0);
+                    obj.updateOrderHeaderTempSplit().setGiftValue(0);
+                    obj.updateOrderHeaderTempSplit().setCouponValue(0);
+                    obj.updateOrderHeaderTempSplit().setPointValue(0);
+
+                    Log.e("sec no /table no ",""+obj.updateOrderHeaderTempSplit().getSectionNO()+"  /  "+ obj.updateOrderHeaderTempSplit().getTableNO());
+                    Log.e("total no /dis no ",""+obj.updateOrderHeaderTempSplit().getTotal()+"  /  "+ obj.updateOrderHeaderTempSplit().getAllDiscount());
+
+                    Log.e("vouDate no /voh no ",""+obj.updateOrderHeaderTempSplit().getVoucherDate()+"  /  "+ obj.updateOrderHeaderTempSplit().getVoucherNumber());
+
+
+                    mDHandler.deleteFromOrderHeaderTemp( ""+obj.updateOrderHeaderTempSplit().getSectionNO(), ""+ obj.updateOrderHeaderTempSplit().getTableNO());
+                    mDHandler.deleteFromOrderTransactionTemp(""+obj.updateOrderHeaderTempSplit().getSectionNO(), ""+ obj.updateOrderHeaderTempSplit().getTableNO());
+
+                    mDHandler.addOrderHeaderTemp(obj.updateOrderHeaderTempSplit());
+                    for(int i=0;i<obj.updateOrderTransactionTempSplit().size();i++) {
+
+                        obj.updateOrderTransactionTempSplit().get(i).setVoucherNo(obj.updateOrderHeaderTempSplit().getVoucherNumber());
+                        mDHandler.addOrderTransactionTemp(obj.updateOrderTransactionTempSplit().get(i));
+                    }
+
+                    TableActions table=new TableActions( obj.getOrderHeaderObj().getPointOfSaleNumber(), obj.getOrderHeaderObj().getUserName()
+                    , obj.getOrderHeaderObj().getUserNo(), obj.getOrderHeaderObj().getShiftName(), obj.getOrderHeaderObj().getShiftNumber(),
+                            2, obj.getOrderHeaderObj().getVoucherDate(), obj.getOrderHeaderObj().getTime(), obj.getOrderHeaderObj().getTableNO(),
+                            obj.getOrderHeaderObj().getSectionNO(),-1,-1);
+
+                    mDHandler.addTableAction(table);
+
+                    Intent intent = new Intent(PayMethods.this, DineIn.class);
+                    startActivity(intent);
+
+                    mDHandler.updateMaxVhf(obj.getOrderHeaderObj().getVoucherNumber());
+
+
+                                   }
 
             } else { // Dine In
 
@@ -1855,6 +1900,8 @@ public class PayMethods extends AppCompatActivity {
         Log.e("OrdedTr ", "" + OrderTransactionsObj.get(0).getTaxValue() + " date\n " + OrderTransactionsObj.get(0).getVoucherDate() + " \t no  " + OrderTransactionsObj.get(0).getVoucherNo());
         final Dialog dialog = new Dialog(PayMethods.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setCanceledOnTouchOutside(true);
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.print);
         final Button okButton = dialog.findViewById(R.id.print_btn);
@@ -1893,7 +1940,7 @@ public class PayMethods extends AppCompatActivity {
         TextView header = new TextView(PayMethods.this);
         header.setGravity(Gravity.CENTER);
 
-        header.setText("Item name ");
+        header.setText(getResources().getString(R.string.item_name));
         header.setTextColor(getResources().getColor(R.color.text_color));
         header.setLayoutParams(lp2);
         header.setTextSize(14);
@@ -1901,7 +1948,7 @@ public class PayMethods extends AppCompatActivity {
 
         TextView header2 = new TextView(PayMethods.this);
         header2.setGravity(Gravity.CENTER);
-        header2.setText("QTy");
+        header2.setText(getResources().getString(R.string.qty));
         header2.setTextColor(getResources().getColor(R.color.text_color));
         header2.setLayoutParams(lp2);
         header2.setTextSize(14);
@@ -1910,7 +1957,7 @@ public class PayMethods extends AppCompatActivity {
         TextView header3 = new TextView(PayMethods.this);
         header3.setGravity(Gravity.CENTER);
 
-        header3.setText("Total");
+        header3.setText(getResources().getString(R.string.total));
         header3.setTextColor(getResources().getColor(R.color.text_color));
         header3.setLayoutParams(lp2);
         header3.setTextSize(14);
