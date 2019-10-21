@@ -35,6 +35,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -128,15 +129,15 @@ public class BackOfficeActivity extends AppCompatActivity {
     RadioGroup radioGroup;//= new RadioGroup(this);
     int kitchenNoOldValue = -1;
     private final RectF onValueSelectedRectF = new RectF();
-    private BarChart chart2,chart1,chart8;
+    private BarChart chart2, chart1, chart8;
     private LineChart chart3;
-    private PieChart chart4,chart5,chart6,chart7,chart9;
+    private PieChart chart4, chart5, chart6, chart7, chart9;
     int isChecked = 0;
     LinearLayout lManagement, lSales, lCustomers, lEmployees, lMenu, lSettings;
 
     TableLayout jobTable;
     Button butManagement, butSales, butCustomers, butEmployees, butMenu, butSettings;
-    LinearLayout announcement, giftCard, employeeClockInOut, menuSearch, reCancellationSupervisor,DashboardData;
+    LinearLayout announcement, giftCard, employeeClockInOut, menuSearch, reCancellationSupervisor, DashboardData;
     LinearLayout membershipGroup, membership, customerRegistration;
     LinearLayout jobGroup, employeeRegistration, employeeSchedule, payroll, vacation, editTables;
     LinearLayout menuCategory, menuRegistration, modifier, forceQuestion, voiding_reasons, menuLayout;
@@ -154,7 +155,7 @@ public class BackOfficeActivity extends AppCompatActivity {
     ImageView moneyPicImageView = null;
 
     ArrayList<OrderHeader> headerData, headerDataMarket;
-    ArrayList<PayMethod> payData, OrderPayMData;
+    List<PayMethod> payData, OrderPayMData;
     List<OrderTransactions> orderTransactionData;
     ArrayList<Pay> payInData, PayCashier;
     ArrayList<Announcemet> Announcement;
@@ -427,6 +428,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         dialog.setContentView(R.layout.main_settings_dialog);
         dialog.setCanceledOnTouchOutside(true);
 
+        Switch simpleSwitch = (Switch) dialog.findViewById(R.id.kitchen_type);
         EditText userName = (EditText) dialog.findViewById(R.id.main_settings_userName);
         EditText userPassword = (EditText) dialog.findViewById(R.id.main_settings_password);
         EditText userNo = (EditText) dialog.findViewById(R.id.main_settings_userNo);
@@ -458,8 +460,27 @@ public class BackOfficeActivity extends AppCompatActivity {
             taxType.setText("" + Settings.tax_type);
             timeCard.setText("" + Settings.time_card);
             cashNo.setText("" + Settings.cash_no);
+            if(Settings.kitchenType==0)
+            { simpleSwitch.setChecked(true);
+            simpleSwitch.setText("Kitchen Screen");}
+            else {
+                simpleSwitch.setChecked(false);
+                simpleSwitch.setText("Printer");
+            }
         }
 
+        simpleSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(simpleSwitch.isChecked()) {
+                    simpleSwitch.setText("Kitchen Screen");}
+                else {
+                    simpleSwitch.setText("Printer");
+                }
+            }
+
+        });
         saveSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -475,6 +496,13 @@ public class BackOfficeActivity extends AppCompatActivity {
                                                     if (!TextUtils.isEmpty(taxType.getText().toString())) {
                                                         if (!TextUtils.isEmpty(timeCard.getText().toString())) {
                                                             if (!TextUtils.isEmpty(cashNo.getText().toString())) {
+                                                                int kitchenType=0;//0->kitchen screen /1-> printer
+                                                                if(simpleSwitch.isChecked()){
+                                                                    kitchenType=0;
+                                                                }else {
+                                                                    kitchenType=1;
+                                                                }
+
                                                                 mDHandler.deleteCurrentMainSettings();
                                                                 Settings.user_name = userName.getText().toString();
                                                                 Settings.password = Integer.parseInt(userPassword.getText().toString());
@@ -488,6 +516,8 @@ public class BackOfficeActivity extends AppCompatActivity {
                                                                 Settings.tax_type = Integer.parseInt(taxType.getText().toString());
                                                                 Settings.time_card = Integer.parseInt(timeCard.getText().toString());
                                                                 Settings.cash_no = Integer.parseInt(cashNo.getText().toString());
+                                                                Settings.kitchenType = kitchenType;
+                                                                Log.e("main_setting ","-->"+ Settings.kitchenType );
                                                                 mDHandler.addMainSettings();
                                                                 dialog.dismiss();
                                                                 dialog1.dismiss();
@@ -3586,7 +3616,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         Button done, exit;
 
         ImageView printingReport;
-
+        TableLayout creaditTable;
         done = (Button) dialog.findViewById(R.id.doneReport);
         exit = (Button) dialog.findViewById(R.id.exitReport);
 
@@ -3613,6 +3643,8 @@ public class BackOfficeActivity extends AppCompatActivity {
         pointText = (TextView) dialog.findViewById(R.id.points);
         giftText = (TextView) dialog.findViewById(R.id.gifts);
         creditText = (TextView) dialog.findViewById(R.id.credits);
+
+        creaditTable = (TableLayout) dialog.findViewById(R.id.creaditTable);
 
         printingReport = (ImageView) dialog.findViewById(R.id.printing);
 
@@ -3643,6 +3675,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         posNoArray.add("7");
 
 
+
         ArrayAdapter<String> adapter = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, shiftNameArray);
         shiftName.setAdapter(adapter);
 
@@ -3668,15 +3701,23 @@ public class BackOfficeActivity extends AppCompatActivity {
                         totalServiceSales = 0.0, totalServiceReturn = 0.0, cashValue = 0.0, pointValue = 0.0, visaValue = 0.0, masterValue = 0.0, giftValue = 0.0, creditValue = 0.0, chequeValue = 0.0, netSales = 0.0, netPayMethod = 0.0, netDiscount = 0.0, netService = 0.0;
 
                 headerData = mDHandler.getAllOrderHeader();
-                payData = mDHandler.getAllExistingPay();
-
+//                payData = mDHandler.getAllExistingPay();
+                String posNos = getResources().getString(R.string.all), user = getResources().getString(R.string.all);
                 userString[0] = users.getSelectedItem().toString();
                 shiftNameString[0] = shiftName.getSelectedItem().toString();
 
+                if (users.getSelectedItem().toString().equals(getResources().getString(R.string.all))) {
+                    user = "USER_NAME";
+                } else {
+                    user = users.getSelectedItem().toString();
+                }
+
                 if (posNo.getSelectedItem().toString().equals(getResources().getString(R.string.all))) {
                     posNoString[0] = -1;
+                    posNos = "POINT_OF_SALE_NUMBER";
                 } else {
                     posNoString[0] = Integer.parseInt(posNo.getSelectedItem().toString());
+                    posNos = posNo.getSelectedItem().toString();
                 }
 
                 for (int i = 0; i < headerData.size(); i++) {
@@ -3706,22 +3747,45 @@ public class BackOfficeActivity extends AppCompatActivity {
                     }//else 1
                 }
 
+
+                if (shiftNameString[0] == getResources().getString(R.string.all)) {
+
+                    shiftNameString[0] = "SHIFT_NAME";
+                } else {
+                    shiftNameString[0] = shiftName.getSelectedItem().toString();
+                }
+
+
+                payData = mDHandler.getPayByCreadit(shiftNameString[0], posNos, "" + user);
+
+                ArrayList<String> name = new ArrayList<>();
+                ArrayList<String> value = new ArrayList<>();
+                ArrayList<Double> valuePay = new ArrayList<>();
+
+
                 for (int i = 0; i < payData.size(); i++) {
-                    if (filters(fromDate.getText().toString(), toDate.getText().toString(), payData.get(i).getVoucherDate())) {
-                        if (payData.get(i).getShiftName().equals(shiftNameString[0]) || shiftNameString[0].equals(getResources().getString(R.string.all))) {
-                            if (payData.get(i).getUserName().equals(userString[0]) || userString[0].equals(getResources().getString(R.string.all))) {
-                                if (payData.get(i).getPointOfSaleNumber() == posNoString[0] || posNoString[0] == -1) {
+                    String payValue =  payData.get(i).getPayName();
+                    String payDate =  payData.get(i).getVoucherDate();
 
-                                    if (payData.get(i).getPayType().contains("v") || payData.get(i).getPayType().contains("V"))
-                                        visaValue += payData.get(i).getPayValue();
-                                    else if (payData.get(i).getPayType().contains("m") || payData.get(i).getPayType().contains("M"))
-                                        masterValue += payData.get(i).getPayValue();
 
-                                }
-                            }
+                    String[] arrayString = payValue.split(",");
+                    String[] arrayDate = payDate.split(",");
+
+
+                    double totalValue=0;
+                    for (int j = 0; j < arrayDate.length; j++) {
+                        if (filters(fromDate.getText().toString(), toDate.getText().toString(), arrayDate[j])) {
+
+//                            totalValue+=Double.parseDouble(convertToEnglish(threeDForm.format(arrayString[j])));
+                            totalValue+=Double.parseDouble(arrayString[j]);
                         }
                     }
+                    valuePay.add(i,totalValue);
+                    insertRawForCredite(payData.get(i).getPayType(),totalValue,creaditTable);
                 }
+
+               //
+
 
 
                 netSales = sales + returns;
@@ -3737,8 +3801,8 @@ public class BackOfficeActivity extends AppCompatActivity {
                 pointText.setText(convertToEnglish(threeDForm.format(pointValue)));
                 creditText.setText(convertToEnglish(threeDForm.format(creditValue)));
                 giftText.setText(convertToEnglish(threeDForm.format(giftValue)));
-                visaText.setText(convertToEnglish(threeDForm.format(visaValue)));//
-                masterText.setText(convertToEnglish(threeDForm.format(masterValue)));
+//                visaText.setText(convertToEnglish(threeDForm.format(visaValue)));//
+//                masterText.setText(convertToEnglish(threeDForm.format(masterValue)));
                 chequeText.setText(convertToEnglish(threeDForm.format(chequeValue)));
                 netPayMethodText.setText(convertToEnglish(threeDForm.format(netPayMethod)));
 
@@ -4204,12 +4268,12 @@ public class BackOfficeActivity extends AppCompatActivity {
         chart8 = dialog.findViewById(R.id.chart8);
         chart9 = dialog.findViewById(R.id.chart9);
 
-        List<Float>val=new ArrayList<>();
-        List<Float>val1=new ArrayList<>();
+        List<Float> val = new ArrayList<>();
+        List<Float> val1 = new ArrayList<>();
 
 
         List<OrderHeader> orderHeaders = mDHandler.getAllOrderHeader();
-        val = getFilteredArrayByHour2(orderHeaders, today, today, getResources().getString(R.string.all),-1, -1);
+        val = getFilteredArrayByHour2(orderHeaders, today, today, getResources().getString(R.string.all), -1, -1);
         chartLineOneDay(orderHeaders);
         pipTkKind(orderHeaders);
         chartLineOneWeak(orderHeaders);
@@ -4219,11 +4283,10 @@ public class BackOfficeActivity extends AppCompatActivity {
         ArrayList<BarEntry> values1 = new ArrayList<>();
 
 
-        for (int i = 0; i <24; i++) {
+        for (int i = 0; i < 24; i++) {
 
-            values1.add(new BarEntry(i+1, val.get(i)));
+            values1.add(new BarEntry(i + 1, val.get(i)));
         }
-
 
 
         chart2.getDescription().setEnabled(false);
@@ -4409,19 +4472,17 @@ public class BackOfficeActivity extends AppCompatActivity {
 //        chart4.setEntryLabelTypeface(tfRegular);
         chart4.setEntryLabelTextSize(12f);
 
-     setDatapip(7,100,orderHeaders);
+        setDatapip(7, 100, orderHeaders);
 
 
         //________________________________________________________________________
-
-
 
 
         dialog.show();
     }
 
 
-    void pipTkKind(List<OrderHeader> orderHeaders){
+    void pipTkKind(List<OrderHeader> orderHeaders) {
 
 
         chart9.setUsePercentValues(true);
@@ -4470,12 +4531,12 @@ public class BackOfficeActivity extends AppCompatActivity {
 //        chart4.setEntryLabelTypeface(tfRegular);
         chart9.setEntryLabelTextSize(12f);
 
-        setDatapipTk(7,100,orderHeaders);
+        setDatapipTk(7, 100, orderHeaders);
 
 
     }
 
-    void pipChart6(List<OrderHeader> orderHeaders){
+    void pipChart6(List<OrderHeader> orderHeaders) {
 
         chart6.setUsePercentValues(true);
         chart6.getDescription().setEnabled(false);
@@ -4523,13 +4584,13 @@ public class BackOfficeActivity extends AppCompatActivity {
 //        chart4.setEntryLabelTypeface(tfRegular);
         chart6.setEntryLabelTextSize(12f);
 
-        setDatapip6(2,100,orderHeaders);
+        setDatapip6(2, 100, orderHeaders);
 
 
     }
 
 
-    void pipChart(List<OrderHeader> orderHeaders){
+    void pipChart(List<OrderHeader> orderHeaders) {
 
         chart5.setUsePercentValues(true);
         chart5.getDescription().setEnabled(false);
@@ -4577,27 +4638,26 @@ public class BackOfficeActivity extends AppCompatActivity {
 //        chart4.setEntryLabelTypeface(tfRegular);
         chart5.setEntryLabelTextSize(12f);
 
-        setDatapip5(2,100,orderHeaders);
+        setDatapip5(2, 100, orderHeaders);
 
 
     }
 
 
-    void chartLineOneDay(List<OrderHeader> orderHeaders){
+    void chartLineOneDay(List<OrderHeader> orderHeaders) {
 
-        List<Float>val=new ArrayList<>();
+        List<Float> val = new ArrayList<>();
 
-        val = getFilteredArraybyDay(orderHeaders, today,3, getResources().getString(R.string.all),-1, -1);
+        val = getFilteredArraybyDay(orderHeaders, today, 3, getResources().getString(R.string.all), -1, -1);
 
 
         ArrayList<BarEntry> values1 = new ArrayList<>();
 
 
-        for (int i = 0; i <3; i++) {
+        for (int i = 0; i < 3; i++) {
 
-            values1.add(new BarEntry(i+1, val.get(2-i)));
+            values1.add(new BarEntry(i + 1, val.get(2 - i)));
         }
-
 
 
         chart1.getDescription().setEnabled(false);
@@ -4644,21 +4704,21 @@ public class BackOfficeActivity extends AppCompatActivity {
         chart1.invalidate();
 
     }
-    void chartLineOneWeak(List<OrderHeader> orderHeaders){
 
-        List<Float>val=new ArrayList<>();
+    void chartLineOneWeak(List<OrderHeader> orderHeaders) {
 
-        val = getFilteredArraybyDay(orderHeaders, today,7, getResources().getString(R.string.all),-1, -1);
+        List<Float> val = new ArrayList<>();
+
+        val = getFilteredArraybyDay(orderHeaders, today, 7, getResources().getString(R.string.all), -1, -1);
 
 
         ArrayList<BarEntry> values1 = new ArrayList<>();
 
 
-        for (int i = 0; i <7; i++) {
+        for (int i = 0; i < 7; i++) {
 
-            values1.add(new BarEntry(i+1, val.get(6-i)));
+            values1.add(new BarEntry(i + 1, val.get(6 - i)));
         }
-
 
 
         chart8.getDescription().setEnabled(false);
@@ -4705,7 +4765,8 @@ public class BackOfficeActivity extends AppCompatActivity {
         chart8.invalidate();
 
     }
-    void LineChartDataSet(){
+
+    void LineChartDataSet() {
 
 
 //        chart3.setOnChartValueSelectedListener(this);
@@ -4773,7 +4834,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         rightAxis.setDrawZeroLine(false);
         rightAxis.setGranularityEnabled(false);
 
-        setDataLineChart(3,100);
+        setDataLineChart(3, 100);
         chart3.invalidate();
 
     }
@@ -4793,7 +4854,6 @@ public class BackOfficeActivity extends AppCompatActivity {
             float val = (float) (Math.random() * range) + 450;
             values2.add(new Entry(i, val));
         }
-
 
 
         LineDataSet set1, set2;
@@ -4840,7 +4900,6 @@ public class BackOfficeActivity extends AppCompatActivity {
             //set2.setFillFormatter(new MyFillFormatter(900f));
 
 
-
             // create a data object with the data sets
             LineData data = new LineData(set1, set2);
             data.setValueTextColor(Color.WHITE);
@@ -4851,9 +4910,9 @@ public class BackOfficeActivity extends AppCompatActivity {
         }
     }
 
-    private void setDatapip5(int count, float range,List<OrderHeader>headerData) {
+    private void setDatapip5(int count, float range, List<OrderHeader> headerData) {
 
-        final String[] parties = new String[] {
+        final String[] parties = new String[]{
                 getResources().getString(R.string.sales),
                 getResources().getString(R.string.refund)
         };
@@ -4863,21 +4922,21 @@ public class BackOfficeActivity extends AppCompatActivity {
 //        payData = mDHandler.getAllExistingPay();
 
 
-        float sales=0,allDiscountSales=0,totalServiceSales=0,cashValue=0,pointValue=0,giftValue=0,
-                creditValue=0,chequeValue=0,visaValue=0,masterValue=0,returns=0;
-        List<Float> valueCredit=new ArrayList<>();
+        float sales = 0, allDiscountSales = 0, totalServiceSales = 0, cashValue = 0, pointValue = 0, giftValue = 0,
+                creditValue = 0, chequeValue = 0, visaValue = 0, masterValue = 0, returns = 0;
+        List<Float> valueCredit = new ArrayList<>();
 
         for (int i = 0; i < headerData.size(); i++) {
             if (filters(today, today, headerData.get(i).getVoucherDate())) {
-                            if (headerData.get(i).getOrderKind() == 0) {
-                                sales += headerData.get(i).getAmountDue();
+                if (headerData.get(i).getOrderKind() == 0) {
+                    sales += headerData.get(i).getAmountDue();
 //                                allDiscountSales += headerData.get(i).getAllDiscount();
 //                                totalServiceSales += headerData.get(i).getTotalService();
-                            } else if (headerData.get(i).getOrderKind() == 1) {
-                                returns += headerData.get(i).getAmountDue();
+                } else if (headerData.get(i).getOrderKind() == 1) {
+                    returns += headerData.get(i).getAmountDue();
 //                                allDiscountReturn += headerData.get(i).getAllDiscount();
 //                                totalServiceReturn += headerData.get(i).getTotalService();
-                            }
+                }
 
 //                cashValue += headerData.get(i).getCashValue();
 //                pointValue += headerData.get(i).getPointValue();
@@ -4886,11 +4945,8 @@ public class BackOfficeActivity extends AppCompatActivity {
 //                chequeValue += headerData.get(i).getChequeValue();
 
 
-
-
             }//else 1
         }
-
 
 
         valueCredit.add(sales);
@@ -4901,7 +4957,7 @@ public class BackOfficeActivity extends AppCompatActivity {
 
         // NOTE: The order of the entries when being added to the entries array determines their position around the center of
         // the chart.
-        for (int i1 = 0; i1 < valueCredit.size() ; i1++) {
+        for (int i1 = 0; i1 < valueCredit.size(); i1++) {
 
             entries.add(new PieEntry(valueCredit.get(i1),
                     parties[i1],
@@ -4952,9 +5008,10 @@ public class BackOfficeActivity extends AppCompatActivity {
 
         chart5.invalidate();
     }
-    private void setDatapip6(int count, float range,List<OrderHeader>headerData) {
 
-        final String[] parties = new String[] {
+    private void setDatapip6(int count, float range, List<OrderHeader> headerData) {
+
+        final String[] parties = new String[]{
                 getResources().getString(R.string.discount),
                 getResources().getString(R.string.returns_discount)
         };
@@ -4964,19 +5021,19 @@ public class BackOfficeActivity extends AppCompatActivity {
 //        payData = mDHandler.getAllExistingPay();
 
 
-        float sales=0,allDiscountSales=0,allDiscountReturn=0,totalServiceSales=0,cashValue=0,pointValue=0,giftValue=0,
-                creditValue=0,chequeValue=0,visaValue=0,masterValue=0,returns=0;
-        List<Float> valueCredit=new ArrayList<>();
+        float sales = 0, allDiscountSales = 0, allDiscountReturn = 0, totalServiceSales = 0, cashValue = 0, pointValue = 0, giftValue = 0,
+                creditValue = 0, chequeValue = 0, visaValue = 0, masterValue = 0, returns = 0;
+        List<Float> valueCredit = new ArrayList<>();
 
         for (int i = 0; i < headerData.size(); i++) {
             if (filters(today, today, headerData.get(i).getVoucherDate())) {
                 if (headerData.get(i).getOrderKind() == 0) {
 //                    sales += headerData.get(i).getAmountDue();
-                                allDiscountSales += headerData.get(i).getAllDiscount();
+                    allDiscountSales += headerData.get(i).getAllDiscount();
 //                                totalServiceSales += headerData.get(i).getTotalService();
                 } else if (headerData.get(i).getOrderKind() == 1) {
 //                    returns += headerData.get(i).getAmountDue();
-                                allDiscountReturn += headerData.get(i).getAllDiscount();
+                    allDiscountReturn += headerData.get(i).getAllDiscount();
 //                                totalServiceReturn += headerData.get(i).getTotalService();
                 }
 
@@ -4987,11 +5044,8 @@ public class BackOfficeActivity extends AppCompatActivity {
 //                chequeValue += headerData.get(i).getChequeValue();
 
 
-
-
             }//else 1
         }
-
 
 
         valueCredit.add(allDiscountSales);
@@ -5002,7 +5056,7 @@ public class BackOfficeActivity extends AppCompatActivity {
 
         // NOTE: The order of the entries when being added to the entries array determines their position around the center of
         // the chart.
-        for (int i1 = 0; i1 < valueCredit.size() ; i1++) {
+        for (int i1 = 0; i1 < valueCredit.size(); i1++) {
 
             entries.add(new PieEntry(valueCredit.get(i1),
                     parties[i1],
@@ -5054,34 +5108,33 @@ public class BackOfficeActivity extends AppCompatActivity {
         chart6.invalidate();
     }
 
-    private void setDatapipTk(int count, float range,List<OrderHeader>headerData) {
+    private void setDatapipTk(int count, float range, List<OrderHeader> headerData) {
 
 
-
-        List<TakeAway>takeAways=new ArrayList<>();
-        takeAways= mDHandler.getAllTAKind();
+        List<TakeAway> takeAways = new ArrayList<>();
+        takeAways = mDHandler.getAllTAKind();
         final String[] parties = new String[takeAways.size()];
 
-        float total=0;
-        List<Float> valueCredit=new ArrayList<>();
-for(int k = 0; k < takeAways.size(); k++){
-        for (int i = 0; i < headerData.size(); i++) {
-            if(headerData.get(i).getOrderHeaderKind().equals(takeAways.get(k).getTANmae())){
+        float total = 0;
+        List<Float> valueCredit = new ArrayList<>();
+        for (int k = 0; k < takeAways.size(); k++) {
+            for (int i = 0; i < headerData.size(); i++) {
+                if (headerData.get(i).getOrderHeaderKind().equals(takeAways.get(k).getTANmae())) {
 
-                total+=headerData.get(i).getAmountDue();
+                    total += headerData.get(i).getAmountDue();
 
+                }
             }
+            valueCredit.add(total);
+            parties[k] = takeAways.get(k).getTANmae();
+            total = 0;
         }
-    valueCredit.add(total);
-        parties[k]=takeAways.get(k).getTANmae();
-    total=0;
-}
 
         ArrayList<PieEntry> entries = new ArrayList<>();
 
         // NOTE: The order of the entries when being added to the entries array determines their position around the center of
         // the chart.
-        for (int i = 0; i < valueCredit.size() ; i++) {
+        for (int i = 0; i < valueCredit.size(); i++) {
 
             entries.add(new PieEntry(valueCredit.get(i),
                     parties[i],
@@ -5134,13 +5187,12 @@ for(int k = 0; k < takeAways.size(); k++){
     }
 
 
+    private void setDatapip(int count, float range, List<OrderHeader> headerData) {
 
-    private void setDatapip(int count, float range,List<OrderHeader>headerData) {
-
-        final String[] parties = new String[] {
-                getResources().getString(R.string.visa),  getResources().getString(R.string.master),
+        final String[] parties = new String[]{
+                getResources().getString(R.string.visa), getResources().getString(R.string.master),
                 getResources().getString(R.string.credit), getResources().getString(R.string.gift_card),
-                getResources().getString(R.string.point),  getResources().getString(R.string.cheque),getResources().getString(R.string.cash)
+                getResources().getString(R.string.point), getResources().getString(R.string.cheque), getResources().getString(R.string.cash)
         };
 
 
@@ -5148,9 +5200,9 @@ for(int k = 0; k < takeAways.size(); k++){
         payData = mDHandler.getAllExistingPay();
 
 
-float sales=0,allDiscountSales=0,totalServiceSales=0,cashValue=0,pointValue=0,giftValue=0,
-        creditValue=0,chequeValue=0,visaValue=0,masterValue=0;
-List<Float> valueCredit=new ArrayList<>();
+        float sales = 0, allDiscountSales = 0, totalServiceSales = 0, cashValue = 0, pointValue = 0, giftValue = 0,
+                creditValue = 0, chequeValue = 0, visaValue = 0, masterValue = 0;
+        List<Float> valueCredit = new ArrayList<>();
 
         for (int i = 0; i < headerData.size(); i++) {
             if (filters(today, today, headerData.get(i).getVoucherDate())) {
@@ -5164,13 +5216,11 @@ List<Float> valueCredit=new ArrayList<>();
 //                                totalServiceReturn += headerData.get(i).getTotalService();
 //                            }
 
-                            cashValue += headerData.get(i).getCashValue();
-                            pointValue += headerData.get(i).getPointValue();
-                            giftValue += headerData.get(i).getGiftValue();
-                            creditValue += headerData.get(i).getCouponValue();  /////???? replace coupon to credit """"
-                            chequeValue += headerData.get(i).getChequeValue();
-
-
+                cashValue += headerData.get(i).getCashValue();
+                pointValue += headerData.get(i).getPointValue();
+                giftValue += headerData.get(i).getGiftValue();
+                creditValue += headerData.get(i).getCouponValue();  /////???? replace coupon to credit """"
+                chequeValue += headerData.get(i).getChequeValue();
 
 
             }//else 1
@@ -5180,14 +5230,13 @@ List<Float> valueCredit=new ArrayList<>();
             if (filters(today, today, payData.get(i).getVoucherDate())) {
 
 
-                            if (payData.get(i).getPayType().contains("v") || payData.get(i).getPayType().contains("V"))
-                                visaValue += payData.get(i).getPayValue();
-                            else if (payData.get(i).getPayType().contains("m") || payData.get(i).getPayType().contains("M"))
-                                masterValue += payData.get(i).getPayValue();
+                if (payData.get(i).getPayType().contains("v") || payData.get(i).getPayType().contains("V"))
+                    visaValue += payData.get(i).getPayValue();
+                else if (payData.get(i).getPayType().contains("m") || payData.get(i).getPayType().contains("M"))
+                    masterValue += payData.get(i).getPayValue();
 
 
-
-                }
+            }
 
         }
 
@@ -5204,7 +5253,7 @@ List<Float> valueCredit=new ArrayList<>();
 
         // NOTE: The order of the entries when being added to the entries array determines their position around the center of
         // the chart.
-        for (int i = 0; i < valueCredit.size() ; i++) {
+        for (int i = 0; i < valueCredit.size(); i++) {
 
             entries.add(new PieEntry(valueCredit.get(i),
                     parties[i],
@@ -6060,56 +6109,56 @@ List<Float> valueCredit=new ArrayList<>();
 
 
     public List<Float> getFilteredArrayByHour2(List<OrderHeader> orderHeaders, String fromDate, String toDate, String ShiftName,
-                                                    int CashierNo, int posNoString) {
+                                               int CashierNo, int posNoString) {
         float total = 0;
         List<Float> filteredOrderHeaders = new ArrayList<>();
-        for(int h = 0; h < 24; h++){
-        for (int i = 0; i < orderHeaders.size(); i++) {
-            int orderHour = Integer.parseInt(orderHeaders.get(i).getTime().substring(0, 2));
+        for (int h = 0; h < 24; h++) {
+            for (int i = 0; i < orderHeaders.size(); i++) {
+                int orderHour = Integer.parseInt(orderHeaders.get(i).getTime().substring(0, 2));
 
-            if (filters(fromDate, toDate, orderHeaders.get(i).getVoucherDate())) {
-                if (orderHeaders.get(i).getShiftName().equals(ShiftName) || ShiftName.equals(getResources().getString(R.string.all))) {
-                    if (orderHeaders.get(i).getUserNo() == (CashierNo) || CashierNo == -1) {
-                        if (orderHeaders.get(i).getPointOfSaleNumber() == posNoString || posNoString == -1) {
-                            if (orderHour == h) {
-                                total += orderHeaders.get(i).getAmountDue();
+                if (filters(fromDate, toDate, orderHeaders.get(i).getVoucherDate())) {
+                    if (orderHeaders.get(i).getShiftName().equals(ShiftName) || ShiftName.equals(getResources().getString(R.string.all))) {
+                        if (orderHeaders.get(i).getUserNo() == (CashierNo) || CashierNo == -1) {
+                            if (orderHeaders.get(i).getPointOfSaleNumber() == posNoString || posNoString == -1) {
+                                if (orderHour == h) {
+                                    total += orderHeaders.get(i).getAmountDue();
 
+                                }
                             }
                         }
                     }
                 }
             }
-        }
-        filteredOrderHeaders.add(total);
+            filteredOrderHeaders.add(total);
             total = 0;
-    }
+        }
         return filteredOrderHeaders;
     }
 
 
     public List<Float> getFilteredArraybyDay(List<OrderHeader> orderHeaders, String fromDate, int dayCount, String ShiftName,
-                                               int CashierNo, int posNoString) {
+                                             int CashierNo, int posNoString) {
         float total = 0;
         List<Float> filteredOrderHeaders = new ArrayList<>();
-        Log.e("toDate ***---> ","date = "+fromDate);
-        for(int h = 0; h < dayCount; h++){
+        Log.e("toDate ***---> ", "date = " + fromDate);
+        for (int h = 0; h < dayCount; h++) {
             for (int i = 0; i < orderHeaders.size(); i++) {
 
-               int  dateInDay=Integer.parseInt(fromDate.substring(0, 2));
-                Log.e("toDate dateInDay---> ","date = "+dateInDay);
-               int day=dateInDay-h;
-                Log.e("toDate day---> ","date = "+day+"     " +h);
-               String toDate=day+fromDate.substring(2,fromDate.length() );
+                int dateInDay = Integer.parseInt(fromDate.substring(0, 2));
+                Log.e("toDate dateInDay---> ", "date = " + dateInDay);
+                int day = dateInDay - h;
+                Log.e("toDate day---> ", "date = " + day + "     " + h);
+                String toDate = day + fromDate.substring(2, fromDate.length());
 
 
-               Log.e("toDate ---> ","date = "+toDate);
+                Log.e("toDate ---> ", "date = " + toDate);
 
                 if (filters(toDate, toDate, orderHeaders.get(i).getVoucherDate())) {
                     if (orderHeaders.get(i).getShiftName().equals(ShiftName) || ShiftName.equals(getResources().getString(R.string.all))) {
                         if (orderHeaders.get(i).getUserNo() == (CashierNo) || CashierNo == -1) {
                             if (orderHeaders.get(i).getPointOfSaleNumber() == posNoString || posNoString == -1) {
 
-                                    total += orderHeaders.get(i).getAmountDue();
+                                total += orderHeaders.get(i).getAmountDue();
 
 
                             }
@@ -8202,6 +8251,42 @@ List<Float> valueCredit=new ArrayList<>();
     }
 
 
+
+
+    void insertRawForCredite(String payType,double payValue,final TableLayout itemsTableLayout) {
+        final TableRow row = new TableRow(BackOfficeActivity.this);
+
+        TableLayout.LayoutParams lp = new TableLayout.LayoutParams();
+        lp.setMargins(2, 2, 2, 0);
+        row.setLayoutParams(lp);
+//        row.setTag(rawPosition);
+        for (int k = 0; k < 2; k++) {
+            TextView textView = new TextView(BackOfficeActivity.this);
+
+            switch (k) {
+                case 0:
+                    textView.setText(payType+": ");
+                    break;
+                case 1:
+                    textView.setText(""+payValue);
+                    break;
+
+            }
+
+            textView.setTextColor(ContextCompat.getColor(BackOfficeActivity.this, R.color.text_color));
+//            textView.setGravity(Gravity.CENTER);
+            textView.setTextColor(getResources().getColor(R.color.text_color));
+            textView.setTextSize(18);
+            TableRow.LayoutParams lp2 = new TableRow.LayoutParams(172, TableRow.LayoutParams.WRAP_CONTENT);
+            textView.setLayoutParams(lp2);
+
+            row.addView(textView);
+
+        }
+        itemsTableLayout.addView(row);
+    }
+
+
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     void insertRowInMoneyCategory(TableLayout MoneyTable, Money moneyCategory) {
@@ -8386,9 +8471,6 @@ List<Float> valueCredit=new ArrayList<>();
     }
 
 
-
-
-
     void insertRaw3(int number, String string, TableLayout tableLayout) {
 
         if (true) {
@@ -8510,7 +8592,7 @@ List<Float> valueCredit=new ArrayList<>();
         lSettings = (LinearLayout) findViewById(R.id.l_settings);
 
         announcement = (LinearLayout) findViewById(R.id.announcement);
-        DashboardData= (LinearLayout) findViewById(R.id.DashboardData);
+        DashboardData = (LinearLayout) findViewById(R.id.DashboardData);
         giftCard = (LinearLayout) findViewById(R.id.gift_card);
         employeeClockInOut = (LinearLayout) findViewById(R.id.employee_click_out);
         menuSearch = (LinearLayout) findViewById(R.id.menu_search);

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,7 +9,14 @@
     android:paddingLeft="5dp"
     android:paddingRight="5dp"
     android:paddingBottom="5dp">
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/layer1"
+        android:orientation="vertical"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingBottom="5dp">
     <TextView
         android:id="@+id/onOffLine"
         android:layout_width="match_parent"
@@ -737,4 +745,38 @@
 
     </LinearLayout>
 
-</LinearLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/imageMove"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!--<ImageView-->
+            <!--android:id="@+id/mo1"-->
+            <!--android:layout_width="84dp"-->
+            <!--android:layout_height="53dp"-->
+            <!--android:layout_alignParentStart="true"-->
+            <!--android:layout_alignParentLeft="true"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:layout_marginStart="157dp"-->
+            <!--android:layout_marginLeft="157dp"-->
+            <!--android:layout_marginBottom="149dp"-->
+
+            <!--android:visibility="invisible" />-->
+
+        <!--<ImageView-->
+            <!--android:id="@+id/mo2"-->
+            <!--android:layout_width="165dp"-->
+            <!--android:layout_height="84dp"-->
+            <!--android:layout_alignParentTop="true"-->
+            <!--android:layout_alignParentEnd="true"-->
+            <!--android:layout_alignParentRight="true"-->
+
+            <!--android:layout_marginTop="130dp"-->
+            <!--android:layout_marginEnd="53dp"-->
+            <!--android:layout_marginRight="53dp"-->
+            <!--android:visibility="invisible" />-->
+
+    </RelativeLayout>
+</RelativeLayout>

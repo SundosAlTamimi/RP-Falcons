@@ -64,6 +64,8 @@ public class LogIn extends AppCompatActivity {
         setShift();
         arrayOfText = new TextView[]{t1, t2, t3, t4};
 
+        mDHandler.getMainSettings();
+
         List<FirstInstlation>firstInstlations=new ArrayList<>();
 
         firstInstlations=mDHandler.getAllFirstInformation();

@@ -238,6 +238,25 @@
                         android:textColor="@color/cardview_dark_background" />
                 </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/main_settings_tavs"
+                        android:layout_width="180dp"
+                        android:layout_height="44dp"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:textColor="@color/text_color"
+                        android:textSize="20sp" />
+
+                </LinearLayout>
+
                 <Button
                     android:id="@+id/main_settings_save"
                     android:layout_width="150dp"
@@ -262,6 +281,8 @@
                     android:textColor="@color/text_color"
                     android:textSize="18sp"
                     />
+
+
 
             </LinearLayout>
 
@@ -469,7 +490,7 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/main_settings_tvs"
+                        android:id="@+id/main_setxticngs_tvs"
                         android:layout_width="180dp"
                         android:layout_height="44dp"
                         android:layout_marginStart="15dp"
@@ -482,7 +503,7 @@
                         android:textSize="20sp" />
 
                     <EditText
-                        android:id="@+id/compYear"
+                        android:id="@+id/compYcear"
                         android:layout_width="220dp"
                         android:layout_height="44dp"
                         android:layout_marginTop="5dp"
@@ -494,6 +515,26 @@
                         android:singleLine="true"
                         android:textColor="@color/cardview_dark_background" />
                 </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <Switch
+                        android:id="@+id/kitchen_type"
+                        android:layout_width="342dp"
+                        android:layout_height="44dp"
+                        android:layout_marginTop="5dp"
+                        android:text="Send to kitchen type "
+                        android:textColor="@color/text_color"
+                        android:textOff="printer"
+                        android:textOn="screen "
+                        android:textSize="20sp" />
+
+                </LinearLayout>
+
 
                 <Button
                     android:id="@+id/main_settings_cancel"
@@ -510,6 +551,7 @@
                     android:text="@string/cancel"
                     android:textAllCaps="false"
                     android:textSize="20sp" />
+
 
             </LinearLayout>
 

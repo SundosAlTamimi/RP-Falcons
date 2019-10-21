@@ -26,35 +26,6 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/main_settings_tv1"
-                        android:layout_width="180dp"
-                        android:layout_height="44dp"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginTop="20dp"
-                        android:gravity="center"
-                        android:text="@string/user_name"
-                        android:textColor="@color/text_color"
-                        android:textSize="18sp" />
-
-                    <EditText
-                        android:id="@+id/main_settings_userName"
-                        android:layout_width="220dp"
-                        android:layout_height="44dp"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginRight="20dp"
-                        android:nextFocusDown="@id/main_settings_password"
-                        android:padding="10dp"
-                        android:singleLine="true"
-                        android:textColor="@color/cardview_dark_background" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
                         android:id="@+id/main_settings_tv2"
                         android:layout_width="180dp"
                         android:layout_height="44dp"
@@ -78,6 +49,35 @@
                         android:singleLine="true"
                         android:textColor="@color/cardview_dark_background" />
 
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/main_settings_tv1"
+                        android:layout_width="180dp"
+                        android:layout_height="44dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="20dp"
+                        android:gravity="center"
+                        android:text="@string/user_name"
+                        android:textColor="@color/text_color"
+                        android:textSize="18sp" />
+
+                    <EditText
+                        android:id="@+id/main_settings_userName"
+                        android:layout_width="220dp"
+                        android:layout_height="44dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginRight="20dp"
+                        android:nextFocusDown="@id/main_settings_password"
+                        android:padding="10dp"
+                        android:singleLine="true"
+                        android:textColor="@color/cardview_dark_background" />
 
                 </LinearLayout>
 
@@ -134,8 +134,8 @@
                         android:layout_height="44dp"
                         android:layout_marginTop="5dp"
                         android:layout_marginRight="20dp"
-                        android:nextFocusDown="@string/store_no"
                         android:imeOptions="actionGo"
+                        android:nextFocusDown="@string/store_no"
                         android:padding="10dp"
                         android:singleLine="true"
                         android:textColor="@color/cardview_dark_background" />
@@ -166,8 +166,8 @@
                         android:layout_marginTop="5dp"
                         android:layout_marginRight="20dp"
                         android:imeOptions="actionGo"
-                        android:padding="10dp"
                         android:nextFocusDown="@string/shift_no"
+                        android:padding="10dp"
                         android:singleLine="true"
                         android:textColor="@color/cardview_dark_background" />
 
@@ -197,12 +197,55 @@
                         android:layout_marginTop="5dp"
                         android:layout_marginRight="20dp"
                         android:imeOptions="actionGo"
-                        android:padding="10dp"
                         android:nextFocusDown="@string/shift_name"
+                        android:padding="10dp"
                         android:singleLine="true"
                         android:textColor="@color/cardview_dark_background" />
 
                 </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/main_settings_tavs"
+                        android:layout_width="180dp"
+                        android:layout_height="44dp"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:textColor="@color/text_color"
+                        android:textSize="20sp" />
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/main_settings_save"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="270dp"
+                    android:layout_marginLeft="270dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/done_buttons"
+                    android:padding="10dp"
+                    android:text="@string/save"
+                    android:textAllCaps="false"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginLeft="60dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/all_fields_are_required"
+                    android:textColor="@color/text_color"
+                    android:textSize="18sp" />
 
 
                 <!--<LinearLayout-->
@@ -236,31 +279,6 @@
                         <!--android:singleLine="true"-->
                         <!--android:textColor="@color/cardview_dark_background" />-->
                 <!--</LinearLayout>-->
-
-                <Button
-                    android:id="@+id/main_settings_save"
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="270dp"
-                    android:layout_marginLeft="270dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginBottom="10dp"
-                    android:background="@drawable/done_buttons"
-                    android:padding="10dp"
-                    android:text="@string/save"
-                    android:textAllCaps="false"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/all_fields_are_required"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginLeft="60dp"
-                    android:layout_marginBottom="10dp"
-                    android:textColor="@color/text_color"
-                    android:textSize="18sp"
-                    />
 
             </LinearLayout>
 
@@ -482,6 +500,25 @@
                         <!--android:textColor="@color/cardview_dark_background" />-->
                 <!--</LinearLayout>-->
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <Switch
+                        android:id="@+id/kitchen_type"
+                        android:layout_width="400dp"
+                        android:layout_height="44dp"
+                        android:layout_marginTop="5dp"
+                        android:text="Send to kitchen type "
+                        android:textColor="@color/text_color"
+                        android:textOff="printer"
+                        android:textOn="screen "
+                        android:textSize="20sp" />
+
+                </LinearLayout>
+
                 <Button
                     android:id="@+id/main_settings_cancel"
                     android:layout_width="150dp"
@@ -489,9 +526,9 @@
                     android:layout_marginStart="15dp"
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="20dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginRight="40dp"
                     android:layout_marginEnd="40dp"
+                    android:layout_marginRight="40dp"
+                    android:layout_marginBottom="10dp"
                     android:background="@drawable/cancel_button"
                     android:padding="10dp"
                     android:text="@string/cancel"

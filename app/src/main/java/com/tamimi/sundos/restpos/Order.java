@@ -1,5 +1,6 @@
 package com.tamimi.sundos.restpos;
 
+import android.animation.Animator;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
@@ -20,8 +21,10 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -29,9 +32,11 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -92,6 +97,9 @@ public class Order extends AppCompatActivity {
     Button back;
     LinearLayout baLiner;
     boolean showChek = false;
+    ImageView mo1,mo2;
+ImageView  views;
+    RelativeLayout imageMove ;
 
     private ProgressDialog progressDialog;
     String json_getString;
@@ -144,8 +152,10 @@ public class Order extends AppCompatActivity {
         setContentView(R.layout.order);
         requestedItemsSplit = new ArrayList<>();
         requestedItemsSplitTemp = new ArrayList<>();
+//        mo1=(ImageView)findViewById(R.id.mo1);
+//        mo2=(ImageView)findViewById(R.id.mo2);
         Log.e("Order ", "in 12345");
-
+        imageMove = (RelativeLayout) findViewById(R.id.imageMove);
         initialize();
 
         mDbHandler = new DatabaseHandler(Order.this);
@@ -470,6 +480,63 @@ public class Order extends AppCompatActivity {
         });
     }
 
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    public ImageView insertImage(View view,String picItem){
+
+
+        ImageView imageView = new ImageView(Order.this);
+        imageView.setImageBitmap(StringToBitMap(picItem));
+        int p1[] = new int[2];
+        int p2[] = new int[2];
+        tableLayout.getLocationInWindow(p2);
+        view.getLocationInWindow(p1);
+        imageView.setVisibility(View.VISIBLE);
+        Log.e("location ",""+p1[0]+"    "+p1[1]);        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(70,
+                70);
+        imageView.setLayoutParams(params);
+        imageView.setX(p1[0]+10);
+        imageView.setY(p1[1]);
+
+        imageMove.addView(imageView);
+        imageView.animate()
+                .x(p2[0])
+                .y(p2[1])
+                .setDuration(1000)
+                .setListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+
+                        imageView.setVisibility(View.INVISIBLE);
+
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+
+
+                })
+                .start();
+
+
+
+
+
+return imageView;
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     void fillItems(String categoryName) {
 //        ArrayList<UsedItems> subList = mDbHandler.getRequestedItems(categoryName);//update 11
@@ -530,8 +597,17 @@ end*/
                 itemGridView.setAdapter(foodAdapter);
 
                 itemGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+                    @SuppressLint("ResourceType")
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                        LinearLayout linearLayout = (LinearLayout) view;
+                        LinearLayout innerLinearLayout = (LinearLayout) linearLayout.getChildAt(0);
+                        views = (ImageView) innerLinearLayout.getChildAt(0);
+
+                        insertImage(view,requestedItems.get(i).getPic());
+
                         if (!requestedItems.get(i).getMenuName().equals("")) {
                             if (requestedItems.get(i).getOpenPrice() != 0) {
 //
@@ -588,12 +664,12 @@ end*/
 //                                textViewLineDiscount.setText("" + newDiscountValue);
 //                                calculateTotal();
 //                            }
-
                                 insertAndCheackItem(i);
                             }
 
                         } else
                             new Settings().makeText(Order.this, getResources().getString(R.string.no_item));
+
                     }
                 });
             }
@@ -602,14 +678,18 @@ end*/
     }
 
     void insertItemRaw(Items item) {
-        final TableRow row = new TableRow(Order.this);
 
+
+//        motionEvent(item.getPic(),views,mo1,mo2);
+
+        final TableRow row = new TableRow(Order.this);
+        TextView textView=null;
         TableLayout.LayoutParams lp = new TableLayout.LayoutParams();
         lp.setMargins(2, 0, 2, 0);
         row.setLayoutParams(lp);
 
         for (int i = 0; i < 5; i++) {
-            TextView textView = new TextView(Order.this);
+          textView = new TextView(Order.this);
 
             switch (i) {
                 case 0:
@@ -669,6 +749,9 @@ end*/
         tableLayoutPosition++;
 
         calculateTotal();
+
+
+
     }
 
     void insertItemRawSplit(OrderTransactions item, TableLayout tableLayout, int origNSplit) {
@@ -2025,6 +2108,9 @@ end*/
             textViewTotal.setText("" + newTotal);
             textViewLineDiscount.setText("" + newDiscountValue);
             calculateTotal();
+
+
+
         }
 
 

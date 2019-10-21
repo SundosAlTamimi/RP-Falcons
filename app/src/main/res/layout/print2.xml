@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
@@ -43,12 +43,12 @@
 
         <LinearLayout
             android:id="@+id/linear2"
-            android:layout_width="match_parent"
+            android:layout_width="550dp"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <TableLayout
-                android:layout_width="match_parent"
+                android:layout_width="550dp"
                 android:layout_height="wrap_content">
 
                 <TableRow
@@ -64,12 +64,12 @@
 
                     <TextView
                         android:id="@+id/resturantname"
-                        android:layout_width="wrap_content"
-                        android:layout_height="30dp"
+                        android:layout_width="133dp"
+                        android:layout_height="wrap_content"
                         android:padding="5dp"
                         android:text="Resturant  "
                         android:textColor="@color/text_color"
-                        android:textSize="16sp"
+                        android:textSize="18sp"
                         android:textStyle="bold"
 
 
@@ -78,11 +78,11 @@
                     <TextView
                         android:id="@+id/resturantnameText"
                         android:layout_width="wrap_content"
-                        android:layout_height="30dp"
+                        android:layout_height="wrap_content"
                         android:padding="5dp"
                         android:text="  Falcons  "
                         android:textColor="@color/text_color"
-                        android:textSize="16sp"
+                        android:textSize="18sp"
                         android:textStyle="bold" />
                 </TableRow>
 
@@ -99,23 +99,23 @@
                     <TextView
                         android:id="@+id/textViewtaxno"
                         android:layout_width="wrap_content"
-                        android:layout_height="30dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:padding="5dp"
                         android:text="@string/no_tax"
                         android:textColor="@color/text_color"
 
-                        android:textSize="12sp" />
+                        android:textSize="18sp" />
 
                     <TextView
                         android:id="@+id/textViewtaxnoText"
                         android:layout_width="wrap_content"
-                        android:layout_height="30dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:padding="5dp"
                         android:text="   "
                         android:textColor="@color/text_color"
-                        android:textSize="12sp" />
+                        android:textSize="18sp" />
                 </TableRow>
 
                 <TableRow
@@ -131,45 +131,45 @@
                     <TextView
                         android:id="@+id/textViewDate"
                         android:layout_width="wrap_content"
-                        android:layout_height="30dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:padding="5dp"
                         android:text="@string/date"
                         android:textColor="@color/text_color"
 
-                        android:textSize="12sp" />
+                        android:textSize="18sp" />
 
                     <TextView
                         android:id="@+id/textViewdateText"
                         android:layout_width="wrap_content"
-                        android:layout_height="30dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:padding="5dp"
                         android:text="   "
                         android:textColor="@color/text_color"
-                        android:textSize="12sp" />
+                        android:textSize="18sp" />
 
                     <TextView
                         android:id="@+id/textViewTime"
                         android:layout_width="100dp"
-                        android:layout_height="30dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
                         android:padding="5dp"
                         android:text="@string/time"
                         android:textColor="@color/text_color"
-                        android:textSize="12sp"
+                        android:textSize="18sp"
 
                         />
 
                     <TextView
                         android:id="@+id/textViewtimeText"
                         android:layout_width="100dp"
-                        android:layout_height="30dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:padding="5dp"
                         android:text="   "
                         android:textColor="@color/text_color"
-                        android:textSize="12sp" />
+                        android:textSize="18sp" />
                 </TableRow>
 
                 <TableRow
@@ -185,23 +185,23 @@
                     <TextView
                         android:id="@+id/textViewWDAte"
                         android:layout_width="wrap_content"
-                        android:layout_height="30dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:padding="5dp"
                         android:text="@string/date"
                         android:textColor="@color/text_color"
 
-                        android:textSize="12sp" />
+                        android:textSize="18sp" />
 
                     <TextView
                         android:id="@+id/textViewWDAteText"
                         android:layout_width="wrap_content"
-                        android:layout_height="30dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:padding="5dp"
                         android:text="   "
                         android:textColor="@color/text_color"
-                        android:textSize="12sp" />
+                        android:textSize="18sp" />
                 </TableRow>
 
                 <TableRow
@@ -217,23 +217,23 @@
                     <TextView
                         android:id="@+id/textViewInvoiceNo"
                         android:layout_width="wrap_content"
-                        android:layout_height="30dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:padding="5dp"
                         android:text="@string/invoice_no"
                         android:textColor="@color/text_color"
 
-                        android:textSize="12sp" />
+                        android:textSize="18sp" />
 
                     <TextView
                         android:id="@+id/textViewWInvoiceNoText"
                         android:layout_width="wrap_content"
-                        android:layout_height="30dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:padding="5dp"
                         android:text="   "
                         android:textColor="@color/text_color"
-                        android:textSize="12sp"
+                        android:textSize="18sp"
 
                         />
                 </TableRow>
@@ -251,22 +251,22 @@
                     <TextView
                         android:id="@+id/textViewCacher"
                         android:layout_width="wrap_content"
-                        android:layout_height="30dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:padding="5dp"
                         android:text="@string/cashier_name"
                         android:textColor="@color/text_color"
-                        android:textSize="12sp" />
+                        android:textSize="18sp" />
 
                     <TextView
                         android:id="@+id/textViewWCacherText"
                         android:layout_width="wrap_content"
-                        android:layout_height="30dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:padding="5dp"
                         android:text="   "
                         android:textColor="@color/text_color"
-                        android:textSize="12sp" />
+                        android:textSize="18sp" />
                 </TableRow>
             </TableLayout>
 
@@ -283,7 +283,7 @@
             <!--android:layout_width="match_parent">-->
             <TableLayout
                 android:id="@+id/table_"
-                android:layout_width="match_parent"
+                android:layout_width="550dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="5dp"
@@ -308,20 +308,32 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/textView124"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:textColor="@color/text_color"
+                    android:textSize="18sp" />
+
+                <TextView
                     android:id="@+id/TotalValue"
                     android:layout_width="110dp"
-                    android:layout_height="30dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="300dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
                     android:padding="3dp"
                     android:text="@string/details"
                     android:textColor="@color/text_color"
-                    android:textSize="14sp"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
             </LinearLayout>
 
             <ScrollView
-                android:layout_width="match_parent"
+                android:layout_width="550dp"
                 android:layout_height="wrap_content">
 
                 <TableLayout
@@ -340,52 +352,52 @@
 
                         <TextView
                             android:layout_width="wrap_content"
-                            android:layout_height="17dp"
+                            android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_marginLeft="10dp"
                             android:layout_weight="2"
                             android:text="@string/total"
                             android:textColor="@color/text_color"
-                            android:textSize="13sp" />
+                            android:textSize="18sp" />
 
                         <TextView
                             android:id="@+id/total_print"
                             android:layout_width="wrap_content"
-                            android:layout_height="17dp"
+                            android:layout_height="wrap_content"
                             android:layout_margin="1dp"
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="@string/zero_decimal"
                             android:textColor="@color/colorPrimary"
-                            android:textSize="13sp" />
+                            android:textSize="18sp" />
 
                     </TableRow>
 
                     <TableRow
                         android:layout_width="match_parent"
-                        android:layout_height="10dp"
+                        android:layout_height="wrap_content"
                         android:layout_margin="1dp">
 
                         <TextView
                             android:layout_width="wrap_content"
-                            android:layout_height="17dp"
+                            android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_marginLeft="10dp"
                             android:layout_weight="2"
                             android:text="@string/delivery_change"
                             android:textColor="@color/text_color"
-                            android:textSize="13sp" />
+                            android:textSize="18sp" />
 
                         <TextView
                             android:id="@+id/delivery_print"
                             android:layout_width="wrap_content"
-                            android:layout_height="17dp"
+                            android:layout_height="wrap_content"
                             android:layout_margin="1dp"
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="@string/zero_decimal"
                             android:textColor="@color/colorPrimary"
-                            android:textSize="13sp" />
+                            android:textSize="18sp" />
 
                     </TableRow>
 
@@ -396,24 +408,24 @@
 
                         <TextView
                             android:layout_width="wrap_content"
-                            android:layout_height="17dp"
+                            android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_marginLeft="10dp"
                             android:layout_weight="2"
                             android:text="@string/line_discount"
                             android:textColor="@color/text_color"
-                            android:textSize="13sp" />
+                            android:textSize="18sp" />
 
                         <TextView
                             android:id="@+id/line_discount_print"
                             android:layout_width="wrap_content"
-                            android:layout_height="17dp"
+                            android:layout_height="wrap_content"
                             android:layout_margin="1dp"
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="@string/zero_decimal"
                             android:textColor="@color/colorPrimary"
-                            android:textSize="13sp" />
+                            android:textSize="18sp" />
 
                     </TableRow>
 
@@ -424,24 +436,24 @@
 
                         <TextView
                             android:layout_width="wrap_content"
-                            android:layout_height="17dp"
+                            android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_marginLeft="10dp"
                             android:layout_weight="2"
                             android:text="@string/discount"
                             android:textColor="@color/text_color"
-                            android:textSize="13sp" />
+                            android:textSize="18sp" />
 
                         <TextView
                             android:id="@+id/discount_print"
                             android:layout_width="wrap_content"
-                            android:layout_height="17dp"
+                            android:layout_height="wrap_content"
                             android:layout_margin="1dp"
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="@string/zero_decimal"
                             android:textColor="@color/colorPrimary"
-                            android:textSize="13sp" />
+                            android:textSize="18sp" />
 
                     </TableRow>
 
@@ -460,24 +472,24 @@
 
                         <TextView
                             android:layout_width="wrap_content"
-                            android:layout_height="17dp"
+                            android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_marginLeft="10dp"
                             android:layout_weight="2"
                             android:text="@string/sub_total"
                             android:textColor="@color/text_color"
-                            android:textSize="13sp" />
+                            android:textSize="18sp" />
 
                         <TextView
                             android:id="@+id/sub_total_print"
                             android:layout_width="wrap_content"
-                            android:layout_height="17dp"
+                            android:layout_height="wrap_content"
                             android:layout_margin="1dp"
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="@string/zero_decimal"
                             android:textColor="@color/colorPrimary"
-                            android:textSize="13sp" />
+                            android:textSize="18sp" />
 
                     </TableRow>
 
@@ -488,24 +500,24 @@
 
                         <TextView
                             android:layout_width="wrap_content"
-                            android:layout_height="17dp"
+                            android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_marginLeft="10dp"
                             android:layout_weight="2"
                             android:text="@string/service"
                             android:textColor="@color/text_color"
-                            android:textSize="13sp" />
+                            android:textSize="18sp" />
 
                         <TextView
                             android:id="@+id/service_print"
                             android:layout_width="wrap_content"
-                            android:layout_height="17dp"
+                            android:layout_height="wrap_content"
                             android:layout_margin="1dp"
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="@string/zero_decimal"
                             android:textColor="@color/colorPrimary"
-                            android:textSize="13sp" />
+                            android:textSize="18sp" />
 
                     </TableRow>
 
@@ -516,24 +528,24 @@
 
                         <TextView
                             android:layout_width="wrap_content"
-                            android:layout_height="17dp"
+                            android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_marginLeft="10dp"
                             android:layout_weight="2"
                             android:text="@string/tax"
                             android:textColor="@color/text_color"
-                            android:textSize="13sp" />
+                            android:textSize="18sp" />
 
                         <TextView
                             android:id="@+id/tax_print"
                             android:layout_width="wrap_content"
-                            android:layout_height="17dp"
+                            android:layout_height="26dp"
                             android:layout_margin="1dp"
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="@string/zero_decimal"
                             android:textColor="@color/colorPrimary"
-                            android:textSize="13sp" />
+                            android:textSize="18sp" />
 
                     </TableRow>
 
@@ -544,24 +556,24 @@
 
                         <TextView
                             android:layout_width="wrap_content"
-                            android:layout_height="17dp"
+                            android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_marginLeft="10dp"
                             android:layout_weight="2"
                             android:text="@string/amount_due"
                             android:textColor="@color/text_color"
-                            android:textSize="13sp" />
+                            android:textSize="18sp" />
 
                         <TextView
                             android:id="@+id/amount_due_print"
                             android:layout_width="wrap_content"
-                            android:layout_height="17dp"
+                            android:layout_height="wrap_content"
                             android:layout_margin="1dp"
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="@string/zero_decimal"
                             android:textColor="@color/exit"
-                            android:textSize="13sp" />
+                            android:textSize="18sp" />
 
                     </TableRow>
 
@@ -576,8 +588,18 @@
                 android:layout_width="158dp"
                 android:layout_height="70dp"
                 android:layout_gravity="center"
-                android:layout_marginBottom="10dp"
-                app:srcCompat="@drawable/we" />
+                android:layout_marginBottom="5dp"
+                />
+            <!--app:srcCompat="@drawable/we"-->
+            <TextView
+                android:layout_width="550dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="2"
+                android:textColor="@color/text_color"
+                android:textSize="18sp" />
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

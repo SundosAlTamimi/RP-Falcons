@@ -60,7 +60,7 @@ import static com.tamimi.sundos.restpos.Settings.shift_name;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
     // Database Versions
-    private static final int DATABASE_VERSION = 43;
+    private static final int DATABASE_VERSION = 45;
 
     // Database Name
     private static final String DATABASE_NAME = "RestPos";
@@ -81,6 +81,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String MAIN_SETTINGS_TAX_TYPE = "TAX_TYPE";
     private static final String MAIN_SETTINGS_TIME_CARD = "TIME_CARD";
     private static final String MAIN_SETTINGS_CASH_NO = "CASH_NO";
+    private static final String MAIN_SETTINGS_KITCHEN_TYPE = "KITCHEN_TYPE";
 
     //___________________________________________________________________________________
     private static final String ITEMS = "ITEMS";
@@ -635,7 +636,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + MAIN_SETTINGS_SERVICE_VALUE + " REAL,"
                 + MAIN_SETTINGS_TAX_TYPE + " INTEGER,"
                 + MAIN_SETTINGS_TIME_CARD + " INTEGER,"
-                + MAIN_SETTINGS_CASH_NO + " INTEGER" + ")";
+                + MAIN_SETTINGS_CASH_NO + " INTEGER,"
+                + MAIN_SETTINGS_KITCHEN_TYPE+ " INTEGER" + ")";
         db.execSQL(CREATE_TABLE_MAIN_SETTINGS);
         //___________________________________________________________________________________
 
@@ -1337,6 +1339,11 @@ try {
     db.execSQL("ALTER TABLE ORDER_HEADER_TEMP ADD ORDER_TK_KIND TAXE NOT NULL DEFAULT 'Take Away'");
 }catch (Exception e){}
 
+        try {
+            db.execSQL("ALTER TABLE MAIN_SETTINGS ADD CASH_NO INTEGER NOT NULL DEFAULT '0'");
+            db.execSQL("ALTER TABLE MAIN_SETTINGS ADD KITCHEN_TYPE INTEGER NOT NULL DEFAULT '0'");
+        }catch (Exception e){}
+
 try {
     String CREATE_TABLE_TAKE_AWAY_KIND = "CREATE TABLE " + TAKE_AWAY_KIND + " ("
             + TA_KIND_SERIAL + " INTEGER,"
@@ -1416,6 +1423,7 @@ try {
         values.put(MAIN_SETTINGS_TAX_TYPE, Settings.tax_type);
         values.put(MAIN_SETTINGS_TIME_CARD, Settings.time_card);
         values.put(MAIN_SETTINGS_CASH_NO, Settings.cash_no);
+        values.put(MAIN_SETTINGS_KITCHEN_TYPE, Settings.kitchenType);
 
         db.insert(MAIN_SETTINGS, null , values);
         db.close();
@@ -2293,6 +2301,7 @@ try {
             Settings.tax_type = cursor.getInt(9);
             Settings.time_card = cursor.getInt(10);
             Settings.cash_no = cursor.getInt(11);
+            Settings.kitchenType = cursor.getInt(12);
 
         }
     }
@@ -3097,6 +3106,35 @@ try {
                 item.setShiftName(cursor.getString(3));//connt string of qty
                 item.setUserName(cursor.getString(4));//connt string of total
 
+
+                items.add(item);
+            } while (cursor.moveToNext());
+        }
+        return items;
+    }
+
+
+    public List<PayMethod> getPayByCreadit(String shiftName,String pos,String USER_NAME) {
+        List<PayMethod> items = new ArrayList<>();
+
+        String selectQuery = "select PAY_TYPE, GROUP_CONCAT(PAY_VALUE),GROUP_CONCAT(VOUCHER_DATE)   from PAY_METHOD  " +
+                "where POINT_OF_SALE_NUMBER = "+pos +" and SHIFT_NAME = "+shiftName +" and USER_NAME = "+USER_NAME+" and PAY_NAME = \"Credit Card\"" +
+                " group by PAY_TYPE ";
+
+
+//        String selectQuery = "select ITEM_BARCODE1 , ITEM_NAME , VOUCHER_DATE , SHIFT_NAME , POS_NO  , USER_NAME , sum(QTY) , sum(TOTAL) \n" +
+//                "from ORDER_TRANSACTIONS\n" +
+//                "group by ITEM_BARCODE1 ORDER BY QTY DESC;";
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                PayMethod item = new PayMethod();
+
+                item.setPayType(cursor.getString(0));
+                item.setPayName(cursor.getString(1));
+                item.setVoucherDate(cursor.getString(2));
 
                 items.add(item);
             } while (cursor.moveToNext());
