@@ -49,9 +49,9 @@ public class SendSocket {
 
     }
 
-    public void sendMessage(int master, LinearLayout liner) {
+    public void sendMessage(int master, LinearLayout liner, List<Bitmap> bitmapList, List<String> IPprinter) {
         final Handler handler = new Handler();
-        lin=liner;
+        lin = liner;
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -69,14 +69,15 @@ public class SendSocket {
                     Log.e("size : ", "**" + orderTransactions.size());
 
                     if (kitchenScreens.size() != 0) {
-                        //this for_loop for filter and send all data to target kitchen has same kitchen no and have ip
-                        for (int i = 0; i < kitchenScreens.size(); i++) {
-                            if (!kitchenScreens.get(i).getKitchenIP().equals("")) {//&& isHostAvailable(kitchenScreens.get(i).getKitchenIP(), 9002,100)
+                        if (Settings.kitchenType == 0) {
+                            //this for_loop for filter and send all data to target kitchen has same kitchen no and have ip
+                            for (int i = 0; i < kitchenScreens.size(); i++) {
+                                if (!kitchenScreens.get(i).getKitchenIP().equals("")) {//&& isHostAvailable(kitchenScreens.get(i).getKitchenIP(), 9002,100)
 
-                                if (checkHosts(kitchenScreens.get(i).getKitchenIP())) {
-                                    if (Settings.kitchenType == 0) {
+                                    if (checkHosts(kitchenScreens.get(i).getKitchenIP())) {
+
                                         ///this for print in Kitchen screen
-  // _________________________________________________________________________________________________________
+                                        // _________________________________________________________________________________________________________
                                         Log.e("kitchenType==0 ", "Kitchen screen");
                                         obj3 = getObjectForKitchenNo(orderTransactions, kitchenScreens.get(i).getKitchenNo());
                                         if (obj3.toString().length() > 2) {
@@ -95,39 +96,65 @@ public class SendSocket {
                                                 e.printStackTrace();
                                             }
                                         }
-   // _________________________________________________________________________________________________________
-                                    } else {///this for print in Kitchen printer
-                                        Log.e("kitchenType==1 ", "printer");
-//                                        if (!printerValue.toString().equals("")) {
-                                        try {
-                                            String ip = kitchenScreens.get(i).getKitchenIP();
-//                                    String ip = "192.168.2.10";
-                                            char[] command = new char[]{27, 112, (byte) 48, (byte) 10, (byte) 50}; // for open cash drawer
-                                            char[] ESC_m = new char[]{27, 109};//cut paper
-                                            s = new Socket(ip.trim(), 9100);
-                                            out = s.getOutputStream();
-                                            output = new PrintWriter(out);
-                                            out.write(convertToImage());
-                                            out.flush();
-                                            output.println(ESC_m);
-                                            output.flush();
-                                            Log.e("kitchenScreens " + i + " sec " + kitchenScreens.get(i).getKitchenNo(), "kitchenScreens = --> ");
-                                            output.close();
-                                            out.close();
-                                            s.close();
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }
-                                        //}//
+                                        // _________________________________________________________________________________________________________
+//                                    }
                                     }
-                                }//
+//                                else {
+//                                    Toast.makeText(context, "Please Make Sure The Printer if Connect or not ", Toast.LENGTH_SHORT).show();
+//                                }
+                                }
+                            }
+                        } else {//this for print in Kitchen printer
+                            Log.e("kitchenType==1 ", "printer");
+//
+                            for (int i = 0; i < bitmapList.size(); i++) {
+                                if (!IPprinter.get(i).equals("")) {//&& isHostAvailable(kitchenScreens.get(i).getKitchenIP(), 9002,100)
+
+                                    if (checkHosts(IPprinter.get(i))) {
+                                        if (bitmapList.get(i) != null) {
+                                            try {
+
+                                                String ip = IPprinter.get(i);
+//                                    String ip = "192.168.2.10";
+                                                char[] command = new char[]{27, 112, (byte) 48, (byte) 10, (byte) 50}; // for open cash drawer
+                                                char[] ESC_m = new char[]{27, 109};//cut paper
+//                                                char[] LF = new char[]{10};//line feed
+                                                char LF =10;//line feed
+
+                                                PrintPic printPic = PrintPic.getInstance();
+                                                printPic.init(bitmapList.get(i));
+                                                byte[] bitmapdata = printPic.printDraw();
+
+
+                                                s = new Socket(ip.trim(), 9100);
+                                                out = s.getOutputStream();
+                                                output = new PrintWriter(out);
+                                                out.write(bitmapdata);
+                                                out.flush();
+                                                output.println(LF);
+                                                output.flush();
+                                                output.println(LF);
+                                                output.flush();
+                                                output.println(ESC_m);
+                                                output.flush();
+                                                output.close();
+                                                out.close();
+                                                s.close();
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+//                                    else{
+//                                        Toast.makeText(context, "Please Make Sure The Printer if Connect or not ", Toast.LENGTH_SHORT).show();
+//                                    }
+                                    }
+                                }
                             }
                         }
-
                     } else {
                         Toast.makeText(context, "Please Add kitchen/printer IP ", Toast.LENGTH_SHORT).show();
                     }
-  // _________________________________________________________________________________________________________
+                    // _________________________________________________________________________________________________________
                 } else {//this for print cash printer
                     try {
 //                      String ip = kitchenScreens.get(i).getKitchenIP();
@@ -153,7 +180,7 @@ public class SendSocket {
                             out.close();
                             s.close();
 
-                        }else {
+                        } else {
                             Toast.makeText(context, "Please Make Sure Your Printer ", Toast.LENGTH_SHORT).show();
                         }
                     } catch (IOException e) {
@@ -185,6 +212,36 @@ public class SendSocket {
 
         thread.start();
     }
+
+
+    //"""""""""""""""""""""""""""""""""""""""""""
+//    else {///this for print in Kitchen printer
+//        Log.e("kitchenType==1 ", "printer");
+////                                        if (!printerValue.toString().equals("")) {
+//        try {
+//            String ip = kitchenScreens.get(i).getKitchenIP();
+////                                    String ip = "192.168.2.10";
+//            char[] command = new char[]{27, 112, (byte) 48, (byte) 10, (byte) 50}; // for open cash drawer
+//            char[] ESC_m = new char[]{27, 109};//cut paper
+//            s = new Socket(ip.trim(), 9100);
+//            out = s.getOutputStream();
+//            output = new PrintWriter(out);
+//            out.write(convertToImage());
+//            out.flush();
+//            output.println(ESC_m);
+//            output.flush();
+//            Log.e("kitchenScreens " + i + " sec " + kitchenScreens.get(i).getKitchenNo(), "kitchenScreens = --> ");
+//            output.close();
+//            out.close();
+//            s.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        //}//
+
+
+    //""""""""""""""""""""""""""""""""""""""""""""
+
 
     // this for get all object  send to target kitchen by kitchen no ...
 
@@ -294,8 +351,6 @@ public class SendSocket {
 //                    Drawable d = ContextCompat.getDrawable(MainActivity.this, R.drawable.axe);
 //                    Bitmap bitmap = ((BitmapDrawable)d).getBitmap();
 //                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-
-
 
 
         lin.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),

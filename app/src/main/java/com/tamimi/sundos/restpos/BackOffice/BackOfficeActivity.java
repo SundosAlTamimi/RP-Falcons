@@ -133,7 +133,7 @@ public class BackOfficeActivity extends AppCompatActivity {
     private BarChart chart2, chart1, chart8;
     private LineChart chart3;
     private PieChart chart4, chart5, chart6, chart7, chart9;
-    int isChecked = 0;
+    TableRow focusedRowReCancellation;
     LinearLayout lManagement, lSales, lCustomers, lEmployees, lMenu, lSettings;
 
     TableLayout jobTable;
@@ -148,7 +148,6 @@ public class BackOfficeActivity extends AppCompatActivity {
             salesReportByCustomer, salesReportByCardType, waiterSalesReport, tableActionReport, profitLossReport, detailSalesReport,
             simpleSalesTotalReport, SoldQtyReport, userOrderCountReport, reCancellationReport, reCancellationSupervisorReport, TakeawayKind;
 
-    int count, count2, nextSerial;
     Dialog dialog, dialog1;
     String today;
     DatabaseHandler mDHandler;

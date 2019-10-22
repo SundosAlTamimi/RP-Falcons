@@ -5,7 +5,10 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -23,11 +26,14 @@ import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.tamimi.sundos.restpos.BackOffice.BackOfficeActivity;
 import com.tamimi.sundos.restpos.Models.Cashier;
 import com.tamimi.sundos.restpos.Models.Cheque;
 import com.tamimi.sundos.restpos.Models.CreditCard;
 import com.tamimi.sundos.restpos.Models.ItemWithScreen;
+import com.tamimi.sundos.restpos.Models.KitchenScreen;
 import com.tamimi.sundos.restpos.Models.Money;
 import com.tamimi.sundos.restpos.Models.OrderHeader;
 import com.tamimi.sundos.restpos.Models.OrderTransactions;
@@ -60,7 +66,7 @@ public class PayMethods extends AppCompatActivity {
             totalDue, totalReceived, balance;
     LinearLayout TakeAwayTableLayout;
     LinearLayout linearLayouts;
-
+List<LinearLayout> layoutList;
     DatabaseHandler mDHandler;
     Dialog dialog, dialog1;
     DecimalFormatSymbols de =new DecimalFormatSymbols(Locale.ENGLISH);
@@ -92,7 +98,7 @@ public class PayMethods extends AppCompatActivity {
     double giftCardValue = 0.00;
     double creditValue = 0.00;
     double pointValue = 0.00;
-
+List<String>ipForKitchen;
     public static double cashValue1 = 0.00;
     public static double creditCardValue1 = 0.00;
     public static double chequeValue1 = 0.00;
@@ -109,7 +115,7 @@ public class PayMethods extends AppCompatActivity {
 
         initialize();
         maxSerial =Order.voucherNo;
-
+        layoutList=new ArrayList<>();
         Date currentTimeAndDate = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
         String today = convertToEnglish(df.format(currentTimeAndDate));
@@ -1856,8 +1862,16 @@ try {
 
             PrintInNetworkPrinter(OrderTransactionsObj,OrderHeaderObj);
             SendSocket sendSocket = new SendSocket(context, obj1, OrderTransactionsObj);
-            sendSocket.sendMessage(0,linearLayouts);
+//            sendSocket.sendMessage(0,linearLayouts,null,null);
             Log.e("socket_printer_cash", "J");
+            if(Settings.kitchenType==0){
+                sendSocket.sendMessage(1,linearLayouts,null,null);
+            }else{
+                Log.e("socket_printer_kitchen", "J");
+
+                List<Bitmap>imagePrint =LinearToPrint(OrderTransactionsObj);
+                sendSocket.sendMessage(1,linearLayouts,imagePrint,ipForKitchen);
+            }
 
 
 
@@ -2186,6 +2200,152 @@ try {
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
     }
+
+
+    List<Bitmap> LinearToPrint(List<OrderTransactions> orderTransactions){
+
+        List<Bitmap> liner=new ArrayList<>();
+
+        Dialog  dialogLinear=new Dialog(PayMethods.this);
+        dialogLinear.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogLinear.setCancelable(true);
+        if(getResources().getString(R.string.A_E).equals("A")){
+            dialogLinear.setContentView(R.layout.kitckin_printer_a);
+
+        }else{
+            dialogLinear.setContentView(R.layout.kitckin_printer_);
+
+        }
+        dialogLinear.setCanceledOnTouchOutside(true);
+
+        TextView orderType,OrderNo,tableNo,screenNo;
+        TableLayout itemTable;
+        ImageView orderImage;
+
+        ipForKitchen=new ArrayList<>();
+        ipForKitchen.clear();
+        LinearLayout linerToImage=(LinearLayout)dialogLinear.findViewById(R.id.linerForKitchen);
+         itemTable=(TableLayout)dialogLinear.findViewById(R.id.itemTable);
+//         orderImage=(ImageView)dialogLinear.findViewById(R.id.orderPic);
+         orderType=(TextView)dialogLinear.findViewById(R.id.orderType);
+
+        OrderNo=(TextView)dialogLinear.findViewById(R.id.orderNo);
+        tableNo=(TextView)dialogLinear.findViewById(R.id.tableNo);
+        screenNo=(TextView)dialogLinear.findViewById(R.id.screenNo);
+       List<KitchenScreen> kitchenScreens = mDHandler.getAllKitchenScreen();
+
+
+
+       if(kitchenScreens.size()!=0&& orderTransactions.size()!=0){
+           if(orderTransactions.get(0).getOrderType()==0){
+               orderType.setText(getResources().getString(R.string.take_away));
+//               orderImage.setImageDrawable(getResources().getDrawable(R.drawable.take_away));
+           }else{
+               orderType.setText(getResources().getString(R.string.dine_in));
+//               orderImage.setImageDrawable(getResources().getDrawable(R.drawable.dine_in));
+           }
+           screenNo.setText(""+orderTransactions.get(0).getSectionNo());
+           tableNo.setText(""+orderTransactions.get(0).getTableNo());
+           OrderNo.setText(orderTransactions.get(0).getVoucherNo());
+
+           for(int k=0;k<kitchenScreens.size();k++){
+               itemTable.removeAllViews();
+               boolean isKitchenHaveItem=false;
+           for (int i = 0; i < orderTransactions.size(); i++) {
+            if (orderTransactions.get(i).getScreenNo() == kitchenScreens.get(k).getKitchenNo()) {
+                isKitchenHaveItem=true;
+
+                final TableRow row = new TableRow(PayMethods.this);
+//
+        TableRow.LayoutParams lp = new TableRow.LayoutParams(550, TableRow.LayoutParams.WRAP_CONTENT);
+//        lp.setMargins(2, 2, 2, 2);
+        row.setLayoutParams(lp);
+
+        for (int s = 0; s < 3; s++) {
+            TextView textView = new TextView(PayMethods.this);
+
+            switch (s) {
+                case 0:
+                    textView.setText(orderTransactions.get(i).getItemName());
+                    break;
+                case 1:
+                    textView.setText(""+orderTransactions.get(i).getQty());
+                    break;
+                case 2:
+                    textView.setText(""+orderTransactions.get(i).getNote());
+                    break;
+
+            }
+
+            textView.setTextColor(ContextCompat.getColor(PayMethods.this, R.color.text_color));
+            textView.setGravity(Gravity.CENTER);
+            textView.setTextSize(16);
+
+
+
+                TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+                lp2.setMargins(2, 2, 2, 2);
+                textView.setLayoutParams(lp2);
+
+                row.addView(textView);
+
+
+        }
+
+        itemTable.addView(row);
+
+
+
+
+            }
+           }//
+
+               if(isKitchenHaveItem){
+                   liner.add(returnBitmap(linerToImage));
+                   ipForKitchen.add(kitchenScreens.get(k).getKitchenIP());
+               }
+
+           }}else{
+           Toast.makeText(PayMethods.this, "Please Add Kitchen Printer Ip ", Toast.LENGTH_SHORT).show();
+       }
+//
+
+        return liner;
+    }
+
+
+
+    Bitmap returnBitmap(LinearLayout lin){
+
+        lin.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        lin.layout(0, 0, lin.getMeasuredWidth(), lin.getMeasuredHeight());
+
+        Log.e("size of img ", "width=" + lin.getMeasuredWidth() + "      higth =" + lin.getHeight());
+
+//        linearView.setDrawingCacheEnabled(true);
+//        linearView.buildDrawingCache();
+//        Bitmap bit =linearView.getDrawingCache();
+
+//        linearView.setDrawingCacheEnabled(true);
+//        linearView.buildDrawingCache();
+//        Bitmap bit =linearView.getDrawingCache();
+
+        Bitmap bitmap = Bitmap.createBitmap(lin.getWidth(), lin.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        Drawable bgDrawable = lin.getBackground();
+        if (bgDrawable != null) {
+            bgDrawable.draw(canvas);
+        } else {
+            canvas.drawColor(Color.WHITE);
+        }
+        lin.draw(canvas);
+
+        return bitmap;
+
+    }
+
+
     void initialize() {
 
         print = (ImageView) findViewById(R.id.print);
@@ -2223,8 +2383,6 @@ try {
         credit.setOnClickListener(onClickListener);
         point.setOnClickListener(onClickListener);
         save.setOnClickListener(onClickListener);
-
-
 
 
     }
