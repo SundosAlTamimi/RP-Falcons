@@ -1909,6 +1909,8 @@ try {
         Log.e("OrdedTr ", "" + OrderTransactionsObj.get(0).getTaxValue() + " date\n " + OrderTransactionsObj.get(0).getVoucherDate() + " \t no  " + OrderTransactionsObj.get(0).getVoucherNo());
         final Dialog dialog = new Dialog(PayMethods.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setCanceledOnTouchOutside(true);
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.print2);
         final Button okButton = dialog.findViewById(R.id.print_btn);
@@ -1948,7 +1950,7 @@ try {
         TextView header = new TextView(PayMethods.this);
         header.setGravity(Gravity.CENTER);
 
-        header.setText("Item name ");
+        header.setText(getResources().getString(R.string.item_name));
         header.setTextColor(getResources().getColor(R.color.text_color));
         header.setLayoutParams(lp2);
         header.setTextSize(18);
@@ -1956,7 +1958,7 @@ try {
 
         TextView header2 = new TextView(PayMethods.this);
         header2.setGravity(Gravity.CENTER);
-        header2.setText("QTy");
+        header2.setText(getResources().getString(R.string.qty));
         header2.setTextColor(getResources().getColor(R.color.text_color));
         header2.setLayoutParams(lp2);
         header2.setTextSize(18);
@@ -1965,7 +1967,7 @@ try {
         TextView header3 = new TextView(PayMethods.this);
         header3.setGravity(Gravity.CENTER);
 
-        header3.setText("Total");
+        header3.setText(getResources().getString(R.string.total));
         header3.setTextColor(getResources().getColor(R.color.text_color));
         header3.setLayoutParams(lp2);
         header3.setTextSize(18);
@@ -2174,7 +2176,16 @@ try {
 
     }
 
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
 
+    public void setSlideAnimation() {
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
+    }
     void initialize() {
 
         print = (ImageView) findViewById(R.id.print);

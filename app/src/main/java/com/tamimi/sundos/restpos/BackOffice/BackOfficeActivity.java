@@ -126,8 +126,9 @@ import org.json.JSONObject;
 //import static com.itextpdf.text.Element.ALIGN_CENTER;
 
 public class BackOfficeActivity extends AppCompatActivity {
-    RadioGroup radioGroup;//= new RadioGroup(this);
-    int kitchenNoOldValue = -1;
+
+    private RadioGroup radioGroup;//= new RadioGroup(this);
+    private int kitchenNoOldValue = -1, isChecked = 0, count, count2, nextSerial, visible = 0, rawPosition = 0;
     private final RectF onValueSelectedRectF = new RectF();
     private BarChart chart2, chart1, chart8;
     private LineChart chart3;
@@ -162,19 +163,16 @@ public class BackOfficeActivity extends AppCompatActivity {
     ArrayList<Money> finalMoneyArray;
     TableRow focusedRaw = null;
     private List<TableRow> selectedItemsList = new ArrayList<>();
-    int rawPosition = 0;
-    Calendar myCalendar;
-    List<BlindCloseDetails> focusedRowData = null;
-    TableRow focusedRowReCancellation = null;
-    int visible = 0;
-    boolean clicked = false;
+    private Calendar myCalendar;
+    private List<BlindCloseDetails> focusedRowData = null;
+    private boolean clicked = false;
 
-    ArrayList<ItemWithFq> itemWithFqsList;
-    ArrayList<ItemWithModifier> itemWithModifiersList;
-    ArrayList<CategoryWithModifier> categoryWithModifiersList;
-    ArrayList<ItemWithScreen> itemWithScreensList;
-    DecimalFormatSymbols de = new DecimalFormatSymbols(Locale.ENGLISH);
-    DecimalFormat threeDForm = new DecimalFormat("0.000", de);
+    private ArrayList<ItemWithFq> itemWithFqsList;
+    private ArrayList<ItemWithModifier> itemWithModifiersList;
+    private ArrayList<CategoryWithModifier> categoryWithModifiersList;
+    private ArrayList<ItemWithScreen> itemWithScreensList;
+    private DecimalFormatSymbols de = new DecimalFormatSymbols(Locale.ENGLISH);
+    private DecimalFormat threeDForm = new DecimalFormat("0.000", de);
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

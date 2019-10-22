@@ -219,6 +219,7 @@ ImageView  views;
 
                             Intent intentPay = new Intent(Order.this, PayMethods.class);
                             startActivity(intentPay);
+                            setSlideAnimation();
 
                         } else
                             new Settings().makeText(Order.this, getResources().getString(R.string.amountdue_oo));
@@ -240,7 +241,8 @@ ImageView  views;
                             }
                             Intent intent = new Intent(Order.this, DineIn.class);
                             startActivity(intent);
-                            finish();
+                            setSlideAnimation();
+//                            finish();
 
                         } else
                             new Settings().makeText(Order.this, getResources().getString(R.string.amountdue_oo));
@@ -888,7 +890,6 @@ end*/
 
             row.addView(textView);
             row.setTag(tableLayoutPosition);
-
             row.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -2537,10 +2538,8 @@ end*/
                     dialog.setCancelable(false);
                     dialog.setContentView(R.layout.line_discount_dialog);
                     dialog.setCanceledOnTouchOutside(true);
-
 //                    Window window = dialog.getWindow();
 //                    window.setLayout(470, 280);
-
                     final EditText addLineDiscountEditText = (EditText) dialog.findViewById(R.id.add_line_discount);
                     Button buttonDone = (Button) dialog.findViewById(R.id.b_done);
                     final CheckBox radioButton = (CheckBox) dialog.findViewById(R.id.discount_perc);
@@ -3010,12 +3009,25 @@ end*/
         if (orderTypeFlag == 0) {
             Intent intent = new Intent(Order.this, Main.class);
             startActivity(intent);
+
+
         } else {
             Intent intent = new Intent(Order.this, DineIn.class);
             startActivity(intent);
         }
+        finish();
     }
 
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
+
+    public void setSlideAnimation() {
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
+    }
 
     public String convertToEnglish(String value) {
         String newValue = (((((((((((value + "").replaceAll("١", "1")).replaceAll("٢", "2")).replaceAll("٣", "3")).replaceAll("٤", "4")).replaceAll("٥", "5")).replaceAll("٦", "6")).replaceAll("٧", "7")).replaceAll("٨", "8")).replaceAll("٩", "9")).replaceAll("٠", "0").replaceAll("٫", "."));
