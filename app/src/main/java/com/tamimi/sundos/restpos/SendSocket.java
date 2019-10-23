@@ -40,6 +40,10 @@ public class SendSocket {
     LinearLayout lin;
     ESCPOS escpos = new ESCPOS();
     RequestQueue requestQueue = RequestQueue.getInstance();
+    char[] command = new char[]{27, 112, (byte) 48, (byte) 10, (byte) 50}; // for open cash drawer
+    char[] ESC_m = new char[]{27, 109};//cut paper
+    //                                                char[] LF = new char[]{10};//line feed
+    char LF =10;//line feed
 
     public SendSocket(Context context, JSONObject obj, List<OrderTransactions> orderTransactions) {
         this.obj1 = obj;
@@ -116,10 +120,10 @@ public class SendSocket {
 
                                                 String ip = IPprinter.get(i);
 //                                    String ip = "192.168.2.10";
-                                                char[] command = new char[]{27, 112, (byte) 48, (byte) 10, (byte) 50}; // for open cash drawer
-                                                char[] ESC_m = new char[]{27, 109};//cut paper
-//                                                char[] LF = new char[]{10};//line feed
-                                                char LF =10;//line feed
+//                                                char[] command = new char[]{27, 112, (byte) 48, (byte) 10, (byte) 50}; // for open cash drawer
+//                                                char[] ESC_m = new char[]{27, 109};//cut paper
+////                                                char[] LF = new char[]{10};//line feed
+//                                                char LF =10;//line feed
 
                                                 PrintPic printPic = PrintPic.getInstance();
                                                 printPic.init(bitmapList.get(i));
@@ -160,8 +164,8 @@ public class SendSocket {
 //                      String ip = kitchenScreens.get(i).getKitchenIP();
                         String ip = "192.168.2.10";
                         if (checkHosts("192.168.2.10")) {
-                            char[] command = new char[]{27, 112, (byte) 48, (byte) 10, (byte) 50}; // for open cash drawer
-                            char[] ESC_m = new char[]{27, 109};//cut paper
+//                            char[] command = new char[]{27, 112, (byte) 48, (byte) 10, (byte) 50}; // for open cash drawer
+//                            char[] ESC_m = new char[]{27, 109};//cut paper
 
                             s = new Socket(ip.trim(), 9100);
                             out = s.getOutputStream();
@@ -173,6 +177,10 @@ public class SendSocket {
                             output.flush();
 //                                        output.println(command);
 //                                        output.flush();
+                            output.println(LF);
+                            output.flush();
+                            output.println(LF);
+                            output.flush();
                             output.println(ESC_m);
                             output.flush();
 

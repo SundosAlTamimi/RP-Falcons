@@ -1864,6 +1864,13 @@ try {
             SendSocket sendSocket = new SendSocket(context, obj1, OrderTransactionsObj);
 //            sendSocket.sendMessage(0,linearLayouts,null,null);
             Log.e("socket_printer_cash", "J");
+
+//            try {
+//                Thread.sleep(1000);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+
             if(Settings.kitchenType==0){
                 sendSocket.sendMessage(1,linearLayouts,null,null);
             }else{
@@ -2257,7 +2264,7 @@ try {
 
                 final TableRow row = new TableRow(PayMethods.this);
 //
-        TableRow.LayoutParams lp = new TableRow.LayoutParams(550, TableRow.LayoutParams.WRAP_CONTENT);
+        TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
 //        lp.setMargins(2, 2, 2, 2);
         row.setLayoutParams(lp);
 
