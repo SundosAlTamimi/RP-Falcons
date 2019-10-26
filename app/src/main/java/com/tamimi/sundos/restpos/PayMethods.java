@@ -1857,27 +1857,33 @@ try {
             obj.put("Items", obj2);
             obj.put("Header", obj1);
 
+//            sendToCashPrinter( obj1,OrderHeaderObj, OrderTransactionsObj);
             Log.e("socket", "J");
 //
 
-            PrintInNetworkPrinter(OrderTransactionsObj,OrderHeaderObj);
+
             SendSocket sendSocket = new SendSocket(context, obj1, OrderTransactionsObj);
 //            sendSocket.sendMessage(0,linearLayouts,null,null);
             Log.e("socket_printer_cash", "J");
-
-//            try {
-//                Thread.sleep(1000);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
 
             if(Settings.kitchenType==0){
                 sendSocket.sendMessage(1,linearLayouts,null,null);
             }else{
                 Log.e("socket_printer_kitchen", "J");
+                ipForKitchen=new ArrayList<>();
+                ipForKitchen.clear();
+                PrintInNetworkPrinter(OrderTransactionsObj,OrderHeaderObj);
+                List<Bitmap>imagePrint=new ArrayList<>();
+                List<Bitmap>imagePrint2=new ArrayList<>();
+                imagePrint2.add( 0,returnBitmap(linearLayouts));
+                ipForKitchen.add(0,"192.168.2.11");
+                imagePrint =LinearToPrint(OrderTransactionsObj);
 
-                List<Bitmap>imagePrint =LinearToPrint(OrderTransactionsObj);
-                sendSocket.sendMessage(1,linearLayouts,imagePrint,ipForKitchen);
+                for(int i=0;i<imagePrint.size();i++){
+                    imagePrint2.add(i+1,imagePrint.get(i));
+                }
+
+                sendSocket.sendMessage(1,linearLayouts,imagePrint2,ipForKitchen);
             }
 
 
@@ -1891,6 +1897,12 @@ try {
         } catch (JSONException e) {
             Log.e("Tag", "JSONException");
         }
+    }
+
+    void sendToCashPrinter(JSONObject obj1,OrderHeader OrderHeaderObj,List<OrderTransactions> OrderTransactionsObj){
+//        PrintInNetworkPrinter(OrderTransactionsObj,OrderHeaderObj);
+        SendSocket sendSocket = new SendSocket(PayMethods.this, obj1, OrderTransactionsObj);
+            sendSocket.sendMessage(0,linearLayouts,null,null);
     }
 
     public void sendToServer(Context context,OrderHeader OrderHeaderObj, List<OrderTransactions> OrderTransactionsObj, List<PayMethod> PayMethodObj) {
@@ -2229,8 +2241,7 @@ try {
         TableLayout itemTable;
         ImageView orderImage;
 
-        ipForKitchen=new ArrayList<>();
-        ipForKitchen.clear();
+
         LinearLayout linerToImage=(LinearLayout)dialogLinear.findViewById(R.id.linerForKitchen);
          itemTable=(TableLayout)dialogLinear.findViewById(R.id.itemTable);
 //         orderImage=(ImageView)dialogLinear.findViewById(R.id.orderPic);
@@ -2291,7 +2302,7 @@ try {
 
 
                 TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
-                lp2.setMargins(2, 2, 2, 2);
+//                lp2.setMargins(2, 2, 2, 2);
                 textView.setLayoutParams(lp2);
 
                 row.addView(textView);

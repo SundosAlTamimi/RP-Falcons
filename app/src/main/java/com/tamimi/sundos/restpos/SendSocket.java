@@ -44,6 +44,9 @@ public class SendSocket {
     char[] ESC_m = new char[]{27, 109};//cut paper
     //                                                char[] LF = new char[]{10};//line feed
     char LF =10;//line feed
+    char[] ESC_Clear = new char[]{0x1B , 0x40};//cLEAR
+//    char ESC_Clear ='@';//cLEAR
+//private final static char[] INIT_PRINTER = new char[]{0x1B, 0x40};
 
     public SendSocket(Context context, JSONObject obj, List<OrderTransactions> orderTransactions) {
         this.obj1 = obj;
@@ -115,6 +118,7 @@ public class SendSocket {
                                 if (!IPprinter.get(i).equals("")) {//&& isHostAvailable(kitchenScreens.get(i).getKitchenIP(), 9002,100)
 
                                     if (checkHosts(IPprinter.get(i))) {
+                                        Log.e("bitmapList",""+bitmapList.get(i)+"     ==>"+bitmapList.size());
                                         if (bitmapList.get(i) != null) {
                                             try {
 
@@ -125,11 +129,10 @@ public class SendSocket {
 ////                                                char[] LF = new char[]{10};//line feed
 //                                                char LF =10;//line feed
 
+
                                                 PrintPic printPic = PrintPic.getInstance();
                                                 printPic.init(bitmapList.get(i));
                                                 byte[] bitmapdata = printPic.printDraw();
-
-
                                                 s = new Socket(ip.trim(), 9100);
                                                 out = s.getOutputStream();
                                                 output = new PrintWriter(out);
@@ -141,6 +144,7 @@ public class SendSocket {
                                                 output.flush();
                                                 output.println(ESC_m);
                                                 output.flush();
+
                                                 output.close();
                                                 out.close();
                                                 s.close();
@@ -156,47 +160,51 @@ public class SendSocket {
                             }
                         }
                     } else {
-                        Toast.makeText(context, "Please Add kitchen/printer IP ", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(context, "Please Add kitchen/printer IP ", Toast.LENGTH_SHORT).show();
                     }
                     // _________________________________________________________________________________________________________
-                } else {//this for print cash printer
-                    try {
-//                      String ip = kitchenScreens.get(i).getKitchenIP();
-                        String ip = "192.168.2.10";
-                        if (checkHosts("192.168.2.10")) {
-//                            char[] command = new char[]{27, 112, (byte) 48, (byte) 10, (byte) 50}; // for open cash drawer
-//                            char[] ESC_m = new char[]{27, 109};//cut paper
-
-                            s = new Socket(ip.trim(), 9100);
-                            out = s.getOutputStream();
-
-                            output = new PrintWriter(out);
-                            out.write(convertToImage());
-                            out.flush();
-                            output.println();
-                            output.flush();
-//                                        output.println(command);
-//                                        output.flush();
-                            output.println(LF);
-                            output.flush();
-                            output.println(LF);
-                            output.flush();
-                            output.println(ESC_m);
-                            output.flush();
-
-                            output.close();
-                            out.close();
-                            s.close();
-
-                        } else {
-                            Toast.makeText(context, "Please Make Sure Your Printer ", Toast.LENGTH_SHORT).show();
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-
                 }
+//                else {//this for print cash printer
+//                    try {
+////                      String ip = kitchenScreens.get(i).getKitchenIP();
+//                        String ip = "192.168.2.10";
+//                        if (checkHosts("192.168.2.10")) {
+////                            char[] command = new char[]{27, 112, (byte) 48, (byte) 10, (byte) 50}; // for open cash drawer
+////                            char[] ESC_m = new char[]{27, 109};//cut paper
+//
+//                            s = new Socket(ip.trim(), 9100);
+//                            out = s.getOutputStream();
+//
+//                            output = new PrintWriter(out);
+//                            output.println(ESC_Clear);
+//                            output.flush();
+//
+//                            out.write(convertToImage());
+//                            out.flush();
+//                            output.println();
+//                            output.flush();
+////                                        output.println(command);
+////                                        output.flush();
+//                            output.println(LF);
+//                            output.flush();
+//                            output.println(LF);
+//                            output.flush();
+//                            output.println(ESC_m);
+//                            output.flush();
+//
+//                            output.close();
+//                            out.close();
+//                            s.close();
+//
+//                        } else {
+//                            Toast.makeText(context, "Please Make Sure Your Printer ", Toast.LENGTH_SHORT).show();
+//                        }
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//
+//
+//                }
 
                 //tis for read data send from server ...
 
