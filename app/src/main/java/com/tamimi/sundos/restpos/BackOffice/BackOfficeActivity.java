@@ -3822,7 +3822,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                 taxSalesText.setText(convertToEnglish(threeDForm.format(totalTaxSales)));
                 taxReturnsText.setText(convertToEnglish(threeDForm.format(totaltaxReturn)));
                 TotalTaxText.setText(convertToEnglish(threeDForm.format(netTaxReturn)));
-                
+
                 headerData.clear();
                 payData.clear();
             }
