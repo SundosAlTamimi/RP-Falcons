@@ -3610,7 +3610,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         final String[] userString = {getResources().getString(R.string.all)};
 
         final TextView salesText, returnsText, netSalesText, salesDiscountText, returnsDiscountText, netDiscountText, salesServiceText, returnsServiceText, netServiceText, cashText,
-                visaText, masterText, chequeText, netPayMethodText, pointText, giftText, creditText;
+                visaText, masterText, chequeText, netPayMethodText, pointText, giftText, creditText,taxSalesText,taxReturnsText,TotalTaxText;
         final Spinner shiftName, posNo, users;
         Button done, exit;
 
@@ -3647,6 +3647,10 @@ public class BackOfficeActivity extends AppCompatActivity {
 
         printingReport = (ImageView) dialog.findViewById(R.id.printing);
 
+
+        taxSalesText = (TextView) dialog.findViewById(R.id.Tax);
+        taxReturnsText = (TextView) dialog.findViewById(R.id.returnsTax);
+        TotalTaxText = (TextView) dialog.findViewById(R.id.netTaxSales);
 //        Date currentTimeAndDate = Calendar.getInstance().getTime();
 //        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
 //        today = convertToEnglish(df.format(currentTimeAndDate));
@@ -3697,7 +3701,7 @@ public class BackOfficeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 double sales = 0.0, returns = 0.0, allDiscountSales = 0.0, allDiscountReturn = 0.0,
-                        totalServiceSales = 0.0, totalServiceReturn = 0.0, cashValue = 0.0, pointValue = 0.0, visaValue = 0.0, masterValue = 0.0, giftValue = 0.0, creditValue = 0.0, chequeValue = 0.0, netSales = 0.0, netPayMethod = 0.0, netDiscount = 0.0, netService = 0.0;
+                        totalServiceSales = 0.0, totalTaxSales = 0.0, totaltaxReturn = 0.0, netTaxReturn = 0.0,totalServiceReturn = 0.0, cashValue = 0.0, pointValue = 0.0, visaValue = 0.0, masterValue = 0.0, giftValue = 0.0, creditValue = 0.0, chequeValue = 0.0, netSales = 0.0, netPayMethod = 0.0, netDiscount = 0.0, netService = 0.0;
 
                 headerData = mDHandler.getAllOrderHeader();
 //                payData = mDHandler.getAllExistingPay();
@@ -3728,10 +3732,12 @@ public class BackOfficeActivity extends AppCompatActivity {
                                         sales += headerData.get(i).getAmountDue();
                                         allDiscountSales += headerData.get(i).getAllDiscount();
                                         totalServiceSales += headerData.get(i).getTotalService();
+                                        totalTaxSales+= headerData.get(i).getTotalTax();
                                     } else if (headerData.get(i).getOrderKind() == 1) {
                                         returns += headerData.get(i).getAmountDue();
                                         allDiscountReturn += headerData.get(i).getAllDiscount();
                                         totalServiceReturn += headerData.get(i).getTotalService();
+                                        totaltaxReturn+= headerData.get(i).getTotalTax();
                                     }
 
                                     cashValue += headerData.get(i).getCashValue();
@@ -3791,7 +3797,7 @@ public class BackOfficeActivity extends AppCompatActivity {
                 netDiscount = allDiscountSales + allDiscountReturn;
                 netService = totalServiceSales + totalServiceReturn;
                 netPayMethod = cashValue + pointValue + visaValue + masterValue + giftValue + creditValue + chequeValue;
-
+                netTaxReturn=totalTaxSales+totaltaxReturn;
                 salesText.setText(convertToEnglish(threeDForm.format(sales)));
                 returnsText.setText(convertToEnglish(threeDForm.format(returns)));
                 netSalesText.setText(convertToEnglish(threeDForm.format(netSales)));
@@ -3812,6 +3818,11 @@ public class BackOfficeActivity extends AppCompatActivity {
                 salesServiceText.setText(convertToEnglish(threeDForm.format(totalServiceSales)));
                 returnsServiceText.setText(convertToEnglish(threeDForm.format(totalServiceReturn)));
                 netServiceText.setText(convertToEnglish(threeDForm.format(netService)));
+
+                taxSalesText.setText(convertToEnglish(threeDForm.format(totalTaxSales)));
+                taxReturnsText.setText(convertToEnglish(threeDForm.format(totaltaxReturn)));
+                TotalTaxText.setText(convertToEnglish(threeDForm.format(netTaxReturn)));
+                
                 headerData.clear();
                 payData.clear();
             }

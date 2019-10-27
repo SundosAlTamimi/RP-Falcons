@@ -1152,9 +1152,10 @@ public class Main extends AppCompatActivity {
                 Date currentTimeAndDate = Calendar.getInstance().getTime();
                 SimpleDateFormat dfTime = new SimpleDateFormat("HH:mm:ss");
                 String time = convertToEnglish(dfTime.format(currentTimeAndDate));
-                Log.e("time123", "" + time);
-                if (!value.getText().toString().equals("") && !mainTotal.getText().toString().equals("") && (Double.parseDouble(value.getText().toString()) != 0)) {
-                    if (Double.parseDouble(value.getText().toString()) == Double.parseDouble(mainTotal.getText().toString())) {
+                Log.e("time123", "" + time);//if (!value.getText().toString().equals("") && !mainTotal.getText().toString().equals("") && (Double.parseDouble(value.getText().toString()) != 0)) {
+
+                if (!value.getText().toString().equals("")  && (Double.parseDouble(value.getText().toString()) != 0)) {
+//                    if (Double.parseDouble(value.getText().toString()) == Double.parseDouble(mainTotal.getText().toString())) {
 
                         //SAVE IN PAY_IN_OUT TABLE ...
                         if (!value.getText().toString().equals("")) {
@@ -1165,8 +1166,24 @@ public class Main extends AppCompatActivity {
                             dialog.dismiss();
                         }
 
-                        //SAVE IN CASHIER_IN_OUT TABLE ...
 
+                        //START
+                    ArrayList<Cashier> cashier = new ArrayList<>();
+                    Cashier cash = new Cashier();
+                    cash.setCashierName(Settings.user_name);
+                    cash.setCheckInDate(date.getText().toString());
+                    cash.setCategoryName("null");
+                    cash.setCategoryValue( Double.parseDouble(finalSignal+value.getText().toString()));
+                    cash.setCategoryQty(-1);
+                    cash.setOrderKind(2);/// 2 --> pay in / out   1 --> trans (order - refund ) / 0 --> cashier iN
+                    cashier.add(cash);
+                    mDHandler.addCashierInOut(cashier);
+                    dialog.dismiss();
+
+                        ///END
+
+                        //SAVE IN CASHIER_IN_OUT TABLE ...
+/*//THIS FOR MONY CATEGORY START
                         ArrayList<Cashier> cashier = new ArrayList<>();
                         for (int i = 0; i < money.size(); i++) {
                             Cashier cash = new Cashier();
@@ -1188,9 +1205,9 @@ public class Main extends AppCompatActivity {
                             }
                         }
                         mDHandler.addCashierInOut(cashier);
-                        dialog.dismiss();
-                    } else
-                        new Settings().makeText(Main.this, getResources().getString(R.string.total_from_cash_not_equal_value));
+                        dialog.dismiss();*/ //THIS FOR MONY CATEGORY END
+//                    } else
+//                        new Settings().makeText(Main.this, getResources().getString(R.string.total_from_cash_not_equal_value));
                 } else
                     new Settings().makeText(Main.this, getResources().getString(R.string.ensure_your_input));
             }

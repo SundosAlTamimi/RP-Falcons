@@ -608,6 +608,9 @@
     <string name="note">Note</string>
     <string name="kitcken">Kitcken</string>
     <string name="Activate">THIS User Not Activate</string>
+    <string name="net_tax">Net Tax</string>
+    <string name="return_tax">Return Tax</string>
+    <string name="sales_tax">Sales Tax</string>
 
 
 </resources>
