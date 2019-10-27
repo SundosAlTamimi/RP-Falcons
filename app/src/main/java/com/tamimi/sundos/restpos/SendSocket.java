@@ -138,6 +138,8 @@ public class SendSocket {
                                                 output = new PrintWriter(out);
                                                 out.write(bitmapdata);
                                                 out.flush();
+                                                output.println(command);
+                                                output.flush();
                                                 output.println(LF);
                                                 output.flush();
                                                 output.println(LF);

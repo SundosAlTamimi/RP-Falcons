@@ -1788,7 +1788,7 @@ try {
                     mDHandler.addTableAction(table);
 
                     Intent intent = new Intent(PayMethods.this, DineIn.class);
-                    startActivity(intent);
+                    startActivity(intent);//close when print
 
                     mDHandler.updateMaxVhf(obj.getOrderHeaderObj().getVoucherNumber());
 
@@ -1868,6 +1868,8 @@ try {
 
             if(Settings.kitchenType==0){
                 sendSocket.sendMessage(1,linearLayouts,null,null);
+                Intent intentToOrder =new Intent(PayMethods.this,Order.class);
+                startActivity(intentToOrder);
             }else{
                 Log.e("socket_printer_kitchen", "J");
                 ipForKitchen=new ArrayList<>();
@@ -1876,7 +1878,7 @@ try {
                 List<Bitmap>imagePrint=new ArrayList<>();
                 List<Bitmap>imagePrint2=new ArrayList<>();
                 imagePrint2.add( 0,returnBitmap(linearLayouts));
-                ipForKitchen.add(0,"192.168.2.11");
+                ipForKitchen.add(0,"192.168.2.10");
                 imagePrint =LinearToPrint(OrderTransactionsObj);
 
                 for(int i=0;i<imagePrint.size();i++){
@@ -2156,7 +2158,7 @@ try {
                 textView.setTextSize(18);
                 textView.setTextColor(getResources().getColor(R.color.text_color));
                 if (i == 0) {
-                    textView.setText("" + OrderTransactionsObj.get(j).getItemName());
+                    textView.setText("" + OrderTransactionsObj.get(j).getKitchenAlias());
                     textView.setLayoutParams(lp2);
                 }
                 if (i == 1) {
@@ -2339,7 +2341,7 @@ try {
                 View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
         lin.layout(0, 0, lin.getMeasuredWidth(), lin.getMeasuredHeight());
 
-        Log.e("size of img ", "width=" + lin.getMeasuredWidth() + "      higth =" + lin.getHeight());
+        Log.e("size of img ", "width=" + lin.getMeasuredWidth() + "      higth =" + lin.getMeasuredHeight());
 
 //        linearView.setDrawingCacheEnabled(true);
 //        linearView.buildDrawingCache();
@@ -2349,7 +2351,7 @@ try {
 //        linearView.buildDrawingCache();
 //        Bitmap bit =linearView.getDrawingCache();
 
-        Bitmap bitmap = Bitmap.createBitmap(lin.getWidth(), lin.getHeight(), Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(lin.getMeasuredWidth(), lin.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         Drawable bgDrawable = lin.getBackground();
         if (bgDrawable != null) {

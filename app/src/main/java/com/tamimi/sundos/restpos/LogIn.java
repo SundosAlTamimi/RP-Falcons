@@ -238,6 +238,8 @@ public class LogIn extends AppCompatActivity {
                                 userPassword=Integer.parseInt(password);
                                 logCheak();
                                 dialog.dismiss();
+                                }else {
+                                    new Settings().makeText(LogIn.this, getResources().getString(R.string.Activate));
                                 }
 
                                 break;

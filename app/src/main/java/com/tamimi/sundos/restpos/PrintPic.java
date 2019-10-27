@@ -2,6 +2,7 @@ package com.tamimi.sundos.restpos;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.Log;
 
 public class PrintPic {
     public Canvas canvas = null;
@@ -28,8 +29,12 @@ public class PrintPic {
     }
 
     public void init(Bitmap bitmap) {
+        bitbuf=null;
+        this.length=0;
+        bm=null;
         if (null != bitmap) {
             initCanvas(bitmap.getWidth());
+            Log.e("bitmap.hi",""+bitmap.getHeight());
         }
         if (null == paint) {
             initPaint();

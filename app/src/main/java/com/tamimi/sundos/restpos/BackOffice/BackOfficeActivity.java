@@ -69,6 +69,7 @@ import com.github.mikephil.charting.utils.MPPointF;
 import com.tamimi.sundos.restpos.DatabaseHandler;
 import com.tamimi.sundos.restpos.DineInLayout;
 import com.tamimi.sundos.restpos.ExportToPdf;
+import com.tamimi.sundos.restpos.LogIn;
 import com.tamimi.sundos.restpos.Main;
 import com.tamimi.sundos.restpos.Models.BlindClose;
 import com.tamimi.sundos.restpos.Models.BlindCloseDetails;
@@ -101,6 +102,7 @@ import com.tamimi.sundos.restpos.R;
 import com.tamimi.sundos.restpos.ReceiveCloud;
 import com.tamimi.sundos.restpos.SendCloud;
 import com.tamimi.sundos.restpos.Settings;
+import com.tamimi.sundos.restpos.SyncWithCloud;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -1356,8 +1358,8 @@ public class BackOfficeActivity extends AppCompatActivity {
 
     void showSyncWithCloudDialog() {
 
-//        SyncWithCloud obj = new SyncWithCloud(BackOfficeActivity.this);
-//        obj.startSyncing("sync");
+        SyncWithCloud obj = new SyncWithCloud(BackOfficeActivity.this);
+        obj.startSyncing("sync");
     }
 
     void X_ReportDialog() {
