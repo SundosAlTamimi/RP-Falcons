@@ -1865,32 +1865,41 @@ try {
             SendSocket sendSocket = new SendSocket(context, obj1, OrderTransactionsObj);
 //            sendSocket.sendMessage(0,linearLayouts,null,null);
             Log.e("socket_printer_cash", "J");
+//
+//            ipForKitchen=new ArrayList<>();
+//            List<String>ipForCashier=new ArrayList<>();
+//            ipForKitchen.clear();
+//            List<Bitmap>imagePrint=new ArrayList<>();
+//            List<Bitmap>imagePrint2=new ArrayList<>();
+//
+//            PrintInNetworkPrinter(OrderTransactionsObj,OrderHeaderObj);
+//            imagePrint2.add( 0,returnBitmap(linearLayouts));
+//            ipForCashier.add(0,"192.168.2.10");
+//            sendSocket.sendMessage(0,linearLayouts,imagePrint2,ipForCashier);
+//
+//            imagePrint =LinearToPrint(OrderTransactionsObj);
+//            SendSocket sendSocket2 = new SendSocket(context, obj1, OrderTransactionsObj);
+//            sendSocket2.sendMessage(1,linearLayouts,imagePrint,ipForKitchen);
 
-            if(Settings.kitchenType==0){
-                sendSocket.sendMessage(1,linearLayouts,null,null);
-                Intent intentToOrder =new Intent(PayMethods.this,Order.class);
-                startActivity(intentToOrder);
-            }else{
-                Log.e("socket_printer_kitchen", "J");
-                ipForKitchen=new ArrayList<>();
-                ipForKitchen.clear();
-                PrintInNetworkPrinter(OrderTransactionsObj,OrderHeaderObj);
-                List<Bitmap>imagePrint=new ArrayList<>();
-                List<Bitmap>imagePrint2=new ArrayList<>();
-                imagePrint2.add( 0,returnBitmap(linearLayouts));
-                ipForKitchen.add(0,"192.168.2.10");
-                imagePrint =LinearToPrint(OrderTransactionsObj);
 
-                for(int i=0;i<imagePrint.size();i++){
-                    imagePrint2.add(i+1,imagePrint.get(i));
-                }
 
-                sendSocket.sendMessage(1,linearLayouts,imagePrint2,ipForKitchen);
+            Log.e("socket_printer_kitchen", "J");
+            ipForKitchen=new ArrayList<>();
+            ipForKitchen.clear();
+            PrintInNetworkPrinter(OrderTransactionsObj,OrderHeaderObj);
+            List<Bitmap>imagePrint=new ArrayList<>();
+            List<Bitmap>imagePrint2=new ArrayList<>();
+            imagePrint2.add( 0,returnBitmap(linearLayouts));
+            ipForKitchen.add(0,"192.168.2.10");
+            imagePrint =LinearToPrint(OrderTransactionsObj);
+
+            for(int i=0;i<imagePrint.size();i++){
+                imagePrint2.add(i+1,imagePrint.get(i));
             }
 
+            sendSocket.sendMessage(1,linearLayouts,imagePrint2,ipForKitchen);
 
 
-//            sendSocket.sendMessage(1);
             Log.e("socket_printer_Kitchen", "J");
             Log.e("sendCloud", "J");
             SendCloud sendCloud = new SendCloud(context, obj);
@@ -2158,7 +2167,7 @@ try {
                 textView.setTextSize(18);
                 textView.setTextColor(getResources().getColor(R.color.text_color));
                 if (i == 0) {
-                    textView.setText("" + OrderTransactionsObj.get(j).getKitchenAlias());
+                    textView.setText("" + OrderTransactionsObj.get(j).getItemName());
                     textView.setLayoutParams(lp2);
                 }
                 if (i == 1) {
@@ -2272,7 +2281,7 @@ try {
                itemTable.removeAllViews();
                boolean isKitchenHaveItem=false;
            for (int i = 0; i < orderTransactions.size(); i++) {
-            if (orderTransactions.get(i).getScreenNo() == kitchenScreens.get(k).getKitchenNo()) {
+            if ((orderTransactions.get(i).getScreenNo() == kitchenScreens.get(k).getKitchenNo())&&(kitchenScreens.get(k).getKitchenType()==0)) {
                 isKitchenHaveItem=true;
 
                 final TableRow row = new TableRow(PayMethods.this);
@@ -2286,7 +2295,11 @@ try {
 
             switch (s) {
                 case 0:
-                    textView.setText(orderTransactions.get(i).getItemName());
+                    if(!orderTransactions.get(i).getKitchenAlias().equals("")){
+                        textView.setText(orderTransactions.get(i).getKitchenAlias());
+                    }else{
+                        textView.setText(orderTransactions.get(i).getItemName());
+                    }
                     break;
                 case 1:
                     textView.setText(""+orderTransactions.get(i).getQty());

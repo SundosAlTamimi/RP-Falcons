@@ -196,7 +196,7 @@ public class BackOfficeActivity extends AppCompatActivity {
         initialize();
         currentLinear(lManagement);
         mDHandler = new DatabaseHandler(BackOfficeActivity.this);
-        showDashBoardDialog();
+//        showDashBoardDialog();
     }
 
     View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -7772,6 +7772,29 @@ public class BackOfficeActivity extends AppCompatActivity {
         ArrayAdapter<String> spinnerAdapter;
         ArrayList<KitchenScreen> allScreensInfo = mDHandler.getAllKitchenScreen();
         ArrayList<String> screensList = new ArrayList<>();
+        ArrayList<String> kitchenTypeList= new ArrayList<>();
+        kitchenTypeList.add("Printer");
+        kitchenTypeList.add("Kitchen Screen");
+
+        final Spinner kitchenSpinner = (Spinner) dialog.findViewById(R.id.spinnera);
+        ArrayAdapter<String> kitchenTypeAdapter = new ArrayAdapter<String>(BackOfficeActivity.this, R.layout.spinner_style, kitchenTypeList);
+        kitchenTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        kitchenSpinner.setAdapter(kitchenTypeAdapter);
+
+
+
+        kitchenSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(BackOfficeActivity.this, "position"+position, Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         save = (Button) dialog.findViewById(R.id.save);
         exit = (Button) dialog.findViewById(R.id.exit);
@@ -7785,12 +7808,10 @@ public class BackOfficeActivity extends AppCompatActivity {
 
         screensList.add("Select screen");
 
-        if (allScreensInfo.size() != 0)
-            for (int i = 0; i < allScreensInfo.size(); i++)
-                screensList.add(allScreensInfo.get(i).getKitchenName());
-//        else
-//            screensList.add("Select screen");
-
+        if (allScreensInfo.size() != 0) {
+            for (int i = 0; i < allScreensInfo.size(); i++){
+                screensList.add(allScreensInfo.get(i).getKitchenName());}
+        }
         spinnerAdapter = new ArrayAdapter<>(BackOfficeActivity.this, R.layout.spinner_style, screensList);
         editScreenInformation.setAdapter(spinnerAdapter);
         editScreenInformation.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -7838,12 +7859,21 @@ public class BackOfficeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 boolean found = false;
+               int  KitchenType=0;
+                if(kitchenSpinner.getSelectedItem().toString().equals("Printer")){
+                    KitchenType=0;//printer
+
+                }else if(kitchenSpinner.getSelectedItem().toString().equals("Kitchen Screen")){
+                    KitchenType=1;//screen
+
+                }
 
                 if (!TextUtils.isEmpty(kitchenNo.getText().toString()) && !TextUtils.isEmpty(kitchenName.getText().toString())
                         && !TextUtils.isEmpty(kitchenIP.getText().toString())) {
                     KitchenScreen editedScreenInfo = new KitchenScreen(Integer.parseInt(kitchenNo.getText().toString())
                             , kitchenName.getText().toString()
-                            , kitchenIP.getText().toString());
+                            , kitchenIP.getText().toString()
+                            ,KitchenType);
                     if (editedScreenInfo.getKitchenNo() != -1) {
                         List<KitchenScreen> list = mDHandler.getAllKitchenScreen();
                         for (int i = 0; i < list.size(); i++) {
@@ -7885,12 +7915,20 @@ public class BackOfficeActivity extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int KitchenType=0;
+                if(kitchenSpinner.getSelectedItem().toString().equals("Printer")){
+                    KitchenType=0;//printer
+
+                }else if(kitchenSpinner.getSelectedItem().toString().equals("Kitchen Screen")){
+                    KitchenType=1;//screen
+
+                }
 
                 if (!kitchenName.getText().toString().equals("") && !convertToEnglish(kitchenNo.getText().toString()).equals("")
                         && !kitchenIP.getText().toString().equals("")) {
 
                     KitchenScreen kitchenScreen = new KitchenScreen(Integer.parseInt(convertToEnglish(kitchenNo.getText().toString()))
-                            , kitchenName.getText().toString(), convertToEnglish(kitchenIP.getText().toString()));
+                            , kitchenName.getText().toString(), convertToEnglish(kitchenIP.getText().toString()),KitchenType);
                     mDHandler.addKitchenScreen(kitchenScreen);
                     kitchenName.setText("");
                     kitchenNo.setText("");

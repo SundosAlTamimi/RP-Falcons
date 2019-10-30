@@ -427,13 +427,15 @@ public class LogIn extends AppCompatActivity {
 
                 if(!compNo.getText().toString().equals("")&&!CompYear.getText().toString().equals("")
                &&!userName.getText().toString().equals("")&&!password.getText().toString().equals("")){
+try {
+    mDHandler.addFirstInformation(new FirstInstlation(Integer.parseInt(compNo.getText().toString()), CompYear.getText().toString()
+            , userName.getText().toString(), Integer.parseInt(password.getText().toString())));
 
-                    mDHandler.addFirstInformation(new FirstInstlation(Integer.parseInt(compNo.getText().toString()),CompYear.getText().toString()
-                    ,userName.getText().toString(),Integer.parseInt(password.getText().toString())));
-
-                    dialog1.dismiss();
-                    showUserNameDialog();
-
+    dialog1.dismiss();
+    showUserNameDialog();
+}catch (Exception e){
+    Toast.makeText(LogIn.this, "please add int password", Toast.LENGTH_SHORT).show();
+}
                 }else {
                     Toast.makeText(LogIn.this, "Please Enter All Filled", Toast.LENGTH_SHORT).show();
                 }

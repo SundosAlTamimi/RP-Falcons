@@ -345,6 +345,15 @@ public class Main extends AppCompatActivity {
         clear = (Button) dialogCashierIn.findViewById(R.id.b_clear);
         save = (Button) dialogCashierIn.findViewById(R.id.save);
 
+        mainTotal.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                focusedTextView =mainTotal ;
+                focusedTextView.setText("");
+            }
+        });
+
+
         b1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -426,83 +435,92 @@ public class Main extends AppCompatActivity {
                     text2.setText("0");
                     mainTotal.setText("0.00");
                 }
+
+                mainTotal.setText("0.00");
             }
         });
         save.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                ArrayList<Cashier> cashier = new ArrayList<>();
-                if (money.size() > 0) {
-                    if (!checkIsCashierInOutZero(money)) {
-
-                        for (int i = 0; i < money.size(); i++) {
-                            Cashier cash = new Cashier();
-                            TableRow tableRow = (TableRow) categories.getChildAt(i);
-                            TextView text = (TextView) tableRow.getChildAt(0);
-                            TextView text1 = (TextView) tableRow.getChildAt(1);
-
-                            if (!convertToEnglish(text1.getText().toString()).equals("")) {
-
-                                cash.setCashierName(convertToEnglish(user.getText().toString()));
-                                cash.setCheckInDate(convertToEnglish(date.getText().toString()));
-                                cash.setCategoryName(convertToEnglish(text.getText().toString()));
-                                cash.setCategoryValue(Double.parseDouble(convertToEnglish(text.getTag().toString())));
-                                cash.setCategoryQty(Integer.parseInt(convertToEnglish(text1.getText().toString())));
-                                cash.setOrderKind(0);
-                                cashier.add(cash);
-                            } else {
-                                new Settings().makeText(Main.this, getResources().getString(R.string.some_qty_not));
-                            }
-                        }
-                        mDHandler.addCashierInOut(cashier);
-                        mDHandler.addClockInClockOut(clockInClockOut);
-                        clockInSuccessful(times, dates); //this for Successful clockIn
-
-                        dialogCashierIn.dismiss();
-                    } else {
-                        AlertDialog.Builder builderInner = new AlertDialog.Builder(Main.this);
-                        builderInner.setTitle(R.string.cashier_in_zero);
-                        builderInner.setCancelable(false);
-                        builderInner.setPositiveButton(getResources().getString(R.string.yes), (dialog1, which1) -> {
-                            for (int i = 0; i < money.size(); i++) {
-                                Cashier cash = new Cashier();
-                                TableRow tableRow = (TableRow) categories.getChildAt(i);
-                                TextView text = (TextView) tableRow.getChildAt(0);
-                                TextView text1 = (TextView) tableRow.getChildAt(1);
-
-                                if (!text1.getText().toString().equals("")) {
-
-                                    cash.setCashierName(convertToEnglish(user.getText().toString()));
-                                    cash.setCheckInDate(convertToEnglish(date.getText().toString()));
-                                    cash.setCategoryName(convertToEnglish(text.getText().toString()));
-                                    cash.setCategoryValue(Double.parseDouble(text.getTag().toString()));
-                                    cash.setCategoryQty(Integer.parseInt(convertToEnglish(text1.getText().toString())));
-                                    cash.setOrderKind(0);
-                                    cashier.add(cash);
-                                } else {
-                                    new Settings().makeText(Main.this, getResources().getString(R.string.some_qty_not));
-                                }
-                            }
-                            mDHandler.addCashierInOut(cashier);
-                            dialogCashierIn.dismiss();
-
-                            mDHandler.addClockInClockOut(clockInClockOut);
-                            new Settings().makeText(Main.this, getResources().getString(R.string.save_successful));
-                            clockInSuccessful(times, dates); //this for Successful clockIn
-                        });
-                        builderInner.setNegativeButton(getResources().getString(R.string.no), (dialog1, i) -> {
-                            dialog1.dismiss();
-                        });
-                        builderInner.show();
-                    }
 
 
-                } else {
-                    new Settings().makeText(Main.this, getResources().getString(R.string.add_money_category));
-                    dialogCashierIn.dismiss();
+//                addCashierInSaveWithMonyCategory(money,user,date,dialogCashierIn,times, dates,clockInClockOut);
 
-                }
+                addCashierInSaveWithOutMonyCategory(mainTotal,user,date,dialogCashierIn,times, dates,clockInClockOut);
+
+
+//                ArrayList<Cashier> cashier = new ArrayList<>();
+//                if (money.size() > 0) {
+//                    if (!checkIsCashierInOutZero(money)) {
+//
+//                        for (int i = 0; i < money.size(); i++) {
+//                            Cashier cash = new Cashier();
+//                            TableRow tableRow = (TableRow) categories.getChildAt(i);
+//                            TextView text = (TextView) tableRow.getChildAt(0);
+//                            TextView text1 = (TextView) tableRow.getChildAt(1);
+//
+//                            if (!convertToEnglish(text1.getText().toString()).equals("")) {
+//
+//                                cash.setCashierName(convertToEnglish(user.getText().toString()));
+//                                cash.setCheckInDate(convertToEnglish(date.getText().toString()));
+//                                cash.setCategoryName(convertToEnglish(text.getText().toString()));
+//                                cash.setCategoryValue(Double.parseDouble(convertToEnglish(text.getTag().toString())));
+//                                cash.setCategoryQty(Integer.parseInt(convertToEnglish(text1.getText().toString())));
+//                                cash.setOrderKind(0);
+//                                cashier.add(cash);
+//                            } else {
+//                                new Settings().makeText(Main.this, getResources().getString(R.string.some_qty_not));
+//                            }
+//                        }
+//                        mDHandler.addCashierInOut(cashier);
+//                        mDHandler.addClockInClockOut(clockInClockOut);
+//                        clockInSuccessful(times, dates); //this for Successful clockIn
+//
+//                        dialogCashierIn.dismiss();
+//                    } else {
+//                        AlertDialog.Builder builderInner = new AlertDialog.Builder(Main.this);
+//                        builderInner.setTitle(R.string.cashier_in_zero);
+//                        builderInner.setCancelable(false);
+//                        builderInner.setPositiveButton(getResources().getString(R.string.yes), (dialog1, which1) -> {
+//                            for (int i = 0; i < money.size(); i++) {
+//                                Cashier cash = new Cashier();
+//                                TableRow tableRow = (TableRow) categories.getChildAt(i);
+//                                TextView text = (TextView) tableRow.getChildAt(0);
+//                                TextView text1 = (TextView) tableRow.getChildAt(1);
+//
+//                                if (!text1.getText().toString().equals("")) {
+//
+//                                    cash.setCashierName(convertToEnglish(user.getText().toString()));
+//                                    cash.setCheckInDate(convertToEnglish(date.getText().toString()));
+//                                    cash.setCategoryName(convertToEnglish(text.getText().toString()));
+//                                    cash.setCategoryValue(Double.parseDouble(text.getTag().toString()));
+//                                    cash.setCategoryQty(Integer.parseInt(convertToEnglish(text1.getText().toString())));
+//                                    cash.setOrderKind(0);
+//                                    cashier.add(cash);
+//                                } else {
+//                                    new Settings().makeText(Main.this, getResources().getString(R.string.some_qty_not));
+//                                }
+//                            }
+//                            mDHandler.addCashierInOut(cashier);
+//                            dialogCashierIn.dismiss();
+//
+//                            mDHandler.addClockInClockOut(clockInClockOut);
+//                            new Settings().makeText(Main.this, getResources().getString(R.string.save_successful));
+//                            clockInSuccessful(times, dates); //this for Successful clockIn
+//                        });
+//                        builderInner.setNegativeButton(getResources().getString(R.string.no), (dialog1, i) -> {
+//                            dialog1.dismiss();
+//                        });
+//                        builderInner.show();
+//                    }
+//
+//
+//                } else {
+//                    new Settings().makeText(Main.this, getResources().getString(R.string.add_money_category));
+//                    dialogCashierIn.dismiss();
+//
+//                }
             }
         });
 
@@ -620,6 +638,155 @@ public class Main extends AppCompatActivity {
         dialogCashierIn.show();
 
     }
+
+
+    void addCashierInSaveWithMonyCategory(ArrayList<Money>money,TextView user,TextView date,Dialog dialogCashierIn,String times, String dates, ClockInClockOut clockInClockOut){
+
+
+        ArrayList<Cashier> cashier = new ArrayList<>();
+        if (money.size() > 0) {
+            if (!checkIsCashierInOutZero(money)) {
+
+                for (int i = 0; i < money.size(); i++) {
+                    Cashier cash = new Cashier();
+                    TableRow tableRow = (TableRow) categories.getChildAt(i);
+                    TextView text = (TextView) tableRow.getChildAt(0);
+                    TextView text1 = (TextView) tableRow.getChildAt(1);
+
+                    if (!convertToEnglish(text1.getText().toString()).equals("")) {
+
+                        cash.setCashierName(convertToEnglish(user.getText().toString()));
+                        cash.setCheckInDate(convertToEnglish(date.getText().toString()));
+                        cash.setCategoryName(convertToEnglish(text.getText().toString()));
+                        cash.setCategoryValue(Double.parseDouble(convertToEnglish(text.getTag().toString())));
+                        cash.setCategoryQty(Integer.parseInt(convertToEnglish(text1.getText().toString())));
+                        cash.setOrderKind(0);
+                        cashier.add(cash);
+                    } else {
+                        new Settings().makeText(Main.this, getResources().getString(R.string.some_qty_not));
+                    }
+                }
+                mDHandler.addCashierInOut(cashier);
+                mDHandler.addClockInClockOut(clockInClockOut);
+                clockInSuccessful(times, dates); //this for Successful clockIn
+
+                dialogCashierIn.dismiss();
+            } else {
+                AlertDialog.Builder builderInner = new AlertDialog.Builder(Main.this);
+                builderInner.setTitle(R.string.cashier_in_zero);
+                builderInner.setCancelable(false);
+                builderInner.setPositiveButton(getResources().getString(R.string.yes), (dialog1, which1) -> {
+                    for (int i = 0; i < money.size(); i++) {
+                        Cashier cash = new Cashier();
+                        TableRow tableRow = (TableRow) categories.getChildAt(i);
+                        TextView text = (TextView) tableRow.getChildAt(0);
+                        TextView text1 = (TextView) tableRow.getChildAt(1);
+
+                        if (!text1.getText().toString().equals("")) {
+
+                            cash.setCashierName(convertToEnglish(user.getText().toString()));
+                            cash.setCheckInDate(convertToEnglish(date.getText().toString()));
+                            cash.setCategoryName(convertToEnglish(text.getText().toString()));
+                            cash.setCategoryValue(Double.parseDouble(text.getTag().toString()));
+                            cash.setCategoryQty(Integer.parseInt(convertToEnglish(text1.getText().toString())));
+                            cash.setOrderKind(0);
+                            cashier.add(cash);
+                        } else {
+                            new Settings().makeText(Main.this, getResources().getString(R.string.some_qty_not));
+                        }
+                    }
+                    mDHandler.addCashierInOut(cashier);
+                    dialogCashierIn.dismiss();
+
+                    mDHandler.addClockInClockOut(clockInClockOut);
+                    new Settings().makeText(Main.this, getResources().getString(R.string.save_successful));
+                    clockInSuccessful(times, dates); //this for Successful clockIn
+                });
+                builderInner.setNegativeButton(getResources().getString(R.string.no), (dialog1, i) -> {
+                    dialog1.dismiss();
+                });
+                builderInner.show();
+            }
+
+
+        } else {
+            new Settings().makeText(Main.this, getResources().getString(R.string.add_money_category));
+            dialogCashierIn.dismiss();
+
+        }
+
+
+    }
+
+    void addCashierInSaveWithOutMonyCategory(TextView Total,TextView user,TextView date,Dialog dialogCashierIn,String times, String dates, ClockInClockOut clockInClockOut){
+
+
+        ArrayList<Cashier> cashier = new ArrayList<>();
+        if ((Double.parseDouble(convertToEnglish(Total.getText().toString()))!=0)) {
+            if (!Total.getText().toString().equals("")) {
+
+                    Cashier cash = new Cashier();
+                    cash.setCashierName(convertToEnglish(user.getText().toString()));
+                    cash.setCheckInDate(convertToEnglish(date.getText().toString()));
+                    cash.setCategoryName("null");
+                    cash.setCategoryValue(Double.parseDouble(convertToEnglish(Total.getText().toString())));
+                    cash.setCategoryQty(-1);
+                    cash.setOrderKind(0);
+                    cashier.add(cash);
+
+                    mDHandler.addCashierInOut(cashier);
+                    mDHandler.addClockInClockOut(clockInClockOut);
+                    clockInSuccessful(times, dates); //this for Successful clockIn
+                dialogCashierIn.dismiss();
+                } else {
+                    new Settings().makeText(Main.this, getResources().getString(R.string.some_qty_not));
+                }
+
+            } else {
+                AlertDialog.Builder builderInner = new AlertDialog.Builder(Main.this);
+                builderInner.setTitle(R.string.cashier_in_zero);
+                builderInner.setCancelable(false);
+                builderInner.setPositiveButton(getResources().getString(R.string.yes), (dialog1, which1) -> {
+
+
+                    if (!Total.getText().toString().equals("")) {
+
+                        Cashier cash = new Cashier();
+                        cash.setCashierName(convertToEnglish(user.getText().toString()));
+                        cash.setCheckInDate(convertToEnglish(date.getText().toString()));
+                        cash.setCategoryName("null");
+                        cash.setCategoryValue(Double.parseDouble(convertToEnglish(Total.getText().toString())));
+                        cash.setCategoryQty(-1);
+                        cash.setOrderKind(0);
+                        cashier.add(cash);
+
+                        mDHandler.addCashierInOut(cashier);
+                        mDHandler.addClockInClockOut(clockInClockOut);
+                        clockInSuccessful(times, dates); //this for Successful clockIn
+                        dialogCashierIn.dismiss();
+                        new Settings().makeText(Main.this, getResources().getString(R.string.save_successful));
+
+
+                    } else {
+                        new Settings().makeText(Main.this, getResources().getString(R.string.some_qty_not));
+                    }
+                });
+                builderInner.setNegativeButton(getResources().getString(R.string.no), (dialog1, i) -> {
+                    dialog1.dismiss();
+                });
+                builderInner.show();
+            }
+
+
+//        } else {
+//            new Settings().makeText(Main.this, getResources().getString(R.string.add_money_category));
+//            dialogCashierIn.dismiss();
+//
+//        }
+
+
+    }
+
 
     @SuppressLint("ClickableViewAccessibility")
     void showCashierOutDialog() {
@@ -1373,6 +1540,7 @@ public class Main extends AppCompatActivity {
 
         return isAllZero;
     }
+
 
 
     void saveCashierOutBase(TableLayout categories, int tranType, RadioButton finalClose, RadioButton changeOver,

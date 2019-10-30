@@ -60,7 +60,7 @@ import static com.tamimi.sundos.restpos.Settings.shift_name;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
     // Database Versions
-    private static final int DATABASE_VERSION = 45;
+    private static final int DATABASE_VERSION = 46;
 
     // Database Name
     private static final String DATABASE_NAME = "RestPos";
@@ -588,7 +588,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KITCHEN_NO = "KITCHEN_NO";
     private static final String KITCHEN_NAME = "KITCHEN_NAME";
     private static final String KITCHEN_IP = "KITCHEN_IP";
-
+    private static final String KITCHEN_TYPE = "KITCHEN_TYPE";
     //____________________________________________________________________________________
     private static final String MAX_SERIAL = "MAX_SERIAL";
 
@@ -1251,7 +1251,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String CREATE_TABLE_KITCHEN_SCREEN_TABLE = "CREATE TABLE " + KITCHEN_SCREEN_TABLE + "("
                 + KITCHEN_NAME + " TEXT,"
                 + KITCHEN_NO + " INTEGER,"
-                + KITCHEN_IP + " TEXT " + ")";
+                + KITCHEN_IP + " TEXT,"
+                + KITCHEN_TYPE + " INTEGER " + ")";
         db.execSQL(CREATE_TABLE_KITCHEN_SCREEN_TABLE);
 
         //___________________________________________________________________________________
@@ -1338,6 +1339,12 @@ try {
     db.execSQL("ALTER TABLE ORDER_HEADER ADD ORDER_TK_KIND TAXE NOT NULL DEFAULT 'Take Away'");
     db.execSQL("ALTER TABLE ORDER_HEADER_TEMP ADD ORDER_TK_KIND TAXE NOT NULL DEFAULT 'Take Away'");
 }catch (Exception e){}
+
+        try {
+            db.execSQL("ALTER TABLE KITCHEN_SCREEN_TABLE ADD KITCHEN_TYPE INTEGER NOT NULL DEFAULT '0'");
+
+        }catch (Exception e){}
+
 
         try {
             db.execSQL("ALTER TABLE MAIN_SETTINGS ADD CASH_NO INTEGER NOT NULL DEFAULT '0'");
@@ -2242,6 +2249,7 @@ try {
         values.put(KITCHEN_NAME, kitchenScreen.getKitchenName());
         values.put(KITCHEN_NO, kitchenScreen.getKitchenNo());
         values.put(KITCHEN_IP, kitchenScreen.getKitchenIP());
+        values.put(KITCHEN_TYPE, kitchenScreen.getKitchenType());
 
 
         db.insert(KITCHEN_SCREEN_TABLE, null, values);
@@ -4120,7 +4128,7 @@ try {
                 kitchenScreen.setKitchenName(cursor.getString(0));
                 kitchenScreen.setKitchenNo(cursor.getInt(1));
                 kitchenScreen.setKitchenIP(cursor.getString(2));
-
+                kitchenScreen.setKitchenType(cursor.getInt(3));
 
                 kitchenScreens.add(kitchenScreen);
             } while (cursor.moveToNext());
@@ -4139,6 +4147,7 @@ try {
                 kitchenScreen.setKitchenName(cursor.getString(0));
                 kitchenScreen.setKitchenNo(cursor.getInt(1));
                 kitchenScreen.setKitchenIP(cursor.getString(2));
+            kitchenScreen.setKitchenType(cursor.getInt(3));
 
         }
         return kitchenScreen;
@@ -4354,6 +4363,7 @@ try {
         values.put(KITCHEN_NAME, kitchenScreen.getKitchenName());
         values.put(KITCHEN_NO, kitchenScreen.getKitchenNo());
         values.put(KITCHEN_IP, kitchenScreen.getKitchenIP());
+        values.put(KITCHEN_TYPE, kitchenScreen.getKitchenType());
 
         // updating row
         db.update(KITCHEN_SCREEN_TABLE, values, KITCHEN_NO + " = '" + oldKitchenNo + "'", null);
