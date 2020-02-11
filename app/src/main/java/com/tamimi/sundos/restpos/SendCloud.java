@@ -102,7 +102,7 @@ public class SendCloud {
                 URL url = new URL(link);
 //                new SendDeviceDetails().execute("http://52.88.194.67:8080/IOTProjectServer/registerDevice", postData.toString());
 
-                Log.e("data kitchen ", "--> " + obj.toString());
+                Log.e("data_kitchen ", "--> " + obj.toString());
 
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setDoOutput(true);
@@ -205,7 +205,7 @@ public class SendCloud {
                 URL url = new URL(link);
                 Log.e("url con ", "" + url.toString());
 
-
+                Log.e("data_order ", "--> " + obj.toString());
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setDoOutput(true);
                 httpURLConnection.setDoInput(true);
@@ -310,6 +310,7 @@ public class SendCloud {
 
                 //http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/SaveGroup?Compno=736&CompYear=2019&POSNO=1&Group={%22SERIAL%22:1,%22ITYPE%22:1,%22NAME_CATEGORY_FAMILY%22:%22NEW%20FOOD%22}
                 //http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/SaveGroup?Compno=736&CompYear=2019&POSNO=1&Group=%7B%22SERIAL%22%3A26%2C%22TYPE%22%3A2%2C%22NAME_CATEGORY_FAMILY%22%3A%22cat9+%22%7D
+                Log.e("data_FamileC ", "--> " + obj.toString());
 
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setDoOutput(true);
@@ -396,6 +397,7 @@ public class SendCloud {
                         "ITEMCARD=" + URLEncoder.encode(obj.toString().trim(), "UTF-8");
 
                 URL url = new URL(link);
+                Log.e("data_menuReg ", "--> " + obj.toString());
 
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setDoOutput(true);
@@ -496,6 +498,8 @@ public class SendCloud {
                 wr.flush();
                 wr.close();
 
+                Log.e("data_modifer ", "--> " + obj.toString());
+
                 InputStream inputStream = httpURLConnection.getInputStream();
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 
@@ -585,7 +589,7 @@ public class SendCloud {
                 wr.flush();
                 wr.close();
 
-
+                Log.e("data_ForceQ ", "--> " + obj.toString());
                 InputStream inputStream = httpURLConnection.getInputStream();
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 
@@ -674,6 +678,7 @@ public class SendCloud {
                 wr.flush();
                 wr.close();
 
+                Log.e("data_itemWithMo ", "--> " + obj.toString());
 
                 InputStream inputStream = httpURLConnection.getInputStream();
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
@@ -763,6 +768,8 @@ public class SendCloud {
                 wr.flush();
                 wr.close();
 
+                Log.e("data_Category_Modifir ", "--> " + obj.toString());
+
                 InputStream inputStream = httpURLConnection.getInputStream();
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 
@@ -850,6 +857,7 @@ public class SendCloud {
                 wr.writeBytes(data);
                 wr.flush();
                 wr.close();
+                Log.e("data_itemwithfq ", "--> " + obj.toString());
 
                 InputStream inputStream = httpURLConnection.getInputStream();
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
@@ -937,6 +945,7 @@ public class SendCloud {
                 wr.writeBytes(data);
                 wr.flush();
                 wr.close();
+                Log.e("data_Announcem ", "--> " + obj.toString());
 
                 InputStream inputStream = httpURLConnection.getInputStream();
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
@@ -1029,6 +1038,7 @@ public class SendCloud {
 //                wr.flush();
 //                wr.close();
 
+                Log.e("data_max_serial ", "--> " + obj.toString());
 
                 InputStream inputStream = httpURLConnection.getInputStream();
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
@@ -1108,6 +1118,7 @@ public class SendCloud {
 
                 URL url = new URL(link + data);
 //                Log.e("url autentication", "" + url.toString());
+                Log.e("data_Auth", "--> " + obj.toString());
 
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
 //                httpURLConnection.setDoOutput(true);
