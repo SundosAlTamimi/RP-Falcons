@@ -59,24 +59,25 @@ public class MyService extends Service {
         T.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-try{
-                OrderHeaderObj.clear();
-                OrderTransactionsObj.clear();
-                PayMethodObj.clear();
+                try {
+                    OrderHeaderObj.clear();
+                    OrderTransactionsObj.clear();
+                    PayMethodObj.clear();
 
-                OrderHeaderObj = db.getAllOrderHeader();
-                OrderTransactionsObj = db.getAllOrderTransactions();
-                PayMethodObj = db.getAllExistingPay();
+                    OrderHeaderObj = db.getAllOrderHeader();
+                    OrderTransactionsObj = db.getAllOrderTransactions();
+                    PayMethodObj = db.getAllExistingPay();
 
-                for (int i = 0; i < OrderHeaderObj.size(); i++) {
-                    if (OrderHeaderObj.get(i).getIsPost() != 1) {
-                        sendToServer(OrderHeaderObj.get(i), OrderTransactionsObj, PayMethodObj);
+                    for (int i = 0; i < OrderHeaderObj.size(); i++) {
+                        if (OrderHeaderObj.get(i).getIsPost() != 1) {
+                            sendToServer(OrderHeaderObj.get(i), OrderTransactionsObj, PayMethodObj);
+                        }
                     }
+
+                } catch (Exception e) {
+                    Log.e("error in sticky", "no data in order header ...");
                 }
 //                message();
-            }catch (Exception e){
-
-}
 
             }
         }, 10000, 3000);

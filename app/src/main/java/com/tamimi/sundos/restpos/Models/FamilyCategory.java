@@ -62,7 +62,7 @@ public class FamilyCategory {
             obj.put("SERIAL", serial);
             obj.put("ITYPE", type);
             obj.put("NAME_CATEGORY_FAMILY", name);
-//            obj.put("CATEGORY_PIC", catPic);
+            obj.put("PIC", catPic);
 
         } catch (JSONException e) {
             Log.e("Tag", "JSONException");

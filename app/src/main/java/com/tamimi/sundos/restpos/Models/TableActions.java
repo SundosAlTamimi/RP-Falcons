@@ -16,6 +16,8 @@ public class TableActions {
 
     public TableActions(int POSNumber, String userName, int userNo, String shiftName, int shiftNo, int actionType, String actionDate,
                         String actionTime, int tableNo, int sectionNo, int toTable, int toSection) {
+
+        this.POSNumber = POSNumber;
         this.userName = userName;
         this.userNo = userNo;
         this.shiftName = shiftName;

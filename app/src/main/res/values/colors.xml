@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimaryLight">#7bccb5</color>
+    <color name="colorPrimaryLight">#7BCCB5</color>
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574b</color>
     <color name="colorAccent">#d81b60</color>
@@ -10,7 +10,7 @@
     <color name="layer3">#E5E4E2</color>
     <color name="layer4">#B6B6B4</color>
     <color name="text_color">#25383C</color>
-    <color name="exit">#c24641</color>
+    <color name="exit">#C24641</color>
     <color name="exit_hover">#E77471</color>
     <color name="light_blue_over">#E0FFFF</color>
     <color name="light_blue">#C2DFFF</color>
@@ -21,5 +21,5 @@
     <color name="floor">#e8adaa</color>
 
     <color name="transparent">#48CFC7C7</color>
-
+    <color name="layer_">#A6E5E4E2</color>
 </resources>

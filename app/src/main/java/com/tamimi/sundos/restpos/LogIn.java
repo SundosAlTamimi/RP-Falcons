@@ -37,17 +37,15 @@ import org.json.JSONObject;
 
 public class LogIn extends AppCompatActivity {
 
-    ImageView lock;
-    Button b1, b2, b3, b4, b5, b6, b7, b8, b9, b0;
-    Button clear, logIn;
-    TextView t1, t2, t3, t4, logfocu;
-    TextView[] arrayOfText;
-    int index = 0;
-    MediaPlayer mp;
-    String date, time, shiftName = "A";
-    int shiftNo = 0;
-    boolean isActive;
-    int userPassword;
+    private ImageView lock;
+    private Button b1, b2, b3, b4, b5, b6, b7, b8, b9, b0;
+    private Button clear, logIn;
+    private TextView t1, t2, t3, t4, logfocu;
+    private TextView[] arrayOfText;
+    private MediaPlayer mp;
+    private String date, time, shiftName = "A";
+    private int shiftNo = 0, index = 0, userPassword;
+    private boolean isActive;
 
     Dialog dialog;
     DatabaseHandler mDHandler;
@@ -63,6 +61,8 @@ public class LogIn extends AppCompatActivity {
         initialize();
         setShift();
         arrayOfText = new TextView[]{t1, t2, t3, t4};
+
+        mDHandler.getMainSettings();
 
         List<FirstInstlation>firstInstlations=new ArrayList<>();
 
@@ -148,9 +148,7 @@ public class LogIn extends AppCompatActivity {
 
     };
 
-
     void logCheak(){
-
 
         if (index == 4) {
             String password = t1.getText().toString() + t2.getText().toString() + t3.getText().toString() + t4.getText().toString();
@@ -181,8 +179,6 @@ public class LogIn extends AppCompatActivity {
 
                 new Settings().makeText(LogIn.this, getResources().getString(R.string.incorect_password));
         }
-
-
 
     }
 
@@ -219,7 +215,6 @@ public class LogIn extends AppCompatActivity {
                 }
             }
         });
-
         dialog.show();
     }
 
@@ -243,6 +238,8 @@ public class LogIn extends AppCompatActivity {
                                 userPassword=Integer.parseInt(password);
                                 logCheak();
                                 dialog.dismiss();
+                                }else {
+                                    new Settings().makeText(LogIn.this, getResources().getString(R.string.Activate));
                                 }
 
                                 break;
@@ -302,20 +299,17 @@ public class LogIn extends AppCompatActivity {
             public void run() {
                 SyncWithCloud obj = new SyncWithCloud(LogIn.this);
                 obj.startSyncing("sync");
-
 //                try {
 //
 //                    Thread.sleep(5000);
 //                } catch (InterruptedException e) {
 //                    e.printStackTrace();
 //                }
-
-
                 final Intent mainIntent = new Intent(LogIn.this, Main.class);
                 startActivity(mainIntent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 finish();
                 startService(new Intent(LogIn.this, MyService.class));
-
 
             }
         }, 500);
@@ -433,13 +427,15 @@ public class LogIn extends AppCompatActivity {
 
                 if(!compNo.getText().toString().equals("")&&!CompYear.getText().toString().equals("")
                &&!userName.getText().toString().equals("")&&!password.getText().toString().equals("")){
+try {
+    mDHandler.addFirstInformation(new FirstInstlation(Integer.parseInt(compNo.getText().toString()), CompYear.getText().toString()
+            , userName.getText().toString(), Integer.parseInt(password.getText().toString())));
 
-                    mDHandler.addFirstInformation(new FirstInstlation(Integer.parseInt(compNo.getText().toString()),CompYear.getText().toString()
-                    ,userName.getText().toString(),Integer.parseInt(password.getText().toString())));
-
-                    dialog1.dismiss();
-                    showUserNameDialog();
-
+    dialog1.dismiss();
+    showUserNameDialog();
+}catch (Exception e){
+    Toast.makeText(LogIn.this, "please add int password", Toast.LENGTH_SHORT).show();
+}
                 }else {
                     Toast.makeText(LogIn.this, "Please Enter All Filled", Toast.LENGTH_SHORT).show();
                 }

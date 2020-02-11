@@ -29,6 +29,7 @@ public class Settings {
     public static TextView focas=null;
     public static boolean onOFF=true;
     public static String datatest="";
+    public static int kitchenType=0;
 
     public static int checkUserFlag = 0; // 0=> no user, 1=> user is exist, 3=> no internet connection
 

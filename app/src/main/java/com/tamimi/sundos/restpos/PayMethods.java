@@ -5,7 +5,10 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -23,15 +26,19 @@ import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.tamimi.sundos.restpos.BackOffice.BackOfficeActivity;
 import com.tamimi.sundos.restpos.Models.Cashier;
 import com.tamimi.sundos.restpos.Models.Cheque;
 import com.tamimi.sundos.restpos.Models.CreditCard;
 import com.tamimi.sundos.restpos.Models.ItemWithScreen;
+import com.tamimi.sundos.restpos.Models.KitchenScreen;
 import com.tamimi.sundos.restpos.Models.Money;
 import com.tamimi.sundos.restpos.Models.OrderHeader;
 import com.tamimi.sundos.restpos.Models.OrderTransactions;
 import com.tamimi.sundos.restpos.Models.PayMethod;
+import com.tamimi.sundos.restpos.Models.TableActions;
 import com.tamimi.sundos.restpos.Models.TakeAway;
 
 import org.json.JSONArray;
@@ -58,7 +65,8 @@ public class PayMethods extends AppCompatActivity {
     TextView tableNumber, check, date, remainingBalance, server, orderAmount, discount, subCharge, subTotal, tax, amountDue, deliveryCharge,
             totalDue, totalReceived, balance;
     LinearLayout TakeAwayTableLayout;
-
+    LinearLayout linearLayouts;
+List<LinearLayout> layoutList;
     DatabaseHandler mDHandler;
     Dialog dialog, dialog1;
     DecimalFormatSymbols de =new DecimalFormatSymbols(Locale.ENGLISH);
@@ -90,7 +98,7 @@ public class PayMethods extends AppCompatActivity {
     double giftCardValue = 0.00;
     double creditValue = 0.00;
     double pointValue = 0.00;
-
+List<String>ipForKitchen;
     public static double cashValue1 = 0.00;
     public static double creditCardValue1 = 0.00;
     public static double chequeValue1 = 0.00;
@@ -107,7 +115,7 @@ public class PayMethods extends AppCompatActivity {
 
         initialize();
         maxSerial =Order.voucherNo;
-
+        layoutList=new ArrayList<>();
         Date currentTimeAndDate = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
         String today = convertToEnglish(df.format(currentTimeAndDate));
@@ -144,17 +152,19 @@ public class PayMethods extends AppCompatActivity {
 
         } else {  // pay from takeaway
 
+try {
+    balance.setText(obj.getOrderHeaderObj().getAmountDue() + "");
+    orderAmount.setText(obj.getOrderHeaderObj().getTotal() + "");
+    discount.setText(obj.getOrderHeaderObj().getAllDiscount() + "");
+    deliveryCharge.setText(obj.getOrderHeaderObj().getDeliveryCharge() + "");
+    server.setText(obj.getOrderHeaderObj().getWaiter());
+    subTotal.setText(obj.getOrderHeaderObj().getSubTotal() + "");
+    tax.setText(obj.getOrderHeaderObj().getTotalTax() + "");
+    amountDue.setText(obj.getOrderHeaderObj().getAmountDue() + "");
 
-            balance.setText(obj.getOrderHeaderObj().getAmountDue() + "");
-            orderAmount.setText(obj.getOrderHeaderObj().getTotal() + "");
-            discount.setText(obj.getOrderHeaderObj().getAllDiscount() + "");
-            deliveryCharge.setText(obj.getOrderHeaderObj().getDeliveryCharge() + "");
-            server.setText(obj.getOrderHeaderObj().getWaiter());
-            subTotal.setText(obj.getOrderHeaderObj().getSubTotal() + "");
-            tax.setText(obj.getOrderHeaderObj().getTotalTax() + "");
-            amountDue.setText(obj.getOrderHeaderObj().getAmountDue() + "");
-
-
+}catch (Exception e){
+    Log.e("Exception 158","/payMethodClass/");
+}
             mainBalance = convertToEnglish(balance.getText().toString());
             remainingBalance.setText(getResources().getString(R.string.remaining_) +Double.parseDouble( convertToEnglish(balance.getText().toString())));
             check.setText(check.getText().toString() + " -");
@@ -1731,17 +1741,59 @@ public class PayMethods extends AppCompatActivity {
 
                 mDHandler.addOrderHeader(obj.getOrderHeaderObj());
 
-                for (int i = 0; i < obj.getOrderTransactionObj().size(); i++)
+                for (int i = 0; i < obj.getOrderTransactionObj().size(); i++) {
+                    obj.getOrderTransactionObj().get(i).setVoucherNo(obj.getOrderHeaderObj().getVoucherNumber());
                     mDHandler.addOrderTransaction(obj.getOrderTransactionObj().get(i));
-
+                }
 
                 sendToKitchen(PayMethods.this, obj.getOrderHeaderObj(), obj.getOrderTransactionObj(), payMethodList, itemWithScreens);
                 sendToServer(PayMethods.this,obj.getOrderHeaderObj(), obj.getOrderTransactionObj(), payMethodList);
 
 //                Intent intent = new Intent(PayMethods.this, Order.class);
 //                startActivity(intent);
-                Print(obj.getOrderTransactionObj(),obj.getOrderHeaderObj());
-                mDHandler.updateMaxVhf(maxSerial);
+                if(obj.getOrderHeaderObj().getOrderType()==0){
+//                    Print(obj.getOrderTransactionObj(),obj.getOrderHeaderObj());
+                    mDHandler.updateMaxVhf(maxSerial);
+                }else {// for split method for update temp table ..
+
+
+                    obj.updateOrderHeaderTempSplit().setCashValue(0);
+                    obj.updateOrderHeaderTempSplit().setCardsValue(0);
+                    obj.updateOrderHeaderTempSplit().setChequeValue(0);
+                    obj.updateOrderHeaderTempSplit().setGiftValue(0);
+                    obj.updateOrderHeaderTempSplit().setCouponValue(0);
+                    obj.updateOrderHeaderTempSplit().setPointValue(0);
+
+                    Log.e("sec no /table no ",""+obj.updateOrderHeaderTempSplit().getSectionNO()+"  /  "+ obj.updateOrderHeaderTempSplit().getTableNO());
+                    Log.e("total no /dis no ",""+obj.updateOrderHeaderTempSplit().getTotal()+"  /  "+ obj.updateOrderHeaderTempSplit().getAllDiscount());
+
+                    Log.e("vouDate no /voh no ",""+obj.updateOrderHeaderTempSplit().getVoucherDate()+"  /  "+ obj.updateOrderHeaderTempSplit().getVoucherNumber());
+
+
+                    mDHandler.deleteFromOrderHeaderTemp( ""+obj.updateOrderHeaderTempSplit().getSectionNO(), ""+ obj.updateOrderHeaderTempSplit().getTableNO());
+                    mDHandler.deleteFromOrderTransactionTemp(""+obj.updateOrderHeaderTempSplit().getSectionNO(), ""+ obj.updateOrderHeaderTempSplit().getTableNO());
+
+                    mDHandler.addOrderHeaderTemp(obj.updateOrderHeaderTempSplit());
+                    for(int i=0;i<obj.updateOrderTransactionTempSplit().size();i++) {
+
+                        obj.updateOrderTransactionTempSplit().get(i).setVoucherNo(obj.updateOrderHeaderTempSplit().getVoucherNumber());
+                        mDHandler.addOrderTransactionTemp(obj.updateOrderTransactionTempSplit().get(i));
+                    }
+
+                    TableActions table=new TableActions( obj.getOrderHeaderObj().getPointOfSaleNumber(), obj.getOrderHeaderObj().getUserName()
+                    , obj.getOrderHeaderObj().getUserNo(), obj.getOrderHeaderObj().getShiftName(), obj.getOrderHeaderObj().getShiftNumber(),
+                            2, obj.getOrderHeaderObj().getVoucherDate(), obj.getOrderHeaderObj().getTime(), obj.getOrderHeaderObj().getTableNO(),
+                            obj.getOrderHeaderObj().getSectionNO(),-1,-1);
+
+                    mDHandler.addTableAction(table);
+
+                    Intent intent = new Intent(PayMethods.this, DineIn.class);
+                    startActivity(intent);//close when print
+
+                    mDHandler.updateMaxVhf(obj.getOrderHeaderObj().getVoucherNumber());
+
+
+                                   }
 
             } else { // Dine In
 
@@ -1805,10 +1857,50 @@ public class PayMethods extends AppCompatActivity {
             obj.put("Items", obj2);
             obj.put("Header", obj1);
 
+//            sendToCashPrinter( obj1,OrderHeaderObj, OrderTransactionsObj);
             Log.e("socket", "J");
-            SendSocket sendSocket = new SendSocket(context, obj1, OrderTransactionsObj);
-            sendSocket.sendMessage();
+//
 
+
+            SendSocket sendSocket = new SendSocket(context, obj1, OrderTransactionsObj);
+//            sendSocket.sendMessage(0,linearLayouts,null,null);
+            Log.e("socket_printer_cash", "J");
+//
+//            ipForKitchen=new ArrayList<>();
+//            List<String>ipForCashier=new ArrayList<>();
+//            ipForKitchen.clear();
+//            List<Bitmap>imagePrint=new ArrayList<>();
+//            List<Bitmap>imagePrint2=new ArrayList<>();
+//
+//            PrintInNetworkPrinter(OrderTransactionsObj,OrderHeaderObj);
+//            imagePrint2.add( 0,returnBitmap(linearLayouts));
+//            ipForCashier.add(0,"192.168.2.10");
+//            sendSocket.sendMessage(0,linearLayouts,imagePrint2,ipForCashier);
+//
+//            imagePrint =LinearToPrint(OrderTransactionsObj);
+//            SendSocket sendSocket2 = new SendSocket(context, obj1, OrderTransactionsObj);
+//            sendSocket2.sendMessage(1,linearLayouts,imagePrint,ipForKitchen);
+
+
+
+            Log.e("socket_printer_kitchen", "J");
+            ipForKitchen=new ArrayList<>();
+            ipForKitchen.clear();
+            PrintInNetworkPrinter(OrderTransactionsObj,OrderHeaderObj);
+            List<Bitmap>imagePrint=new ArrayList<>();
+            List<Bitmap>imagePrint2=new ArrayList<>();
+            imagePrint2.add( 0,returnBitmap(linearLayouts));
+            ipForKitchen.add(0,"192.168.2.10");
+            imagePrint =LinearToPrint(OrderTransactionsObj);
+
+            for(int i=0;i<imagePrint.size();i++){
+                imagePrint2.add(i+1,imagePrint.get(i));
+            }
+
+            sendSocket.sendMessage(1,linearLayouts,imagePrint2,ipForKitchen);
+
+
+            Log.e("socket_printer_Kitchen", "J");
             Log.e("sendCloud", "J");
             SendCloud sendCloud = new SendCloud(context, obj);
             sendCloud.startSending("kitchen");
@@ -1816,6 +1908,12 @@ public class PayMethods extends AppCompatActivity {
         } catch (JSONException e) {
             Log.e("Tag", "JSONException");
         }
+    }
+
+    void sendToCashPrinter(JSONObject obj1,OrderHeader OrderHeaderObj,List<OrderTransactions> OrderTransactionsObj){
+//        PrintInNetworkPrinter(OrderTransactionsObj,OrderHeaderObj);
+        SendSocket sendSocket = new SendSocket(PayMethods.this, obj1, OrderTransactionsObj);
+            sendSocket.sendMessage(0,linearLayouts,null,null);
     }
 
     public void sendToServer(Context context,OrderHeader OrderHeaderObj, List<OrderTransactions> OrderTransactionsObj, List<PayMethod> PayMethodObj) {
@@ -1855,10 +1953,13 @@ public class PayMethods extends AppCompatActivity {
         Log.e("OrdedTr ", "" + OrderTransactionsObj.get(0).getTaxValue() + " date\n " + OrderTransactionsObj.get(0).getVoucherDate() + " \t no  " + OrderTransactionsObj.get(0).getVoucherNo());
         final Dialog dialog = new Dialog(PayMethods.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setCanceledOnTouchOutside(true);
         dialog.setCancelable(false);
-        dialog.setContentView(R.layout.print);
+        dialog.setContentView(R.layout.print2);
         final Button okButton = dialog.findViewById(R.id.print_btn);
         final LinearLayout linearLayout = dialog.findViewById(R.id.linear2);
+        linearLayouts=linearLayout;
         TableLayout tabLayout = (TableLayout) dialog.findViewById(R.id.table_);
         TextView tax_no = (TextView) dialog.findViewById(R.id.textViewtaxnoText);
         TextView date = dialog.findViewById(R.id.textViewdateText);
@@ -1893,27 +1994,27 @@ public class PayMethods extends AppCompatActivity {
         TextView header = new TextView(PayMethods.this);
         header.setGravity(Gravity.CENTER);
 
-        header.setText("Item name ");
+        header.setText(getResources().getString(R.string.item_name));
         header.setTextColor(getResources().getColor(R.color.text_color));
         header.setLayoutParams(lp2);
-        header.setTextSize(14);
+        header.setTextSize(18);
         headerRow.addView(header);
 
         TextView header2 = new TextView(PayMethods.this);
         header2.setGravity(Gravity.CENTER);
-        header2.setText("QTy");
+        header2.setText(getResources().getString(R.string.qty));
         header2.setTextColor(getResources().getColor(R.color.text_color));
         header2.setLayoutParams(lp2);
-        header2.setTextSize(14);
+        header2.setTextSize(18);
         headerRow.addView(header2);
 
         TextView header3 = new TextView(PayMethods.this);
         header3.setGravity(Gravity.CENTER);
 
-        header3.setText("Total");
+        header3.setText(getResources().getString(R.string.total));
         header3.setTextColor(getResources().getColor(R.color.text_color));
         header3.setLayoutParams(lp2);
-        header3.setTextSize(14);
+        header3.setTextSize(18);
         headerRow.addView(header3);
         tabLayout.addView(headerRow);
 
@@ -1929,7 +2030,7 @@ public class PayMethods extends AppCompatActivity {
                TextView textView = new TextView(PayMethods.this);
                textView = new TextView(PayMethods.this);
                textView.setGravity(Gravity.CENTER);
-               textView.setTextSize(10);
+               textView.setTextSize(18);
                textView.setTextColor(getResources().getColor(R.color.text_color));
                if (i == 0) {
                    textView.setText("" + OrderTransactionsObj.get(j).getItemName());
@@ -1962,21 +2063,318 @@ public class PayMethods extends AppCompatActivity {
            amountDu.setText(OrderHeaderObj.getAmountDue() + "");
            Log.e("total money", "" + OrderHeaderObj.getAmountDue());
        }
+//
+//        okButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                PrintHelper photoPrinter = new PrintHelper(PayMethods.this);
+//                photoPrinter.setScaleMode(PrintHelper.SCALE_MODE_FIT);
+//                linearLayout.setDrawingCacheEnabled(true);
+//                Bitmap bitmap = linearLayout.getDrawingCache();
+//                photoPrinter.printBitmap("invoice2.jpg", bitmap);
+//                dialog.dismiss();
+//            Intent intentToOrder =new Intent(PayMethods.this,Order.class);
+//            startActivity(intentToOrder);
+//            }
+//        });
+        dialog.show();
 
+    }
+
+    public void PrintInNetworkPrinter(List<OrderTransactions> OrderTransactionsObj, OrderHeader OrderHeaderObj) {
+        Log.e("OrdedTr ", "" + OrderTransactionsObj.get(0).getTaxValue() + " date\n " + OrderTransactionsObj.get(0).getVoucherDate() + " \t no  " + OrderTransactionsObj.get(0).getVoucherNo());
+        final Dialog dialog = new Dialog(PayMethods.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.print2);
+        final Button okButton = dialog.findViewById(R.id.print_btn);
+        final LinearLayout linearLayout = dialog.findViewById(R.id.linear2);
+        linearLayouts=linearLayout;
+        TableLayout tabLayout = (TableLayout) dialog.findViewById(R.id.table_);
+        TextView tax_no = (TextView) dialog.findViewById(R.id.textViewtaxnoText);
+        TextView date = dialog.findViewById(R.id.textViewdateText);
+        TextView time = dialog.findViewById(R.id.textViewtimeText);
+        TextView w_date = dialog.findViewById(R.id.textViewWDAteText);
+        TextView invoice_no = dialog.findViewById(R.id.textViewWInvoiceNoText);
+        TextView casher = dialog.findViewById(R.id.textViewWCacherText);
+        TextView total = dialog.findViewById(R.id.total_print);
+        TextView delivery = dialog.findViewById(R.id.delivery_print);
+        TextView line_Des = dialog.findViewById(R.id.line_discount_print);
+        TextView descount = dialog.findViewById(R.id.discount_print);
+        TextView sub_total = dialog.findViewById(R.id.sub_total_print);
+        TextView services = dialog.findViewById(R.id.service_print);
+        TextView tax = dialog.findViewById(R.id.tax_print);
+        TextView amountDu = dialog.findViewById(R.id.amount_due_print);
+        if ((OrderTransactionsObj.get(0).getTaxValue()) != 0.0) {
+            tax_no.setText((OrderTransactionsObj.get(0).getTaxValue()) + "");
+            Log.e("", "" + OrderTransactionsObj.get(0).getTaxValue());
+        }
+        date.setText(OrderTransactionsObj.get(0).getVoucherDate());
+        time.setText(OrderTransactionsObj.get(0).getTime());
+        w_date.setText(OrderTransactionsObj.get(0).getVoucherDate());
+        invoice_no.setText(OrderTransactionsObj.get(0).getVoucherNo());
+        casher.setText(OrderTransactionsObj.get(0).getUserName());
+        TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+
+        lp2.setMargins(0, 7, 0, 0);
+
+        final TableRow headerRow = new TableRow(PayMethods.this);
+//        headerRow.setBackgroundColor(getResources().getColor(R.color.light_blue));
+
+        TextView header = new TextView(PayMethods.this);
+        header.setGravity(Gravity.CENTER);
+
+        header.setText("Item name ");
+        header.setTextColor(getResources().getColor(R.color.text_color));
+        header.setLayoutParams(lp2);
+        header.setTextSize(18);
+        headerRow.addView(header);
+
+        TextView header2 = new TextView(PayMethods.this);
+        header2.setGravity(Gravity.CENTER);
+        header2.setText("QTy");
+        header2.setTextColor(getResources().getColor(R.color.text_color));
+        header2.setLayoutParams(lp2);
+        header2.setTextSize(18);
+        headerRow.addView(header2);
+
+        TextView header3 = new TextView(PayMethods.this);
+        header3.setGravity(Gravity.CENTER);
+
+        header3.setText("Total");
+        header3.setTextColor(getResources().getColor(R.color.text_color));
+        header3.setLayoutParams(lp2);
+        header3.setTextSize(18);
+        headerRow.addView(header3);
+        tabLayout.addView(headerRow);
+        //--------------------------------------
+//        final TableRow headerRow2 = new TableRow(PayMethods.this);
+//        headerRow2.setBackgroundColor(getResources().getColor(R.color.light_blue));
+//        tabLayout.addView(headerRow2);
+
+        for (int j = 0; j < OrderTransactionsObj.size(); j++) {
+
+            final TableRow row = new TableRow(PayMethods.this);
+
+
+            for (int i = 0; i < 3; i++) {
+                TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+                lp.setMargins(0, 10, 0, 0);
+                row.setLayoutParams(lp);
+                TextView textView = new TextView(PayMethods.this);
+                textView = new TextView(PayMethods.this);
+                textView.setGravity(Gravity.CENTER);
+                textView.setTextSize(18);
+                textView.setTextColor(getResources().getColor(R.color.text_color));
+                if (i == 0) {
+                    textView.setText("" + OrderTransactionsObj.get(j).getItemName());
+                    textView.setLayoutParams(lp2);
+                }
+                if (i == 1) {
+                    textView.setText("" + OrderTransactionsObj.get(j).getQty());
+                    textView.setLayoutParams(lp2);
+                }
+                if (i == 2) {
+                    textView.setText("" + OrderTransactionsObj.get(j).getTotal());
+                    textView.setLayoutParams(lp2);
+                }
+
+
+                row.addView(textView);
+
+
+            }
+
+            tabLayout.addView(row);
+
+            total.setText(OrderHeaderObj.getTotal() + "");
+            delivery.setText(OrderHeaderObj.getDeliveryCharge() + "");
+            line_Des.setText(OrderHeaderObj.getTotalLineDiscount() + "");
+            descount.setText(OrderTransactionsObj.get(0).getlDiscount() + "");
+            sub_total.setText(OrderHeaderObj.getSubTotal() + "");
+            services.setText(OrderTransactionsObj.get(0).getService() + "");
+            tax.setText(OrderHeaderObj.getTotalTax() + "");
+            amountDu.setText(OrderHeaderObj.getAmountDue() + "");
+            Log.e("total money", "" + OrderHeaderObj.getAmountDue());
+        }
+//
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PrintHelper photoPrinter = new PrintHelper(PayMethods.this);
-                photoPrinter.setScaleMode(PrintHelper.SCALE_MODE_FIT);
-                linearLayout.setDrawingCacheEnabled(true);
-                Bitmap bitmap = linearLayout.getDrawingCache();
-                photoPrinter.printBitmap("invoice2.jpg", bitmap);
-                dialog.dismiss();
-            Intent intentToOrder =new Intent(PayMethods.this,Order.class);
-            startActivity(intentToOrder);
+//                PrintHelper photoPrinter = new PrintHelper(PayMethods.this);
+//                photoPrinter.setScaleMode(PrintHelper.SCALE_MODE_FIT);
+//                linearLayout.setDrawingCacheEnabled(true);
+//                Bitmap bitmap = linearLayout.getDrawingCache();
+//                photoPrinter.printBitmap("invoice2.jpg", bitmap);
+//                dialog.dismiss();
+//            Intent intentToOrder =new Intent(PayMethods.this,Order.class);
+//            startActivity(intentToOrder);
+
+
             }
         });
-        dialog.show();
+//        dialog.show();
+
+        Intent intentToOrder =new Intent(PayMethods.this,Order.class);
+            startActivity(intentToOrder);
+
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
+
+    public void setSlideAnimation() {
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
+    }
+
+
+    List<Bitmap> LinearToPrint(List<OrderTransactions> orderTransactions){
+
+        List<Bitmap> liner=new ArrayList<>();
+
+        Dialog  dialogLinear=new Dialog(PayMethods.this);
+        dialogLinear.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogLinear.setCancelable(true);
+        if(getResources().getString(R.string.A_E).equals("A")){
+            dialogLinear.setContentView(R.layout.kitckin_printer_a);
+
+        }else{
+            dialogLinear.setContentView(R.layout.kitckin_printer_);
+
+        }
+        dialogLinear.setCanceledOnTouchOutside(true);
+
+        TextView orderType,OrderNo,tableNo,screenNo;
+        TableLayout itemTable;
+        ImageView orderImage;
+
+
+        LinearLayout linerToImage=(LinearLayout)dialogLinear.findViewById(R.id.linerForKitchen);
+         itemTable=(TableLayout)dialogLinear.findViewById(R.id.itemTable);
+//         orderImage=(ImageView)dialogLinear.findViewById(R.id.orderPic);
+         orderType=(TextView)dialogLinear.findViewById(R.id.orderType);
+
+        OrderNo=(TextView)dialogLinear.findViewById(R.id.orderNo);
+        tableNo=(TextView)dialogLinear.findViewById(R.id.tableNo);
+        screenNo=(TextView)dialogLinear.findViewById(R.id.screenNo);
+       List<KitchenScreen> kitchenScreens = mDHandler.getAllKitchenScreen();
+
+
+
+       if(kitchenScreens.size()!=0&& orderTransactions.size()!=0){
+           if(orderTransactions.get(0).getOrderType()==0){
+               orderType.setText(getResources().getString(R.string.take_away));
+//               orderImage.setImageDrawable(getResources().getDrawable(R.drawable.take_away));
+           }else{
+               orderType.setText(getResources().getString(R.string.dine_in));
+//               orderImage.setImageDrawable(getResources().getDrawable(R.drawable.dine_in));
+           }
+           screenNo.setText(""+orderTransactions.get(0).getSectionNo());
+           tableNo.setText(""+orderTransactions.get(0).getTableNo());
+           OrderNo.setText(orderTransactions.get(0).getVoucherNo());
+
+           for(int k=0;k<kitchenScreens.size();k++){
+               itemTable.removeAllViews();
+               boolean isKitchenHaveItem=false;
+           for (int i = 0; i < orderTransactions.size(); i++) {
+            if ((orderTransactions.get(i).getScreenNo() == kitchenScreens.get(k).getKitchenNo())&&(kitchenScreens.get(k).getKitchenType()==0)) {
+                isKitchenHaveItem=true;
+
+                final TableRow row = new TableRow(PayMethods.this);
+//
+        TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+//        lp.setMargins(2, 2, 2, 2);
+        row.setLayoutParams(lp);
+
+        for (int s = 0; s < 3; s++) {
+            TextView textView = new TextView(PayMethods.this);
+
+            switch (s) {
+                case 0:
+                    if(!orderTransactions.get(i).getKitchenAlias().equals("")){
+                        textView.setText(orderTransactions.get(i).getKitchenAlias());
+                    }else{
+                        textView.setText(orderTransactions.get(i).getItemName());
+                    }
+                    break;
+                case 1:
+                    textView.setText(""+orderTransactions.get(i).getQty());
+                    break;
+                case 2:
+                    textView.setText(""+orderTransactions.get(i).getNote());
+                    break;
+
+            }
+
+            textView.setTextColor(ContextCompat.getColor(PayMethods.this, R.color.text_color));
+            textView.setGravity(Gravity.CENTER);
+            textView.setTextSize(16);
+
+
+
+                TableRow.LayoutParams lp2 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f);
+//                lp2.setMargins(2, 2, 2, 2);
+                textView.setLayoutParams(lp2);
+
+                row.addView(textView);
+
+
+        }
+
+        itemTable.addView(row);
+
+
+
+
+            }
+           }//
+
+               if(isKitchenHaveItem){
+                   liner.add(returnBitmap(linerToImage));
+                   ipForKitchen.add(kitchenScreens.get(k).getKitchenIP());
+               }
+
+           }}else{
+           Toast.makeText(PayMethods.this, "Please Add Kitchen Printer Ip ", Toast.LENGTH_SHORT).show();
+       }
+//
+
+        return liner;
+    }
+
+
+
+    Bitmap returnBitmap(LinearLayout lin){
+
+        lin.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        lin.layout(0, 0, lin.getMeasuredWidth(), lin.getMeasuredHeight());
+
+        Log.e("size of img ", "width=" + lin.getMeasuredWidth() + "      higth =" + lin.getMeasuredHeight());
+
+//        linearView.setDrawingCacheEnabled(true);
+//        linearView.buildDrawingCache();
+//        Bitmap bit =linearView.getDrawingCache();
+
+//        linearView.setDrawingCacheEnabled(true);
+//        linearView.buildDrawingCache();
+//        Bitmap bit =linearView.getDrawingCache();
+
+        Bitmap bitmap = Bitmap.createBitmap(lin.getMeasuredWidth(), lin.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        Drawable bgDrawable = lin.getBackground();
+        if (bgDrawable != null) {
+            bgDrawable.draw(canvas);
+        } else {
+            canvas.drawColor(Color.WHITE);
+        }
+        lin.draw(canvas);
+
+        return bitmap;
 
     }
 
@@ -2018,8 +2416,6 @@ public class PayMethods extends AppCompatActivity {
         credit.setOnClickListener(onClickListener);
         point.setOnClickListener(onClickListener);
         save.setOnClickListener(onClickListener);
-
-
 
 
     }

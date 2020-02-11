@@ -79,7 +79,7 @@
     <string name="check_number">Check:</string>
     <string name="date">Date:</string>
     <string name="date_">Date</string>
-    <string name="time">Time</string>
+    <string name="time">Time : </string>
     <string name="hour">Hour</string>
     <string name="memo">Memo:</string>
     <string name="waiter">Waiter:</string>
@@ -123,6 +123,7 @@
     <string name="not_used">Not Used</string>
     <string name="no_tax">No Tax</string>
     <string name="tax_percent">Tax Percent</string>
+    <string name="tax_number">Tax No : </string>
     <string name="secondary_name">Secondary Name</string>
     <string name="kitchen_name">Kitchen Alias</string>
     <string name="item_barcode">Item Barcode</string>
@@ -434,7 +435,8 @@
     <string name="all">ALL</string>
     <string name="cashierno">CashierNo</string>
     <string name="cashier_name">Cashier Name</string>
-    <string name="cashier">Cashier</string>
+    <string name="cashier">Cashier : </string>
+    <string name="details">Details : </string>
     <string name="pos">POS</string>
     <string name="trans_type">Trans Type</string>
     <string name="amount">Amount</string>
@@ -458,6 +460,9 @@
 
     <string name="update_blind_close">Update Blind Close</string>
     <string name="tiller_ok">Tiller Ok</string>
+    <string name="print">Print </string>
+    <string name="resturant_name">Resturant</string>
+
     <string name="print_denomination">Print Denomination</string>
     <string name="move_change_over_to_another_user">Move Change Over To Another User</string>
     <string name="user_order_count">User Order Count</string>
@@ -577,7 +582,7 @@
     <string name="gift_card_value">Gift Card Value :</string>
     <string name="point_value">Point Value :</string>
     <string name="cheque_value">Cheque Value :</string>
-    <string name="invoice_no">Invoice No</string>
+    <string name="invoice_no">Invoice No: </string>
     <string name="is_show">Is Show</string>
     <string name="enter_received">Enter Received:</string>
     <string name="tables_merged">Tables merged !</string>
@@ -588,7 +593,6 @@
     <string name="kitchen_ip">Kitchen IP</string>
     <string name="not_data">not have data to export ...</string>
     <string name="sync_max_vhf">Sync Max VHF</string>
-    <string name="details">Details :</string>
     <string name="details_">More Details</string>
     <string name="details_L">Less Details</string>
     <string name="take_away_kind">Take Away Kind</string>
@@ -597,6 +601,16 @@
     <string name="comp_year">Comp Year</string>
     <string name="comp_no">Comp No</string>
     <string name="first_install_for_app">First Install For App</string>
+    <string name="new_item_name">New Item Name</string>
+    <string name="original">Original</string>
+    <string name="order_no">Order No :</string>
+    <string name="section_no">Section No :</string>
+    <string name="note">Note</string>
+    <string name="kitcken">Kitcken</string>
+    <string name="Activate">THIS User Not Activate</string>
+    <string name="net_tax">Net Tax</string>
+    <string name="return_tax">Return Tax</string>
+    <string name="sales_tax">Sales Tax</string>
 
 
 </resources>
