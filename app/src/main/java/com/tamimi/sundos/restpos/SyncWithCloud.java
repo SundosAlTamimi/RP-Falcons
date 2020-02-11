@@ -298,7 +298,7 @@ public class SyncWithCloud {
         protected void onPostExecute(String JsonResponse) {
             super.onPostExecute(JsonResponse);
 
-            if (JsonResponse != null && JsonResponse.contains("\"ErrorCode\":\"0\"")) {
+            if (JsonResponse != null && JsonResponse.contains("\"ErrorCode\":0")) {
                 Log.e("tag Modifier", "****Success");
 
                 try {
@@ -314,7 +314,7 @@ public class SyncWithCloud {
                         Modifier obj = new Modifier();
                         obj.setModifierNumber(finalObject.getInt("MODIFIER_NO"));
                         obj.setModifierName(finalObject.getString("MODIFIER_NAME"));
-                        obj.setModifierActive(finalObject.getInt("ACTIVE"));
+//                        obj.setModifierActive(finalObject.getInt("ACTIVE"));
 //
                         itemModifer.add(obj);
 
@@ -417,7 +417,7 @@ public class SyncWithCloud {
         protected void onPostExecute(String JsonResponse) {
             super.onPostExecute(JsonResponse);
 
-            if (JsonResponse != null && JsonResponse.contains("\"ErrorCode\":\"0\"")) {
+            if (JsonResponse != null && JsonResponse.contains("\"ErrorCode\":0")) {
                 Log.e("tag fotceQ", "****Success");
 
                 try {
@@ -542,7 +542,7 @@ public class SyncWithCloud {
         protected void onPostExecute(String JsonResponse) {
             super.onPostExecute(JsonResponse);
 
-            if (JsonResponse != null && JsonResponse.contains("\"ErrorCode\":\"0\"")) {
+            if (JsonResponse != null && JsonResponse.contains("\"ErrorCode\":0")) {
                 Log.e("tag item", "****Success");
 
                 try {
@@ -696,7 +696,7 @@ public class SyncWithCloud {
         protected void onPostExecute(String JsonResponse) {
             super.onPostExecute(JsonResponse);
 
-            if (JsonResponse != null && JsonResponse.contains("\"ErrorCode\":\"0\"")) {
+            if (JsonResponse != null && JsonResponse.contains("\"ErrorCode\":0")) {
                 Log.e("tag category", "****Success");
 
                 try {
@@ -821,7 +821,7 @@ public class SyncWithCloud {
         protected void onPostExecute(String JsonResponse) {
             super.onPostExecute(JsonResponse);
 
-            if (JsonResponse != null && JsonResponse.contains("\"ErrorCode\":\"0\"")) {
+            if (JsonResponse != null && JsonResponse.contains("\"ErrorCode\":0")) {
                 Log.e("tag shift", "****Success");
 
                 try {
@@ -947,7 +947,7 @@ public class SyncWithCloud {
         protected void onPostExecute(String JsonResponse) {
             super.onPostExecute(JsonResponse);
 
-            if (JsonResponse != null && JsonResponse.contains("\"ErrorCode\":\"0\"")) {
+            if (JsonResponse != null && JsonResponse.contains("\"ErrorCode\":0")) {
                 Log.e("tag void", "****Success");
 
                 try {
@@ -1072,7 +1072,7 @@ public class SyncWithCloud {
         protected void onPostExecute(String JsonResponse) {
             super.onPostExecute(JsonResponse);
 
-            if (JsonResponse != null && JsonResponse.contains("\"ErrorCode\":\"0\"")) {
+            if (JsonResponse != null && JsonResponse.contains("\"ErrorCode\":0")) {
                 Log.e("tag iM", "****Success");
 
                 try {
@@ -1195,7 +1195,7 @@ public class SyncWithCloud {
         protected void onPostExecute(String JsonResponse) {
             super.onPostExecute(JsonResponse);
 
-            if (JsonResponse != null && JsonResponse.contains("\"ErrorCode\":\"0\"")) {
+            if (JsonResponse != null && JsonResponse.contains("\"ErrorCode\":0")) {
                 Log.e("tag iFQ", "****Success");
 
                 try {
@@ -1318,7 +1318,7 @@ public class SyncWithCloud {
         protected void onPostExecute(String JsonResponse) {
             super.onPostExecute(JsonResponse);
 
-            if (JsonResponse != null && JsonResponse.contains("\"ErrorCode\":\"0\"")) {
+            if (JsonResponse != null && JsonResponse.contains("\"ErrorCode\":0")) {
                 Log.e("tag iFQ", "****Success");
 
                 try {
@@ -1441,7 +1441,7 @@ public class SyncWithCloud {
         protected void onPostExecute(String JsonResponse) {
             super.onPostExecute(JsonResponse);
 
-            if (JsonResponse != null && JsonResponse.contains("\"ErrorCode\":\"0\"")) {
+            if (JsonResponse != null && JsonResponse.contains("\"ErrorCode\":0")) {
                 Log.e("tag void", "****Success");
 
                 try {

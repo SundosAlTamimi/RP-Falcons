@@ -13,7 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class Settings {
-    public static final String URL = "http://Falconssoft.net/RestService/FSAppServiceDLL.dll/";
+    public static final String URL = "http://catnipsoft-001-site6.etempurl.com/RestApi/";
     public static String user_name = "no user";
     public static int password = -1;
     public static int user_no = -1;
