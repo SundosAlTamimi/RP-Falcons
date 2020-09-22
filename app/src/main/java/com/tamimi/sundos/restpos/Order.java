@@ -2138,35 +2138,37 @@ end*/
         qus.setText(ItemWithFqs.get(questionNo).getQuestionText());
 
         ArrayList<ForceQuestions> questions = mDbHandler.getRequestedForceQuestions(ItemWithFqs.get(questionNo).getQuestionNo());
-
-        if (questions.get(0).getMultipleAnswer() == 0) {
-            RadioGroup radioGroup = new RadioGroup(Order.this);
-            for (int i = 0; i < questions.size(); i++) {
-                final RadioButton radioButton = new RadioButton(Order.this);
-                radioButton.setText(questions.get(i).getAnswer());
-                radioButton.setTextColor(getResources().getColor(R.color.text_color));
-                radioButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        v = radioButton;
-                    }
-                });
-                radioGroup.addView(radioButton);
-            }
-            answersLinear.addView(radioGroup);
-        } else
-            for (int i = 0; i < questions.size(); i++) {
-                final CheckBox checkBox = new CheckBox(Order.this);
-                checkBox.setText(questions.get(i).getAnswer());
-                checkBox.setTextColor(getResources().getColor(R.color.text_color));
-                checkBox.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        v = checkBox;
-                    }
-                });
-                answersLinear.addView(checkBox);
-            }
+if(questions.size()!=0) {
+    if (questions.get(0).getMultipleAnswer() == 0) {
+        RadioGroup radioGroup = new RadioGroup(Order.this);
+        for (int i = 0; i < questions.size(); i++) {
+            final RadioButton radioButton = new RadioButton(Order.this);
+            radioButton.setText(questions.get(i).getAnswer());
+            radioButton.setTextColor(getResources().getColor(R.color.text_color));
+            radioButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    v = radioButton;
+                }
+            });
+            radioGroup.addView(radioButton);
+        }
+        answersLinear.addView(radioGroup);
+    } else {
+        for (int i = 0; i < questions.size(); i++) {
+            final CheckBox checkBox = new CheckBox(Order.this);
+            checkBox.setText(questions.get(i).getAnswer());
+            checkBox.setTextColor(getResources().getColor(R.color.text_color));
+            checkBox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    v = checkBox;
+                }
+            });
+            answersLinear.addView(checkBox);
+        }
+    }
+}
 
 
         extra.setOnClickListener(new View.OnClickListener() {

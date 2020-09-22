@@ -1746,7 +1746,7 @@ try {
                     mDHandler.addOrderTransaction(obj.getOrderTransactionObj().get(i));
                 }
 
-                sendToKitchen(PayMethods.this, obj.getOrderHeaderObj(), obj.getOrderTransactionObj(), payMethodList, itemWithScreens);
+                sendToKitchen(mDHandler,1,PayMethods.this, obj.getOrderHeaderObj(), obj.getOrderTransactionObj(), payMethodList, itemWithScreens);
                 sendToServer(PayMethods.this,obj.getOrderHeaderObj(), obj.getOrderTransactionObj(), payMethodList);
 
 //                Intent intent = new Intent(PayMethods.this, Order.class);
@@ -1811,7 +1811,7 @@ try {
                 mDHandler.deleteFromOrderHeaderTemp(sectionNo, tableNo);
                 mDHandler.deleteFromOrderTransactionTemp(sectionNo, tableNo);
 
-                sendToKitchen(PayMethods.this, orderHeaderTemp.get(0), orderTransTemp, payMethodList, itemWithScreens);
+                sendToKitchen(mDHandler,1,PayMethods.this, orderHeaderTemp.get(0), orderTransTemp, payMethodList, itemWithScreens);
                 sendToServer(PayMethods.this,orderHeaderTemp.get(0), orderTransTemp, payMethodList);
 
                 Intent intent = new Intent(PayMethods.this, DineIn.class);
@@ -1826,7 +1826,7 @@ try {
         }
     }
 
-    public void sendToKitchen(Context context, OrderHeader OrderHeaderObj, List<OrderTransactions> OrderTransactionsObj, List<PayMethod> PayMethodObj, List<ItemWithScreen> itemWithScreens) {
+    public void sendToKitchen(DatabaseHandler mDHandler,int kindType,Context context, OrderHeader OrderHeaderObj, List<OrderTransactions> OrderTransactionsObj, List<PayMethod> PayMethodObj, List<ItemWithScreen> itemWithScreens) {
         try {
             JSONObject obj1 = OrderHeaderObj.getJSONObject();
 
@@ -1886,12 +1886,12 @@ try {
             Log.e("socket_printer_kitchen", "J");
             ipForKitchen=new ArrayList<>();
             ipForKitchen.clear();
-            PrintInNetworkPrinter(OrderTransactionsObj,OrderHeaderObj);
+            PrintInNetworkPrinter(kindType,context,OrderTransactionsObj,OrderHeaderObj);
             List<Bitmap>imagePrint=new ArrayList<>();
             List<Bitmap>imagePrint2=new ArrayList<>();
             imagePrint2.add( 0,returnBitmap(linearLayouts));
             ipForKitchen.add(0,"192.168.2.10");
-            imagePrint =LinearToPrint(OrderTransactionsObj);
+            imagePrint =LinearToPrint(mDHandler,context,OrderTransactionsObj);
 
             for(int i=0;i<imagePrint.size();i++){
                 imagePrint2.add(i+1,imagePrint.get(i));
@@ -2081,9 +2081,9 @@ try {
 
     }
 
-    public void PrintInNetworkPrinter(List<OrderTransactions> OrderTransactionsObj, OrderHeader OrderHeaderObj) {
+    public void PrintInNetworkPrinter(int kindType,Context context,List<OrderTransactions> OrderTransactionsObj, OrderHeader OrderHeaderObj) {
         Log.e("OrdedTr ", "" + OrderTransactionsObj.get(0).getTaxValue() + " date\n " + OrderTransactionsObj.get(0).getVoucherDate() + " \t no  " + OrderTransactionsObj.get(0).getVoucherNo());
-        final Dialog dialog = new Dialog(PayMethods.this);
+        final Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.print2);
@@ -2118,31 +2118,31 @@ try {
 
         lp2.setMargins(0, 7, 0, 0);
 
-        final TableRow headerRow = new TableRow(PayMethods.this);
+        final TableRow headerRow = new TableRow(context);
 //        headerRow.setBackgroundColor(getResources().getColor(R.color.light_blue));
 
-        TextView header = new TextView(PayMethods.this);
+        TextView header = new TextView(context);
         header.setGravity(Gravity.CENTER);
 
         header.setText("Item name ");
-        header.setTextColor(getResources().getColor(R.color.text_color));
+        header.setTextColor(context.getResources().getColor(R.color.text_color));
         header.setLayoutParams(lp2);
         header.setTextSize(18);
         headerRow.addView(header);
 
-        TextView header2 = new TextView(PayMethods.this);
+        TextView header2 = new TextView(context);
         header2.setGravity(Gravity.CENTER);
         header2.setText("QTy");
-        header2.setTextColor(getResources().getColor(R.color.text_color));
+        header2.setTextColor(context.getResources().getColor(R.color.text_color));
         header2.setLayoutParams(lp2);
         header2.setTextSize(18);
         headerRow.addView(header2);
 
-        TextView header3 = new TextView(PayMethods.this);
+        TextView header3 = new TextView(context);
         header3.setGravity(Gravity.CENTER);
 
         header3.setText("Total");
-        header3.setTextColor(getResources().getColor(R.color.text_color));
+        header3.setTextColor(context.getResources().getColor(R.color.text_color));
         header3.setLayoutParams(lp2);
         header3.setTextSize(18);
         headerRow.addView(header3);
@@ -2154,18 +2154,18 @@ try {
 
         for (int j = 0; j < OrderTransactionsObj.size(); j++) {
 
-            final TableRow row = new TableRow(PayMethods.this);
+            final TableRow row = new TableRow(context);
 
 
             for (int i = 0; i < 3; i++) {
                 TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
                 lp.setMargins(0, 10, 0, 0);
                 row.setLayoutParams(lp);
-                TextView textView = new TextView(PayMethods.this);
-                textView = new TextView(PayMethods.this);
+                TextView textView = new TextView(context);
+                textView = new TextView(context);
                 textView.setGravity(Gravity.CENTER);
                 textView.setTextSize(18);
-                textView.setTextColor(getResources().getColor(R.color.text_color));
+                textView.setTextColor(context.getResources().getColor(R.color.text_color));
                 if (i == 0) {
                     textView.setText("" + OrderTransactionsObj.get(j).getItemName());
                     textView.setLayoutParams(lp2);
@@ -2215,8 +2215,10 @@ try {
         });
 //        dialog.show();
 
-        Intent intentToOrder =new Intent(PayMethods.this,Order.class);
+        if(kindType==1) {
+            Intent intentToOrder = new Intent(context, Order.class);
             startActivity(intentToOrder);
+        }
 
     }
 
@@ -2232,14 +2234,14 @@ try {
     }
 
 
-    List<Bitmap> LinearToPrint(List<OrderTransactions> orderTransactions){
+    List<Bitmap> LinearToPrint(DatabaseHandler mDHandler,Context context,List<OrderTransactions> orderTransactions){
 
         List<Bitmap> liner=new ArrayList<>();
 
-        Dialog  dialogLinear=new Dialog(PayMethods.this);
+        Dialog  dialogLinear=new Dialog(context);
         dialogLinear.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialogLinear.setCancelable(true);
-        if(getResources().getString(R.string.A_E).equals("A")){
+        if(context.getResources().getString(R.string.A_E).equals("A")){
             dialogLinear.setContentView(R.layout.kitckin_printer_a);
 
         }else{
@@ -2267,10 +2269,10 @@ try {
 
        if(kitchenScreens.size()!=0&& orderTransactions.size()!=0){
            if(orderTransactions.get(0).getOrderType()==0){
-               orderType.setText(getResources().getString(R.string.take_away));
+               orderType.setText(context.getResources().getString(R.string.take_away));
 //               orderImage.setImageDrawable(getResources().getDrawable(R.drawable.take_away));
            }else{
-               orderType.setText(getResources().getString(R.string.dine_in));
+               orderType.setText(context.getResources().getString(R.string.dine_in));
 //               orderImage.setImageDrawable(getResources().getDrawable(R.drawable.dine_in));
            }
            screenNo.setText(""+orderTransactions.get(0).getSectionNo());
@@ -2284,14 +2286,14 @@ try {
             if ((orderTransactions.get(i).getScreenNo() == kitchenScreens.get(k).getKitchenNo())&&(kitchenScreens.get(k).getKitchenType()==0)) {
                 isKitchenHaveItem=true;
 
-                final TableRow row = new TableRow(PayMethods.this);
+                final TableRow row = new TableRow(context);
 //
         TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
 //        lp.setMargins(2, 2, 2, 2);
         row.setLayoutParams(lp);
 
         for (int s = 0; s < 3; s++) {
-            TextView textView = new TextView(PayMethods.this);
+            TextView textView = new TextView(context);
 
             switch (s) {
                 case 0:
@@ -2310,7 +2312,7 @@ try {
 
             }
 
-            textView.setTextColor(ContextCompat.getColor(PayMethods.this, R.color.text_color));
+            textView.setTextColor(ContextCompat.getColor(context, R.color.text_color));
             textView.setGravity(Gravity.CENTER);
             textView.setTextSize(16);
 
@@ -2339,7 +2341,7 @@ try {
                }
 
            }}else{
-           Toast.makeText(PayMethods.this, "Please Add Kitchen Printer Ip ", Toast.LENGTH_SHORT).show();
+           Toast.makeText(context, "Please Add Kitchen Printer Ip ", Toast.LENGTH_SHORT).show();
        }
 //
 

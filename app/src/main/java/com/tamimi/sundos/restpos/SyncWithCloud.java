@@ -49,15 +49,15 @@ public class SyncWithCloud {
 
         if(flag.equals("sync")){
 
-            new SyncModifier().execute();
-            new SyncForceQ().execute();
-            new SyncItem().execute();
-            new SyncCategory().execute();
-            new SyncShiftNo().execute();
-            new SyncVoidReason().execute();
-            new SyncJoinItemWithModifer().execute();
-            new SyncJoinItemWithFQ().execute();
-            new SyncJoinCategoryWithitem().execute();
+            new SyncModifier().execute();//ok
+            new SyncForceQ().execute();//ok
+            new SyncItem().execute();//ok
+            new SyncCategory().execute();// not all ok
+            new SyncShiftNo().execute();// not ok
+            new SyncVoidReason().execute();//not ok
+            new SyncJoinItemWithModifer().execute();//ok
+            new SyncJoinItemWithFQ().execute();//OK
+            new SyncJoinCategoryWithitem().execute();//OK
 
 //            new SyncitemPic().execute();
 
@@ -555,11 +555,21 @@ public class SyncWithCloud {
                     for (int i = 0; i <parentArray.length(); i++) {
                         JSONObject finalObject = parentArray.getJSONObject(i);
 
-                        //
+//                        {"ErrorCode":0,"ErrorDescreption":0,"Data":[{"Id":1,"BarCodeNo":1,"CATEGORYID":1,
+//                         "CATEGORYNAME":"Group 1","MENU_NAME":"Item1","UNITID":1,"UNITNAME":"Unit 1",
+//                         "KITCHENID":1,"KITCHENNAME":"KITCHEN 1","FAMILYID":1,"FAMILY_NAME":"Family1",
+//                         "PRICE":100,"TAX_TYPE":2,"TAX_PERCENT":0,"SECONDARY_NAME":null,"ITEM_BARCODE":"1",
+//                         "STATUS":1,"ITEM_TYPE":1,"DESCRIPTION":"Test","INVENTORY_UNIT":null,"WASTAGE_PERCENT":0,
+//                         "DISCOUNT_AVAILABLE":false,"POINT_AVAILABLE":false,"OPEN_PRICE":false,"KITCHEN_PRINTER_TO_USE":null,
+//                         "USED":0,"SHOW_IN_MENU":false,"INDATE":"\/Date(1581373973037)\/"},{"Id":2,"BarCodeNo":2,"CATEGORYID":2,
+//                         "CATEGORYNAME":"Group 2","MENU_NAME":"Item 2","UNITID":2,"UNITNAME":"Unit 2","KITCHENID":2,"KITCHENNAME":"KITCHEN 2",
+//                         "FAMILYID":3,"FAMILY_NAME":"Family3","PRICE":50,"TAX_TYPE":1,"TAX_PERCENT":16,"SECONDARY_NAME":null,"ITEM_BARCODE":"2",
+//                         "STATUS":1,"ITEM_TYPE":1,"DESCRIPTION":null,"INVENTORY_UNIT":null,"WASTAGE_PERCENT":0,"DISCOUNT_AVAILABLE":false,"POINT_AVAILABLE":false
+//                         ,"OPEN_PRICE":false,"KITCHEN_PRINTER_TO_USE":null,"USED":0,"SHOW_IN_MENU":false,"INDATE":"\/Date(1581373993260)\/"}]}
 
 
                         Items obj = new Items();
-                        obj.setMenuCategory(finalObject.getString("MENU_CATEGORY"));
+                        obj.setMenuCategory(finalObject.getString("CATEGORYNAME"));
                         obj.setMenuName(finalObject.getString("MENU_NAME"));
                         obj.setFamilyName(finalObject.getString("FAMILY_NAME"));
 
@@ -568,7 +578,7 @@ public class SyncWithCloud {
                         obj.setTax(finalObject.getDouble("TAX_PERCENT"));
                         obj.setSecondaryName(finalObject.getString("SECONDARY_NAME"));
 
-                        obj.setKitchenAlias(finalObject.getString("KITCHEN_NAME"));
+                        obj.setKitchenAlias(finalObject.getString("KITCHENNAME"));
                         try {
                             obj.setItemBarcode(finalObject.getInt("ITEM_BARCODE"));
                         }catch (Exception e){
@@ -580,20 +590,42 @@ public class SyncWithCloud {
                         obj.setDescription(finalObject.getString("DESCRIPTION"));
                         obj.setInventoryUnit(finalObject.getString("INVENTORY_UNIT"));
                         obj.setWastagePercent(finalObject.getInt("WASTAGE_PERCENT"));
-                        obj.setDiscountAvailable(finalObject.getInt("DISCOUNT_AVAILABLE"));
+                        if(finalObject.getBoolean("DISCOUNT_AVAILABLE")){
+                            obj.setDiscountAvailable(1);
+                        }else{
+                            obj.setDiscountAvailable(0);
+                        }
 
+//                        obj.setPointAvailable(finalObject.getInt("POINT_AVAILABLE"));
+                        if(finalObject.getBoolean("POINT_AVAILABLE")){
+                            obj.setPointAvailable(1);
+                        }else{
+                            obj.setPointAvailable(0);
+                        }
 
-                        obj.setPointAvailable(finalObject.getInt("POINT_AVAILABLE"));
-                        obj.setOpenPrice(finalObject.getInt("OPEN_PRICE"));
+                        //   obj.setOpenPrice(finalObject.getInt("OPEN_PRICE"));
+
+                        if(finalObject.getBoolean("OPEN_PRICE")){
+                            obj.setOpenPrice(1);
+                        }else{
+                            obj.setOpenPrice(0);
+                        }
+
                         obj.setKitchenPrinter(finalObject.getString("KITCHEN_PRINTER_TO_USE"));
                         obj.setUsed(finalObject.getInt("USED"));
-                        obj.setShowInMenu(finalObject.getInt("SHOW_IN_MENU"));
+//                        obj.setShowInMenu(finalObject.getInt("SHOW_IN_MENU"));
 
-                        try {
-                            obj.setPic(finalObject.getString("ITEMPIC"));
-                        }catch(Exception e){
-                            obj.setPic("");
+                        if(finalObject.getBoolean("SHOW_IN_MENU")){
+                            obj.setShowInMenu(1);
+                        }else{
+                            obj.setShowInMenu(0);
                         }
+
+//                        try {
+//                            obj.setPic(finalObject.getString("ITEMPIC"));
+//                        }catch(Exception e){
+//                            obj.setPic("");
+//                        }
 //
                         items.add(obj);
 
@@ -613,7 +645,7 @@ public class SyncWithCloud {
                 }
 
             } else {
-                Log.e("tag item", "****Failed to export data");
+                Log.e("tag_item_syn", "****Failed to export data");
             }
 //            progressDialog.dismiss();
         }
@@ -671,7 +703,7 @@ public class SyncWithCloud {
                 inputStream.close();
                 httpURLConnection.disconnect();
 
-                Log.e("tag", "category -->" + stringBuffer.toString());
+                Log.e("tag", "category_in -->" + stringBuffer.toString());
 
                 return stringBuffer.toString();
 
@@ -697,7 +729,7 @@ public class SyncWithCloud {
             super.onPostExecute(JsonResponse);
 
             if (JsonResponse != null && JsonResponse.contains("\"ErrorCode\":0")) {
-                Log.e("tag category", "****Success");
+                Log.e("tag_category_item", "****Success");
 
                 try {
 
@@ -709,16 +741,21 @@ public class SyncWithCloud {
                     for (int i = 0; i < parentArray.length(); i++) {
                         JSONObject finalObject = parentArray.getJSONObject(i);
 
-                        //
+                        //{"ErrorCode":0,"ErrorDescreption":0,"Data":[{"Id":1,"CATEGORYID":1
+                        // ,"CATEGORY_NAME":"Group 1","PICPATH":null,"INDATE":"\/Date(1581373799627)\/",
+                        // "iRowTable":0},{"Id":2,"CATEGORYID":2,"CATEGORY_NAME":"Group 2","PICPATH":null,
+                        // "INDATE":"\/Date(1581373805330)\/","iRowTable":0},{"Id":3,"CATEGORYID":3,
+                        // "CATEGORY_NAME":"cat5","PICPATH":null,"INDATE":"\/Date(1581339773163)\/",
+                        // "iRowTable":0}]}
 
 
                         FamilyCategory obj = new FamilyCategory();
-                        obj.setName(finalObject.getString("NAME_CATEGORY_FAMILY"));
-                        obj.setType(finalObject.getInt("ITYPE"));
-                        obj.setSerial(finalObject.getInt("SERIAL"));
+                        obj.setName(finalObject.getString("CATEGORY_NAME"));
+                        obj.setType(2);
+                        obj.setSerial(finalObject.getInt("CATEGORYID"));
 
 
-                        obj.setCatPic(finalObject.getString("PIC"));
+//                        obj.setCatPic(finalObject.getString("PIC"));
 
 //
                         items.add(obj);
@@ -731,6 +768,7 @@ public class SyncWithCloud {
                         mDHandler.addFamilyCategory(items.get(i));
 //                        progressDialog.setMessage("ADDING ("+items.get(i).getName()+")...");
                     }
+                    Log.e("tag_category_item", "****save_Success");
 
 //
 
@@ -865,7 +903,7 @@ public class SyncWithCloud {
                 }
 
             } else {
-                Log.e("tag item", "****Failed to export data");
+                Log.e("tag_shift_no", "****Failed to export data");
             }
 //            progressDialog.dismiss();
         }
@@ -1107,6 +1145,7 @@ public class SyncWithCloud {
                         mDHandler.addItemWithModifier(itemModifer.get(i));
                     }
 
+                    Log.e("tag_iM", "****SAVE_Success");
 //
 
                 } catch (JSONException e) {
@@ -1229,7 +1268,7 @@ public class SyncWithCloud {
                     for (int i = 0; i < itemModifer.size(); i++) {
                         mDHandler.addItemWithFQ(itemModifer.get(i));
                     }
-
+                    Log.e("tag_iFQ", "****SAVE_Success");
 //
 
                 } catch (JSONException e) {
@@ -1320,7 +1359,7 @@ public class SyncWithCloud {
             super.onPostExecute(JsonResponse);
 
             if (JsonResponse != null && JsonResponse.contains("\"ErrorCode\":0")) {
-                Log.e("tag iFQ", "****Success");
+                Log.e("tag_CWI", "****Success");
 
                 try {
 
@@ -1338,7 +1377,7 @@ public class SyncWithCloud {
 
                         CategoryWithModifier obj = new CategoryWithModifier();
                         obj.setModifierName(finalObject.getString("MODIFIER_NAME"));
-                        obj.setCategoryName(finalObject.getString("CATEGORY"));
+                        obj.setCategoryName(finalObject.getString("CATEGORY_NAME"));
 
                         itemModifer.add(obj);
 
@@ -1349,7 +1388,7 @@ public class SyncWithCloud {
                     for (int i = 0; i < itemModifer.size(); i++) {
                         mDHandler.addCategoriesModifier(itemModifer.get(i));
                     }
-
+                    Log.e("tag_CWI", "****SAVE_Success");
 //
 
                 } catch (JSONException e) {

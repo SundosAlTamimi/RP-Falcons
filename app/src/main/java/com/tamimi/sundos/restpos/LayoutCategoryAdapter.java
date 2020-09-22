@@ -73,7 +73,12 @@ end */
         void build(FamilyCategory item) {
             String itemName = String.valueOf(item.getName());
             name.setText(itemName);
-            img.setImageBitmap(StringToBitMap(item.getCatPic()));
+            if(item.getCatPic()==null){
+                img.setImageBitmap(null);
+            }else{
+                img.setImageBitmap(StringToBitMap(item.getCatPic()));
+            }
+
             background.setBackgroundColor(context.getResources().getColor(R.color.layer2));
         }
 

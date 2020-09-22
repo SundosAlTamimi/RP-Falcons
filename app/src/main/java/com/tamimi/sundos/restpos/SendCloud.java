@@ -447,8 +447,8 @@ public class SendCloud {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-
-            if (s != null && s.contains("Item Saved Successfully")) {
+//Item Saved Successfully
+            if (s != null && s.contains("Saved Successfully")) {
 //                Toast.makeText(ExportJason.this , "Success" , Toast.LENGTH_SHORT).show();
                 Log.e("tag", "****Success");
             } else {
@@ -718,7 +718,7 @@ public class SendCloud {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
 
-            if (s != null && s.contains("ITEM_WITH_MODIFIER Saved Successfully")) {
+            if (s != null && s.contains("Saved Successfully")) {
 //                Toast.makeText(ExportJason.this , "Success" , Toast.LENGTH_SHORT).show();
                 Log.e("tag", "****Success");
             } else {

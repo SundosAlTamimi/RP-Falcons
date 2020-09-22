@@ -71,8 +71,8 @@ public class ReceiveCloud {
         @Override
         protected String doInBackground(String... params) {
             try {
-                String link = "http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/GetMaxGroupSerial?";
-
+//                String link = "http://10.0.0.16:8080/WSKitchenScreen/FSAppServiceDLL.dll/GetMaxGroupSerial?";
+                String link=Settings.URL+"GetMaxGroupSerial?";
                 String data = "Compno=" + URLEncoder.encode("736", "UTF-8") + "&" +
                         "CompYear=" + URLEncoder.encode("2019", "UTF-8") + "&" +
                         "POSNO=" + URLEncoder.encode("1", "UTF-8")+ "&" +
@@ -168,8 +168,8 @@ public class ReceiveCloud {
         @Override
         protected String doInBackground(String... params) {
             try {
-                String link = "http://falconssoft.net/RestService/FSAppServiceDLL.dll/GetMaxVHFNo?";
-
+//                String link = "http://falconssoft.net/RestService/FSAppServiceDLL.dll/GetMaxVHFNo?";
+                String link=Settings.URL+"GetMaxVHFNo?";
                 String data = "Compno=" + URLEncoder.encode("736", "UTF-8") + "&" +
                         "CompYear=" + URLEncoder.encode("2019", "UTF-8") + "&" +
                         "POSNO=" + URLEncoder.encode("1", "UTF-8")+ "&" +

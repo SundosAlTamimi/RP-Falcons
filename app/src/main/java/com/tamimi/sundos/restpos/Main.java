@@ -2633,7 +2633,7 @@ public class Main extends AppCompatActivity {
                         PayMethods pay = new PayMethods();
 
                         orderHeader.setVoucherNumber(rowRefund.get(0).getVoucherNo());
-                        pay.sendToKitchen(Main.this, orderHeader, rowRefund, payObj, itemWithScreens);
+                        pay.sendToKitchen(mDHandler,0,Main.this, orderHeader, rowRefund, payObj, itemWithScreens);
 
                         rowRefund.get(0).setVoucherNo("" + transactionsSize);
                         orderHeader.setVoucherNumber("" + transactionsSize);
